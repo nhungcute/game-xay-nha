@@ -109,3 +109,36 @@ the strict schema length even when a valid world ID has 128 characters.
 Decision: deterministic revision/collision-counter IDs are scoped to the world and checked against
 all existing building/bridge IDs. Do not embed the full world ID. G2 command transactions own
 authoritative allocation and persistence; this is not a global account/character ID generator.
+
+## D016 — 2026-10-10 — G0 approval and continuation mode
+
+G0 APPROVED by the product owner, who independently ran pnpm check: 604/604 passed.
+Mode: auto-continue (approved 2026-10-10).
+At each gate: run the full suite, write docs/reports/G<x>-report.md, commit, and start the next
+gate only after its exit criteria really pass. Stop for criteria failing after three serious
+attempts, new gameplay/economy/design questions outside these approvals, external inputs,
+destructive/irreversible actions, or any public deploy. Local development remains authorized.
+
+## D017 — 2026-10-10 — Approved repeat quests for G3 (Q005)
+
+Record the exact product-owner specification in docs/16 §10.3: three active slots; replacement
+on completion; one free reroll per four hours; unlocked targets; no consecutive template repeat;
+the approved City/Farm template lists; targets sized for 30–60 minutes. Reward is 25% of the
+specified hourly reference income, rounded to $10, minimum $100; XP round(2√reward).
+All constants go into generated economy content and are checked with sim-economy in G3.
+This approves those constants, not additional target-sizing constants or gameplay.
+
+## D018 — 2026-10-10 — Approved road valuation and authored banks (Q006/Q007)
+
+Confirm D011 with actual paid cost: template road base value is excluded, but rebuilding a removed
+template road counts the full new payment; an upgrade counts the paid difference. Track that
+history in sim rather than subtracting the template tier unconditionally.
+Confirm D012 and add optional bankRegions to layout/template, schema and validator. Regions use
+unique IDs and nonoverlapping authored dry cells; a far region differs from the ENTRY region and
+is connected by an ACTIVE bridge. This supports rivers whose banks connect around their ends.
+
+## D019 — 2026-10-10 — Approved shoreline QA correction (Q008)
+
+Correct docs/10 §2.1 to follow docs/15: unembanked shared shore vertices in water+[5,20];
+embanked vertices >=water+5, with no upper shoreline limit other than the overall map ceiling.
+Nothing may go below water+5. Source edits limited to the approvals above.

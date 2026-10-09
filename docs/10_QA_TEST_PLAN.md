@@ -19,7 +19,7 @@
 
 - [ ] RAISE/LOWER/FLATTEN thay đổi đúng tập đỉnh, đúng bậc, chi phí đúng `Σ|Δh|/5 × rate`.
 - [ ] San vùng có ô nước / đường / công trình / env chưa dọn → đúng mã lỗi.
-- [ ] Hạ đỉnh ven nước chưa kè dưới `waterLevel+5` → `SHORE_RULE`; đã kè → hợp lệ.
+- [ ] Đỉnh bờ chưa kè phải nằm trong `[waterLevel+5, waterLevel+20]`; bờ đã kè được cao hơn `waterLevel+20` nhưng vẫn phải `≥ waterLevel+5`. Hạ dưới `waterLevel+5` luôn → `SHORE_RULE` (`15 §4.2.3`).
 - [ ] Chênh lệch biên > 20 dm → `TOO_STEEP_EDGE`.
 - [ ] Đỉnh chung với đường bên ngoài vùng làm đường vượt dốc → `AFFECTS_NEIGHBOR`.
 - [ ] Vùng > 256 ô → `AREA_TOO_LARGE`.

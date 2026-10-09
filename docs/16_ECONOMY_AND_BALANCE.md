@@ -349,7 +349,20 @@ Mỗi lần lên cấp còn nâng giới hạn số lượng công trình (§6.2
 | 11 | Bắc cầu gỗ qua suối | $800 |
 | 12 | Cuốc ruộng ở bờ bên kia | $500 |
 
-Sau nhiệm vụ 12: nhiệm vụ lặp ngẫu nhiên theo cấp (ví dụ "Thu $20 000", "Bán 30 trứng"), thưởng ≈ 15 phút thu nhập hiện tại của nhân vật.
+### 10.3 Nhiệm vụ lặp — đặc tả được duyệt 2026-10-10, triển khai G3
+
+- Sau nhiệm vụ 12, mỗi nhân vật có **3 nhiệm vụ lặp đang hoạt động**. Hoàn thành → thay ngay bằng nhiệm vụ mới.
+- **1 lần đổi nhiệm vụ miễn phí mỗi 4 giờ**. Chỉ chọn mục tiêu đã mở ở cấp hiện tại; không chọn cùng một mẫu hai lần liên tiếp.
+- Thành phố: thu `$X` với `X = 1 giờ thu nhập cơ sở hiện tại`; xây `N = 1–3` công trình thuộc loại đã mở;
+  làm/nâng cấp `N` ô đường; kè `N` ô; đạt dân số `P`.
+- Quê: thu hoạch `N` ô cây `Y`; bán `N` đơn vị vật phẩm `Y`; sản xuất `N` đơn vị sản phẩm `Y`; cuốc `N` ô.
+- Chọn kích thước mục tiêu để hoàn thành trong **30–60 phút chơi bình thường**. Hiệu chỉnh và kiểm chứng bằng `sim-economy` ở G3; không tự đặt thêm hằng số.
+- Thu nhập tham chiếu một giờ: Thành phố = tổng rate cơ sở hiện tại trước trần kho tiền;
+  Quê = hạn mức ruộng × lãi/ô/giờ của cây đã mở có lãi cao nhất × **0,5**.
+- Tiền thưởng = **25%** thu nhập tham chiếu một giờ, làm tròn tới **$10**, tối thiểu **$100**.
+  Tương đương thưởng ≈ 15 phút thu nhập tham chiếu, trước làm tròn và mức tối thiểu.
+- XP thưởng = `round(2 × √tiền_thưởng)`.
+- Tất cả hằng số trên phải nằm trong `economy.v1.json` và được kiểm bằng `sim-economy` tại G3.
 
 ## 11. Núm tinh chỉnh
 
@@ -430,7 +443,7 @@ tổngTàiSản =
     tiềnMặt
   + Σ floor(accrued)                         // tiền đang chờ thu ở công trình (sau settle)
   + Σ công trình:  investedValue              // = quyĐổi(chi phí thực trả lúc xây), kể cả công trình đang xây
-  + Σ ô đường:     quyĐổi(chi phí tier hiện tại)
+  + Σ ô đường:     quyĐổi(chi phí người chơi thực trả cho ô còn tồn tại)
   + Σ ô kè:        quyĐổi(chi phí kè)
   + Σ cầu:         quyĐổi(chi phí cầu)
   + landValue                                 // tổng tiền đã trả để mở khu
@@ -439,6 +452,8 @@ tổngTàiSản =
 ```
 
 - **Không tính:** chi phí san nền, cuốc, dọn đất (công thi công, không phải tài sản), tiền hạt đã gieo, nguyên liệu đang trong hàng chờ, tiền xây nhanh.
+- Đường làng có sẵn trong template không tính tài sản. Chỉ tính chi phí người chơi thực trả:
+  ô mới, chênh lệch nâng cấp và xây lại ô đường template đã xóa (Q006, duyệt 2026-10-10).
 - Phá dỡ: tài sản giảm `investedValue`, tiền mặt tăng 50% → tổng tài sản giảm 50% giá trị công trình. Hủy khi đang xây: không đổi (hoàn 100%).
 - Server lưu `net_worth` trên bản ghi nhân vật, cập nhật sau mỗi lệnh thành công; job đêm tính lại toàn bộ để đối soát.
 - Khởi đầu: $2 000 + 20 × 15 + 10 × 20 = **$2 500**.

@@ -77,6 +77,7 @@ export interface WorldTemplate {
 
   env: EnvSpec;                  // xem §4.1
   suggestedLots?: { id: string; cells: [number, number, number, number] }[]; // [cx0,cz0,cx1,cz1] — chỉ gợi ý/hướng dẫn
+  bankRegions?: { id: string; cells: [number, number][] }[]; // vùng bờ tác giả chỉ định; tùy chọn
   camera: { target: [number, number, number]; yawDeg: number; pitchDeg: number; distance: number };
   palette: Record<string, string>;
 }
@@ -91,6 +92,11 @@ export interface WorldTemplate {
 - `startZones` liền kề nhau, chứa ≥ 200 ô đất xây được (phẳng hoặc san được với ≤ 2 bậc).
 - **Không có công trình, không có cầu, không có ô `TILLED`, không có `FOUNDATION`.**
 - Đường tự nhiên (`roadTier = 1`) không chạm ô nước.
+- `bankRegions` (tùy chọn, được duyệt 2026-10-10): dùng khi hai bờ nối nhau vòng qua đầu sông.
+  Mỗi vùng có ID duy nhất và danh sách ô đất trong bản đồ, không trùng ô trong/giữa các vùng;
+  mọi ô ENTRY phải thuộc một vùng nếu khai báo trường này. Bờ bên kia là vùng khác vùng ENTRY,
+  được nối với vùng ENTRY bằng cầu đã hoàn thành. Khi không khai báo, dùng thành phần đất khô
+  liên thông theo D012. Layout được phép cung cấp cùng trường này; validator kiểm tra sau raster nước.
 
 ### 4.1 Env objects
 

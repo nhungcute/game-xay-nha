@@ -2,10 +2,26 @@
 
 Updated: 2026-10-10 (Asia/Bangkok).
 
-## Current gate: G0 — READY FOR HUMAN REVIEW
+Mode: auto-continue (approved 2026-10-10)
+
+## Current gate: G1 — IN PROGRESS
 
 Read all design documents 00–16, both economy scripts, and all three reference images.
-Scope and approval protocol: docs/14 §0.1. G1–G4 have NOT started.
+G0 approved 2026-10-10; product owner independently re-ran pnpm check: 604/604 passed.
+Continuation protocol updated by explicit user instruction: full test/report/commit at every gate,
+then continue only when exit criteria pass. G2–G4 have not started. No public deploy authorized.
+
+## G1 task plan
+
+- [ ] Apply/commit approved docs Q005–Q008 and mode; maintain reports under docs/reports/.
+- [ ] Implement approved bankRegions contracts/validator and actual-paid road valuation regressions.
+- [ ] Bootstrap pinned Vite + React 18 + Three.js + zustand app, VITE_OFFLINE=1.
+- [ ] GLB assets/manifest with verified CC0 sources or explicitly marked permitted placeholders.
+- [ ] Terrain per zone, reused buffers/normals/dirty zones; water/waterfall, deterministic env, roads/kè/cầu.
+- [ ] All tools through shared sim with green/yellow/red previews, cost/reason/confirmation; timers.
+- [ ] Desktop/touch camera, Vietnamese UI, validated offline cache and debug instrumentation.
+- [ ] Browser evidence for required tool sequence, orbit180, performance, leaks and lighting/contrast.
+- [ ] Full tests, docs/reports/G1-report.md, commit; advance only if all G1 exit criteria pass.
 
 ## G0 task plan
 
@@ -40,5 +56,5 @@ Scope and approval protocol: docs/14 §0.1. G1–G4 have NOT started.
 
 ## Next steps
 
-STOP for G0 approval under docs/14 §0.1. Report and evidence are in G0_GATE_REPORT.md.
-After explicit approval, start G1 offline Farm. Do not begin G1 from this status alone.
+Commit the approved documentation changes, then implement G1. Q001–Q004 retain the reviewed G0
+interpretations; do not change their gameplay/economy rules without a further approval.
