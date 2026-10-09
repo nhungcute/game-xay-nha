@@ -10,9 +10,9 @@ export default tseslint.config(
     languageOptions: { globals: { console: 'readonly', process: 'readonly', Buffer: 'readonly', URL: 'readonly' } },
     rules: { '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }] },
   },
-  { files: ['apps/web/**/*.ts', 'apps/web/**/*.tsx'], languageOptions: { globals: { window: 'readonly', document: 'readonly', navigator: 'readonly', fetch: 'readonly', performance: 'readonly', requestAnimationFrame: 'readonly', cancelAnimationFrame: 'readonly', indexedDB: 'readonly', crypto: 'readonly', ResizeObserver: 'readonly', HTMLElement: 'readonly', HTMLCanvasElement: 'readonly', PointerEvent: 'readonly', WheelEvent: 'readonly', KeyboardEvent: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly', location: 'readonly', matchMedia: 'readonly', devicePixelRatio: 'readonly', structuredClone: 'readonly' } } },
+  { files: ['apps/web/**/*.ts', 'apps/web/**/*.tsx'], languageOptions: { globals: { window: 'readonly', document: 'readonly', navigator: 'readonly', fetch: 'readonly', performance: 'readonly', requestAnimationFrame: 'readonly', cancelAnimationFrame: 'readonly', indexedDB: 'readonly', crypto: 'readonly', ResizeObserver: 'readonly', HTMLElement: 'readonly', HTMLCanvasElement: 'readonly', PointerEvent: 'readonly', WheelEvent: 'readonly', KeyboardEvent: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly', location: 'readonly', localStorage: 'readonly', Response: 'readonly', matchMedia: 'readonly', devicePixelRatio: 'readonly', structuredClone: 'readonly' } } },
   // Playwright scripts: code inside page.evaluate() runs in the browser.
-  { files: ['scripts/**/*.mjs'], languageOptions: { globals: { window: 'readonly', document: 'readonly', Image: 'readonly', innerWidth: 'readonly', innerHeight: 'readonly', navigator: 'readonly', fetch: 'readonly' } } },
+  { files: ['scripts/**/*.mjs'], languageOptions: { globals: { window: 'readonly', document: 'readonly', Image: 'readonly', innerWidth: 'readonly', innerHeight: 'readonly', navigator: 'readonly', fetch: 'readonly', localStorage: 'readonly', crypto: 'readonly', setTimeout: 'readonly' } } },
   {
     files: ['packages/sim/src/**/*.ts', 'packages/worldgen/src/**/*.ts'],
     ignores: ['**/*.test.ts'],

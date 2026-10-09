@@ -25,7 +25,8 @@
     "tunnel:up": "docker compose -f infra/compose.yml --profile tunnel up -d tunnel",
     "tunnel:url": "node scripts/tunnel-url.mjs",
     "tunnel:down": "docker compose -f infra/compose.yml --profile tunnel rm -sf tunnel",
-    "evidence:g1": "tsx scripts/g1-plan.ts && node scripts/g1-evidence.mjs && node scripts/g1-mobile.mjs"
+    "evidence:g1": "tsx scripts/g1-plan.ts && node scripts/g1-evidence.mjs && node scripts/g1-mobile.mjs",
+    "test:api": "node scripts/test-api.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.37.0",
