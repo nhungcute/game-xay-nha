@@ -142,3 +142,17 @@ is connected by an ACTIVE bridge. This supports rivers whose banks connect aroun
 Correct docs/10 §2.1 to follow docs/15: unembanked shared shore vertices in water+[5,20];
 embanked vertices >=water+5, with no upper shoreline limit other than the overall map ceiling.
 Nothing may go below water+5. Source edits limited to the approvals above.
+
+## D020 — 2026-10-10 — Product-owner answers Q001–Q004 (supersedes D013)
+
+Approved by the product owner (consolidated MVP goal, docs/14 §0.1b).
+- Q001: money already accrued is never removed; the cap limits only new accrual:
+  `accrued_new = accrued + min(rate × dt, max(0, rate × capHours − accrued))`. D013 is superseded.
+  Implemented in sim `settle`; regressions: road disconnection, cap shrink, collect after shrink.
+- Q002: demolition never auto-destroys state. Farmhouse → `FIELD_LIMIT` when tilled cells exceed the
+  remaining quota; silo → `STORAGE_FULL`; production with queued, in-progress or uncollected batches →
+  new `PRODUCTION_ACTIVE` (replaces `CANNOT_DEMOLISH_SUPPORT`). docs/15 §8.3 and §11 updated.
+- Q003: D002 confirmed; docs/06 §4 rewritten (water-only vertices ≤ water−5; shared shore vertices per docs/15).
+- Q004: D003 confirmed; docs/06 §6.6 distinguishes past timestamps (≤ serverTime+5 min) from deadlines.
+- D004: speed-up 50% confirmed; docs/tools/economy/model.mjs `speedupPct = 0.5` (not used by the simulation).
+- New characters: farm `inventory = {}`, city population 0 (docs/16 §2).

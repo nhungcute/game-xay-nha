@@ -86,8 +86,8 @@ export interface WorldTemplate {
 **Ràng buộc validator (template):**
 
 - Ô `WATER` ⇔ nằm trong polygon hồ / dải sông (raster hóa) — lệch tối đa 0 ô.
-- Ô `WATER`: 4 đỉnh `h ≤ waterLevelDm - 5`.
-- Ô đất ven nước: đỉnh chung với nước `waterLevel+5 ≤ h ≤ waterLevel+20`.
+- Đỉnh **chỉ thuộc ô nước** (mọi ô quanh nó là `WATER`): `h ≤ waterLevelDm − 5`.
+- Đỉnh **chung giữa ô đất và ô nước** (đỉnh bờ): theo `15 §4.2.3` — chưa kè `waterLevel+5 ≤ h ≤ waterLevel+20`; đã kè chỉ cần `h ≥ waterLevel+5`. (D002)
 - Mọi `entryCells` nằm trong `startZones`, trên đường tự nhiên của template. Đường tự nhiên từ `entryCells` chạy ra mép bản đồ ("đường làng từ bên ngoài vào"); các ô đường đó ngoài khu ban đầu mang cờ `PROTECTED` cho tới khi khu được mở.
 - `startZones` liền kề nhau, chứa ≥ 200 ô đất xây được (phẳng hoặc san được với ≤ 2 bậc).
 - **Không có công trình, không có cầu, không có ô `TILLED`, không có `FOUNDATION`.**
@@ -271,7 +271,7 @@ Chạy ở client (trước khi nạp, `08 §6.1`) và server (khi đọc từ D
 | Va chạm | Dựng occupancy từ đầu: không hai entity chiếm cùng ô; công trình không đè ô `WATER`/`ROAD`/`TILLED`; cây trồng chỉ trên ô `TILLED`; footprint công trình phẳng |
 | Cầu | Thỏa lại toàn bộ `15 §9.2` trên dữ liệu đã nạp |
 | Xây dựng | Số công trình + cầu đang xây ≤ đội thợ của cấp; `buildEndsAt − placedAt` khớp thời gian xây trong catalog (± 1 giây; trừ trường hợp đã xây nhanh: `buildEndsAt` sớm hơn); `status` khớp `buildEndsAt` so với `serverTime`; số lượng mỗi loại ≤ giới hạn theo cấp |
-| Số | `cash, wood, stone ≥ 0`, số nguyên; `level` khớp `xp` theo bảng `16 §8.2`; `revision ≥ 0`; thời điểm (`placedAt`, `readyAt`, `settledAt`) không ở tương lai quá 5 phút so với `serverTime` |
+| Số | `cash, wood, stone ≥ 0`, số nguyên; `level` khớp `xp` theo bảng `16 §8.2`; `revision ≥ 0`; **mốc đã qua** (`placedAt`, `plantedAt`, `settledAt`, `startedAt`) ≤ `serverTime + 5 phút`; **hạn hoàn thành** (`buildEndsAt`, `readyAt`) kiểm tra theo thời lượng trong catalog (có tính tưới nước, hướng dẫn tân thủ, xây nhanh) — không giới hạn 5 phút (D003) |
 | Tài sản | `netWorth` khớp công thức `16 §13` (lệch → lỗi trên server; client chỉ cảnh báo debug) |
 
 ## 7. Lệnh

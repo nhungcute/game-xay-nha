@@ -30,7 +30,7 @@ export const P = {
   zoneCost: (k) => 1000 + 800 * k + 150 * k * k,
   zoneLevel: (k) => Math.min(20, 2 + Math.floor(k / 3)),
   builders: (L) => 2 + (L >= 5) + (L >= 10),
-  speedupPct: 0.3,                           // bỏ qua thời gian xây: 30% giá $ × phần thời gian còn lại
+  speedupPct: 0.5,                           // bỏ qua thời gian xây: 50% giá $ × phần thời gian còn lại
   startCash: 2000, startWood: 20, startStone: 10,
 };
 export const xpNeed = (L, cum = P.xpCum) => (cum ? cum[L + 1] - cum[L] : Math.round(P.xpBase * P.xpGrowth ** (L - 1) / 10) * 10);

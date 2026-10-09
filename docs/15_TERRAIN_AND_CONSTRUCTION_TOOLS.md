@@ -182,6 +182,10 @@ export function buildingAtCell(s: SimState, cx: number, cz: number): string | nu
 
 - Chỉ áp dụng cho công trình đã xong (`ACTIVE`). Hoàn **50%** tiền và vật liệu thực trả (làm tròn xuống). Settle thu nhập trước khi phá, tiền đang chờ được cộng vào ví.
 - Công trình đang xây → lỗi `UNDER_CONSTRUCTION` (dùng hủy).
+- **Không tự hủy dữ liệu khi phá** — từ chối nếu phá làm trạng thái không hợp lệ:
+  - Nhà nông: số ô `TILLED` > hạn mức ruộng còn lại → `FIELD_LIMIT` (bỏ cuốc trước).
+  - Kho: hàng trong kho > sức chứa còn lại → `STORAGE_FULL` (bán bớt trước).
+  - Xưởng/chuồng còn mẻ trong hàng chờ, đang làm, hoặc sản phẩm chưa thu → `PRODUCTION_ACTIVE`.
 - Ô footprint về `FOUNDATION` (giữ nền phẳng), có thể xây lại ngay.
 
 ## 9. Cầu (`BUILD_BRIDGE`, `REMOVE_BRIDGE`)
@@ -259,6 +263,7 @@ Thời gian lớn có thể giảm bởi **giếng** / nước gần (xem `16`).
 | `UNDER_CONSTRUCTION` | Công trình đang xây (chỉ hủy hoặc xây nhanh) |
 | `NOT_UNDER_CONSTRUCTION` | Công trình đã xong, không hủy/xây nhanh được |
 | `LIMIT_REACHED` | Đã đạt số lượng tối đa ở cấp hiện tại |
+| `PRODUCTION_ACTIVE` | Xưởng/chuồng còn mẻ chờ, đang làm hoặc chưa thu |
 | `REVISION_CONFLICT` | Dữ liệu đã thay đổi, đồng bộ lại |
 
 ## 12. Ví dụ minh họa

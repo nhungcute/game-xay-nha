@@ -33,7 +33,7 @@ node docs/tools/economy/calibrate-xp.mjs city  # hiệu chỉnh lại bảng XP 
 | **Nông sản / sản phẩm** (Quê) | Thu hoạch, chế biến | Bán, làm nguyên liệu |
 
 - **Cửa hàng vật liệu** (luôn có trong menu, không cần xây): mua gỗ **$15**, đá **$20** mỗi đơn vị. Không bán ngược.
-- **Trạng thái bắt đầu của mỗi nhân vật mới** (mỗi map một nhân vật; không chia sẻ giữa các map): $2 000, 20 gỗ, 10 đá, cấp 1, 0 XP, 4 khu trung tâm đã mở, 2 đội thợ.
+- **Trạng thái bắt đầu của mỗi nhân vật mới** (mỗi map một nhân vật; không chia sẻ giữa các map): $2 000, 20 gỗ, 10 đá, cấp 1, 0 XP, 4 khu trung tâm đã mở, 2 đội thợ. Kho nông sản (Quê) **trống** (`inventory = {}` — không có nông sản, sản phẩm hay hạt giống); Thành phố **0 dân**; 0 công trình.
 
 ## 3. Thời gian xây dựng
 
@@ -168,7 +168,9 @@ Mỗi công trình kinh doanh lưu `accrued` (tiền đang chờ) và `settledAt
 ```text
 settle(b, now):
   elapsedH  = (now - max(b.settledAt, b.buildEndsAt)) / 3600
-  b.accrued = min(b.rate * capHours, b.accrued + b.rate * max(0, elapsedH))
+  earned    = b.rate * max(0, elapsedH)
+  // trần chỉ giới hạn phần TÍCH LŨY MỚI; tiền đã tích lũy không bao giờ bị trừ (Q001)
+  b.accrued = b.accrued + min(earned, max(0, b.rate * capHours - b.accrued))
   b.settledAt = now
 ```
 

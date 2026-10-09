@@ -52,8 +52,10 @@ export function settle(s: SimState, now: number): void {
   for (const b of s.snapshot.buildings) if (b.status === 'ACTIVE' && catalog.buildings[b.defId]?.baseRatePerHour) {
     const start = Math.max(b.settledAt ?? b.buildEndsAt,b.buildEndsAt);
     guard(now >= start,'INVALID_TIME');
-    const rate = s.rates[b.id] ?? 0, hours = (now-start)/3_600_000;
-    b.accrued = Math.min(rate * cap,(b.accrued ?? 0) + rate * hours * (tutorial ? economy.tutorial.cityIncomeMultiplier : 1));
+    const rate = s.rates[b.id] ?? 0, hours = (now-start)/3_600_000, previous = b.accrued ?? 0;
+    // Q001/D020: the cap limits only NEW accrual; money already earned is never removed.
+    const earned = rate * hours * (tutorial ? economy.tutorial.cityIncomeMultiplier : 1);
+    b.accrued = previous + Math.min(earned, Math.max(0, rate * cap - previous));
     b.settledAt = now;
   }
 }

@@ -147,6 +147,37 @@ describe('fake-clock settlement and ordered completion', () => {
     advanceTime(s, NOW + 48 * HOUR);
     expect(b.accrued).toBe(1020);
   });
+  it('never removes accrued money when the road is disconnected (rate drops to 0)', () => {
+    const s = setup(), b = building(s, 'house_small', [52, 68]);
+    advanceTime(s, NOW + 5 * HOUR);
+    expect(b.accrued).toBe(850);
+    for (let x = 49; x <= 110; x++) { s.roadTier[cellIndex(x, 70)] = 0; s.surface[cellIndex(x, 70)] = Surface.GRASS; }
+    recompute(s);
+    expect(s.rates[b.id]).toBe(0);
+    advanceTime(s, NOW + 9 * HOUR);
+    expect(b.accrued).toBe(850);
+  });
+  it('never removes accrued money when the cap shrinks below the stored amount', () => {
+    const s = setup(), house = building(s, 'house_small', [48, 68]);
+    const bank = building(s, 'bank', [52, 67]);
+    advanceTime(s, NOW + 8 * HOUR);
+    expect(capHours(s)).toBe(8);
+    expect(house.accrued).toBe(170 * 8);
+    s.snapshot.buildings.splice(s.snapshot.buildings.indexOf(bank), 1);
+    rebuildOccupancy(s); recompute(s);
+    expect(capHours(s)).toBe(6);
+    advanceTime(s, NOW + 10 * HOUR);
+    expect(house.accrued).toBe(170 * 8);
+  });
+  it('collect still works after a cap shrink, then accrual resumes up to the new cap', () => {
+    let s = setup(); const house = building(s, 'house_small', [48, 68]);
+    house.accrued = 170 * 8;
+    s = apply(s, 'COLLECT', { buildingIds: [house.id] }, NOW + HOUR);
+    const collected = s.snapshot.buildings.find(b => b.id === house.id)!;
+    expect(collected.accrued).toBeLessThan(1);
+    advanceTime(s, NOW + 20 * HOUR);
+    expect(collected.accrued).toBeCloseTo(170 * 6, 6);
+  });
   it.each([[0, 6], [1, 8], [2, 10], [3, 12], [4, 14], [5, 14]])('%s connected banks give cap %s hours', (count, expected) => {
     const s = setup();
     for (let i = 0; i < count; i++) building(s, 'bank', [52 + i * 4, 67]);

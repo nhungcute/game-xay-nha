@@ -2,24 +2,24 @@
 
 Questions do not authorize new gameplay or changes to docs/00–16.
 
-## Q001 — Accrued money after capacity/rate decreases
+## Q001 — Accrued money after capacity/rate decreases — RESOLVED (D020)
 
 docs/16 §6.4 clamps previously earned money to the new rate-dependent cap, which can delete
 money after road disconnection. Current code follows that exact formula (D013). Confirm whether
 this behavior is intended; retention would require an approved design change, not silent tuning.
 
-## Q002 — Farm support demolition
+## Q002 — Farm support demolition — RESOLVED (D020)
 
 docs/15 does not say what happens if farmhouse/silo demolition lowers quota/storage below current
 usage or a production building contains prepaid queues. A conservative reject policy will be
 documented rather than inventing automatic crop/product destruction. Product review at gate.
 
-## Q003 — Template shore constraint
+## Q003 — Template shore constraint — RESOLVED (D020)
 
 docs/06 §4 is contradictory for shared shore vertices. D002 follows higher-priority docs/15 and
 the existing rasterization procedure docs/07; please confirm this reading at gate review.
 
-## Q004 — Future deadlines and speed-up discrepancy
+## Q004 — Future deadlines and speed-up discrepancy — RESOLVED (D020)
 
 Review D003/D004. Catalog deadlines may exceed five minutes; speed-up uses docs/16's 50%.
 No source design document or model parameter was changed.

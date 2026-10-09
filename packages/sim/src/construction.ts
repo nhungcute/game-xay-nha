@@ -153,12 +153,12 @@ function requireDemolitionSafe(s: SimState, object: PlacedBuilding): void {
   const def = catalog.buildings[object.defId]!;
   const after = { ...s, snapshot: { ...s.snapshot, buildings: s.snapshot.buildings.filter(other => other.id !== object.id) } };
   if (def.fieldQuota) {
-    guard(s.surface.reduce((sum, surface) => sum + Number(surface === Surface.TILLED), 0) <= fieldQuota(after), 'LIMIT_REACHED');
+    guard(s.surface.reduce((sum, surface) => sum + Number(surface === Surface.TILLED), 0) <= fieldQuota(after), 'FIELD_LIMIT');
   }
   if (def.storageBonus) {
     guard(inventoryCount(s) <= storageCapacity(after), 'STORAGE_FULL');
   }
-  guard(!object.slots?.some(queue => queue.length > 0), 'CANNOT_DEMOLISH_SUPPORT');
+  guard(!object.slots?.some(queue => queue.length > 0), 'PRODUCTION_ACTIVE');
 }
 
 function remove(s: SimState, object: ConstructionObject, fraction: number): void {

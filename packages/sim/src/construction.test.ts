@@ -191,7 +191,7 @@ describe('construction lifecycle and refunds', () => {
   it('guards demolition of farmhouse supporting existing fields', () => {
     const s = setup(), b = place(s); completeConstruction(s, b);
     s.surface[cellIndex(72, 54)] = Surface.TILLED;
-    rejects(s, command('DEMOLISH', { buildingId: b.id }), 'LIMIT_REACHED');
+    rejects(s, command('DEMOLISH', { buildingId: b.id }), 'FIELD_LIMIT');
   });
   it('guards demolition of silo holding excess inventory', () => {
     const s = setup(), b = place(s, 'silo'); completeConstruction(s, b);
@@ -201,7 +201,12 @@ describe('construction lifecycle and refunds', () => {
   it('guards demolition of production with queued ingredients', () => {
     const s = setup(), b = place(s, 'rice_mill'); completeConstruction(s, b);
     b.slots![0]!.push({ recipeId: 'rice_mill', startedAt: NOW, readyAt: NOW + 900_000 });
-    rejects(s, command('DEMOLISH', { buildingId: b.id }), 'CANNOT_DEMOLISH_SUPPORT');
+    rejects(s, command('DEMOLISH', { buildingId: b.id }), 'PRODUCTION_ACTIVE');
+  });
+  it('guards demolition of production holding a finished but uncollected product', () => {
+    const s = setup(), b = place(s, 'rice_mill'); completeConstruction(s, b);
+    b.slots![0]!.push({ recipeId: 'rice_mill', startedAt: NOW - 1_800_000, readyAt: NOW - 900_000 });
+    rejects(s, command('DEMOLISH', { buildingId: b.id }), 'PRODUCTION_ACTIVE');
   });
 });
 
