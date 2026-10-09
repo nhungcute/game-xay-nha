@@ -1,0 +1,5 @@
+{
+  "name": "@xay-nha/sim", "version": "0.1.0", "private": true, "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": { "@xay-nha/contracts": "workspace:*", "@xay-nha/content": "workspace:*" }
+}
