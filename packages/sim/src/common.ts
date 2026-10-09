@@ -55,7 +55,17 @@ export function event(s: SimState, action: string, kind: string, count = 1): voi
   if (q?.action === action && (q.kind === kind || q.buildingId === kind || q.cropId === kind)) {
     s.snapshot.progress.questProgress[q.id] = (s.snapshot.progress.questProgress[q.id] ?? 0) + count;
   }
+  // Repeat quests (docs/16 §10.3): same events, matched by template action + subject/kind.
+  for (const r of s.snapshot.progress.repeat?.active ?? []) {
+    const spec = REPEAT_ACTIONS[r.template];
+    if (!spec || spec[0] !== action || (r.subject ? r.subject !== kind : spec[1] !== kind)) continue;
+    r.progress = Math.min(r.target, r.progress + count);
+  }
 }
+const REPEAT_ACTIONS: Record<string, [string, string?]> = {
+  collect_cash: ['COLLECT', 'cash'], build_type: ['BUILD'], road_cells: ['ROAD', 'cells'], embank_cells: ['EMBANK', 'cells'], population: ['POPULATION'],
+  harvest_crop: ['HARVEST'], sell_item: ['SELL'], produce_item: ['PRODUCE'], till_cells: ['TILL', 'cells'],
+};
 
 export function isFarBank(s: SimState, cells: Cell[]): boolean {
   if (!cells.length) return false;

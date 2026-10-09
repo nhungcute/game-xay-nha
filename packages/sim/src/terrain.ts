@@ -86,7 +86,7 @@ export function terrain(s: SimState, cmd: Command): Cost | undefined {
       s.surface[i] = Surface.ROAD; s.roadTier[i] = cmd.payload.tier; changed.push(c);
     }
     for (const c of changed) guard(roadValid(s,c),'TOO_STEEP');
-    pay(s,cost,true); return cost;
+    pay(s,cost,true); if (changed.length) event(s,'ROAD','cells',changed.length); return cost;
   }
   if (cmd.type === 'REMOVE_ROAD') {
     for (const c of cmd.payload.cells) {

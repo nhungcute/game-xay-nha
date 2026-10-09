@@ -6,11 +6,12 @@ import { farm } from './farm';
 import { terrain } from './terrain';
 import { advanceTime, populationAndJobs, recompute } from './economy';
 import { access } from './roads';
+import { claimRepeat, ensureRepeatQuests, rerollRepeat } from './quests';
 import { cloneState, rebuildOccupancy, writeDeltas, type SimState } from './state';
 
 export interface Execution { state: SimState; result: CommandResult; cost: Cost; dirtyZones: number[] }
 
-function administrative(s: SimState, cmd: Command): Cost | undefined {
+function administrative(s: SimState, cmd: Command, now: number): Cost | undefined {
   if (cmd.type === 'CLEAR_ENV') {
     let cost = zeroCost(), reward = zeroCost(), area = 0;
     const cleared: {id:string;kind:string}[] = [];
@@ -65,10 +66,12 @@ function administrative(s: SimState, cmd: Command): Cost | undefined {
       const amount=Math.floor(b.accrued ?? 0); b.accrued=(b.accrued ?? 0)-amount; collected+=amount;
     }
     s.snapshot.wallet.cash+=collected; cashXp(s,collected,'collect');
-    if (collected) event(s,'COLLECT','first_collection');
+    if (collected) { event(s,'COLLECT','first_collection'); event(s,'COLLECT','cash',collected); }
     return zeroCost();
   }
+  if (cmd.type === 'REROLL_QUEST') return rerollRepeat(s,cmd.payload.questId,now);
   if (cmd.type === 'CLAIM_QUEST') {
+    const repeat=claimRepeat(s,cmd.payload.questId); if (repeat) return repeat;
     const p=s.snapshot.progress, q=catalog.quests[s.template.mapKind][p.questIndex];
     guard(q?.id===cmd.payload.questId,'NOT_FOUND');
     let progress=p.questProgress[q.id] ?? 0;
@@ -77,6 +80,7 @@ function administrative(s: SimState, cmd: Command): Cost | undefined {
     guard(progress>=q.target,'QUEST_NOT_READY');
     refund(s,q.reward); addXp(s,q.xp); p.questIndex++;
     if (p.questIndex >= economy.construction.tutorialInstantThroughQuest) p.tutorialDone=true;
+    ensureRepeatQuests(s);
     return zeroCost();
   }
   return undefined;
@@ -84,7 +88,7 @@ function administrative(s: SimState, cmd: Command): Cost | undefined {
 
 function applyDraft(s: SimState, cmd: Command, now: number): Cost {
   advanceTime(s,now);
-  const cost = terrain(s,cmd) ?? construction(s,cmd,now) ?? farm(s,cmd,now) ?? administrative(s,cmd);
+  const cost = terrain(s,cmd) ?? construction(s,cmd,now) ?? farm(s,cmd,now) ?? administrative(s,cmd,now);
   guard(cost!==undefined,'INVALID_COMMAND');
   guard(rebuildOccupancy(s).length===0,'OCCUPIED'); recompute(s);
   if (cmd.type==='BUILD_ROAD') {

@@ -109,7 +109,7 @@ export function farm(s: SimState, cmd: Command, now: number): Cost | undefined {
         guard(def !== undefined, 'NOT_FOUND');
         if (remaining < def.yield) continue;
         putItem(s, def.itemId, def.yield);
-        remaining -= def.yield; xp += def.xp; harvested++;
+        remaining -= def.yield; xp += def.xp; harvested++; event(s, 'HARVEST', def.id, 1);
         remove.add(index); s.occupancy.delete(cellIndex(...cell));
       }
       guard(harvested > 0, ripe ? 'STORAGE_FULL' : 'INVALID_COMMAND');
@@ -176,6 +176,7 @@ export function farm(s: SimState, cmd: Command, now: number): Cost | undefined {
       for (const [id, count] of Object.entries(cmd.payload.items)) s.snapshot.inventory[id]! -= count;
       s.snapshot.wallet.cash += revenue;
       event(s, 'SELL', 'farm_items', sold);
+      for (const [id, count] of Object.entries(cmd.payload.items)) event(s, 'SELL', id, count);
       return result;
     }
     default: return undefined;

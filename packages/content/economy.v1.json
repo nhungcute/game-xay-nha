@@ -243,8 +243,50 @@
     "farmGrowSeconds": 20
   },
   "repeatQuests": {
-    "defined": false,
-    "rewardIncomeMinutes": 15
+    "defined": true,
+    "rewardIncomeMinutes": 15,
+    "slots": 3,
+    "rerollHours": 4,
+    "rewardShare": 0.25,
+    "rewardRound": 10,
+    "rewardMin": 100,
+    "farmIncomeFactor": 0.5,
+    "xpMultiplier": 2,
+    "sizing": {
+      "buildCount": [
+        1,
+        3
+      ],
+      "roadCells": [
+        8,
+        24
+      ],
+      "embankCells": [
+        4,
+        10
+      ],
+      "populationStep": [
+        10,
+        30
+      ],
+      "harvestQuotaShare": [
+        0.5,
+        1
+      ],
+      "harvestMaxGrowMinutes": 60,
+      "sellUnits": [
+        10,
+        40
+      ],
+      "produceUnits": [
+        3,
+        12
+      ],
+      "tillCells": [
+        6,
+        24
+      ]
+    }
   },
   "catalog": {
     "contentVersion": 1,

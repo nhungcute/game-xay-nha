@@ -83,10 +83,10 @@ describe('docs/16 generated economy content', () => {
       }
     }
   });
-  it('ships every named starter quest and no unspecified random rules', () => {
+  it('ships every named starter quest and the approved repeat-quest constants (docs/16 §10.3, D024)', () => {
     expect(quests.city).toHaveLength(12);
     expect(quests.farm).toHaveLength(12);
-    expect(economy.repeatQuests.defined).toBe(false);
+    expect(economy.repeatQuests).toMatchObject({ defined: true, slots: 3, rerollHours: 4, rewardShare: 0.25, rewardRound: 10, rewardMin: 100, farmIncomeFactor: 0.5, xpMultiplier: 2 });
     expect(quests.city[9]?.reward).toEqual({ cash: 300, wood: 0, stone: 10 });
     expect(quests.city[0]?.xp).toBe(20);
     expect(quests.farm[2]?.xp).toBe(10);

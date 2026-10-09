@@ -13,6 +13,7 @@ import { EnvRenderer } from './render/EnvRenderer';
 import { BuildingRenderer } from './render/BuildingRenderer';
 import { CropRenderer } from './render/CropRenderer';
 import { GhostRenderer } from './render/GhostRenderer';
+import { CoinRenderer } from './render/CoinRenderer';
 import { WorldStore } from './WorldStore';
 import { ToolController, useTools } from './ToolController';
 import { CameraRig } from './CameraRig';
@@ -30,6 +31,7 @@ export class GameLoop {
   private readonly buildings:BuildingRenderer;
   private readonly crops:CropRenderer;
   private readonly ghost:GhostRenderer;
+  private readonly coins:CoinRenderer;
   private readonly assets:AssetManager;
   private readonly renderers:{update: (state:WorldStore['state'])=>void;dispose:()=>void}[];
   private readonly sun=new DirectionalLight('#fff0d5',2.1);
@@ -50,18 +52,18 @@ export class GameLoop {
     this.terrain=new TerrainRenderer(this.scene);this.terrain.update(world.state);
     this.water=new WaterRenderer(this.scene);this.water.update(world.state);
     this.overlay=new OverlayRenderer(this.scene);this.overlay.update(world.state);
-    this.buildings=new BuildingRenderer(this.scene,assets);this.crops=new CropRenderer(this.scene,assets);this.ghost=new GhostRenderer(this.scene,assets);
-    this.renderers=[new RoadRenderer(this.scene),new EmbankRenderer(this.scene),new BridgeRenderer(this.scene),new EnvRenderer(this.scene,assets),this.buildings,this.crops];
+    this.buildings=new BuildingRenderer(this.scene,assets);this.crops=new CropRenderer(this.scene,assets);this.ghost=new GhostRenderer(this.scene,assets);this.coins=new CoinRenderer(this.scene);
+    this.renderers=[new RoadRenderer(this.scene),new EmbankRenderer(this.scene),new BridgeRenderer(this.scene),new EnvRenderer(this.scene,assets),this.buildings,this.crops,this.coins];
     for(const renderer of this.renderers)renderer.update(world.state);
     this.rig=new CameraRig(world.state,(x,z)=>this.terrain.sampleHeight(x,z));this.tools=new ToolController(world);
     this.pointer=new PointerRouter(canvas,this.rig,this.tools,this.terrain.meshes);
-    this.subscriptions.push(world.subscribe((state,dirty,entitiesChanged)=>{this.rig.setState(state);if(dirty.length){this.terrain.update(state,dirty);this.overlay.update(state);}if(entitiesChanged)for(const renderer of this.renderers)renderer.update(state);else this.crops.update(state);}),useTools.subscribe(ui=>{const p=ui.preview;const status=p?.valid?(p.warning?'warning':'valid'):'invalid';if(p)this.overlay.preview(p.cells,world.state,status);else this.overlay.hide();if(p&&ui.tool==='build'&&ui.cell)this.ghost.preview(ui.buildingId,ui.cell,ui.rotation,world.state,status);else this.ghost.hide();}));
+    this.subscriptions.push(world.subscribe((state,dirty,entitiesChanged)=>{this.rig.setState(state);if(dirty.length){this.terrain.update(state,dirty);this.overlay.update(state);}if(entitiesChanged)for(const renderer of this.renderers)renderer.update(state);else {this.crops.update(state);this.coins.update(state);}}),useTools.subscribe(ui=>{const p=ui.preview;const status=p?.valid?(p.warning?'warning':'valid'):'invalid';if(p)this.overlay.preview(p.cells,world.state,status);else this.overlay.hide();if(p&&ui.tool==='build'&&ui.cell)this.ghost.preview(ui.buildingId,ui.cell,ui.rotation,world.state,status);else this.ghost.hide();}));
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.resize();this.frameId=requestAnimationFrame(this.frame);
     if(new URLSearchParams(location.search).get('debug')==='1')this.installDebug();
   }
   private resize():void {const rect=this.canvas.getBoundingClientRect();this.renderer.setSize(rect.width,rect.height,false);this.rig.resize(rect.width,rect.height);}
   private frame=(now:number):void=>{
-    const dt=Math.min((now-this.last)/1000,.1);this.last=now;this.pointer.update(dt);this.terrain.animate(dt);this.water.animate(dt);
+    const dt=Math.min((now-this.last)/1000,.1);this.last=now;this.pointer.update(dt);this.terrain.animate(dt);this.water.animate(dt);this.coins.animate(dt);
     this.sun.target.position.copy(this.rig.target);this.sun.position.copy(this.rig.target).add(new Vector3(-50,90,40));
     this.renderer.render(this.scene,this.rig.camera);this.frameCount++;
     if(now-this.second>=1000){this.fps=this.frameCount*1000/(now-this.second);this.second=now;this.frameCount=0;this.world.tick();}

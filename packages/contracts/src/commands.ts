@@ -61,6 +61,7 @@ export const CommandSchema = z.discriminatedUnion('type', [
     .refine(payload => payload.wood !== undefined || payload.stone !== undefined, 'At least one material required')),
   command('UNLOCK_ZONE', z.object({ zoneId: IntegerSchema.max(63) }).strict()),
   command('CLAIM_QUEST', z.object({ questId: IdSchema }).strict()),
+  command('REROLL_QUEST', z.object({ questId: IdSchema }).strict()),
 ]);
 
 export type Command = z.infer<typeof CommandSchema>;

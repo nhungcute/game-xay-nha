@@ -172,7 +172,14 @@ const economy = {
     unlockEvery: capture(/floor\(k \/ (\d+)\)/), unlockMax: capture(/min\((\d+), 2 \+ floor\(k/),
     waterThreshold: capture(/Khu có > (\d+)%/) / 100, waterPriceMultiplier: capture(/diện tích là nước: giá × ([\d,]+)/) },
   tutorial: { cityIncomeMultiplier: capture(/tích lũy tăng tốc (\d+)×/, questsSource), farmGrowSeconds: capture(/chín sau (\d+) giây/, questsSource) },
-  repeatQuests: { defined: false, rewardIncomeMinutes: capture(/thưởng ≈ (\d+) phút/, questsSource) },
+  // docs/16 §10.3 (D017) constants are parsed from the doc; target sizing ranges are D024 (30–60 min of play).
+  repeatQuests: { defined: true, rewardIncomeMinutes: capture(/thưởng ≈ (\d+) phút/, questsSource),
+    slots: capture(/có \*\*(\d+) nhiệm vụ lặp đang hoạt động/), rerollHours: capture(/mỗi (\d+) giờ\*\*/),
+    rewardShare: capture(/Tiền thưởng = \*\*(\d+)%/) / 100, rewardRound: capture(/làm tròn tới \*\*\$(\d+)\*\*/),
+    rewardMin: capture(/tối thiểu \*\*\$(\d+)\*\*/), farmIncomeFactor: capture(/có lãi cao nhất × \*\*([\d,]+)\*\*/),
+    xpMultiplier: capture(/XP thưởng = `round\((\d+) × √tiền_thưởng\)`/),
+    sizing: { buildCount: [1, 3], roadCells: [8, 24], embankCells: [4, 10], populationStep: [10, 30],
+      harvestQuotaShare: [0.5, 1.0], harvestMaxGrowMinutes: 60, sellUnits: [10, 40], produceUnits: [3, 12], tillCells: [6, 24] } },
 };
 
 // Quest predicates transcribe §10; no random quest pool is invented.
@@ -211,7 +218,7 @@ const quests = Object.fromEntries(Object.entries(questRules).map(([mapKind, rule
   return [mapKind, rules.map((rule, index) => {
     const row = findRow(table, String(index + 1));
     const id = `${mapKind}-${index + 1}`;
-    return { id, nameKey: name('quest', id, row[1]), ...rule, reward: cost(row[2].replaceAll(',', '+')),
+    return { id, nameKey: name('quest', id, row[1].replace(/\s*\((?:tutorial:[^)]*|hoàn thành ngay)\)/g, '').trim()), ...rule, reward: cost(row[2].replaceAll(',', '+')),
       xp: /XP/.test(row[2]) ? capture(/(\d+) XP/, row[2]) : 0, tutorial: index < economy.construction.tutorialInstantThroughQuest };
   })];
 }));

@@ -21,3 +21,7 @@
 .code{font-family:ui-monospace,Consolas,monospace;font-size:26px;letter-spacing:3px;text-align:center;padding:14px;border-radius:12px;background:#203d30;color:#f6efcf;margin:0}
 button.link{background:none;border:none;color:#2f6249;text-decoration:underline;align-self:flex-start;padding:4px 0;min-height:auto}
 button.wide{width:100%}
+.quest.repeat{gap:8px}.repeat-quest{display:flex;flex-direction:column;gap:4px;padding:6px 0;border-top:1px solid #e1e6d4}.repeat-quest .row button{flex:1;min-height:32px;padding:4px 8px}
+.tutor{background:#fff7d6;border:1px solid #e8d48b;border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.45}.tutor .link{display:block;font-size:11px;margin-top:4px}
+.tools button.hint{animation:hint-pulse 1.2s ease-in-out infinite;background:#fff1b8}@keyframes hint-pulse{0%,100%{box-shadow:0 0 0 0 #e7b92f}50%{box-shadow:0 0 0 6px #e7b92f55}}
+.brand{cursor:pointer}.profile p{margin:4px 0;font-size:12px}.profile table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}.profile td{padding:4px 0;border-bottom:1px solid #e1e6d4}.profile td:last-child{text-align:right}.profile tr.total td{font-weight:700;border-bottom:0}

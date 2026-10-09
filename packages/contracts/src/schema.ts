@@ -134,9 +134,19 @@ export const PlacedBridgeSchema = z.object({
 }).strict();
 
 export const PlantedCropSchema = z.object({ cell: CellSchema, cropId: IdSchema, plantedAt: TimestampSchema, readyAt: TimestampSchema }).strict();
+/** docs/16 §10.3 — repeat quests after the 12 authored ones (D017, D024). */
+export const RepeatQuestSchema = z.object({
+  id: IdSchema, template: z.enum(['collect_cash', 'build_type', 'road_cells', 'embank_cells', 'population', 'harvest_crop', 'sell_item', 'produce_item', 'till_cells']),
+  subject: IdSchema.optional(), target: IntegerSchema.min(1), progress: IntegerSchema,
+  reward: z.object({ cash: IntegerSchema, wood: IntegerSchema, stone: IntegerSchema }).strict(), xp: IntegerSchema,
+}).strict();
+export const RepeatStateSchema = z.object({
+  seq: IntegerSchema, rerollAt: IntegerSchema, last: IdSchema.optional(), active: z.array(RepeatQuestSchema).max(3),
+}).strict();
 export const ProgressSchema = z.object({
   xp: IntegerSchema, level: IntegerSchema.min(1).max(20), questIndex: IntegerSchema,
   questProgress: z.record(IdSchema, IntegerSchema), tutorialDone: z.boolean(),
+  repeat: RepeatStateSchema.optional(),
 }).strict();
 
 export const WorldSnapshotSchema = z.object({
@@ -158,6 +168,8 @@ export const WorldSnapshotSchema = z.object({
 }).strict();
 
 export type EnvInstance = z.infer<typeof EnvInstanceSchema>;
+export type RepeatQuest = z.infer<typeof RepeatQuestSchema>;
+export type RepeatState = z.infer<typeof RepeatStateSchema>;
 export type EnvSpec = z.infer<typeof EnvSpecSchema>;
 export type WorldTemplate = z.infer<typeof WorldTemplateSchema>;
 export type ZoneDelta = z.infer<typeof ZoneDeltaSchema>;
