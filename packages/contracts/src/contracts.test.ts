@@ -131,6 +131,24 @@ describe('template and snapshot schemas', () => {
     expect(WorldTemplateSchema.safeParse({ ...raw, layers: { ...raw.layers, surface: raw.layers.surface + 'AAAA' } }).success).toBe(false);
     expect(WorldTemplateSchema.safeParse({ ...raw, layers: { ...raw.layers, surface: raw.layers.surface.slice(0, -4) + 'AB==' } }).success).toBe(false);
   });
+  it('base64 codec round-trips every length and rejects noncanonical padding bits directly', () => {
+    for (let n = 0; n < 40; n++) {
+      const bytes = Uint8Array.from({ length: n }, (_, i) => (i * 97 + n * 13) & 255);
+      const text = encodeUint8(bytes);
+      expect(text).toBe(Buffer.from(bytes).toString('base64'));
+      expect([...decodeUint8(text, n)]).toEqual([...bytes]);
+    }
+    expect([...decodeUint8('AA==')]).toEqual([0]);
+    expect(() => decodeUint8('AB==')).toThrow('Noncanonical');
+    expect(() => decodeUint8('AAB=')).toThrow('Noncanonical');
+    expect(() => decodeUint8('AAA=')).not.toThrow();
+    expect(() => decodeUint8('A===')).toThrow('Invalid');
+    expect(() => decodeUint8('AA=A')).toThrow('Invalid');
+    const big = new Uint8Array(200_000).map((_, i) => i * 31);
+    expect(decodeUint8(encodeUint8(big))).toEqual(big);
+    const ints = Int16Array.from([-32768, -1, 0, 1, 32767, 1234]);
+    expect([...decodeInt16(encodeInt16(ints), 6)]).toEqual([...ints]);
+  });
   it('rejects rivers with mismatched point/width arrays', () => {
     const raw = template();
     const river = { id: 'r1', centerlineXZ: [[1, 1], [2, 2], [3, 3]], widthM: [1, 1] };
