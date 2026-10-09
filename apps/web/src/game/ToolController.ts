@@ -9,6 +9,16 @@ export type Tool='explore'|'clear'|'terraform'|'till'|'road'|'embank'|'bridge'|'
 interface ToolState {tool:Tool;mode:'RAISE'|'LOWER'|'FLATTEN';remove:boolean;tier:1|2|3;bridgeId:string;buildingId:string;cropId:string;rotation:Rotation;selection:string|null;preview:ToolPreview|null;cell:Cell|null;autoFlatten:boolean}
 export const useTools=create<ToolState>(()=>({tool:'explore',mode:'FLATTEN',remove:false,tier:1,bridgeId:'bridge_wood',buildingId:'farmhouse',cropId:'veg_greens',rotation:0,selection:null,preview:null,cell:null,autoFlatten:false}));
 
+/**
+ * Auto-flatten target for a footprint: flush with an adjacent road when there is one (so flattening
+ * never tilts the road: AFFECTS_NEIGHBOR), otherwise the footprint's mean height, in 0.5 m steps.
+ */
+export function flattenTarget(s:WorldStore['state'],cells:Cell[]):number{
+  const inside=new Set(cells.map(c=>cellIndex(...c))),road:number[]=[];
+  for(const [x,z] of cells)for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]] as const){const n:Cell=[x+dx,z+dz];if(inBounds(n)&&!inside.has(cellIndex(...n))&&s.roadTier[cellIndex(...n)])road.push(meanHeight(s,n));}
+  const source=road.length?road:cells.map(c=>meanHeight(s,c));
+  return Math.round(source.reduce((a,b)=>a+b,0)/source.length/5)*5;
+}
 export class ToolController {
   private start:Cell|null=null;
   private bridgeStart:Cell|null=null;
@@ -59,7 +69,7 @@ export class ToolController {
       case 'road':type=ui.remove?'REMOVE_ROAD':'BUILD_ROAD';cells=this.path.length?this.path:[cell];payload=ui.remove?{cells}:{cells,tier:ui.tier};break;
       case 'embank':type=ui.remove?'REMOVE_EMBANK':'EMBANK';payload={cells};break;
       case 'bridge': {if(ui.remove){type='REMOVE_BRIDGE';payload={bridgeId:s.occupancy.get(cellIndex(...cell))};}else if(this.bridgeStart){type='BUILD_BRIDGE';payload={typeId:ui.bridgeId,a:this.bridgeStart,b:cell};}break;}
-      case 'build': {const def=catalog.buildings[ui.buildingId]!;cells=footprintCells(def,cell,ui.rotation);type='PLACE_BUILDING';payload={defId:def.id,anchor:cell,rotation:ui.rotation,...(ui.autoFlatten?{autoFlattenHDm:Math.round(meanHeight(s,cell)/5)*5}:{})};warning=ui.autoFlatten;break;}
+      case 'build': {const def=catalog.buildings[ui.buildingId]!;cells=footprintCells(def,cell,ui.rotation);type='PLACE_BUILDING';payload={defId:def.id,anchor:cell,rotation:ui.rotation,...(ui.autoFlatten?{autoFlattenHDm:flattenTarget(s,cells)}:{})};warning=ui.autoFlatten;break;}
       case 'plant':type='PLANT';payload={rect,cropId:ui.cropId};break;
       case 'harvest':type='HARVEST';payload={cells};break;
       case 'demolish': {const id=buildingAtCell(s,...cell);type=id?'DEMOLISH':'REMOVE_BRIDGE';payload=id?{buildingId:id}:{bridgeId:s.occupancy.get(cellIndex(...cell))};break;}

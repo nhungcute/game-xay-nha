@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 export interface Config {
   databaseUrl: string; port: number; host: string; tokenPepper: string; logLevel: string;
-  worldsDir: string; migrationsDir: string; trustProxy: boolean;
+  worldsDir: string; migrationsDir: string; trustProxy: boolean; accountsPerHour: number;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
@@ -17,5 +17,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     worldsDir: env.WORLDS_DIR ?? resolve(here, '../../web/public/worlds'),
     migrationsDir: env.MIGRATIONS_DIR ?? resolve(here, '../migrations'),
     trustProxy: env.TRUST_PROXY !== '0',
+    // docs/11 §4.2: 5 new accounts per hour per IP; raise only for local testing (ACCOUNTS_PER_HOUR).
+    accountsPerHour: Number(env.ACCOUNTS_PER_HOUR ?? 5),
   };
 }
