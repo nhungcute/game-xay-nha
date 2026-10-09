@@ -1,0 +1,1866 @@
+{
+  "version": 1,
+  "placeholder": true,
+  "assets": [
+    {
+      "id": "tree_deciduous_01",
+      "file": "models/tree_deciduous_01.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.9910657546926611,
+          0,
+          -1.0724207034000062
+        ],
+        "max": [
+          1.1,
+          4.095,
+          1.0724207034000062
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "tree_deciduous_02",
+      "file": "models/tree_deciduous_02.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -1.0541335754458305,
+          0,
+          -1.1406656572527338
+        ],
+        "max": [
+          1.1700000000000002,
+          4.563,
+          1.1406656572527338
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "tree_deciduous_03",
+      "file": "models/tree_deciduous_03.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -1.117201396199,
+          0,
+          -1.2089106111054615
+        ],
+        "max": [
+          1.2400000000000002,
+          5.031,
+          1.2089106111054615
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "tree_deciduous_04",
+      "file": "models/tree_deciduous_04.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -1.1802692169521691,
+          0,
+          -1.277155564958189
+        ],
+        "max": [
+          1.31,
+          5.4990000000000006,
+          1.277155564958189
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "tree_conifer_01",
+      "file": "models/tree_conifer_01.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.9910657546926611,
+          0,
+          -1.0724207034000062
+        ],
+        "max": [
+          1.1,
+          4.525,
+          1.0724207034000062
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "tree_conifer_02",
+      "file": "models/tree_conifer_02.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.9910657546926611,
+          0,
+          -1.0724207034000062
+        ],
+        "max": [
+          1.1,
+          4.745,
+          1.0724207034000062
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "tree_conifer_03",
+      "file": "models/tree_conifer_03.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.9910657546926611,
+          0,
+          -1.0724207034000062
+        ],
+        "max": [
+          1.1,
+          4.965,
+          1.0724207034000062
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "tree_conifer_04",
+      "file": "models/tree_conifer_04.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.9910657546926611,
+          0,
+          -1.0724207034000062
+        ],
+        "max": [
+          1.1,
+          5.1850000000000005,
+          1.0724207034000062
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "bush_01",
+      "file": "models/bush_01.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.6757266509268144,
+          0,
+          -0.7311959341363677
+        ],
+        "max": [
+          0.75,
+          1,
+          0.7311959341363677
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "bush_02",
+      "file": "models/bush_02.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.6757266509268144,
+          0,
+          -0.7311959341363677
+        ],
+        "max": [
+          0.75,
+          1,
+          0.7311959341363677
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "bush_03",
+      "file": "models/bush_03.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.6757266509268144,
+          0,
+          -0.7311959341363677
+        ],
+        "max": [
+          0.75,
+          1,
+          0.7311959341363677
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "bush_04",
+      "file": "models/bush_04.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.6757266509268144,
+          0,
+          -0.7311959341363677
+        ],
+        "max": [
+          0.75,
+          1,
+          0.7311959341363677
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "rock_01",
+      "file": "models/rock_01.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.72,
+          0,
+          -0.6235382907247957
+        ],
+        "max": [
+          0.72,
+          0.95,
+          0.6235382907247958
+        ]
+      },
+      "triangles": 48
+    },
+    {
+      "id": "rock_02",
+      "file": "models/rock_02.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.72,
+          0,
+          -0.6235382907247957
+        ],
+        "max": [
+          0.72,
+          1.08,
+          0.6235382907247958
+        ]
+      },
+      "triangles": 48
+    },
+    {
+      "id": "rock_03",
+      "file": "models/rock_03.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.72,
+          0,
+          -0.6235382907247957
+        ],
+        "max": [
+          0.72,
+          1.21,
+          0.6235382907247958
+        ]
+      },
+      "triangles": 48
+    },
+    {
+      "id": "rock_04",
+      "file": "models/rock_04.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.72,
+          0,
+          -0.6235382907247957
+        ],
+        "max": [
+          0.72,
+          1.34,
+          0.6235382907247958
+        ]
+      },
+      "triangles": 48
+    },
+    {
+      "id": "rock_large_01",
+      "file": "models/rock_large_01.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -1.55,
+          0,
+          -1.34233937586588
+        ],
+        "max": [
+          1.55,
+          0.95,
+          1.34233937586588
+        ]
+      },
+      "triangles": 48
+    },
+    {
+      "id": "rock_large_02",
+      "file": "models/rock_large_02.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -1.55,
+          0,
+          -1.34233937586588
+        ],
+        "max": [
+          1.55,
+          1.08,
+          1.34233937586588
+        ]
+      },
+      "triangles": 48
+    },
+    {
+      "id": "reed_01",
+      "file": "models/reed_01.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.31,
+          0,
+          -0.07
+        ],
+        "max": [
+          0.31,
+          1.4,
+          0.29000000000000004
+        ]
+      },
+      "triangles": 24
+    },
+    {
+      "id": "reed_02",
+      "file": "models/reed_02.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.31,
+          0,
+          -0.07
+        ],
+        "max": [
+          0.31,
+          1.4,
+          0.29000000000000004
+        ]
+      },
+      "triangles": 24
+    },
+    {
+      "id": "reed_03",
+      "file": "models/reed_03.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.31,
+          0,
+          -0.07
+        ],
+        "max": [
+          0.31,
+          1.4,
+          0.29000000000000004
+        ]
+      },
+      "triangles": 24
+    },
+    {
+      "id": "flower_01",
+      "file": "models/flower_01.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.3613525491562421,
+          0,
+          -0.14265847744427304
+        ],
+        "max": [
+          0.39,
+          0.42,
+          0.36265847744427304
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "flower_02",
+      "file": "models/flower_02.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.3613525491562421,
+          0,
+          -0.14265847744427304
+        ],
+        "max": [
+          0.39,
+          0.42,
+          0.36265847744427304
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "flower_03",
+      "file": "models/flower_03.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.3613525491562421,
+          0,
+          -0.14265847744427304
+        ],
+        "max": [
+          0.39,
+          0.42,
+          0.36265847744427304
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "flower_04",
+      "file": "models/flower_04.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.3613525491562421,
+          0,
+          -0.14265847744427304
+        ],
+        "max": [
+          0.39,
+          0.42,
+          0.36265847744427304
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "grass_tuft_01",
+      "file": "models/grass_tuft_01.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.31,
+          0,
+          -0.07
+        ],
+        "max": [
+          0.31,
+          0.35,
+          0.29000000000000004
+        ]
+      },
+      "triangles": 24
+    },
+    {
+      "id": "grass_tuft_02",
+      "file": "models/grass_tuft_02.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.31,
+          0,
+          -0.07
+        ],
+        "max": [
+          0.31,
+          0.35,
+          0.29000000000000004
+        ]
+      },
+      "triangles": 24
+    },
+    {
+      "id": "grass_tuft_03",
+      "file": "models/grass_tuft_03.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "environment",
+      "bounds": {
+        "min": [
+          -0.31,
+          0,
+          -0.07
+        ],
+        "max": [
+          0.31,
+          0.35,
+          0.29000000000000004
+        ]
+      },
+      "triangles": 24
+    },
+    {
+      "id": "house_small",
+      "file": "models/house_small.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        2,
+        2
+      ],
+      "bounds": {
+        "min": [
+          -1.76,
+          0,
+          -1.81
+        ],
+        "max": [
+          1.76,
+          3.5,
+          1.76
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "shop_grocery",
+      "file": "models/shop_grocery.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        2,
+        2
+      ],
+      "bounds": {
+        "min": [
+          -1.76,
+          0,
+          -1.9043999999999999
+        ],
+        "max": [
+          1.76,
+          3.5,
+          1.76
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "deco_garden",
+      "file": "models/deco_garden.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        1,
+        1
+      ],
+      "bounds": {
+        "min": [
+          -0.88,
+          0,
+          -0.88
+        ],
+        "max": [
+          0.88,
+          0.62,
+          0.88
+        ]
+      },
+      "triangles": 52
+    },
+    {
+      "id": "house_town",
+      "file": "models/house_town.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        2,
+        3
+      ],
+      "bounds": {
+        "min": [
+          -1.76,
+          0,
+          -2.69
+        ],
+        "max": [
+          1.76,
+          3.5,
+          2.64
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "shop_cafe",
+      "file": "models/shop_cafe.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        2,
+        2
+      ],
+      "bounds": {
+        "min": [
+          -1.76,
+          0,
+          -1.9043999999999999
+        ],
+        "max": [
+          1.76,
+          3.5,
+          1.76
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "shop_restaurant",
+      "file": "models/shop_restaurant.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        3,
+        3
+      ],
+      "bounds": {
+        "min": [
+          -2.64,
+          0,
+          -2.7316
+        ],
+        "max": [
+          2.64,
+          3.5,
+          2.64
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "deco_park",
+      "file": "models/deco_park.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        3,
+        3
+      ],
+      "bounds": {
+        "min": [
+          -2.64,
+          0,
+          -2.64
+        ],
+        "max": [
+          2.64,
+          0.62,
+          2.64
+        ]
+      },
+      "triangles": 52
+    },
+    {
+      "id": "bank",
+      "file": "models/bank.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        3,
+        3
+      ],
+      "bounds": {
+        "min": [
+          -2.64,
+          0,
+          -2.69
+        ],
+        "max": [
+          2.64,
+          5.2,
+          2.64
+        ]
+      },
+      "triangles": 78
+    },
+    {
+      "id": "house_apartment",
+      "file": "models/house_apartment.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        4,
+        4
+      ],
+      "bounds": {
+        "min": [
+          -3.52,
+          0,
+          -3.57
+        ],
+        "max": [
+          3.52,
+          7.4,
+          3.52
+        ]
+      },
+      "triangles": 132
+    },
+    {
+      "id": "shop_supermarket",
+      "file": "models/shop_supermarket.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        4,
+        4
+      ],
+      "bounds": {
+        "min": [
+          -3.52,
+          0,
+          -3.57
+        ],
+        "max": [
+          3.52,
+          3.5,
+          3.52
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "hotel",
+      "file": "models/hotel.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        4,
+        5
+      ],
+      "bounds": {
+        "min": [
+          -3.52,
+          0,
+          -4.45
+        ],
+        "max": [
+          3.52,
+          8.4,
+          4.4
+        ]
+      },
+      "triangles": 156
+    },
+    {
+      "id": "office_tower",
+      "file": "models/office_tower.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        4,
+        4
+      ],
+      "bounds": {
+        "min": [
+          -3.52,
+          0,
+          -3.57
+        ],
+        "max": [
+          3.52,
+          12.4,
+          3.52
+        ]
+      },
+      "triangles": 204
+    },
+    {
+      "id": "market",
+      "file": "models/market.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        3,
+        3
+      ],
+      "bounds": {
+        "min": [
+          -2.64,
+          0,
+          -2.7316
+        ],
+        "max": [
+          2.64,
+          3.5,
+          2.64
+        ]
+      },
+      "triangles": 66
+    },
+    {
+      "id": "farmhouse",
+      "file": "models/farmhouse.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        3,
+        3
+      ],
+      "bounds": {
+        "min": [
+          -2.64,
+          0,
+          -2.69
+        ],
+        "max": [
+          2.64,
+          3.5,
+          2.64
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "well",
+      "file": "models/well.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        1,
+        1
+      ],
+      "bounds": {
+        "min": [
+          -0.88,
+          0,
+          -0.88
+        ],
+        "max": [
+          0.88,
+          1.95,
+          0.88
+        ]
+      },
+      "triangles": 62
+    },
+    {
+      "id": "silo",
+      "file": "models/silo.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        2,
+        2
+      ],
+      "bounds": {
+        "min": [
+          -1.4080000000000001,
+          0,
+          -1.3390875749435764
+        ],
+        "max": [
+          1.4080000000000001,
+          3.8,
+          1.3390875749435764
+        ]
+      },
+      "triangles": 60
+    },
+    {
+      "id": "chicken_coop",
+      "file": "models/chicken_coop.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        3,
+        3
+      ],
+      "bounds": {
+        "min": [
+          -2.64,
+          0,
+          -2.69
+        ],
+        "max": [
+          2.64,
+          3.5,
+          2.64
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "rice_mill",
+      "file": "models/rice_mill.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        3,
+        3
+      ],
+      "bounds": {
+        "min": [
+          -2.64,
+          0,
+          -2.7800000000000002
+        ],
+        "max": [
+          2.64,
+          5.5,
+          2.64
+        ]
+      },
+      "triangles": 78
+    },
+    {
+      "id": "cow_barn",
+      "file": "models/cow_barn.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        4,
+        4
+      ],
+      "bounds": {
+        "min": [
+          -3.52,
+          0,
+          -3.57
+        ],
+        "max": [
+          3.52,
+          3.5,
+          3.52
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "bakery",
+      "file": "models/bakery.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        3,
+        3
+      ],
+      "bounds": {
+        "min": [
+          -2.64,
+          0,
+          -2.69
+        ],
+        "max": [
+          2.64,
+          3.5,
+          2.64
+        ]
+      },
+      "triangles": 54
+    },
+    {
+      "id": "deco_flowerbed",
+      "file": "models/deco_flowerbed.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "building",
+      "footprint": [
+        1,
+        1
+      ],
+      "bounds": {
+        "min": [
+          -0.88,
+          0,
+          -0.88
+        ],
+        "max": [
+          0.88,
+          0.62,
+          0.88
+        ]
+      },
+      "triangles": 52
+    },
+    {
+      "id": "veg_greens_seed",
+      "file": "models/veg_greens_seed.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5132623792124926,
+          0,
+          -0.5331479122813215
+        ],
+        "max": [
+          0.54,
+          0.12,
+          0.5331479122813215
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "veg_greens_growing",
+      "file": "models/veg_greens_growing.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5456230589874906,
+          0,
+          -0.5711901729331277
+        ],
+        "max": [
+          0.5800000000000001,
+          0.39,
+          0.5711901729331277
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "veg_greens_ripe",
+      "file": "models/veg_greens_ripe.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5779837387624884,
+          0,
+          -0.6092324335849338
+        ],
+        "max": [
+          0.6200000000000001,
+          0.66,
+          0.6092324335849338
+        ]
+      },
+      "triangles": 88
+    },
+    {
+      "id": "rice_seed",
+      "file": "models/rice_seed.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5132623792124926,
+          0,
+          -0.5331479122813215
+        ],
+        "max": [
+          0.54,
+          0.12,
+          0.5331479122813215
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "rice_growing",
+      "file": "models/rice_growing.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5456230589874906,
+          0,
+          -0.5711901729331277
+        ],
+        "max": [
+          0.5800000000000001,
+          0.39,
+          0.5711901729331277
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "rice_ripe",
+      "file": "models/rice_ripe.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5779837387624884,
+          0,
+          -0.6092324335849338
+        ],
+        "max": [
+          0.6200000000000001,
+          0.66,
+          0.6092324335849338
+        ]
+      },
+      "triangles": 88
+    },
+    {
+      "id": "corn_seed",
+      "file": "models/corn_seed.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5132623792124926,
+          0,
+          -0.5331479122813215
+        ],
+        "max": [
+          0.54,
+          0.12,
+          0.5331479122813215
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "corn_growing",
+      "file": "models/corn_growing.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5456230589874906,
+          0,
+          -0.5711901729331277
+        ],
+        "max": [
+          0.5800000000000001,
+          0.39,
+          0.5711901729331277
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "corn_ripe",
+      "file": "models/corn_ripe.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5779837387624884,
+          0,
+          -0.6092324335849338
+        ],
+        "max": [
+          0.6200000000000001,
+          0.66,
+          0.6092324335849338
+        ]
+      },
+      "triangles": 88
+    },
+    {
+      "id": "tomato_seed",
+      "file": "models/tomato_seed.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5132623792124926,
+          0,
+          -0.5331479122813215
+        ],
+        "max": [
+          0.54,
+          0.12,
+          0.5331479122813215
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "tomato_growing",
+      "file": "models/tomato_growing.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5456230589874906,
+          0,
+          -0.5711901729331277
+        ],
+        "max": [
+          0.5800000000000001,
+          0.39,
+          0.5711901729331277
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "tomato_ripe",
+      "file": "models/tomato_ripe.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5779837387624884,
+          0,
+          -0.6092324335849338
+        ],
+        "max": [
+          0.6200000000000001,
+          0.66,
+          0.6092324335849338
+        ]
+      },
+      "triangles": 88
+    },
+    {
+      "id": "sugarcane_seed",
+      "file": "models/sugarcane_seed.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5132623792124926,
+          0,
+          -0.5331479122813215
+        ],
+        "max": [
+          0.54,
+          0.12,
+          0.5331479122813215
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "sugarcane_growing",
+      "file": "models/sugarcane_growing.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5456230589874906,
+          0,
+          -0.5711901729331277
+        ],
+        "max": [
+          0.5800000000000001,
+          0.39,
+          0.5711901729331277
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "sugarcane_ripe",
+      "file": "models/sugarcane_ripe.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5779837387624884,
+          0,
+          -0.6092324335849338
+        ],
+        "max": [
+          0.6200000000000001,
+          0.66,
+          0.6092324335849338
+        ]
+      },
+      "triangles": 88
+    },
+    {
+      "id": "watermelon_seed",
+      "file": "models/watermelon_seed.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5132623792124926,
+          0,
+          -0.5331479122813215
+        ],
+        "max": [
+          0.54,
+          0.12,
+          0.5331479122813215
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "watermelon_growing",
+      "file": "models/watermelon_growing.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5456230589874906,
+          0,
+          -0.5711901729331277
+        ],
+        "max": [
+          0.5800000000000001,
+          0.39,
+          0.5711901729331277
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "watermelon_ripe",
+      "file": "models/watermelon_ripe.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5779837387624884,
+          0,
+          -0.6092324335849338
+        ],
+        "max": [
+          0.6200000000000001,
+          0.66,
+          0.6092324335849338
+        ]
+      },
+      "triangles": 88
+    },
+    {
+      "id": "pumpkin_seed",
+      "file": "models/pumpkin_seed.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5132623792124926,
+          0,
+          -0.5331479122813215
+        ],
+        "max": [
+          0.54,
+          0.12,
+          0.5331479122813215
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "pumpkin_growing",
+      "file": "models/pumpkin_growing.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5456230589874906,
+          0,
+          -0.5711901729331277
+        ],
+        "max": [
+          0.5800000000000001,
+          0.39,
+          0.5711901729331277
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "pumpkin_ripe",
+      "file": "models/pumpkin_ripe.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5779837387624884,
+          0,
+          -0.6092324335849338
+        ],
+        "max": [
+          0.6200000000000001,
+          0.66,
+          0.6092324335849338
+        ]
+      },
+      "triangles": 88
+    },
+    {
+      "id": "coffee_seed",
+      "file": "models/coffee_seed.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5132623792124926,
+          0,
+          -0.5331479122813215
+        ],
+        "max": [
+          0.54,
+          0.12,
+          0.5331479122813215
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "coffee_growing",
+      "file": "models/coffee_growing.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5456230589874906,
+          0,
+          -0.5711901729331277
+        ],
+        "max": [
+          0.5800000000000001,
+          0.39,
+          0.5711901729331277
+        ]
+      },
+      "triangles": 40
+    },
+    {
+      "id": "coffee_ripe",
+      "file": "models/coffee_ripe.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "crop",
+      "bounds": {
+        "min": [
+          -0.5779837387624884,
+          0,
+          -0.6092324335849338
+        ],
+        "max": [
+          0.6200000000000001,
+          0.66,
+          0.6092324335849338
+        ]
+      },
+      "triangles": 88
+    },
+    {
+      "id": "construction_scaffold",
+      "file": "models/construction_scaffold.glb",
+      "source": "Procedural low-poly placeholder generated in this repository",
+      "author": "Xây Nhà project",
+      "license": "Project-owned generated asset",
+      "url": "scripts/generate-placeholder-assets.mjs",
+      "modified": false,
+      "placeholder": true,
+      "category": "construction",
+      "bounds": {
+        "min": [
+          -0.5,
+          0,
+          -0.5
+        ],
+        "max": [
+          0.5,
+          1,
+          0.5
+        ]
+      },
+      "triangles": 144
+    }
+  ]
+}

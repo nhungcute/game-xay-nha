@@ -1,0 +1,53 @@
+import { Group, InstancedMesh, Matrix4, type Scene } from 'three';
+import { AssetManager, type AssetHandle } from './AssetManager';
+
+interface Batch { assetId: string; handle: AssetHandle; meshes: InstancedMesh[]; capacity: number }
+export interface InstancePlacement { assetId: string; matrices: Matrix4[] }
+
+/** Renderer owns instance buffers; AssetManager owns every GLB resource. */
+export class InstanceBatches {
+  readonly group = new Group();
+  private readonly batches = new Map<string, Batch>();
+  private readonly matrix = new Matrix4();
+  constructor(scene: Scene, private readonly assets: AssetManager) { scene.add(this.group); }
+  private allocate(key: string, assetId: string, count: number): Batch {
+    const capacity = 2 ** Math.ceil(Math.log2(Math.max(1, count)));
+    const handle = this.assets.get(assetId);
+    const meshes = handle.parts.map(part => {
+      const mesh = new InstancedMesh(part.geometry, part.material, capacity);
+      mesh.castShadow = true; mesh.receiveShadow = true; mesh.name = `${key}:${assetId}`;
+      this.group.add(mesh);
+      return mesh;
+    });
+    const batch = { assetId, handle, meshes, capacity };
+    this.batches.set(key, batch);
+    return batch;
+  }
+  private destroy(key: string, batch: Batch): void {
+    for (const mesh of batch.meshes) { mesh.removeFromParent(); mesh.dispose(); }
+    batch.handle.release(); this.batches.delete(key);
+  }
+  update(placements: ReadonlyMap<string, InstancePlacement>): void {
+    for (const [key, batch] of this.batches) if (!placements.has(key)) this.destroy(key, batch);
+    for (const [key, placement] of placements) {
+      let batch = this.batches.get(key);
+      if (batch && (batch.assetId !== placement.assetId || batch.capacity < placement.matrices.length)) {
+        this.destroy(key, batch); batch = undefined;
+      }
+      batch ??= this.allocate(key, placement.assetId, placement.matrices.length);
+      batch.meshes.forEach((mesh, partIndex) => {
+        mesh.count = placement.matrices.length;
+        placement.matrices.forEach((matrix, index) => {
+          this.matrix.multiplyMatrices(matrix, batch!.handle.parts[partIndex]!.matrix);
+          mesh.setMatrixAt(index, this.matrix);
+        });
+        mesh.instanceMatrix.needsUpdate = true;
+        mesh.computeBoundingSphere();
+      });
+    }
+  }
+  dispose(): void {
+    for (const [key, batch] of this.batches) this.destroy(key, batch);
+    this.group.removeFromParent();
+  }
+}

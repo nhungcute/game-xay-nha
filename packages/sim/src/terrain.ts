@@ -2,6 +2,7 @@ import { CellFlag, GRID, Surface, VERTS, cellIndex, vertIndex, type Cell, type C
 import { economy } from '@xay-nha/content';
 import { addCost, event, guard, pay, rectCells, refund, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
 import { affectedVertexCells, corners, isShore, meanHeight, neighbors, slope, type SimState } from './state';
+import { forgetRoadPayment, recordRoadPayment } from './road-value';
 
 function shoreValid(s: SimState, c: Cell, embanked: boolean): boolean {
   if (!isShore(s,c)) return true;
@@ -79,6 +80,8 @@ export function terrain(s: SimState, cmd: Command): Cost | undefined {
       guard(!s.occupancy.has(i),'OCCUPIED');
       if (previous >= cmd.payload.tier) continue;
       const old = previous ? economy.roadTiers[previous as 1|2|3].cost : zeroCost();
+      const paid = {cash:def.cost.cash-old.cash,wood:def.cost.wood-old.wood,stone:def.cost.stone-old.stone};
+      recordRoadPayment(s, i, paid.cash + paid.wood * economy.materialPrices.wood + paid.stone * economy.materialPrices.stone);
       cost = addCost(cost,{cash:def.cost.cash-old.cash,wood:def.cost.wood-old.wood,stone:def.cost.stone-old.stone});
       s.surface[i] = Surface.ROAD; s.roadTier[i] = cmd.payload.tier; changed.push(c);
     }
@@ -92,6 +95,7 @@ export function terrain(s: SimState, cmd: Command): Cost | undefined {
       guard(!s.snapshot.bridges.some(b => cellIndex(...b.a) === i || cellIndex(...b.b) === i),'BRIDGE_END_INVALID');
       guard(s.roadTier[i]! > 0,'CELL_BLOCKED');
       s.surface[i] = Surface.DIRT; s.roadTier[i] = 0;
+      forgetRoadPayment(s, i);
     }
     return zeroCost();
   }

@@ -58,6 +58,17 @@ export function event(s: SimState, action: string, kind: string, count = 1): voi
 }
 
 export function isFarBank(s: SimState, cells: Cell[]): boolean {
+  if (!cells.length) return false;
+  if (s.template.bankRegions) {
+    const regionAt = new Map<number, string>();
+    for (const region of s.template.bankRegions) for (const cell of region.cells) regionAt.set(cellIndex(...cell), region.id);
+    const home = new Set(s.template.entryCells.map(cell => regionAt.get(cellIndex(...cell))).filter((id): id is string => id !== undefined));
+    const target = regionAt.get(cellIndex(...cells[0]!));
+    return target !== undefined && !home.has(target) && cells.every(cell => regionAt.get(cellIndex(...cell)) === target)
+      && s.snapshot.bridges.some(bridge => bridge.status === 'ACTIVE'
+        && ((home.has(regionAt.get(cellIndex(...bridge.a)) ?? '') && regionAt.get(cellIndex(...bridge.b)) === target)
+          || (home.has(regionAt.get(cellIndex(...bridge.b)) ?? '') && regionAt.get(cellIndex(...bridge.a)) === target)));
+  }
   const flood = (starts: Cell[]): Uint8Array => {
     const visited = new Uint8Array(GRID * GRID), queue = [...starts];
     for (const c of starts) visited[cellIndex(...c)] = 1;

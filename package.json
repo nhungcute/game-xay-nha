@@ -10,23 +10,34 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint packages scripts --max-warnings 0",
-    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint packages scripts apps --max-warnings 0",
+    "build": "tsc -p tsconfig.build.json && pnpm build:web",
     "check": "pnpm content:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "tooling": "tsx packages/tooling/src/cli.ts",
     "content:generate": "node scripts/generate-content.mjs",
     "content:check": "node scripts/generate-content.mjs --check",
-    "test:worldgen-browser": "node scripts/verify-browser-worldgen.mjs"
+    "test:worldgen-browser": "node scripts/verify-browser-worldgen.mjs",
+    "dev": "pnpm --filter @xay-nha/web dev",
+    "build:web": "pnpm --filter @xay-nha/web build"
   },
   "devDependencies": {
     "@eslint/js": "9.37.0",
     "@playwright/test": "1.55.1",
     "@types/node": "22.18.10",
+    "@types/react": "18.3.26",
+    "@types/react-dom": "18.3.7",
+    "@types/three": "0.180.0",
+    "@vitejs/plugin-react": "5.0.4",
     "esbuild": "0.25.10",
     "eslint": "9.37.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "three": "0.180.0",
     "tsx": "4.20.6",
     "typescript": "5.9.3",
     "typescript-eslint": "8.46.1",
-    "vitest": "3.2.4"
+    "vite": "7.1.9",
+    "vitest": "3.2.4",
+    "zustand": "5.0.8"
   }
 }

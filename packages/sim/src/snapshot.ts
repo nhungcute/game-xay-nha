@@ -7,6 +7,7 @@ import { createState, inBounds, isUnlocked, isShore, corners, affectedVertexCell
 import { footprintCells } from './footprint';
 import { builderCapacity, buildingLimit, validateBridge } from './construction';
 import { costValue, recompute } from './economy';
+import { validateRoadPayments } from './road-value';
 
 export type SnapshotValidation = { ok: true; state: SimState } | { ok: false; errors: string[] };
 
@@ -190,6 +191,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
     } catch (error) { errors.push(`BRIDGE_RULE:${bridge.id}:${error instanceof Error ? error.message : String(error)}`); }
   }
   for (const item of Object.keys(snapshot.inventory)) if (!Object.hasOwn(catalog.items, item)) errors.push(`ITEM_REFERENCE:${item}`);
+  errors.push(...validateRoadPayments(candidate));
   if (snapshot.mapKind === 'farm') {
     // Lost road access may reduce effective capacity, but cannot create new physical support buildings.
     const support = snapshot.buildings.filter(building => building.status === 'ACTIVE' && Object.hasOwn(catalog.buildings, building.defId));

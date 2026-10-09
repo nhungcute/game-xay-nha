@@ -10,6 +10,20 @@ export function validateTemplate(input: unknown): string[] {
   let layers: DecodedLayers;
   try { layers = decodeLayers(template); } catch (error) { return [`layers: ${error instanceof Error ? error.message : String(error)}`]; }
   const water = rasterizeWater(template.water), zones = new Set(template.startZones);
+  if (template.bankRegions) {
+    const regionIds = new Set<string>(), claimed = new Set<number>();
+    for (const region of template.bankRegions) {
+      if (regionIds.has(region.id)) errors.push(`bankRegions: duplicate ID ${region.id}`);
+      regionIds.add(region.id);
+      for (const [x, z] of region.cells) {
+        const index = z * 128 + x;
+        if (claimed.has(index)) errors.push(`bankRegions: overlapping cell ${x},${z}`);
+        claimed.add(index);
+        if (water[index]) errors.push(`bankRegions.${region.id}: water cell ${x},${z}`);
+      }
+    }
+    for (const [x, z] of template.entryCells) if (!claimed.has(z * 128 + x)) errors.push(`bankRegions: ENTRY outside authored regions ${x},${z}`);
+  }
   const startVisited = new Set<number>(), queue = template.startZones.length ? [template.startZones[0]!] : [];
   while (queue.length) {
     const zone = queue.pop()!;

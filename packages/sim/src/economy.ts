@@ -5,6 +5,7 @@ import { roadConnectivity, access } from './roads';
 import { completeConstruction } from './construction';
 import { addXp, guard } from './common';
 import type { SimState } from './state';
+import { roadPaidValue } from './road-value';
 
 export const costValue = (c: Cost): number => c.cash + c.wood * economy.materialPrices.wood + c.stone * economy.materialPrices.stone;
 export const distance = (a: Cell[], b: Cell[]): number => Math.min(...a.flatMap(c => b.map(n => Math.max(Math.abs(c[0]-n[0]),Math.abs(c[1]-n[1])))));
@@ -79,8 +80,7 @@ export function netWorth(s: SimState): number {
   for (let i = 0; i < s.surface.length; i++) {
     const tier = s.roadTier[i] as 0|1|2|3;
     if (tier && s.surface[i] === Surface.ROAD) {
-      const original = s.baseRoadTier[i] as 0|1|2|3;
-      total += costValue(economy.roadTiers[tier].cost) - (original ? costValue(economy.roadTiers[original].cost) : 0);
+      total += roadPaidValue(s, i);
     }
     if (s.flags[i]! & CellFlag.EMBANKED) total += costValue(economy.embank.cost);
   }

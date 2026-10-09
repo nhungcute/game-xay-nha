@@ -86,6 +86,7 @@ export const WorldTemplateSchema = z.object({
   entryCells: z.array(CellSchema).min(1).max(3).refine(values => unique(values, String), 'Duplicate entry cell'),
   env: EnvSpecSchema,
   suggestedLots: z.array(z.object({ id: IdSchema, cells: z.tuple([IntegerSchema.max(127), IntegerSchema.max(127), IntegerSchema.max(127), IntegerSchema.max(127)]) }).strict()).optional(),
+  bankRegions: z.array(z.object({ id: IdSchema, cells: z.array(CellSchema).min(1) }).strict()).min(1).optional(),
   camera: z.object({ target: z.tuple([z.number().finite(), z.number().finite(), z.number().finite()]), yawDeg: z.number().finite(), pitchDeg: z.number().finite(), distance: positive }).strict(),
   palette: z.record(IdSchema, z.string().max(128)),
 }).strict();

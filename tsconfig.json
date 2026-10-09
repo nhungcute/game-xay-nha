@@ -11,8 +11,10 @@
       "@xay-nha/worldgen": ["packages/worldgen/src/index.ts"],
       "@xay-nha/sim": ["packages/sim/src/index.ts"]
     },
-    "types": ["node", "vitest/globals"]
+    "types": ["node", "vitest/globals", "vite/client"],
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["packages/**/*.ts", "vitest.config.ts"],
+  "include": ["packages/**/*.ts", "apps/**/*.ts", "apps/**/*.tsx", "vitest.config.ts"],
   "exclude": ["node_modules", "dist", "map"]
 }

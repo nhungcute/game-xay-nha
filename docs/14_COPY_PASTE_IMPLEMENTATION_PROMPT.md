@@ -167,6 +167,110 @@ START NOW: read the docs, create the status/decision/question files, write a
 G0 task plan into IMPLEMENTATION_STATUS.md, then begin G0.
 ```
 
+### 0.1b Prompt hợp nhất tới MVP (dùng sau khi G0 đã duyệt — 2026-10-10)
+
+Gộp: các câu trả lời Q001–Q004 còn treo, chế độ tự chạy tiếp, triển khai Docker + trycloudflare, và toàn bộ mốc G1–G4. Dán vào phiên của agent (đang chạy hoặc phiên mới).
+
+```text
+FINAL GOAL: take "Xây Nhà" from the approved G0 to a finished MVP (G1 → G2 → G3 → G4)
+in AUTO-CONTINUE mode, following docs/14 §0.1 rules plus everything below.
+This message supersedes earlier instructions where they differ.
+
+0. RESUME FIRST
+- Read docs/IMPLEMENTATION_STATUS.md, DECISIONS.md, OPEN_QUESTIONS.md, docs/reports/,
+  `git status`, `git log --oneline -20`. Finish or safely commit the work in progress.
+- Run `pnpm check`; it must pass before new work.
+
+1. PENDING DESIGN ANSWERS — apply NOW (code + tests + listed doc edits), before more G1 work
+Q001 (supersedes D013): money already accrued is NEVER removed. The cap limits only new
+  accrual: accrued_new = accrued + min(rate × dt, max(0, rate × capHours − accrued)).
+  Update sim, docs/16 §6.4 pseudo-code, and add tests: accrue near cap → road disconnected
+  (rate 0) or cap lowered → settle → accrued unchanged; collect still works.
+Q002: reject demolition that would leave an invalid state (no auto-destruction):
+  farmhouse when tilled cells > new quota → FIELD_LIMIT; silo when inventory > new capacity
+  → STORAGE_FULL; production building with queued/in-progress batch or uncollected product
+  → new error PRODUCTION_ACTIVE. Add to docs/15 §8.3 and §11, with tests.
+Q003: confirm D002; update docs/06 §4 (water-only vertices ≤ water−5; shared shore vertices
+  follow docs/15 §4.2.3).
+Q004: confirm D003; update docs/06 §6.6 (past timestamps placedAt/plantedAt/settledAt/
+  startedAt ≤ serverTime+5 min; deadlines buildEndsAt/readyAt validated against catalog
+  durations, irrigation, tutorial and speed-up rules).
+D004: confirm 50% speed-up; set P.speedupPct = 0.5 in docs/tools/economy/model.mjs.
+New-character clarification: farm inventory starts {} (no crops/products/seeds); city
+  population starts 0. Add to docs/16 §2.
+Record each in DECISIONS.md, close Q001–Q004 in OPEN_QUESTIONS.md, commit.
+
+2. MODE: AUTO-CONTINUE (already recorded; keep it)
+- End of each gate: full `pnpm check` + gate-specific checks, write docs/reports/G<x>-report.md
+  (what was built, commands + real results, evidence, deviations, known issues, NOT verified),
+  commit, then start the next gate immediately.
+- A gate is done only when its exit criteria really pass. Never skip a criterion.
+- STOP and wait for me ONLY if: a criterion still fails after 3 serious attempts; a question
+  would change gameplay, economy numbers, or docs 00–16 beyond approvals in this message;
+  external input is needed (art review, licensed assets that need an account, secrets,
+  paid services); an action is destructive/irreversible; anything would be published.
+  Otherwise log it in OPEN_QUESTIONS.md, choose the conservative option, continue.
+
+3. DEPLOYMENT (interim, approved): Docker + Cloudflare quick tunnel (trycloudflare)
+- infra/compose.yml + Dockerfiles + nginx.conf + .env.example:
+  G1: `web` = multi-stage build (pnpm build → nginx serving the client, VITE_OFFLINE=1),
+      bound to localhost:8080, GET /health.
+  G2+: `api` (Node 22), `postgres` (16, named volume, NO published port); nginx proxies
+      /api → api; migrations run on api start (advisory lock); secrets only via .env.
+  `tunnel` service under compose profile "tunnel": image cloudflare/cloudflared pinned to
+      an exact version, `tunnel --no-autoupdate --url http://web:80`.
+- Root scripts: deploy:up, deploy:down, deploy:logs, tunnel:up, tunnel:url (prints the
+  *.trycloudflare.com URL), tunnel:down.
+- docs/DEPLOY_LOCAL.md: commands, getting the URL, stopping, caveats (URL changes on
+  restart, machine must stay on, testing only).
+- Every gate from G1: `pnpm deploy:up`, curl /health = 200, load the page via
+  localhost:8080 in a real browser; record results in the gate report.
+- NEVER start the tunnel yourself — I run `pnpm tunnel:up`. Do not deploy to Botkeep or
+  any other host.
+- From G2: rate limits on, CORS = same origin, no debug endpoints in production builds,
+  Postgres never exposed, no secrets in images or git.
+
+4. REMAINING GATES (details: docs/12 §3, docs/10)
+G1 — Offline vertical slice, FARM (VITE_OFFLINE=1)
+  Terrain per zone with dirty rebuild, water + waterfall, deterministic env, village road,
+  every tool with green/yellow/red preview + reason + cost, construction timers/builders,
+  camera desktop + touch, Vietnamese HUD basics. Provisional farm layout from docs/04 §2.
+  Exit: screenshots/video of clear → flatten → road → embank both banks → wooden bridge →
+  build on far bank → orbit 180°; perf numbers vs docs/11 §8; GPU leak checks docs/10 §4.1;
+  lighting/contrast docs/10 §5; Docker web container works.
+G2 — Server, name login, persistence, economy
+  apps/api per docs/11 (accounts, one character per map, recovery code, worlds, commands,
+  idempotency, revision, settle, completion events, offline income, XP, zones, net worth);
+  client command queue with optimistic updates + rebase; IndexedDB cache with
+  validate-then-swap.
+  Exit: docs/10 §3 integration tests pass; curl-crafted invalid command rejected; state hash
+  identical after reload; two characters on one account independent; full Docker stack up.
+G3 — Full content for both maps
+  City + farm templates (docs/03, docs/04; mark "layout: provisional" until art review),
+  full catalog and limits (docs/16), 24 authored quests + repeat quests (D017), tutorial
+  (docs/09 §5), HUD, profile, net worth, map switching / character creation.
+  Port the economy model to packages/tooling/sim-economy.ts on the real sim; compare pacing
+  with docs/16 §12 (≤ 25% deviation for the 3-sessions/day player) and report.
+  Exit: both maps visually distinct; 5-angle screenshots per map; tutorial ≤ 6 minutes;
+  E2E flows docs/10 §4 pass on Chromium + WebKit mobile emulation.
+G4 — Release readiness (local Docker + tunnel)
+  Mobile polish, low-graphics mode, audio optional, observability/debug panel (docs/11 §10),
+  Postgres backup script, docs/DEPLOY_LOCAL.md complete.
+  Exit: docs/10 §8 criteria; `git clone` → `.env` from example → `pnpm deploy:up` works on a
+  clean checkout; 15 minutes of normal play with no console errors; final report lists every
+  unverified item and every placeholder asset.
+
+5. ASSETS
+Prefer CC0 packs (Kenney, Quaternius, KayKit) if downloadable without an account; record
+source/license in the manifest. Otherwise low-poly placeholders with "placeholder": true.
+Placeholders allowed through G3; G4 report must list every remaining one.
+
+6. WHEN MVP IS DONE
+Write docs/reports/MVP-summary.md: how to run and play (commands), what is in the MVP,
+test totals, perf numbers, known limitations, placeholders, open questions, and suggested
+P1 work. Then stop and tell me: "MVP ready — run `pnpm deploy:up` then `pnpm tunnel:up`."
+```
+
 ### 0.2 Prompt tiếp tục (dán ở mỗi phiên mới)
 
 ```text
