@@ -1,0 +1,111 @@
+# Implementation decisions
+
+## D001 — 2026-10-09 — Scope and ownership
+
+Context: docs/14 §0.1 and docs/12 §1–2.
+Decision: G0 only until its report is approved. Lead owns root/contracts integration/sim;
+separate module owners handle contracts, content and worldgen/tooling. No prototype edits.
+Alternative: copying an existing JS prototype; rejected by docs/14.
+
+## D002 — 2026-10-09 — Shared shore heights
+
+Context: docs/06 §4 requires every water corner below water and a shared shore corner above water;
+these cannot both hold on one shared heightfield. docs/15 §4.2.3 and docs/07 §3.1 agree.
+Decision: shared shore vertices obey docs/15; vertices belonging exclusively to water are below water.
+Template validator explicitly reports this interpretation. No new gameplay or changed price.
+
+## D003 — 2026-10-09 — Construction deadlines
+
+Context: docs/06 §6.6 lists readyAt among timestamps prohibited >5 minutes in the future,
+but docs/16 requires crops/construction/queues lasting hours.
+Decision: validate creation/settlement times against serverTime; validate future deadlines against
+their catalog durations and irrigation/tutorial rules. Follow docs/15–16 precedence.
+
+## D004 — 2026-10-09 — Speed-up percentage
+
+Context: docs/16 §3.1 specifies 50%; reference model P.speedupPct is 30%.
+Decision: generated content uses the explicit 50% in docs/16; reference script is not modified.
+The generator checks and records this override rather than silently adopting the model.
+
+## D005 — 2026-10-09 — Fractional XP from dollar thresholds
+
+Context: docs/16 §8.1 grants XP/$20 spent and XP/$500 collected; DB xp is integer (docs/11).
+Decision: carry remainders in persisted questProgress counters and award whole XP only.
+Splitting a command or a collection does not change total XP. Alternatives: truncating each
+command independently or fractional DB XP; rejected for consistency.
+
+## D006 — 2026-10-09 — Existing farm usage after road loss
+
+Context: docs/15 §6.4 explicitly permits road removal, while §8/§10 require road access for
+support buildings to operate. Decision: disconnected support grants no new field/storage capacity.
+Previously planted crops and stored items remain. Snapshot validation permits this legal state
+within physical support capacity. Demolition rejects a support removal that would destroy prepaid
+queues or leave usage unsupported (Q002). No automatic destruction was introduced.
+
+## D007 — 2026-10-09 — Natural heights and integer terraform payment
+
+Context: docs/15 §1.2 permits arbitrary integer template heights, player heights use 5dm steps,
+and §4.3 can therefore produce fractional dollar costs; wallet money must be integer.
+Decision: sum exact movement across unique vertices, then ceil the total dollar cost once.
+FLATTEN without a target uses the rounded mean of unique vertices per docs/15 §4.1.
+Already-flat work costs zero. This changes no rate in docs/16.
+
+## D008 — 2026-10-09 — Production completion and scheduled timestamps
+
+Context: docs/15 §10 prepaid batches run consecutively; docs/16 §8 awards XP when products finish.
+Decision: a later queue batch may have a future startedAt equal to the previous readyAt.
+advanceTime grants completion XP once when readyAt crosses the persisted serverTime; collecting
+does not award it again. Crop durations are validated against catalog/irrigation/20-second tutorial
+alternatives because current well placement cannot reconstruct historical irrigation.
+
+## D009 — 2026-10-09 — Schema lifecycle fields and bridge deck height
+
+Context: docs/06 omits paid materials and parts of bridge lifecycle required by docs/15–16.
+Decision: persist paid cash/materials, invested value, status and placedAt for exact refunds/timers;
+persist seed/generatorVersion for template matching. A bridge deck may be a fractional decimeter:
+it uses the average of two bank-edge vertices per docs/15 §9.2, without invented rounding.
+
+## D010 — 2026-10-09 — Deterministic environment details and asset identifiers
+
+Context: docs/06 §4.1 fixes four PRNG draws and stable IDs but leaves draw partitioning unspecified.
+Decision: process scatter specs in authored order; IDs use visited-cell ordinal; reserve all anchors;
+keep a large rock wholly within its generating zone; use Manhattan water distance; split the last
+two draws into 16-bit offset/yaw/scale fields. Fixed golden cases and real Node/browser parity
+verify this implementation. Content model/icon IDs and entranceSide S are provisional declarations;
+they do not claim delivered GLB assets. Road access uses any footprint edge as docs/15 requires.
+
+## D011 — 2026-10-09 — Initial natural roads and net worth
+
+Context: docs/16 §2 and §13 require initial net worth exactly $2500 while templates include
+natural village roads. Decision: template roads are background infrastructure, not purchased
+character assets. Net worth counts player road additions and upgrade value above the template
+tier; it excludes the template's original tier value. Review Q006 before later economy validation.
+
+## D012 — 2026-10-09 — Repeat quests and far-bank evidence
+
+Context: docs/16 §10 gives 12 exact quests per map but only examples of later random quests.
+Decision: implement the 24 authored quests; do not invent a random pool (Q005). For the authored
+far-bank quest, require a separate dry-land component from ENTRY connected by a completed bridge.
+This topology interpretation is recorded for review; no new rewards or quest definitions were added.
+
+## D013 — 2026-10-09 — Literal income cap formula
+
+Context: Q001 raised possible loss when rate-dependent capacity falls.
+Decision: currently apply the exact Math.min formula in docs/16 §6.4, including a zero-rate cap.
+Do not silently add a retention rule. Q001 asks for product review before any formula change.
+The absence-respecting cap itself follows docs/01; the concern is a player-induced rate decrease.
+
+## D014 — 2026-10-10 — Complete command patch metadata
+
+Context: docs/08 StatePatch lists gameplay collections but omits the ownership and character
+fields changed by existing commands. Decision: add optional character, unlockedZones and landValue
+to the shared patch. UNLOCK_ZONE and valuation changes can then be applied without a full reload.
+This carries existing state only; it adds no gameplay feature.
+
+## D015 — 2026-10-10 — Pure, bounded entity IDs
+
+Context: sim may not generate random UUIDs or read runtime clocks; identifiers must stay within
+the strict schema length even when a valid world ID has 128 characters.
+Decision: deterministic revision/collision-counter IDs are scoped to the world and checked against
+all existing building/bridge IDs. Do not embed the full world ID. G2 command transactions own
+authoritative allocation and persistence; this is not a global account/character ID generator.

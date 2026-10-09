@@ -1,0 +1,137 @@
+{
+  "check": "G0 pure worldgen Node/Chromium parity; no rendered game or G1 acceptance",
+  "passed": true,
+  "recordedAtUtc": "2026-10-09T17:07:06.524Z",
+  "nodeVersion": "v22.20.0",
+  "browserVersion": "154.0.8037.98",
+  "browserExecutable": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "fixtures": [
+    {
+      "mapKind": "city",
+      "seed": 0,
+      "generatorVersion": "veg-1.0.0",
+      "count": 493,
+      "sha256": "22be1aaab69fef02ce3620dd2edb6535c75093a69214bb9f7a58e791816faf96"
+    },
+    {
+      "mapKind": "city",
+      "seed": 0,
+      "generatorVersion": "veg-1.0.1",
+      "count": 438,
+      "sha256": "7628f57ef6a6c6145417f1082ea7a9eabdf57fb1719e9d5406f4bab2a02d4e57"
+    },
+    {
+      "mapKind": "city",
+      "seed": 1,
+      "generatorVersion": "veg-1.0.0",
+      "count": 452,
+      "sha256": "b6a6f1f76161674b58ecc40b760d570bb532b5abb3d52f18cee60c783be03a1c"
+    },
+    {
+      "mapKind": "city",
+      "seed": 1,
+      "generatorVersion": "veg-1.0.1",
+      "count": 498,
+      "sha256": "0190de071e393f879bf874dcdbac6530209080d60759ccb00e7ea9746c79e1be"
+    },
+    {
+      "mapKind": "city",
+      "seed": 20261009,
+      "generatorVersion": "veg-1.0.0",
+      "count": 475,
+      "sha256": "eff5be709584bb7ea4baf4dc60a891c905a319568ddb8b65ca29387cabe07d16"
+    },
+    {
+      "mapKind": "city",
+      "seed": 20261009,
+      "generatorVersion": "veg-1.0.1",
+      "count": 456,
+      "sha256": "9abbb5b001bba2e1c294f3ede73827f87fe94fd658ef7c7e6841aed618736a76"
+    },
+    {
+      "mapKind": "city",
+      "seed": 4294967295,
+      "generatorVersion": "veg-1.0.0",
+      "count": 451,
+      "sha256": "34550e1bc88e24205db2c16b4cedfc903e1368c5831bbc0971d089999c51950f"
+    },
+    {
+      "mapKind": "city",
+      "seed": 4294967295,
+      "generatorVersion": "veg-1.0.1",
+      "count": 447,
+      "sha256": "288ce3995ecac955b3250da0bdbcbf7c5e5b072e52f72e17acea0c644ac97aac"
+    },
+    {
+      "mapKind": "farm",
+      "seed": 0,
+      "generatorVersion": "veg-1.0.0",
+      "count": 491,
+      "sha256": "58a7a6f4f60c40dd22e86e7d0d1049506cfc674c85aa683f61eed8c900d78875"
+    },
+    {
+      "mapKind": "farm",
+      "seed": 0,
+      "generatorVersion": "veg-1.0.1",
+      "count": 438,
+      "sha256": "258f2d3e3019b8a9d8ea757ef7fe68dee2f503f82174639885b8af38ad9fd0cb"
+    },
+    {
+      "mapKind": "farm",
+      "seed": 1,
+      "generatorVersion": "veg-1.0.0",
+      "count": 452,
+      "sha256": "03c0c08587feb21315148c34396e4e277fc0b8e1259b88d2a0a6f0daa607fb23"
+    },
+    {
+      "mapKind": "farm",
+      "seed": 1,
+      "generatorVersion": "veg-1.0.1",
+      "count": 499,
+      "sha256": "8cd8c7447afc82f0b629404dfb8549c544d5938e44857f9a35cedb185b32e80d"
+    },
+    {
+      "mapKind": "farm",
+      "seed": 20261009,
+      "generatorVersion": "veg-1.0.0",
+      "count": 477,
+      "sha256": "d1ca431034d2b288c0bb713165dc3928d803ea2b6a0a038acbd9b262632ee398"
+    },
+    {
+      "mapKind": "farm",
+      "seed": 20261009,
+      "generatorVersion": "veg-1.0.1",
+      "count": 457,
+      "sha256": "92bf2b83dd3ced57bfb4f3ec464dc5914eed8704b9ed0ddb67ac48930ce4a62c"
+    },
+    {
+      "mapKind": "farm",
+      "seed": 4294967295,
+      "generatorVersion": "veg-1.0.0",
+      "count": 454,
+      "sha256": "7a17c697c587ac593f4007af99dd98d4b0973815cfe3c4acc49fc27a64644241"
+    },
+    {
+      "mapKind": "farm",
+      "seed": 4294967295,
+      "generatorVersion": "veg-1.0.1",
+      "count": 448,
+      "sha256": "d675658cca47ce9cddf65c93742f4069dcd8415e26b3c8e2528d6b21e68785c0"
+    }
+  ],
+  "zoneOrderCases": [
+    {
+      "mapKind": "city",
+      "count": 475,
+      "equal": true
+    },
+    {
+      "mapKind": "farm",
+      "count": 477,
+      "equal": true
+    }
+  ],
+  "nodeSha256": "1d03406d2f3df059625642bf36911ddec65a0fc7d520ec599eae19102edcac3c",
+  "browserSha256": "1d03406d2f3df059625642bf36911ddec65a0fc7d520ec599eae19102edcac3c",
+  "errors": []
+}
