@@ -1,0 +1,8 @@
+{
+  "name": "@xay-nha/content",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts", "./i18n/vi": "./i18n/vi.json" },
+  "dependencies": { "@xay-nha/contracts": "workspace:*", "zod": "3.25.76" }
+}

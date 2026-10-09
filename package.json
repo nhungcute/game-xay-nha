@@ -1,0 +1,32 @@
+{
+  "name": "xay-nha",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.18.3",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint packages scripts --max-warnings 0",
+    "build": "tsc -p tsconfig.build.json",
+    "check": "pnpm content:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "tooling": "tsx packages/tooling/src/cli.ts",
+    "content:generate": "node scripts/generate-content.mjs",
+    "content:check": "node scripts/generate-content.mjs --check",
+    "test:worldgen-browser": "node scripts/verify-browser-worldgen.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.37.0",
+    "@playwright/test": "1.55.1",
+    "@types/node": "22.18.10",
+    "esbuild": "0.25.10",
+    "eslint": "9.37.0",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.1",
+    "vitest": "3.2.4"
+  }
+}

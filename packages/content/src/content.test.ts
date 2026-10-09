@@ -1,0 +1,122 @@
+import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { describe, expect, it } from 'vitest';
+import { CatalogSchema, catalog, contentVersion, economy, quests, vi } from './index.js';
+
+const root = fileURLToPath(new URL('../../../', import.meta.url));
+const document = readFileSync(new URL('../../../docs/16_ECONOMY_AND_BALANCE.md', import.meta.url), 'utf8');
+function docRows(sectionStart: string, sectionEnd: string): string[][] {
+  const start = document.indexOf(sectionStart);
+  const end = document.indexOf(sectionEnd, start + sectionStart.length);
+  if (start < 0 || end < 0) throw new Error(`Missing source section ${sectionStart}`);
+  return document.slice(start, end).split('\n')
+    .filter(line => line.startsWith('|') && !line.includes('---'))
+    .map(line => line.split('|').slice(1, -1).map(cell => cell.trim().replaceAll('`', '').replaceAll('**', '')));
+}
+const num = (value: string) => Number(value.replaceAll(' ', ''));
+const cityRows = docRows('### 6.1', '### 6.2').filter(row => catalog.buildings[row[0] ?? '']);
+const cropRows = docRows('### 7.1', '### 7.2').filter(row => catalog.crops[row[0] ?? '']);
+const producerRows = docRows('### 7.2', '### 7.3').filter(row => catalog.recipes[row[0] ?? '']);
+
+describe('docs/16 generated economy content', () => {
+  it('regenerates deterministically and passes check mode', () => {
+    expect(execFileSync(process.execPath, ['scripts/generate-content.mjs', '--check'], { cwd: root, encoding: 'utf8' }))
+      .toContain('Verified 4 content files');
+  });
+  it('rejects malformed generated content before consumers receive it', () => {
+    const invalid = structuredClone(catalog);
+    const house = invalid.buildings.house_small;
+    if (!house) throw new Error('Missing documented house');
+    house.cost.cash = -1;
+    expect(CatalogSchema.safeParse(invalid).success).toBe(false);
+    house.cost.cash = catalog.buildings.house_small?.cost.cash ?? 0;
+    house.id = 'wrong_id';
+    expect(CatalogSchema.safeParse(invalid).success).toBe(false);
+  });
+  it('contains all catalog balance tables in the economy artifact', () => {
+    expect(economy.catalog).toEqual(catalog);
+    expect(contentVersion).toBe(1);
+    expect(catalog.contentVersion).toBe(contentVersion);
+  });
+  it.each(cityRows)('matches city table %s', (id, _name, size, cash, wood, stone, _value, level, population, jobs, rate) => {
+    const def = catalog.buildings[id ?? ''];
+    expect(def).toBeDefined();
+    expect(def?.size).toEqual(size?.split('×').map(Number));
+    expect(def?.cost).toEqual({ cash: num(cash ?? ''), wood: num(wood ?? ''), stone: num(stone ?? '') });
+    expect(def?.unlockLevel).toBe(num(level ?? ''));
+    if (population !== '—') expect(def?.population).toBe(num(population ?? ''));
+    if (jobs !== '—') expect(def?.jobs).toBe(num(jobs ?? ''));
+    if (!rate?.includes('bán kính')) expect(def?.baseRatePerHour).toBe(num(rate ?? ''));
+  });
+  it.each(cropRows)('matches crop table %s', (id, _name, level, seed, _time, yieldCount, price, _profit, _perHour, xp) => {
+    const def = catalog.crops[id ?? ''];
+    expect(def?.unlockLevel).toBe(num(level ?? ''));
+    expect(def?.seedCost).toBe(num(seed ?? ''));
+    expect(def?.yield).toBe(num(yieldCount ?? ''));
+    expect(def?.xp).toBe(num(xp ?? ''));
+    expect(catalog.items[id ?? '']?.sellPrice).toBe(num(price ?? ''));
+  });
+  it.each(producerRows)('matches producer table %s', (id, _name, level, size, cash, wood, stone, _value, slots, _time, _input, _output, price, _profit, _payback, _build, xp) => {
+    const def = catalog.buildings[id ?? ''];
+    const recipe = catalog.recipes[id ?? ''];
+    expect(def?.cost).toEqual({ cash: num(cash ?? ''), wood: num(wood ?? ''), stone: num(stone ?? '') });
+    expect(def?.size).toEqual(size?.split('×').map(Number));
+    expect(def?.unlockLevel).toBe(num(level ?? ''));
+    expect(def?.production?.slots).toBe(num(slots ?? ''));
+    expect(def?.production?.queueLimit).toBe(economy.farm.productionQueueLimit);
+    expect(recipe?.xp).toBe(num(xp ?? ''));
+    expect(catalog.items[recipe?.output ?? '']?.sellPrice).toBe(num(price ?? ''));
+  });
+  it('uses docs/16 construction 50% speedup and exact fractional bank limit', () => {
+    expect(economy.construction.speedupPct).toBe(0.5);
+    expect(catalog.buildings.bank?.limit).toEqual([1, 1 / 3, 4]);
+  });
+  it('keeps the distinct city and farm XP tables through level 20', () => {
+    expect(economy.xp.cumulative.city).toHaveLength(economy.xp.maxLevel + 1);
+    expect(economy.xp.cumulative.farm).toHaveLength(economy.xp.maxLevel + 1);
+    expect(economy.xp.cumulative.city[20]).toBe(430000);
+    expect(economy.xp.cumulative.farm[20]).toBe(240000);
+    for (const table of Object.values(economy.xp.cumulative)) {
+      for (let level = 2; level <= economy.xp.maxLevel; level++) {
+        expect(table[level]).toBeGreaterThan(table[level - 1] ?? 0);
+      }
+    }
+  });
+  it('ships every named starter quest and no unspecified random rules', () => {
+    expect(quests.city).toHaveLength(12);
+    expect(quests.farm).toHaveLength(12);
+    expect(economy.repeatQuests.defined).toBe(false);
+    expect(quests.city[9]?.reward).toEqual({ cash: 300, wood: 0, stone: 10 });
+    expect(quests.city[0]?.xp).toBe(20);
+    expect(quests.farm[2]?.xp).toBe(10);
+    const all = [...quests.city, ...quests.farm];
+    expect(new Set(all.map(quest => quest.id)).size).toBe(all.length);
+  });
+  it('resolves all catalog names and all production references', () => {
+    for (const definition of [...Object.values(catalog.buildings), ...Object.values(catalog.crops), ...Object.values(catalog.items), ...quests.city, ...quests.farm]) {
+      expect(vi[definition.nameKey]).toBeTruthy();
+    }
+    for (const def of Object.values(catalog.buildings)) {
+      for (const id of def.production?.recipes ?? []) expect(catalog.recipes[id]).toBeDefined();
+    }
+    for (const recipe of Object.values(catalog.recipes)) {
+      expect(catalog.items[recipe.output]).toBeDefined();
+      for (const id of Object.keys(recipe.inputs)) expect(catalog.items[id]).toBeDefined();
+    }
+  });
+  it('limits farmhouse cost scaling to the ten documented purchases', () => {
+    const def = catalog.buildings.farmhouse;
+    expect(def?.costScaling).toHaveLength(def?.maxCount ?? 0);
+    expect(def?.unlockLevels).toHaveLength(def?.maxCount ?? 0);
+    expect(def?.fieldQuota).toBe(24);
+    expect(def?.costScaling?.at(-1)).toBe(130000);
+    expect(def?.unlockLevels?.at(-1)).toBe(19);
+  });
+  it('has only the documented maps and concrete bridge is city-only', () => {
+    for (const def of [...Object.values(catalog.buildings), ...Object.values(catalog.bridges)]) {
+      expect(def.mapKinds.every(kind => kind === 'city' || kind === 'farm')).toBe(true);
+    }
+    expect(catalog.bridges.bridge_concrete?.mapKinds).toEqual(['city']);
+  });
+});

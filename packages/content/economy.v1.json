@@ -1,0 +1,1502 @@
+{
+  "contentVersion": 1,
+  "sources": [
+    "docs/16_ECONOMY_AND_BALANCE.md",
+    "docs/tools/economy/model.mjs"
+  ],
+  "principles": {
+    "paybackBaseH": 1.5,
+    "paybackGrowth": 1.15,
+    "housePaybackMul": 1.5,
+    "bankPaybackMul": 1.3,
+    "prodPaybackMul": 2,
+    "cropP0": 36.5,
+    "cropCycleExp": -0.2,
+    "cropLevelGrowth": 1.06
+  },
+  "start": {
+    "cash": 2000,
+    "wood": 20,
+    "stone": 10,
+    "level": 1,
+    "xp": 0,
+    "unlockedZoneCount": 4
+  },
+  "materialPrices": {
+    "wood": 15,
+    "stone": 20
+  },
+  "construction": {
+    "builders": [
+      {
+        "unlockLevel": 1,
+        "count": 2
+      },
+      {
+        "unlockLevel": 5,
+        "count": 3
+      },
+      {
+        "unlockLevel": 10,
+        "count": 4
+      }
+    ],
+    "speedupPct": 0.5,
+    "speedupMinimumCash": 1,
+    "cancelRefund": 1,
+    "refund": 0.5,
+    "tutorialInstantThroughQuest": 6
+  },
+  "clear": {
+    "tree": {
+      "cost": {
+        "cash": 10,
+        "wood": 0,
+        "stone": 0
+      },
+      "reward": {
+        "cash": 0,
+        "wood": 3,
+        "stone": 0
+      }
+    },
+    "rock": {
+      "cost": {
+        "cash": 20,
+        "wood": 0,
+        "stone": 0
+      },
+      "reward": {
+        "cash": 0,
+        "wood": 0,
+        "stone": 4
+      }
+    },
+    "rock_large": {
+      "cost": {
+        "cash": 60,
+        "wood": 0,
+        "stone": 0
+      },
+      "reward": {
+        "cash": 0,
+        "wood": 0,
+        "stone": 15
+      }
+    },
+    "bush": {
+      "cost": {
+        "cash": 2,
+        "wood": 0,
+        "stone": 0
+      },
+      "reward": {
+        "cash": 0,
+        "wood": 0,
+        "stone": 0
+      }
+    }
+  },
+  "terraform": {
+    "costPerStep": 3,
+    "stepDm": 5,
+    "unlockLevel": 1
+  },
+  "till": {
+    "cost": 5,
+    "removeCost": 0,
+    "unlockLevel": 1
+  },
+  "embank": {
+    "cost": {
+      "cash": 30,
+      "wood": 0,
+      "stone": 3
+    },
+    "unlockLevel": 3
+  },
+  "roadTiers": {
+    "1": {
+      "cost": {
+        "cash": 5,
+        "wood": 0,
+        "stone": 0
+      },
+      "unlockLevel": 1,
+      "mapKinds": [
+        "city",
+        "farm"
+      ],
+      "multiplier": 1
+    },
+    "2": {
+      "cost": {
+        "cash": 15,
+        "wood": 0,
+        "stone": 1
+      },
+      "unlockLevel": 4,
+      "mapKinds": [
+        "city",
+        "farm"
+      ],
+      "multiplier": 1.1
+    },
+    "3": {
+      "cost": {
+        "cash": 40,
+        "wood": 0,
+        "stone": 2
+      },
+      "unlockLevel": 8,
+      "mapKinds": [
+        "city",
+        "farm"
+      ],
+      "multiplier": 1.2
+    }
+  },
+  "income": {
+    "capBaseH": 6,
+    "bankCapH": 2,
+    "bankCapMax": 4,
+    "decorCap": 0.3,
+    "waterBonus": 0.1,
+    "waterRadius": 4,
+    "hotelWaterBonus": 0.2,
+    "bubbleFraction": 0.1
+  },
+  "farm": {
+    "baseStorage": 50,
+    "irrigationMultiplier": 0.8,
+    "waterIrrigationRadius": 3,
+    "productionQueueLimit": 3
+  },
+  "xp": {
+    "buildMultiplier": 2,
+    "spendDivisor": 20,
+    "collectDivisor": 500,
+    "cumulative": {
+      "city": [
+        0,
+        0,
+        40,
+        150,
+        340,
+        1600,
+        2900,
+        4200,
+        6100,
+        9500,
+        14000,
+        22000,
+        36000,
+        54000,
+        73000,
+        100000,
+        140000,
+        180000,
+        240000,
+        330000,
+        430000
+      ],
+      "farm": [
+        0,
+        0,
+        40,
+        120,
+        220,
+        960,
+        2200,
+        3500,
+        5700,
+        8800,
+        14000,
+        21000,
+        33000,
+        45000,
+        58000,
+        75000,
+        95000,
+        120000,
+        150000,
+        190000,
+        240000
+      ]
+    },
+    "levelReward": 150,
+    "maxLevel": 20
+  },
+  "zones": {
+    "maxBuy": 60,
+    "costBase": 1000,
+    "costLinear": 800,
+    "costQuadratic": 150,
+    "unlockBase": 2,
+    "unlockEvery": 3,
+    "unlockMax": 20,
+    "waterThreshold": 0.5,
+    "waterPriceMultiplier": 0.5
+  },
+  "tutorial": {
+    "cityIncomeMultiplier": 60,
+    "farmGrowSeconds": 20
+  },
+  "repeatQuests": {
+    "defined": false,
+    "rewardIncomeMinutes": 15
+  },
+  "catalog": {
+    "contentVersion": 1,
+    "buildings": {
+      "house_small": {
+        "id": "house_small",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.house_small",
+        "size": [
+          2,
+          2
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 300,
+          "wood": 5,
+          "stone": 0
+        },
+        "unlockLevel": 1,
+        "buildSeconds": 30,
+        "buildXp": 39,
+        "modelId": "house_small",
+        "limit": [
+          4,
+          2,
+          40
+        ],
+        "population": 4,
+        "baseRatePerHour": 170
+      },
+      "shop_grocery": {
+        "id": "shop_grocery",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.shop_grocery",
+        "size": [
+          2,
+          2
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 500,
+          "wood": 5,
+          "stone": 0
+        },
+        "unlockLevel": 1,
+        "buildSeconds": 60,
+        "buildXp": 48,
+        "modelId": "shop_grocery",
+        "limit": [
+          3,
+          1,
+          25
+        ],
+        "jobs": 3,
+        "baseRatePerHour": 380
+      },
+      "deco_garden": {
+        "id": "deco_garden",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.deco_garden",
+        "size": [
+          1,
+          1
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "unlockLevel": 2,
+        "buildSeconds": 15,
+        "buildXp": 20,
+        "modelId": "deco_garden",
+        "limit": [
+          4,
+          2,
+          60
+        ],
+        "decor": {
+          "bonus": 0.05,
+          "radius": 5
+        }
+      },
+      "house_town": {
+        "id": "house_town",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.house_town",
+        "size": [
+          2,
+          3
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 1200,
+          "wood": 10,
+          "stone": 5
+        },
+        "unlockLevel": 3,
+        "buildSeconds": 180,
+        "buildXp": 76,
+        "modelId": "house_town",
+        "limit": [
+          3,
+          2,
+          50
+        ],
+        "population": 10,
+        "baseRatePerHour": 490
+      },
+      "shop_cafe": {
+        "id": "shop_cafe",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.shop_cafe",
+        "size": [
+          2,
+          2
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 1500,
+          "wood": 10,
+          "stone": 5
+        },
+        "unlockLevel": 3,
+        "buildSeconds": 300,
+        "buildXp": 84,
+        "modelId": "shop_cafe",
+        "limit": [
+          2,
+          1,
+          25
+        ],
+        "jobs": 5,
+        "baseRatePerHour": 880
+      },
+      "shop_restaurant": {
+        "id": "shop_restaurant",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.shop_restaurant",
+        "size": [
+          3,
+          3
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 4000,
+          "wood": 20,
+          "stone": 15
+        },
+        "unlockLevel": 5,
+        "buildSeconds": 900,
+        "buildXp": 136,
+        "modelId": "shop_restaurant",
+        "limit": [
+          2,
+          1,
+          20
+        ],
+        "jobs": 10,
+        "baseRatePerHour": 1750
+      },
+      "deco_park": {
+        "id": "deco_park",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.deco_park",
+        "size": [
+          3,
+          3
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 2000,
+          "wood": 10,
+          "stone": 10
+        },
+        "unlockLevel": 5,
+        "buildSeconds": 600,
+        "buildXp": 97,
+        "modelId": "deco_park",
+        "limit": [
+          1,
+          1,
+          25
+        ],
+        "decor": {
+          "bonus": 0.1,
+          "radius": 8
+        }
+      },
+      "bank": {
+        "id": "bank",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.bank",
+        "size": [
+          3,
+          3
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 12000,
+          "wood": 10,
+          "stone": 40
+        },
+        "unlockLevel": 7,
+        "buildSeconds": 1800,
+        "buildXp": 228,
+        "modelId": "bank",
+        "limit": [
+          1,
+          0.3333333333333333,
+          4
+        ],
+        "jobs": 15,
+        "baseRatePerHour": 2870,
+        "bankCapHours": 2
+      },
+      "house_apartment": {
+        "id": "house_apartment",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.house_apartment",
+        "size": [
+          4,
+          4
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 15000,
+          "wood": 20,
+          "stone": 60
+        },
+        "unlockLevel": 8,
+        "buildSeconds": 2700,
+        "buildXp": 257,
+        "modelId": "house_apartment",
+        "limit": [
+          2,
+          1,
+          30
+        ],
+        "population": 60,
+        "baseRatePerHour": 2760
+      },
+      "shop_supermarket": {
+        "id": "shop_supermarket",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.shop_supermarket",
+        "size": [
+          4,
+          4
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 22000,
+          "wood": 30,
+          "stone": 40
+        },
+        "unlockLevel": 9,
+        "buildSeconds": 3600,
+        "buildXp": 305,
+        "modelId": "shop_supermarket",
+        "limit": [
+          1,
+          1,
+          18
+        ],
+        "jobs": 30,
+        "baseRatePerHour": 5070
+      },
+      "hotel": {
+        "id": "hotel",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.hotel",
+        "size": [
+          4,
+          5
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 50000,
+          "wood": 40,
+          "stone": 80
+        },
+        "unlockLevel": 12,
+        "buildSeconds": 7200,
+        "buildXp": 457,
+        "modelId": "hotel",
+        "limit": [
+          1,
+          0.5,
+          10
+        ],
+        "jobs": 40,
+        "baseRatePerHour": 7480,
+        "waterBonusOverride": 0.2
+      },
+      "office_tower": {
+        "id": "office_tower",
+        "mapKinds": [
+          "city"
+        ],
+        "nameKey": "building.office_tower",
+        "size": [
+          4,
+          4
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 100000,
+          "wood": 20,
+          "stone": 120
+        },
+        "unlockLevel": 15,
+        "buildSeconds": 14400,
+        "buildXp": 641,
+        "modelId": "office_tower",
+        "limit": [
+          1,
+          0.5,
+          10
+        ],
+        "jobs": 60,
+        "baseRatePerHour": 9680
+      },
+      "market": {
+        "id": "market",
+        "mapKinds": [
+          "farm"
+        ],
+        "nameKey": "building.market",
+        "size": [
+          3,
+          3
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 200,
+          "wood": 5,
+          "stone": 0
+        },
+        "unlockLevel": 1,
+        "buildSeconds": 30,
+        "buildXp": 33,
+        "modelId": "market",
+        "maxCount": 1
+      },
+      "farmhouse": {
+        "id": "farmhouse",
+        "mapKinds": [
+          "farm"
+        ],
+        "nameKey": "building.farmhouse",
+        "size": [
+          3,
+          3
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 500,
+          "wood": 10,
+          "stone": 5
+        },
+        "unlockLevel": 1,
+        "buildSeconds": 60,
+        "buildXp": 55,
+        "modelId": "farmhouse",
+        "maxCount": 10,
+        "costScaling": [
+          500,
+          1500,
+          4000,
+          8000,
+          15000,
+          25000,
+          40000,
+          60000,
+          90000,
+          130000
+        ],
+        "unlockLevels": [
+          1,
+          3,
+          5,
+          7,
+          9,
+          11,
+          13,
+          15,
+          17,
+          19
+        ],
+        "fieldQuota": 24
+      },
+      "well": {
+        "id": "well",
+        "mapKinds": [
+          "farm"
+        ],
+        "nameKey": "building.well",
+        "size": [
+          1,
+          1
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 300,
+          "wood": 0,
+          "stone": 5
+        },
+        "unlockLevel": 2,
+        "buildSeconds": 120,
+        "buildXp": 40,
+        "modelId": "well",
+        "irrigationRadius": 6
+      },
+      "silo": {
+        "id": "silo",
+        "mapKinds": [
+          "farm"
+        ],
+        "nameKey": "building.silo",
+        "size": [
+          2,
+          2
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 800,
+          "wood": 10,
+          "stone": 10
+        },
+        "unlockLevel": 2,
+        "buildSeconds": 300,
+        "buildXp": 68,
+        "modelId": "silo",
+        "storageBonus": 100
+      },
+      "chicken_coop": {
+        "id": "chicken_coop",
+        "mapKinds": [
+          "farm"
+        ],
+        "nameKey": "building.chicken_coop",
+        "size": [
+          3,
+          3
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 1500,
+          "wood": 20,
+          "stone": 5
+        },
+        "unlockLevel": 3,
+        "buildSeconds": 300,
+        "buildXp": 87,
+        "modelId": "chicken_coop",
+        "limit": [
+          1,
+          0.3333333333333333,
+          4
+        ],
+        "production": {
+          "slots": 6,
+          "queueLimit": 3,
+          "recipes": [
+            "chicken_coop"
+          ]
+        }
+      },
+      "rice_mill": {
+        "id": "rice_mill",
+        "mapKinds": [
+          "farm"
+        ],
+        "nameKey": "building.rice_mill",
+        "size": [
+          3,
+          3
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 3000,
+          "wood": 20,
+          "stone": 20
+        },
+        "unlockLevel": 5,
+        "buildSeconds": 900,
+        "buildXp": 122,
+        "modelId": "rice_mill",
+        "limit": [
+          1,
+          0.3333333333333333,
+          4
+        ],
+        "production": {
+          "slots": 3,
+          "queueLimit": 3,
+          "recipes": [
+            "rice_mill"
+          ]
+        }
+      },
+      "cow_barn": {
+        "id": "cow_barn",
+        "mapKinds": [
+          "farm"
+        ],
+        "nameKey": "building.cow_barn",
+        "size": [
+          4,
+          4
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 6000,
+          "wood": 40,
+          "stone": 20
+        },
+        "unlockLevel": 7,
+        "buildSeconds": 1800,
+        "buildXp": 167,
+        "modelId": "cow_barn",
+        "limit": [
+          1,
+          0.3333333333333333,
+          4
+        ],
+        "production": {
+          "slots": 6,
+          "queueLimit": 3,
+          "recipes": [
+            "cow_barn"
+          ]
+        }
+      },
+      "bakery": {
+        "id": "bakery",
+        "mapKinds": [
+          "farm"
+        ],
+        "nameKey": "building.bakery",
+        "size": [
+          3,
+          3
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 12000,
+          "wood": 20,
+          "stone": 40
+        },
+        "unlockLevel": 9,
+        "buildSeconds": 3600,
+        "buildXp": 229,
+        "modelId": "bakery",
+        "limit": [
+          1,
+          0.3333333333333333,
+          4
+        ],
+        "production": {
+          "slots": 3,
+          "queueLimit": 3,
+          "recipes": [
+            "bakery"
+          ]
+        }
+      },
+      "deco_flowerbed": {
+        "id": "deco_flowerbed",
+        "mapKinds": [
+          "farm"
+        ],
+        "nameKey": "building.deco_flowerbed",
+        "size": [
+          1,
+          1
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 80,
+          "wood": 0,
+          "stone": 0
+        },
+        "unlockLevel": 2,
+        "buildSeconds": 15,
+        "buildXp": 18,
+        "modelId": "deco_flowerbed"
+      }
+    },
+    "crops": {
+      "veg_greens": {
+        "id": "veg_greens",
+        "nameKey": "crop.veg_greens",
+        "unlockLevel": 1,
+        "seedCost": 3,
+        "growSeconds": 300,
+        "yield": 2,
+        "itemId": "veg_greens",
+        "xp": 1,
+        "stageModels": [
+          "veg_greens_seed",
+          "veg_greens_growing",
+          "veg_greens_ripe"
+        ]
+      },
+      "rice": {
+        "id": "rice",
+        "nameKey": "crop.rice",
+        "unlockLevel": 1,
+        "seedCost": 5,
+        "growSeconds": 600,
+        "yield": 2,
+        "itemId": "rice",
+        "xp": 1,
+        "stageModels": [
+          "rice_seed",
+          "rice_growing",
+          "rice_ripe"
+        ]
+      },
+      "corn": {
+        "id": "corn",
+        "nameKey": "crop.corn",
+        "unlockLevel": 2,
+        "seedCost": 10,
+        "growSeconds": 1800,
+        "yield": 3,
+        "itemId": "corn",
+        "xp": 2,
+        "stageModels": [
+          "corn_seed",
+          "corn_growing",
+          "corn_ripe"
+        ]
+      },
+      "tomato": {
+        "id": "tomato",
+        "nameKey": "crop.tomato",
+        "unlockLevel": 4,
+        "seedCost": 20,
+        "growSeconds": 3600,
+        "yield": 4,
+        "itemId": "tomato",
+        "xp": 2,
+        "stageModels": [
+          "tomato_seed",
+          "tomato_growing",
+          "tomato_ripe"
+        ]
+      },
+      "sugarcane": {
+        "id": "sugarcane",
+        "nameKey": "crop.sugarcane",
+        "unlockLevel": 6,
+        "seedCost": 30,
+        "growSeconds": 7200,
+        "yield": 4,
+        "itemId": "sugarcane",
+        "xp": 3,
+        "stageModels": [
+          "sugarcane_seed",
+          "sugarcane_growing",
+          "sugarcane_ripe"
+        ]
+      },
+      "watermelon": {
+        "id": "watermelon",
+        "nameKey": "crop.watermelon",
+        "unlockLevel": 8,
+        "seedCost": 50,
+        "growSeconds": 14400,
+        "yield": 2,
+        "itemId": "watermelon",
+        "xp": 4,
+        "stageModels": [
+          "watermelon_seed",
+          "watermelon_growing",
+          "watermelon_ripe"
+        ]
+      },
+      "pumpkin": {
+        "id": "pumpkin",
+        "nameKey": "crop.pumpkin",
+        "unlockLevel": 10,
+        "seedCost": 80,
+        "growSeconds": 28800,
+        "yield": 3,
+        "itemId": "pumpkin",
+        "xp": 5,
+        "stageModels": [
+          "pumpkin_seed",
+          "pumpkin_growing",
+          "pumpkin_ripe"
+        ]
+      },
+      "coffee": {
+        "id": "coffee",
+        "nameKey": "crop.coffee",
+        "unlockLevel": 12,
+        "seedCost": 120,
+        "growSeconds": 43200,
+        "yield": 4,
+        "itemId": "coffee",
+        "xp": 6,
+        "stageModels": [
+          "coffee_seed",
+          "coffee_growing",
+          "coffee_ripe"
+        ]
+      }
+    },
+    "recipes": {
+      "chicken_coop": {
+        "id": "chicken_coop",
+        "inputs": {
+          "corn": 1
+        },
+        "output": "egg",
+        "seconds": 1200,
+        "xp": 2
+      },
+      "rice_mill": {
+        "id": "rice_mill",
+        "inputs": {
+          "rice": 3
+        },
+        "output": "flour",
+        "seconds": 900,
+        "xp": 2
+      },
+      "cow_barn": {
+        "id": "cow_barn",
+        "inputs": {
+          "corn": 3,
+          "rice": 3
+        },
+        "output": "milk",
+        "seconds": 3600,
+        "xp": 4
+      },
+      "bakery": {
+        "id": "bakery",
+        "inputs": {
+          "flour": 2,
+          "egg": 1
+        },
+        "output": "bread",
+        "seconds": 1800,
+        "xp": 6
+      }
+    },
+    "items": {
+      "veg_greens": {
+        "id": "veg_greens",
+        "nameKey": "item.veg_greens",
+        "sellPrice": 4,
+        "iconId": "veg_greens"
+      },
+      "rice": {
+        "id": "rice",
+        "nameKey": "item.rice",
+        "sellPrice": 7,
+        "iconId": "rice"
+      },
+      "corn": {
+        "id": "corn",
+        "nameKey": "item.corn",
+        "sellPrice": 11,
+        "iconId": "corn"
+      },
+      "tomato": {
+        "id": "tomato",
+        "nameKey": "item.tomato",
+        "sellPrice": 16,
+        "iconId": "tomato"
+      },
+      "sugarcane": {
+        "id": "sugarcane",
+        "nameKey": "item.sugarcane",
+        "sellPrice": 29,
+        "iconId": "sugarcane"
+      },
+      "watermelon": {
+        "id": "watermelon",
+        "nameKey": "item.watermelon",
+        "sellPrice": 108,
+        "iconId": "watermelon"
+      },
+      "pumpkin": {
+        "id": "pumpkin",
+        "nameKey": "item.pumpkin",
+        "sellPrice": 135,
+        "iconId": "pumpkin"
+      },
+      "coffee": {
+        "id": "coffee",
+        "nameKey": "item.coffee",
+        "sellPrice": 156,
+        "iconId": "coffee"
+      },
+      "egg": {
+        "id": "egg",
+        "nameKey": "item.egg",
+        "sellPrice": 40,
+        "iconId": "egg"
+      },
+      "flour": {
+        "id": "flour",
+        "nameKey": "item.flour",
+        "sellPrice": 80,
+        "iconId": "flour"
+      },
+      "milk": {
+        "id": "milk",
+        "nameKey": "item.milk",
+        "sellPrice": 220,
+        "iconId": "milk"
+      },
+      "bread": {
+        "id": "bread",
+        "nameKey": "item.bread",
+        "sellPrice": 440,
+        "iconId": "bread"
+      }
+    },
+    "bridges": {
+      "bridge_wood": {
+        "id": "bridge_wood",
+        "nameKey": "bridge.bridge_wood",
+        "mapKinds": [
+          "city",
+          "farm"
+        ],
+        "maxSpan": 6,
+        "costPerCell": {
+          "cash": 80,
+          "wood": 5,
+          "stone": 0
+        },
+        "unlockLevel": 4,
+        "buildSecondsPerCell": 60
+      },
+      "bridge_stone": {
+        "id": "bridge_stone",
+        "nameKey": "bridge.bridge_stone",
+        "mapKinds": [
+          "city",
+          "farm"
+        ],
+        "maxSpan": 12,
+        "costPerCell": {
+          "cash": 200,
+          "wood": 0,
+          "stone": 8
+        },
+        "unlockLevel": 8,
+        "buildSecondsPerCell": 180
+      },
+      "bridge_concrete": {
+        "id": "bridge_concrete",
+        "nameKey": "bridge.bridge_concrete",
+        "mapKinds": [
+          "city"
+        ],
+        "maxSpan": 24,
+        "costPerCell": {
+          "cash": 400,
+          "wood": 0,
+          "stone": 10
+        },
+        "unlockLevel": 12,
+        "buildSecondsPerCell": 360
+      }
+    },
+    "quests": {
+      "city": [
+        {
+          "id": "city-1",
+          "nameKey": "quest.city-1",
+          "action": "CLEAR",
+          "kind": "tree",
+          "target": 3,
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 20,
+          "tutorial": true
+        },
+        {
+          "id": "city-2",
+          "nameKey": "quest.city-2",
+          "action": "ROAD",
+          "kind": "connected_cells",
+          "target": 6,
+          "requiresRoad": true,
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 10,
+          "tutorial": true
+        },
+        {
+          "id": "city-3",
+          "nameKey": "quest.city-3",
+          "action": "TERRAFORM",
+          "kind": "flat_2x2",
+          "target": 1,
+          "reward": {
+            "cash": 50,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 10,
+          "tutorial": true
+        },
+        {
+          "id": "city-4",
+          "nameKey": "quest.city-4",
+          "action": "BUILD",
+          "kind": "building",
+          "target": 1,
+          "buildingId": "house_small",
+          "reward": {
+            "cash": 150,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": true
+        },
+        {
+          "id": "city-5",
+          "nameKey": "quest.city-5",
+          "action": "BUILD",
+          "kind": "building",
+          "target": 1,
+          "buildingId": "shop_grocery",
+          "reward": {
+            "cash": 200,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": true
+        },
+        {
+          "id": "city-6",
+          "nameKey": "quest.city-6",
+          "action": "COLLECT",
+          "kind": "first_collection",
+          "target": 1,
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": true
+        },
+        {
+          "id": "city-7",
+          "nameKey": "quest.city-7",
+          "action": "POPULATION",
+          "kind": "population",
+          "target": 12,
+          "reward": {
+            "cash": 300,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "city-8",
+          "nameKey": "quest.city-8",
+          "action": "BUILD",
+          "kind": "building",
+          "target": 1,
+          "buildingId": "deco_garden",
+          "reward": {
+            "cash": 200,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "city-9",
+          "nameKey": "quest.city-9",
+          "action": "UNLOCK_ZONE",
+          "kind": "zone",
+          "target": 1,
+          "reward": {
+            "cash": 500,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "city-10",
+          "nameKey": "quest.city-10",
+          "action": "EMBANK",
+          "kind": "cells",
+          "target": 4,
+          "reward": {
+            "cash": 300,
+            "wood": 0,
+            "stone": 10
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "city-11",
+          "nameKey": "quest.city-11",
+          "action": "BRIDGE",
+          "kind": "bridge_wood",
+          "target": 1,
+          "reward": {
+            "cash": 800,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "city-12",
+          "nameKey": "quest.city-12",
+          "action": "BUILD",
+          "kind": "income_far_bank",
+          "target": 1,
+          "farBank": true,
+          "reward": {
+            "cash": 1000,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        }
+      ],
+      "farm": [
+        {
+          "id": "farm-1",
+          "nameKey": "quest.farm-1",
+          "action": "BUILD",
+          "kind": "building",
+          "target": 1,
+          "buildingId": "market",
+          "requiresRoad": true,
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": true
+        },
+        {
+          "id": "farm-2",
+          "nameKey": "quest.farm-2",
+          "action": "BUILD",
+          "kind": "building",
+          "target": 1,
+          "buildingId": "farmhouse",
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": true
+        },
+        {
+          "id": "farm-3",
+          "nameKey": "quest.farm-3",
+          "action": "TILL",
+          "kind": "cells",
+          "target": 6,
+          "reward": {
+            "cash": 50,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 10,
+          "tutorial": true
+        },
+        {
+          "id": "farm-4",
+          "nameKey": "quest.farm-4",
+          "action": "PLANT",
+          "kind": "crop",
+          "target": 1,
+          "cropId": "veg_greens",
+          "reward": {
+            "cash": 30,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": true
+        },
+        {
+          "id": "farm-5",
+          "nameKey": "quest.farm-5",
+          "action": "HARVEST",
+          "kind": "first_harvest",
+          "target": 1,
+          "reward": {
+            "cash": 50,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": true
+        },
+        {
+          "id": "farm-6",
+          "nameKey": "quest.farm-6",
+          "action": "SELL",
+          "kind": "farm_items",
+          "target": 10,
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": true
+        },
+        {
+          "id": "farm-7",
+          "nameKey": "quest.farm-7",
+          "action": "PLANT",
+          "kind": "cells",
+          "target": 10,
+          "cropId": "rice",
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "farm-8",
+          "nameKey": "quest.farm-8",
+          "action": "BUILD",
+          "kind": "building",
+          "target": 1,
+          "buildingId": "well",
+          "reward": {
+            "cash": 200,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "farm-9",
+          "nameKey": "quest.farm-9",
+          "action": "PRODUCE",
+          "kind": "building_and_feed",
+          "target": 1,
+          "buildingId": "chicken_coop",
+          "reward": {
+            "cash": 300,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "farm-10",
+          "nameKey": "quest.farm-10",
+          "action": "EMBANK",
+          "kind": "cells",
+          "target": 4,
+          "reward": {
+            "cash": 300,
+            "wood": 0,
+            "stone": 10
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "farm-11",
+          "nameKey": "quest.farm-11",
+          "action": "BRIDGE",
+          "kind": "bridge_wood",
+          "target": 1,
+          "reward": {
+            "cash": 800,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        },
+        {
+          "id": "farm-12",
+          "nameKey": "quest.farm-12",
+          "action": "TILL",
+          "kind": "cells_far_bank",
+          "target": 1,
+          "farBank": true,
+          "reward": {
+            "cash": 500,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 0,
+          "tutorial": false
+        }
+      ]
+    }
+  }
+}

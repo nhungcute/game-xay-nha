@@ -1,0 +1,358 @@
+{
+  "contentVersion": 1,
+  "quests": {
+    "city": [
+      {
+        "id": "city-1",
+        "nameKey": "quest.city-1",
+        "action": "CLEAR",
+        "kind": "tree",
+        "target": 3,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 20,
+        "tutorial": true
+      },
+      {
+        "id": "city-2",
+        "nameKey": "quest.city-2",
+        "action": "ROAD",
+        "kind": "connected_cells",
+        "target": 6,
+        "requiresRoad": true,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 10,
+        "tutorial": true
+      },
+      {
+        "id": "city-3",
+        "nameKey": "quest.city-3",
+        "action": "TERRAFORM",
+        "kind": "flat_2x2",
+        "target": 1,
+        "reward": {
+          "cash": 50,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 10,
+        "tutorial": true
+      },
+      {
+        "id": "city-4",
+        "nameKey": "quest.city-4",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "house_small",
+        "reward": {
+          "cash": 150,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "city-5",
+        "nameKey": "quest.city-5",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "shop_grocery",
+        "reward": {
+          "cash": 200,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "city-6",
+        "nameKey": "quest.city-6",
+        "action": "COLLECT",
+        "kind": "first_collection",
+        "target": 1,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "city-7",
+        "nameKey": "quest.city-7",
+        "action": "POPULATION",
+        "kind": "population",
+        "target": 12,
+        "reward": {
+          "cash": 300,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "city-8",
+        "nameKey": "quest.city-8",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "deco_garden",
+        "reward": {
+          "cash": 200,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "city-9",
+        "nameKey": "quest.city-9",
+        "action": "UNLOCK_ZONE",
+        "kind": "zone",
+        "target": 1,
+        "reward": {
+          "cash": 500,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "city-10",
+        "nameKey": "quest.city-10",
+        "action": "EMBANK",
+        "kind": "cells",
+        "target": 4,
+        "reward": {
+          "cash": 300,
+          "wood": 0,
+          "stone": 10
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "city-11",
+        "nameKey": "quest.city-11",
+        "action": "BRIDGE",
+        "kind": "bridge_wood",
+        "target": 1,
+        "reward": {
+          "cash": 800,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "city-12",
+        "nameKey": "quest.city-12",
+        "action": "BUILD",
+        "kind": "income_far_bank",
+        "target": 1,
+        "farBank": true,
+        "reward": {
+          "cash": 1000,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      }
+    ],
+    "farm": [
+      {
+        "id": "farm-1",
+        "nameKey": "quest.farm-1",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "market",
+        "requiresRoad": true,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "farm-2",
+        "nameKey": "quest.farm-2",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "farmhouse",
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "farm-3",
+        "nameKey": "quest.farm-3",
+        "action": "TILL",
+        "kind": "cells",
+        "target": 6,
+        "reward": {
+          "cash": 50,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 10,
+        "tutorial": true
+      },
+      {
+        "id": "farm-4",
+        "nameKey": "quest.farm-4",
+        "action": "PLANT",
+        "kind": "crop",
+        "target": 1,
+        "cropId": "veg_greens",
+        "reward": {
+          "cash": 30,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "farm-5",
+        "nameKey": "quest.farm-5",
+        "action": "HARVEST",
+        "kind": "first_harvest",
+        "target": 1,
+        "reward": {
+          "cash": 50,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "farm-6",
+        "nameKey": "quest.farm-6",
+        "action": "SELL",
+        "kind": "farm_items",
+        "target": 10,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "farm-7",
+        "nameKey": "quest.farm-7",
+        "action": "PLANT",
+        "kind": "cells",
+        "target": 10,
+        "cropId": "rice",
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "farm-8",
+        "nameKey": "quest.farm-8",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "well",
+        "reward": {
+          "cash": 200,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "farm-9",
+        "nameKey": "quest.farm-9",
+        "action": "PRODUCE",
+        "kind": "building_and_feed",
+        "target": 1,
+        "buildingId": "chicken_coop",
+        "reward": {
+          "cash": 300,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "farm-10",
+        "nameKey": "quest.farm-10",
+        "action": "EMBANK",
+        "kind": "cells",
+        "target": 4,
+        "reward": {
+          "cash": 300,
+          "wood": 0,
+          "stone": 10
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "farm-11",
+        "nameKey": "quest.farm-11",
+        "action": "BRIDGE",
+        "kind": "bridge_wood",
+        "target": 1,
+        "reward": {
+          "cash": 800,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "farm-12",
+        "nameKey": "quest.farm-12",
+        "action": "TILL",
+        "kind": "cells_far_bank",
+        "target": 1,
+        "farBank": true,
+        "reward": {
+          "cash": 500,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      }
+    ]
+  }
+}
