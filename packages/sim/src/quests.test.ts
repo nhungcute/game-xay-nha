@@ -4,7 +4,7 @@ import { catalog, economy } from '@xay-nha/content';
 import { createTestTemplate } from '@xay-nha/worldgen';
 import { event } from './common';
 import { recompute } from './economy';
-import { execute } from './engine';
+import { authoredQuestProgress, execute } from './engine';
 import { ensureRepeatQuests, referenceIncome } from './quests';
 import { cloneState, createState, rebuildOccupancy, type SimState } from './state';
 import { validateSnapshot } from './snapshot';
@@ -121,5 +121,34 @@ describe('repeat quests (docs/16 §10.3, D017, D024)', () => {
     const s = world('farm', 6);
     const checked = validateSnapshot(cloneState(s), structuredClone(s.snapshot), NOW);
     expect(checked.ok).toBe(true);
+  });
+});
+
+describe('authored state quests count work done before the quest appeared (G3 sim-economy finding)', () => {
+  it('road quest counts connected player-built road cells regardless of when they were built', () => {
+    const s = createState(createTestTemplate('city'), NOW);
+    s.snapshot.progress.questIndex = 1; // city-2: road ≥ 6 connected cells
+    expect(authoredQuestProgress(s)).toBe(0);
+    const e = run(s, 'BUILD_ROAD', { tier: 1, cells: [[49, 70], [50, 70], [51, 70], [52, 70], [53, 70], [54, 70]] });
+    expect(e.result.accepted).toBe(true);
+    expect(authoredQuestProgress(e.state)).toBe(6);
+    // Built while quest 1 was still active: progress is measured from the state, so it still counts.
+    const early = createState(createTestTemplate('city'), NOW);
+    const built = run(early, 'BUILD_ROAD', { tier: 1, cells: [[49, 70], [50, 70], [51, 70], [52, 70], [53, 70], [54, 70]] }).state;
+    built.snapshot.progress.questIndex = 1;
+    expect(run(built, 'CLAIM_QUEST', { questId: catalog.quests.city[1]!.id }).result.accepted).toBe(true);
+  });
+  it('template village roads and disconnected roads do not count', () => {
+    const s = createState(createTestTemplate('city'), NOW);
+    s.snapshot.progress.questIndex = 1;
+    // Two free, flat cells away from the village road and ENTRY.
+    let pair: [number, number][] | null = null;
+    for (let z = 50; z < 62 && !pair; z++) for (let x = 50; x < 75 && !pair; x++) {
+      const cells: [number, number][] = [[x, z], [x + 1, z]];
+      if (cells.every(c => !s.occupancy.get(cellIndex(...c)) && s.surface[cellIndex(...c)] !== Surface.WATER)) pair = cells;
+    }
+    const e = run(s, 'BUILD_ROAD', { tier: 1, cells: pair! });
+    expect(e.result.accepted).toBe(true);
+    expect(authoredQuestProgress(e.state)).toBe(0);
   });
 });

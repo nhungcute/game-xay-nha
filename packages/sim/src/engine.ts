@@ -74,16 +74,31 @@ function administrative(s: SimState, cmd: Command, now: number): Cost | undefine
     const repeat=claimRepeat(s,cmd.payload.questId); if (repeat) return repeat;
     const p=s.snapshot.progress, q=catalog.quests[s.template.mapKind][p.questIndex];
     guard(q?.id===cmd.payload.questId,'NOT_FOUND');
-    let progress=p.questProgress[q.id] ?? 0;
-    if (q.action==='BUILD' && q.buildingId) progress=s.snapshot.buildings.filter(b=>b.defId===q.buildingId && b.status==='ACTIVE' && (!q.requiresRoad || access(s,b))).length;
-    if (q.action==='POPULATION') progress=populationAndJobs(s).population;
-    guard(progress>=q.target,'QUEST_NOT_READY');
+    guard(authoredQuestProgress(s)>=q.target,'QUEST_NOT_READY');
     refund(s,q.reward); addXp(s,q.xp); p.questIndex++;
     if (p.questIndex >= economy.construction.tutorialInstantThroughQuest) p.tutorialDone=true;
     ensureRepeatQuests(s);
     return zeroCost();
   }
   return undefined;
+}
+
+/**
+ * Progress of the current authored quest. Quests about the world's state (roads, embankments, tilled
+ * cells, buildings, population) are measured from the state itself, so work done before the quest
+ * appeared still counts and a player can never get stuck (G3 sim-economy finding). Action quests
+ * (clear, flatten, plant, harvest, sell, collect, produce, bridge, zones) count events while active.
+ */
+export function authoredQuestProgress(s: SimState): number {
+  const p=s.snapshot.progress, q=catalog.quests[s.template.mapKind][p.questIndex];
+  if (!q) return 0;
+  if (q.action==='BUILD' && q.buildingId) return s.snapshot.buildings.filter(b=>b.defId===q.buildingId && b.status==='ACTIVE' && (!q.requiresRoad || access(s,b))).length;
+  if (q.action==='POPULATION') return populationAndJobs(s).population;
+  let count=0;
+  if (q.action==='ROAD') { for (let i=0;i<s.roadTier.length;i++) if (s.roadTier[i] && !s.baseRoadTier[i] && s.connected[i]) count++; return count; }
+  if (q.action==='EMBANK') { for (let i=0;i<s.flags.length;i++) if (s.flags[i]! & CellFlag.EMBANKED) count++; return count; }
+  if (q.action==='TILL' && q.kind==='cells') { for (let i=0;i<s.surface.length;i++) if (s.surface[i]===Surface.TILLED) count++; return count; }
+  return p.questProgress[q.id] ?? 0;
 }
 
 function applyDraft(s: SimState, cmd: Command, now: number): Cost {

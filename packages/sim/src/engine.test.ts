@@ -207,7 +207,7 @@ describe('quests and tutorial completion', () => {
     let state = initial('city');
     state = accepted(state, 'CLEAR_ENV', { envIds: ['A-0', 'A-1', 'A-2'] });
     state = accepted(state, 'CLAIM_QUEST', { questId: 'city-1' });
-    state = accepted(state, 'BUILD_ROAD', { tier: 1, cells: Array.from({ length: 6 }, (_, n) => [48, 70 - n]) });
+    state = accepted(state, 'BUILD_ROAD', { tier: 1, cells: Array.from({ length: 6 }, (_, n) => [48, 69 - n]) });
     state = accepted(state, 'CLAIM_QUEST', { questId: 'city-2' });
     state = accepted(state, 'TERRAFORM', { rect: [50, 65, 51, 66], mode: 'FLATTEN' });
     state = accepted(state, 'CLAIM_QUEST', { questId: 'city-3' });
