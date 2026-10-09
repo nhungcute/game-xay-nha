@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "provisional": true,
+  "kind": "rule-fixture",
+  "mapKind": "farm",
+  "mapId": "farm-test-01",
+  "seed": 20261009
+}

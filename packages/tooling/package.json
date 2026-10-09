@@ -1,0 +1,7 @@
+{
+  "name": "@xay-nha/tooling",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": { "@xay-nha/contracts": "workspace:*", "@xay-nha/worldgen": "workspace:*" }
+}
