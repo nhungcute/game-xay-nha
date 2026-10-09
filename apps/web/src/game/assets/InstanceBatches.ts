@@ -9,13 +9,15 @@ export class InstanceBatches {
   readonly group = new Group();
   private readonly batches = new Map<string, Batch>();
   private readonly matrix = new Matrix4();
-  constructor(scene: Scene, private readonly assets: AssetManager) { scene.add(this.group); }
+  /** `castShadow` decides per asset whether its instances go into the shadow pass (each caster costs a draw call). */
+  constructor(scene: Scene, private readonly assets: AssetManager, private readonly castShadow: (handle: AssetHandle) => boolean = () => true) { scene.add(this.group); }
   private allocate(key: string, assetId: string, count: number): Batch {
     const capacity = 2 ** Math.ceil(Math.log2(Math.max(1, count)));
     const handle = this.assets.get(assetId);
+    const casts = this.castShadow(handle);
     const meshes = handle.parts.map(part => {
       const mesh = new InstancedMesh(part.geometry, part.material, capacity);
-      mesh.castShadow = true; mesh.receiveShadow = true; mesh.name = `${key}:${assetId}`;
+      mesh.castShadow = casts; mesh.receiveShadow = true; mesh.name = `${key}:${assetId}`;
       this.group.add(mesh);
       return mesh;
     });

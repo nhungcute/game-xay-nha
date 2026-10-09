@@ -86,6 +86,19 @@ describe('actual placeholder GLB artifacts', () => {
     renderer.dispose(); expect(scene.children).toHaveLength(0); expect(disposed).not.toHaveBeenCalled();
     handle.release(); manager.dispose(); expect(disposed).toHaveBeenCalledTimes(1);
   });
+  it('batches scenery per asset × map quadrant and keeps low plants out of the shadow pass (draw-call budget)', async () => {
+    const manager = await setup(), scene = new Scene(), renderer = new EnvRenderer(scene, manager);
+    const s = createState(createTestTemplate(), 1000);
+    renderer.update(s);
+    const all = meshes(scene), assets = new Set(s.env.map(e => e.assetId));
+    expect(all.length).toBeLessThanOrEqual(assets.size * 4);
+    for (const mesh of all) {
+      const id = mesh.name.split(':').at(-1)!, handle = manager.get(id), height = handle.bounds.max.y - handle.bounds.min.y; handle.release();
+      expect(mesh.castShadow).toBe(height >= 1.5);
+    }
+    expect(all.some(m => m.castShadow) && all.some(m => !m.castShadow)).toBe(true);
+    renderer.dispose(); manager.dispose();
+  });
   it('switches construction scaffolds to GLB buildings and removes demolished instances', async () => {
     const manager = await setup(), scene = new Scene(), renderer = new BuildingRenderer(scene, manager);
     const s = createState(createTestTemplate(), 1000, []);
