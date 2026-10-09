@@ -1,0 +1,8 @@
+{
+  "license": "CC0-1.0",
+  "origin": "Original procedural models created specifically for this project",
+  "generator": "scripts/generate_assets.py",
+  "units": "meters",
+  "coordinateSystem": "Y_UP",
+  "files": ["pine.glb", "oak.glb", "birch.glb", "shrub.glb", "rock.glb", "reeds.glb", "flowers.glb"]
+}

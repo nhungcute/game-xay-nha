@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#102921"/><meta name="description" content="An interactive geometry-based Three.js farm starter world"/>
+  <title>Verdant Worlds — Interactive 3D Farm</title>
+</head><body>
+  <div id="app">
+    <div id="canvas-wrap" aria-label="Interactive 3D farm world"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <header class="top-bar panel">
+      <div class="brand"><div class="brand-icon">✦</div><div><div class="eyebrow">VERDANT WORLDS / SANDBOX</div><h1>Farm Valley <span>3D</span></h1></div></div>
+      <div class="header-right"><span class="live"><i></i> LIVE WORLD</span><select id="world-select" aria-label="Select world"><option value="farm">🌾 Farm Valley</option><option value="city">🏞 City Frontier</option><option value="eco">🌿 Eco Sanctuary</option></select></div>
+    </header>
+    <section id="left-panel" class="panel"><div class="section-kicker">WORLD TOOLS</div>
+      <button class="tool is-active" data-tool="inspect" title="Inspect land"><span class="tool-icon">⌖</span><span><strong>Explore</strong><small>Select a land parcel</small></span><kbd>Esc</kbd></button>
+      <div class="tool-divider"></div><div class="section-kicker">BUILD ON YOUR LAND</div>
+      <button class="tool" data-tool="cabin"><span class="tool-icon">⌂</span><span><strong>Cabin</strong><small>7 × 6 • wood</small></span><kbd>1</kbd></button>
+      <button class="tool" data-tool="barn"><span class="tool-icon">▣</span><span><strong>Barn</strong><small>10 × 8 • timber</small></span><kbd>2</kbd></button>
+      <button class="tool" data-tool="garden"><span class="tool-icon">♧</span><span><strong>Garden</strong><small>8 × 7 • farming</small></span><kbd>3</kbd></button>
+      <div class="tool-divider"></div><div class="section-kicker">EDIT SCENERY</div>
+      <button class="tool" data-tool="plant"><span class="tool-icon">♠</span><span><strong>Plant an oak</strong><small>Outside build zones</small></span></button>
+      <button class="tool" data-tool="clear"><span class="tool-icon">✕</span><span><strong>Remove tree</strong><small>Restore open land</small></span></button>
+      <button class="tool" data-tool="demolish"><span class="tool-icon">⌫</span><span><strong>Demolish</strong><small>Remove built items</small></span></button>
+    </section>
+    <section class="panel parcel-panel" aria-live="polite"><div class="section-kicker">LAND INSPECTOR</div><div id="parcel-content"><div class="none-selected"><div class="illustration">◇</div><strong>No lot selected</strong><p>Tap any empty green or tan parcel to inspect and start building.</p></div></div></section>
+    <div id="controls" class="panel"><button id="home" title="Reset camera">⌂ <span>Reset view</span></button><button id="rotate" title="Rotate construction">⟳ <span>Rotate</span></button><button id="save" title="Save local progress">↓ <span>Save</span></button><button id="export" title="Export a portable JSON save">⇩ <span>Export</span></button><button id="import" title="Import a portable JSON save">⇧ <span>Import</span></button><input type="file" id="import-file" accept="application/json,.json" hidden/></div>
+    <div class="bottom-left"><span class="world-dot"></span><span id="stat-world">LOADING MAP</span><span class="dot-sep">•</span><span id="stat-count">0 BUILDINGS</span></div>
+    <div class="bottom-right">DRAG <b>Orbit</b><i>·</i> RIGHT DRAG <b>Pan</b><i>·</i> SCROLL <b>Zoom</b></div>
+    <div class="watermark">100% TRUE 3D GEOMETRY <span>◆</span> THREE.JS</div>
+    <div id="toast" role="status"></div>
+    <div id="loading" role="status"><div class="loading-card"><div class="logo-large">✦</div><div class="eyebrow">GENERATING YOUR WORLD</div><h2>Growing a little paradise...</h2><div class="load-track"><span id="load-progress"></span></div><p id="load-label">Sculpting the terrain</p></div></div>
+    <div id="error-screen" hidden><div class="loading-card"><h2>Could not load the scene</h2><p id="error-detail"></p><button onclick="location.reload()">Try again</button></div></div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body></html>

@@ -1,0 +1,7 @@
+services:
+  farm-map:
+    build: .
+    container_name: empty-farm-3d
+    ports:
+      - "8080:80"
+    restart: unless-stopped

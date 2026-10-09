@@ -1,0 +1,25 @@
+{
+  "name": "verdant-worlds-3d",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Actual interactive 3D farm map with procedural terrain, GLB instancing and gameplay parcels",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test tests/*.test.js",
+    "check": "npm run test && npm run build",
+    "test:browser": "node scripts/browser-smoke.mjs"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "vite": "7.1.10",
+    "@playwright/test": "1.56.0"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

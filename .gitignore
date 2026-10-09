@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+.pnpm-store/
+test-results/
+playwright-report/
+*.tsbuildinfo
+.env
+!.env.example
+/review-*.png

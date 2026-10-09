@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#092f30" />
+    <meta name="description" content="Interactive three-dimensional empty farm starter map built using Three.js" />
+    <title>Verdant Valley — 3D Farm Builder</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="scene" aria-label="Bản đồ nông trại 3D tương tác"></canvas>
+      <div id="crosshair" hidden></div>
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">✿</span><div><strong>VERDANT VALLEY</strong><small>YOUR STORY STARTS HERE</small></div></div>
+        <div class="topbar-right"><span id="live-stat" class="live-stat">● &nbsp; READY TO GROW</span><button id="help-btn" class="icon-btn" title="Hướng dẫn">?</button></div>
+      </header>
+      <aside class="leftpanel">
+        <div class="tiny-label">BẢN ĐỒ KHỞI ĐẦU</div>
+        <h1>Thung lũng<br><em>xanh</em></h1>
+        <p>Mảnh đất trống của bạn. Tự do quy hoạch một nông trại từ đầu.</p>
+        <div class="metrics"><div><b id="parcels-stat">—</b><span>LÔ ĐẤT</span></div><div><b id="buildings-stat">0</b><span>CÔNG TRÌNH</span></div></div>
+        <div class="divider-line"></div>
+        <div class="tiny-label">KHU VỰC ĐƯỢC CHỌN</div>
+        <div id="parcel-info" class="parcel-info"><b>Chưa chọn lô đất</b><span>Chạm vào lô đất để xem chi tiết</span></div>
+      </aside>
+      <div class="rightcontrols">
+        <button id="zoom-in" class="control-square" title="Phóng to">＋</button>
+        <button id="zoom-out" class="control-square" title="Thu nhỏ">－</button>
+        <button id="rotate-building" class="control-square" title="Xoay công trình 90°">⟳</button>
+        <button id="home-camera" class="control-square" title="Đặt lại góc nhìn">⌂</button>
+        <button id="toggle-labels" class="control-square" title="Hiện/ẩn ranh giới lô">▦</button>
+      </div>
+      <div class="bottom-wrap">
+        <div id="message" class="toast" role="status">Chọn một lô đất hoặc xoay bản đồ để khám phá.</div>
+        <nav class="toolbar" aria-label="Công cụ xây dựng">
+          <button class="tool active" data-tool="select"><span class="tool-icon">⌖</span><span>Khám phá</span></button>
+          <div class="tool-separator"></div>
+          <button class="tool" data-tool="field"><span class="tool-icon">▤</span><span>Đất trồng</span></button>
+          <button class="tool" data-tool="orchard"><span class="tool-icon">♣</span><span>Vườn cây</span></button>
+          <button class="tool" data-tool="cottage"><span class="tool-icon">⌂</span><span>Nhà ở</span></button>
+          <button class="tool" data-tool="barn"><span class="tool-icon">▱</span><span>Chuồng trại</span></button>
+          <div class="tool-separator"></div>
+          <button id="remove-btn" class="tool" title="Xóa công trình đã chọn"><span class="tool-icon">⌫</span><span>Tháo dỡ</span></button>
+        </nav>
+        <div class="bottom-actions">
+          <button id="save-btn">Lưu</button><button id="load-btn">Tải</button><button id="export-btn">Xuất JSON</button><label class="import-label">Nhập JSON<input id="import-input" type="file" accept=".json,application/json" hidden /></label>
+        </div>
+      </div>
+      <div id="modal" class="modal" hidden><div class="modal-card"><button id="close-modal" class="modal-close">✕</button><div class="tiny-label">HOW TO PLAY</div><h2>Bắt đầu từ vùng đất trống</h2><p>Đây là cảnh 3D thật. Xoay camera để xem địa hình từ mọi hướng.</p><div class="help-grid"><div><b>Máy tính</b><span>Chuột trái kéo: xoay camera<br>Chuột phải kéo: di chuyển<br>Lăn chuột: phóng to</span></div><div><b>Điện thoại / iPad</b><span>Một ngón: xoay / chọn<br>Hai ngón: thu phóng và di chuyển</span></div><div><b>Xây dựng</b><span>Chọn công trình → chạm lô đất hợp lệ<br>Q / E: xoay trước khi đặt<br>Delete: xóa công trình được chọn</span></div><div><b>Lưu trữ</b><span>Lưu/Tải: bộ nhớ trình duyệt<br>Xuất/Nhập JSON: sao lưu bản đồ</span></div></div><p class="fineprint">Mọi cây, đá, đất, sông và công trình đều là đối tượng 3D, không phải ảnh phẳng.</p></div></div>
+      <div id="loading"><div class="loading-spinner"></div><h2>Growing your world…</h2><p>Loading 3D terrain and nature</p></div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

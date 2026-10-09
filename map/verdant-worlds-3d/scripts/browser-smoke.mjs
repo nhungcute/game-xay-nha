@@ -1,0 +1,40 @@
+/** Real browser test: run `npm run dev` in one terminal, `npm run test:browser` in another. */
+import {chromium} from '@playwright/test';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=swiftshader','--enable-webgl']});
+const page=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
+const errors=[];
+page.on('pageerror',e=>errors.push(e.message));
+try {
+  await page.goto(process.env.BASE_URL||'http://127.0.0.1:5173/',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.__mapDebug)&&document.querySelector('#loading.hidden'),null,{timeout:90000});
+  const debug=await page.evaluate(()=>window.__mapDebug());
+  if(!(debug.geometry&&debug.terrainVertices>30000&&debug.lakes>0&&debug.rivers>0&&debug.parcels>=20&&debug.instancedMeshes>0)) throw new Error('Missing real geometry '+JSON.stringify(debug));
+  if(debug.buildings!==0)throw new Error('Starter map must be empty (fresh local storage)');
+  await mkdir('screenshots',{recursive:true});
+  const before=await page.screenshot({path:'screenshots/farm-isometric.png'});
+  const canvas=page.locator('#canvas-wrap canvas');const box=await canvas.boundingBox();
+  await page.mouse.move(box.x+box.width*.52,box.y+box.height*.52);
+  await page.mouse.down();await page.mouse.move(box.x+box.width*.72,box.y+box.height*.57,{steps:16});await page.mouse.up();
+  await page.waitForTimeout(500);
+  const after=await page.screenshot({path:'screenshots/farm-rotated.png'});
+  if(createHash('sha256').update(before).digest('hex')===createHash('sha256').update(after).digest('hex'))throw new Error('Scene did not change after camera drag');
+  const beforeCam=debug.cameraPosition,afterCam=(await page.evaluate(()=>window.__mapDebug())).cameraPosition;
+  if(JSON.stringify(beforeCam)===JSON.stringify(afterCam))throw new Error('Camera did not orbit');
+  await page.click('#home');await page.waitForTimeout(450);
+  const screenPoint=await page.evaluate(()=>window.__mapDebug().projectParcel('FARM-017'));
+  if(!screenPoint||screenPoint.x<0||screenPoint.x>1440||screenPoint.y<0||screenPoint.y>900)throw new Error('Parcel center off screen');
+  await page.mouse.click(screenPoint.x,screenPoint.y);
+  const picked=(await page.evaluate(()=>window.__mapDebug())).selectedId;
+  if(picked!=='FARM-017')throw new Error(`Parcel selection failed, selected ${picked}`);
+  await page.click('[data-tool="garden"]');
+  await page.mouse.click(screenPoint.x,screenPoint.y);
+  if((await page.evaluate(()=>window.__mapDebug())).buildings!==1)throw new Error('Build placement failed');
+  await page.click('#save');await page.reload();
+  await page.waitForFunction(()=>window.__mapDebug&&document.querySelector('#loading.hidden'),null,{timeout:90000});
+  if((await page.evaluate(()=>window.__mapDebug())).buildings!==1)throw new Error('Save/load did not restore building');
+  console.log('PASS: true 3D vertices, real water, GLB instancing, camera orbit, parcel selection, building placement, local save/load');
+  console.log('Screenshots: screenshots/farm-isometric.png and screenshots/farm-rotated.png');
+  if(errors.length)throw new Error('Browser console: '+errors.join('; '));
+} finally {await browser.close();}
