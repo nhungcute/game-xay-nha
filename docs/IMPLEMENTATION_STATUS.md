@@ -4,24 +4,25 @@ Updated: 2026-10-10 (Asia/Bangkok).
 
 Mode: auto-continue (approved 2026-10-10)
 
-## Current gate: G1 — IN PROGRESS
+## Current gate: G2 — IN PROGRESS (G1 complete 2026-10-10, see docs/reports/G1-report.md)
 
-Read all design documents 00–16, both economy scripts, and all three reference images.
-G0 approved 2026-10-10; product owner independently re-ran pnpm check: 604/604 passed.
-Continuation protocol updated by explicit user instruction: full test/report/commit at every gate,
-then continue only when exit criteria pass. G2–G4 have not started. No public deploy authorized.
+## G2 task plan
 
-## G1 task plan
+- [ ] apps/api: Fastify + Postgres 16 + Drizzle schema/migrations per docs/11 §5 (accounts, worlds = characters, zones, buildings, bridges, crops, inventory, removed_env, world_commands).
+- [ ] Auth: POST /api/characters (account + character, recovery code), POST /api/auth/recover, GET /api/me, rate limits.
+- [ ] Worlds: GET /api/worlds/:id (process completions + settle), POST /api/worlds/:id/commands (≤10, idempotent, revision, sim validate/apply, persist), DELETE.
+- [ ] Client: online mode — character creation screen, map choice, command queue with optimistic updates + rebase, clock sync, IndexedDB cache validate-then-swap.
+- [ ] Compose: api + postgres (no published port), nginx /api proxy; secrets via .env.
+- [ ] Integration tests docs/10 §3 against a real Postgres container; curl-crafted invalid command rejected; reload hash identical; two characters independent.
+- [ ] Full check, docs/reports/G2-report.md, commit.
 
-- [ ] Apply/commit approved docs Q005–Q008 and mode; maintain reports under docs/reports/.
-- [ ] Implement approved bankRegions contracts/validator and actual-paid road valuation regressions.
-- [ ] Bootstrap pinned Vite + React 18 + Three.js + zustand app, VITE_OFFLINE=1.
-- [ ] GLB assets/manifest with verified CC0 sources or explicitly marked permitted placeholders.
-- [ ] Terrain per zone, reused buffers/normals/dirty zones; water/waterfall, deterministic env, roads/kè/cầu.
-- [ ] All tools through shared sim with green/yellow/red previews, cost/reason/confirmation; timers.
-- [ ] Desktop/touch camera, Vietnamese UI, validated offline cache and debug instrumentation.
-- [ ] Browser evidence for required tool sequence, orbit180, performance, leaks and lighting/contrast.
-- [ ] Full tests, docs/reports/G1-report.md, commit; advance only if all G1 exit criteria pass.
+## G1 task plan — DONE
+
+- [x] Q001–Q004 applied (D020); Q005–Q008 recorded (D017–D019).
+- [x] Vite + React + Three.js client, VITE_OFFLINE=1, all tools through sim, previews with cost/reason, timers.
+- [x] Placeholder GLBs + manifest (all marked placeholder).
+- [x] Browser evidence 27/27 (tool sequence, orbit 180°, perf, leaks, contrast), mobile 8/8, Docker web smoke.
+- [x] docs/reports/G1-report.md.
 
 ## G0 task plan
 

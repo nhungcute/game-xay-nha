@@ -156,3 +156,10 @@ Approved by the product owner (consolidated MVP goal, docs/14 §0.1b).
 - Q004: D003 confirmed; docs/06 §6.6 distinguishes past timestamps (≤ serverTime+5 min) from deadlines.
 - D004: speed-up 50% confirmed; docs/tools/economy/model.mjs `speedupPct = 0.5` (not used by the simulation).
 - New characters: farm `inventory = {}`, city population 0 (docs/16 §2).
+
+## D021 — 2026-10-10 — Interim deployment: Docker + Cloudflare quick tunnel
+
+Approved by the product owner (docs/14 §0.1b §3). `infra/compose.yml` builds the web image
+(node 22.20.0 → nginx 1.29.2) and runs it on 127.0.0.1:${WEB_PORT:-8090} (8080 was occupied on the
+host). The `tunnel` service (cloudflare/cloudflared:2025.9.1) is under the "tunnel" profile and is
+only started by the product owner (`pnpm tunnel:up`). No deployment to Botkeep or other hosts.

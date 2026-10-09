@@ -9,7 +9,8 @@ export class RoadRenderer {
   private readonly batches: RoadBatch[] = [];
   private readonly dummy = new THREE.Object3D();
   constructor(private readonly scene: THREE.Scene) {
-    for (const [tier, color] of ['#b49a69', '#aaa995', '#555c60'].entries()) {
+    // Dirt is deliberately darker than grass (docs/04 §7, docs/10 §5 contrast check).
+    for (const [tier, color] of ['#8a6a43', '#9a9886', '#4d5458'].entries()) {
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', new THREE.Float32BufferAttribute([-1, 0, -1, -1, 0, 1, 1, 0, 1, -1, 0, -1, 1, 0, 1, 1, 0, -1], 3));
       geometry.setAttribute('normal', new THREE.Float32BufferAttribute(Array.from({ length: 6 }, () => [0, 1, 0]).flat(), 3));

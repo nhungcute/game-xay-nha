@@ -1,4 +1,5 @@
 import { ACESFilmicToneMapping, Color, DirectionalLight, Fog, HemisphereLight, PCFSoftShadowMap, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';
+import type { InstancedMesh, Material, Mesh, PlaneGeometry, Texture } from 'three';
 import type { CommandType } from '@xay-nha/contracts';
 import { stateHash } from '@xay-nha/sim';
 import { AssetManager } from './assets/AssetManager';
@@ -69,8 +70,19 @@ export class GameLoop {
   project(x:number,z:number):{x:number;y:number} {const point=new Vector3(x,this.terrain.sampleHeight(x,z),z).project(this.rig.camera),r=this.canvas.getBoundingClientRect();return{x:r.left+(point.x+1)*r.width/2,y:r.top+(1-point.y)*r.height/2};}
   metrics(){const info=this.renderer.info;return{fps:this.fps,drawCalls:info.render.calls,triangles:info.render.triangles,geometries:info.memory.geometries,textures:info.memory.textures,programs:info.programs?.length??0,terrain:this.terrain.stats,revision:this.world.state.snapshot.revision};}
   private installDebug():void {
-    const debug={getStateHash:()=>stateHash(this.world.state),listSceneObjectTypes:()=>{const types:string[]=[];this.scene.traverse(o=>types.push(o.type));return types;},orbit:(deg:number)=>this.rig.orbit(deg),screenshot:()=>this.canvas.toDataURL('image/png'),metrics:()=>this.metrics(),project:(x:number,z:number)=>this.project(x,z),snapshot:()=>structuredClone(this.world.state.snapshot),flush:()=>this.world.flush()};
-    Object.assign(window,{__debug:{...debug,...(import.meta.env.DEV&&new URLSearchParams(location.search).get('test')==='1'?{command:(type:CommandType,payload:unknown)=>this.world.apply(type,payload).result,advance:(ms:number)=>this.world.advanceForTest(ms)}:{})}});
+    const debug={getStateHash:()=>stateHash(this.world.state),listSceneObjectTypes:()=>{const types:string[]=[];this.scene.traverse(o=>types.push(o.type));return types;},auditScene:()=>this.auditScene(),orbit:(deg:number)=>this.rig.orbit(deg),cameraState:()=>({distance:this.rig.distance,yaw:this.rig.yaw,pitch:this.rig.pitch,target:this.rig.target.toArray()}),screenshot:()=>this.canvas.toDataURL('image/png'),metrics:()=>this.metrics(),project:(x:number,z:number)=>this.project(x,z),snapshot:()=>structuredClone(this.world.state.snapshot),flush:()=>this.world.flush()};
+    Object.assign(window,{__debug:{...debug,...(import.meta.env.DEV&&new URLSearchParams(location.search).get('test')==='1'?{command:(type:CommandType,payload:unknown)=>this.world.apply(type,payload).result,advance:(ms:number)=>this.world.advanceForTest(ms),loadSnapshot:(snapshot:unknown)=>this.world.loadSnapshot(snapshot),camera:(x:number,z:number,distance?:number,yaw?:number,pitch?:number)=>this.rig.focus(x,z,distance,yaw,pitch)}:{})}});
+  }
+  /** docs/10 §5: detect flat image planes faking 3D (textured planes / sprites) and summarise the scene. */
+  auditScene():{objects:number;meshes:number;instanced:number;sprites:number;texturedPlanes:number;largestPlaneM:number;textures:number}{
+    let objects=0,meshes=0,instanced=0,sprites=0,texturedPlanes=0,largestPlaneM=0;const textures=new Set<string>();
+    this.scene.traverse(o=>{objects++;if(o.type==='Sprite')sprites++;
+      const mesh=o as Mesh;if(!mesh.isMesh)return;meshes++;if((o as InstancedMesh).isInstancedMesh)instanced++;
+      const mats=(Array.isArray(mesh.material)?mesh.material:[mesh.material]) as (Material&{map?:Texture|null})[];
+      for(const m of mats)if(m.map)textures.add(m.map.uuid);
+      if(mesh.geometry.type==='PlaneGeometry'){const p=mesh.geometry as PlaneGeometry;largestPlaneM=Math.max(largestPlaneM,p.parameters.width,p.parameters.height);if(mats.some(m=>m.map))texturedPlanes++;}
+    });
+    return {objects,meshes,instanced,sprites,texturedPlanes,largestPlaneM,textures:textures.size};
   }
   dispose():void {cancelAnimationFrame(this.frameId);this.resizeObserver.disconnect();for(const unsubscribe of this.subscriptions)unsubscribe();this.pointer.dispose();this.overlay.dispose();this.ghost.dispose();for(const renderer of this.renderers)renderer.dispose();this.terrain.dispose();this.water.dispose();this.assets.dispose();this.renderer.dispose();this.world.dispose();Reflect.deleteProperty(window,'__debug');}
 }

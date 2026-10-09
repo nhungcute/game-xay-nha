@@ -1,0 +1,21 @@
+{
+  "base": "http://127.0.0.1:8090",
+  "health": "ok",
+  "hudOk": true,
+  "testHooksInProduction": false,
+  "metrics": {
+    "fps": 56.39097744360901,
+    "drawCalls": 233,
+    "triangles": 80440,
+    "geometries": 62,
+    "textures": 1,
+    "programs": 14,
+    "terrain": {
+      "lastRebuildMs": 0.20000004768371582,
+      "maxRebuildMs": 1.600000023841858,
+      "zonesRebuilt": 128
+    },
+    "revision": 0
+  },
+  "errors": []
+}

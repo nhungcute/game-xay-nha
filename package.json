@@ -18,7 +18,14 @@
     "content:check": "node scripts/generate-content.mjs --check",
     "test:worldgen-browser": "node scripts/verify-browser-worldgen.mjs",
     "dev": "pnpm --filter @xay-nha/web dev",
-    "build:web": "pnpm --filter @xay-nha/web build"
+    "build:web": "pnpm --filter @xay-nha/web build",
+    "deploy:up": "docker compose -f infra/compose.yml up -d --build web",
+    "deploy:down": "docker compose -f infra/compose.yml --profile tunnel down",
+    "deploy:logs": "docker compose -f infra/compose.yml logs -f --tail=100",
+    "tunnel:up": "docker compose -f infra/compose.yml --profile tunnel up -d tunnel",
+    "tunnel:url": "node scripts/tunnel-url.mjs",
+    "tunnel:down": "docker compose -f infra/compose.yml --profile tunnel rm -sf tunnel",
+    "evidence:g1": "tsx scripts/g1-plan.ts && node scripts/g1-evidence.mjs && node scripts/g1-mobile.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.37.0",

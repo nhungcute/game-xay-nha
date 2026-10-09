@@ -68,6 +68,13 @@ export class WorldStore {
     advanceTime(next,this.now());this.state=next;
     this.publish([],before!==JSON.stringify([next.snapshot.buildings,next.snapshot.bridges]));
   }
+  /** Validate-everything-then-swap (docs/08 §6.1) for an externally supplied snapshot (test harness). */
+  loadSnapshot(input:unknown):{ok:boolean;errors?:unknown} {
+    const checked=validateSnapshot(this.state,input,this.now());
+    if(!checked.ok)return {ok:false,errors:checked.errors};
+    this.state=checked.state;recompute(this.state);this.publish(Array.from({length:64},(_,i)=>i),true);this.save();
+    return {ok:true};
+  }
   /** Only exposed in development test harness; progression still runs through sim. */
   advanceForTest(ms:number):void {this.timeOffset+=ms;this.tick();}
   subscribe(listener:Listener):()=>void {this.listeners.add(listener);return()=>this.listeners.delete(listener);}

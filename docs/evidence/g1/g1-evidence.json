@@ -1,0 +1,394 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-09T17:57:40.965Z",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+  "perf": {
+    "fps": 56.5,
+    "drawCalls": 243,
+    "triangles": 80788,
+    "zoneRebuildMaxMs": 1.5,
+    "geometries": 80,
+    "textures": 1,
+    "programs": 14
+  },
+  "audit": {
+    "objects": 407,
+    "meshes": 396,
+    "instanced": 320,
+    "sprites": 0,
+    "texturedPlanes": 0,
+    "largestPlaneM": 0,
+    "textures": 0
+  },
+  "contrast": {
+    "blownPct": 0,
+    "grassLum": 0.563,
+    "roadLum": 0.37,
+    "diffPct": 34.2
+  },
+  "memory": {
+    "tools": {
+      "before": {
+        "geometries": 80,
+        "textures": 1,
+        "programs": 14
+      },
+      "after": {
+        "geometries": 80,
+        "textures": 1,
+        "programs": 14
+      }
+    },
+    "placeCancel": {
+      "before": {
+        "geometries": 80,
+        "textures": 1,
+        "programs": 14
+      },
+      "after": {
+        "geometries": 80,
+        "textures": 1,
+        "programs": 14
+      }
+    }
+  },
+  "checks": [
+    {
+      "name": "snapshot loads through validateSnapshot",
+      "ok": true
+    },
+    {
+      "name": "Mua vật liệu ở cửa hàng accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 44,
+        "after": 49,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "Dọn 2 cây/đá trong vùng 65,66,67,68 accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 49,
+        "after": 50,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "Làm đường đất từ điểm vào tới sát bờ sông accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 50,
+        "after": 51,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "Kè bờ gần accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 51,
+        "after": 52,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "San phẳng ô bờ đã kè accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 52,
+        "after": 53,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "Nối đường ra mố cầu bờ gần accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 53,
+        "after": 54,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "Kè bờ xa accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 54,
+        "after": 55,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "San phẳng bờ xa accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 55,
+        "after": 56,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "Làm đường ở bờ xa accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 56,
+        "after": 57,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "Bắc cầu gỗ nhịp 4 ô accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 57,
+        "after": 58,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "Xây chuồng gà ở bờ xa accepted via UI",
+      "ok": true,
+      "detail": {
+        "before": 58,
+        "after": 59,
+        "message": "Có thể thực hiện"
+      }
+    },
+    {
+      "name": "wooden bridge exists and is ACTIVE",
+      "ok": true,
+      "detail": {
+        "id": "br_58_0",
+        "typeId": "bridge_wood",
+        "a": [
+          64,
+          70
+        ],
+        "b": [
+          59,
+          70
+        ],
+        "deckHeightDm": 45,
+        "placedAt": 1791568475970,
+        "buildEndsAt": 1791568715970,
+        "status": "ACTIVE",
+        "cashPaid": 320,
+        "materialsPaid": {
+          "cash": 320,
+          "wood": 20,
+          "stone": 0
+        },
+        "investedValue": 620
+      }
+    },
+    {
+      "name": "far-bank building exists and is ACTIVE",
+      "ok": true,
+      "detail": {
+        "status": "ACTIVE",
+        "anchor": [
+          55,
+          67
+        ]
+      }
+    },
+    {
+      "name": "far-bank building is connected to the road network (UI shows \"Đang hoạt động\")",
+      "ok": true,
+      "detail": [
+        "×",
+        "Chuồng gà",
+        ""
+      ]
+    },
+    {
+      "name": "orbit 180° changes the rendered image",
+      "ok": true
+    },
+    {
+      "name": "no textured image planes or sprites faking 3D",
+      "ok": true,
+      "detail": {
+        "objects": 407,
+        "meshes": 396,
+        "instanced": 320,
+        "sprites": 0,
+        "texturedPlanes": 0,
+        "largestPlaneM": 0,
+        "textures": 0
+      }
+    },
+    {
+      "name": "desktop FPS ≥ 55 (target 60)",
+      "ok": true,
+      "detail": 56.5
+    },
+    {
+      "name": "draw calls ≤ 300",
+      "ok": true,
+      "detail": 243
+    },
+    {
+      "name": "triangles ≤ 1.5M",
+      "ok": true,
+      "detail": 80788
+    },
+    {
+      "name": "terrain zone rebuild ≤ 16 ms (max seen)",
+      "ok": true,
+      "detail": 1.5
+    },
+    {
+      "name": "switching all tools + ghosts 50× does not grow GPU memory",
+      "ok": true,
+      "detail": {
+        "before": {
+          "geometries": 80,
+          "textures": 1,
+          "programs": 14
+        },
+        "after": {
+          "geometries": 80,
+          "textures": 1,
+          "programs": 14
+        }
+      }
+    },
+    {
+      "name": "placing + cancelling a building 50× does not grow GPU memory",
+      "ok": true,
+      "detail": {
+        "before": {
+          "geometries": 80,
+          "textures": 1,
+          "programs": 14
+        },
+        "after": {
+          "geometries": 80,
+          "textures": 1,
+          "programs": 14
+        }
+      }
+    },
+    {
+      "name": "≤ 5% blown-out pixels",
+      "ok": true,
+      "detail": {
+        "blownPct": 0,
+        "grassLum": 0.563,
+        "roadLum": 0.37,
+        "diffPct": 34.2
+      }
+    },
+    {
+      "name": "grass vs dirt road luminance differs ≥ 15%",
+      "ok": true,
+      "detail": {
+        "blownPct": 0,
+        "grassLum": 0.563,
+        "roadLum": 0.37,
+        "diffPct": 34.2
+      }
+    },
+    {
+      "name": "no page/console errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "no failed HTTP requests",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "shots": [
+    {
+      "file": "docs/evidence/g1/01-loaded-level4.jpg",
+      "note": "Bản lưu cấp 4 (chơi thật bằng sim) đã nạp; camera tại khu bắc cầu"
+    },
+    {
+      "file": "docs/evidence/g1/02-buy.jpg",
+      "note": "Mua vật liệu ở cửa hàng"
+    },
+    {
+      "file": "docs/evidence/g1/03-clear-done.jpg",
+      "note": "Dọn 2 cây/đá trong vùng 65,66,67,68"
+    },
+    {
+      "file": "docs/evidence/g1/04-clear.jpg",
+      "note": "Dọn 2 cây/đá trong vùng 65,66,67,68"
+    },
+    {
+      "file": "docs/evidence/g1/05-road.jpg",
+      "note": "Làm đường đất từ điểm vào tới sát bờ sông"
+    },
+    {
+      "file": "docs/evidence/g1/06-embank.jpg",
+      "note": "Kè bờ gần"
+    },
+    {
+      "file": "docs/evidence/g1/07-terraform.jpg",
+      "note": "San phẳng ô bờ đã kè"
+    },
+    {
+      "file": "docs/evidence/g1/08-road.jpg",
+      "note": "Nối đường ra mố cầu bờ gần"
+    },
+    {
+      "file": "docs/evidence/g1/09-embank.jpg",
+      "note": "Kè bờ xa"
+    },
+    {
+      "file": "docs/evidence/g1/10-terraform.jpg",
+      "note": "San phẳng bờ xa"
+    },
+    {
+      "file": "docs/evidence/g1/11-road.jpg",
+      "note": "Làm đường ở bờ xa"
+    },
+    {
+      "file": "docs/evidence/g1/12-bridge.jpg",
+      "note": "Bắc cầu gỗ nhịp 4 ô"
+    },
+    {
+      "file": "docs/evidence/g1/13-wait.jpg",
+      "note": "Chờ cầu xây xong (4 phút)"
+    },
+    {
+      "file": "docs/evidence/g1/14-ghost-preview.jpg",
+      "note": "Bóng ma công trình (xanh = hợp lệ) trước khi đặt"
+    },
+    {
+      "file": "docs/evidence/g1/15-build.jpg",
+      "note": "Xây chuồng gà ở bờ xa"
+    },
+    {
+      "file": "docs/evidence/g1/16-wait.jpg",
+      "note": "Chờ chuồng gà xây xong"
+    },
+    {
+      "file": "docs/evidence/g1/17-far-bank-built.jpg",
+      "note": "Chuồng gà ở bờ xa, nối đường qua cầu gỗ"
+    },
+    {
+      "file": "docs/evidence/g1/18-orbit-0.jpg",
+      "note": "Góc 0°"
+    },
+    {
+      "file": "docs/evidence/g1/19-orbit-180.jpg",
+      "note": "Xoay 180°: địa hình, nước, cây, cầu đều là hình khối thật"
+    },
+    {
+      "file": "docs/evidence/g1/20-low-angle.jpg",
+      "note": "Góc thấp: thấy mặt dốc bờ sông, tường kè và trụ cầu"
+    },
+    {
+      "file": "docs/evidence/g1/21-contrast.jpg",
+      "note": "Ảnh dùng đo độ tương phản cỏ / đường đất"
+    }
+  ],
+  "errors": [],
+  "failedRequests": []
+}

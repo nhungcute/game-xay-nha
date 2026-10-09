@@ -1,0 +1,85 @@
+{
+  "device": "Pixel 7 (Chromium emulation)",
+  "viewport": {
+    "width": 412,
+    "height": 839
+  },
+  "metrics": {
+    "fps": 56.34081249382226,
+    "drawCalls": 26,
+    "triangles": 8324,
+    "geometries": 45,
+    "textures": 1,
+    "programs": 14,
+    "terrain": {
+      "lastRebuildMs": 0,
+      "maxRebuildMs": 1.1999999284744263,
+      "zonesRebuilt": 266
+    },
+    "revision": 45
+  },
+  "checks": [
+    {
+      "name": "snapshot loads on mobile",
+      "ok": true
+    },
+    {
+      "name": "no horizontal page overflow at phone width",
+      "ok": true,
+      "detail": {
+        "viewport": {
+          "width": 412,
+          "height": 839
+        }
+      }
+    },
+    {
+      "name": "touch tap previews but does not auto-confirm",
+      "ok": true,
+      "detail": {
+        "rev0": 44,
+        "rev1": 44
+      }
+    },
+    {
+      "name": "confirm button is visible and ≥ 44px tall",
+      "ok": true,
+      "detail": {
+        "x": 213.421875,
+        "y": 709,
+        "width": 73.71875,
+        "height": 44
+      }
+    },
+    {
+      "name": "✓ button confirms the touch preview",
+      "ok": true,
+      "detail": {
+        "rev0": 44,
+        "rev2": 45
+      }
+    },
+    {
+      "name": "pinch-out zooms in (distance decreases)",
+      "ok": true,
+      "detail": {
+        "before": 60,
+        "after": 37.12700350836844
+      }
+    },
+    {
+      "name": "two-finger twist rotates the camera",
+      "ok": true,
+      "detail": {
+        "before": 0,
+        "after": -34.37745857738781
+      }
+    },
+    {
+      "name": "no page/console errors on mobile",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

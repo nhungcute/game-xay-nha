@@ -1,0 +1,25 @@
+// Production smoke test of the deployed web container (default http://127.0.0.1:8090).
+import { chromium } from '@playwright/test';
+import { mkdir, writeFile } from 'node:fs/promises';
+const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8090';
+const OUT = process.env.OUT ?? 'docs/evidence/g1';
+await mkdir(OUT, { recursive: true });
+const browser = await chromium.launch({ executablePath: process.env.BROWSER_EXECUTABLE ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true, args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+const errors = [];
+page.on('pageerror', e => errors.push(e.message));
+page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
+const health = await (await fetch(`${BASE}/health`)).text();
+await page.goto(`${BASE}/?debug=1`);
+await page.waitForFunction(() => !!window.__debug?.metrics, null, { timeout: 30000 });
+await page.waitForTimeout(4000);
+const metrics = await page.evaluate(() => window.__debug.metrics());
+const hud = await page.locator('header.hud').innerText();
+const testHooks = await page.evaluate(() => typeof window.__debug.command);
+await page.screenshot({ path: `${OUT}/docker-web.jpg`, type: 'jpeg', quality: 80 });
+const result = { base: BASE, health: health.trim(), hudOk: /XÂY NHÀ/.test(hud), testHooksInProduction: testHooks !== 'undefined', metrics, errors };
+await writeFile(`${OUT}/docker-web.json`, JSON.stringify(result, null, 2));
+console.log(JSON.stringify(result));
+await browser.close();
+if (result.health !== 'ok' || !result.hudOk || result.testHooksInProduction || errors.length) process.exitCode = 1;
