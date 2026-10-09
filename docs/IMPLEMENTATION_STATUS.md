@@ -4,17 +4,24 @@ Updated: 2026-10-10 (Asia/Bangkok).
 
 Mode: auto-continue (approved 2026-10-10)
 
-## Current gate: G2 — IN PROGRESS (G1 complete 2026-10-10, see docs/reports/G1-report.md)
+## Current gate: G3 — IN PROGRESS (G2 complete 2026-10-10, see docs/reports/G2-report.md)
 
-## G2 task plan
+## G3 task plan
 
-- [ ] apps/api: Fastify + Postgres 16 + Drizzle schema/migrations per docs/11 §5 (accounts, worlds = characters, zones, buildings, bridges, crops, inventory, removed_env, world_commands).
-- [ ] Auth: POST /api/characters (account + character, recovery code), POST /api/auth/recover, GET /api/me, rate limits.
-- [ ] Worlds: GET /api/worlds/:id (process completions + settle), POST /api/worlds/:id/commands (≤10, idempotent, revision, sim validate/apply, persist), DELETE.
-- [ ] Client: online mode — character creation screen, map choice, command queue with optimistic updates + rebase, clock sync, IndexedDB cache validate-then-swap.
-- [ ] Compose: api + postgres (no published port), nginx /api proxy; secrets via .env.
-- [ ] Integration tests docs/10 §3 against a real Postgres container; curl-crafted invalid command rejected; reload hash identical; two characters independent.
-- [ ] Full check, docs/reports/G2-report.md, commit.
+- [ ] Authored layouts → templates for CITY (docs/03 §2) and FARM (docs/04 §2) via packages/tooling; validator; 5-angle screenshots per map.
+- [ ] Map-aware client polish: city income bubbles/collect-all with bank, farm crops/production UI, catalog limits X/Y, profile + net worth panel.
+- [ ] Quests: 24 authored + repeat quests (D017) in sim + UI; tutorial flow (docs/09 §5) incl. tutorial speed-ups.
+- [ ] packages/tooling/sim-economy.ts on the real sim; compare pacing with docs/16 §12 (≤ 25%).
+- [ ] E2E docs/10 §4 on Chromium + WebKit mobile emulation; visual review per map.
+- [ ] Full check, docs/reports/G3-report.md, commit.
+
+## G2 task plan — DONE
+
+- [x] apps/api (Fastify, Postgres 16, Drizzle), auth + recovery, worlds/commands with idempotency + revision + settle.
+- [x] Online client: start screens, optimistic command queue with hash verification, rebase/resync, offline queue.
+- [x] Docker: postgres + api + web (nginx /api proxy), generated secrets, tunnel profile.
+- [x] Integration 22/22 (real Postgres), online E2E 13/13 (dev and Docker), persistence across restarts.
+- [x] docs/reports/G2-report.md.
 
 ## G1 task plan — DONE
 

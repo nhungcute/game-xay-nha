@@ -163,3 +163,19 @@ Approved by the product owner (docs/14 §0.1b §3). `infra/compose.yml` builds t
 (node 22.20.0 → nginx 1.29.2) and runs it on 127.0.0.1:${WEB_PORT:-8090} (8080 was occupied on the
 host). The `tunnel` service (cloudflare/cloudflared:2025.9.1) is under the "tunnel" profile and is
 only started by the product owner (`pnpm tunnel:up`). No deployment to Botkeep or other hosts.
+
+## D022 — 2026-10-10 — World persistence as validated JSONB; scrypt for recovery codes
+
+docs/11 §5 sketched ~10 normalized tables. Implemented instead: `accounts`, `worlds` (one row per
+character, full sim snapshot in JSONB + hot columns: account, map, name/tag, level, net_worth,
+revision) and `world_commands` (idempotency/audit). Every read goes through `validateSnapshot`
+(docs/08 §6.1); all rules stay in `packages/sim`, so normalized copies of the same data would only
+add ways to diverge. Leaderboard index on (map_kind, net_worth). Recovery codes are hashed with
+Node's built-in scrypt (N=16384, r=8, p=1) instead of argon2id to avoid a native dependency; a
+peppered SHA-256 prefix hash keeps lookup indexed. Tokens: 32 random bytes, stored as peppered SHA-256.
+
+## D023 — 2026-10-10 — Local ports
+
+Host ports 3000/3100/8080 are used by other projects on the development machine. Defaults: API dev
+3217, web dev 5173/5190 (offline) and 5191 (online), Docker web 8090, integration-test Postgres 55432.
+Inside Docker the API listens on 3000 (internal only).

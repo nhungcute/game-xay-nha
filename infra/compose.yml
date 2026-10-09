@@ -1,14 +1,49 @@
-# Local deployment + optional Cloudflare quick tunnel (docs/DEPLOY_LOCAL.md).
-# G1: web only (offline client). G2 adds api + postgres here.
+# Full local stack + optional Cloudflare quick tunnel (docs/DEPLOY_LOCAL.md).
+# Secrets come from infra/.env (created by `node scripts/ensure-env.mjs`, never committed).
 name: xay-nha
 services:
+  postgres:
+    image: postgres:16.10-alpine
+    environment:
+      POSTGRES_DB: xaynha
+      POSTGRES_USER: xaynha
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?run node scripts/ensure-env.mjs}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xaynha -d xaynha"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    # No published port: only the api container can reach the database.
+
+  api:
+    build:
+      context: ..
+      dockerfile: infra/api.Dockerfile
+    image: xay-nha-api:local
+    environment:
+      DATABASE_URL: postgres://xaynha:${POSTGRES_PASSWORD}@postgres:5432/xaynha
+      TOKEN_PEPPER: ${TOKEN_PEPPER:?run node scripts/ensure-env.mjs}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
   web:
     build:
       context: ..
       dockerfile: infra/web.Dockerfile
+      args:
+        VITE_OFFLINE: "0"
     image: xay-nha-web:local
     ports:
       - "127.0.0.1:${WEB_PORT:-8090}:80"
+    depends_on:
+      api:
+        condition: service_healthy
     restart: unless-stopped
 
   # Started only with `pnpm tunnel:up` (profile "tunnel"). Publishes the web service at a
@@ -21,3 +56,6 @@ services:
         condition: service_healthy
     profiles: ["tunnel"]
     restart: unless-stopped
+
+volumes:
+  pgdata:

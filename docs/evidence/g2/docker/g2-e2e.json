@@ -1,0 +1,83 @@
+{
+  "base": "http://127.0.0.1:8090",
+  "at": "2026-10-09T23:08:24.388Z",
+  "checks": [
+    {
+      "name": "name shorter than 3 characters keeps \"Vào chơi\" disabled",
+      "ok": true
+    },
+    {
+      "name": "recovery code shown once in XXXX-XXXX-XXXX format",
+      "ok": true,
+      "detail": "NGQR-6QNC-8QF8"
+    },
+    {
+      "name": "game HUD shows the new character (level 1, $2,000)",
+      "ok": true,
+      "detail": [
+        "⌂",
+        "XÂY NHÀ QUÊ",
+        "Thử Nghiệm 5032#8337 · Cấp 1 · 0 XP",
+        "$2,000"
+      ]
+    },
+    {
+      "name": "server has the market and the claimed quest",
+      "ok": true,
+      "detail": {
+        "buildings": [
+          "market"
+        ],
+        "questIndex": 1
+      }
+    },
+    {
+      "name": "client and server agree after sync (revision, wallet, buildings, terrain delta)",
+      "ok": true,
+      "detail": {
+        "revision": 3
+      }
+    },
+    {
+      "name": "reload goes straight back into the same character with identical state",
+      "ok": true
+    },
+    {
+      "name": "offline: action applied optimistically and shown as pending",
+      "ok": true,
+      "detail": "Mất kết nối — sẽ gửi lại (1)"
+    },
+    {
+      "name": "back online: queued command reached the server exactly once",
+      "ok": true,
+      "detail": {
+        "revision": 4,
+        "stone": 11
+      }
+    },
+    {
+      "name": "crafted illegal command (market on the river) rejected; wallet unchanged",
+      "ok": true,
+      "detail": "CELL_BLOCKED"
+    },
+    {
+      "name": "recovery lists the character on the new device",
+      "ok": true
+    },
+    {
+      "name": "recovered device loads the same world",
+      "ok": true
+    },
+    {
+      "name": "the old device token is revoked after recovery",
+      "ok": true,
+      "detail": 401
+    },
+    {
+      "name": "no page/console errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": []
+}

@@ -19,7 +19,7 @@
     "test:worldgen-browser": "node scripts/verify-browser-worldgen.mjs",
     "dev": "pnpm --filter @xay-nha/web dev",
     "build:web": "pnpm --filter @xay-nha/web build",
-    "deploy:up": "docker compose -f infra/compose.yml up -d --build web",
+    "deploy:up": "node scripts/ensure-env.mjs && docker compose -f infra/compose.yml up -d --build",
     "deploy:down": "docker compose -f infra/compose.yml --profile tunnel down",
     "deploy:logs": "docker compose -f infra/compose.yml logs -f --tail=100",
     "tunnel:up": "docker compose -f infra/compose.yml --profile tunnel up -d tunnel",
