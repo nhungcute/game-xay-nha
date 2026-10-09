@@ -192,3 +192,16 @@ PRNG advanced by `repeat.seq` (identical on client and server). "Never the same 
 row" refers to the template just claimed or rerolled; when no other template is eligible the same
 template is reused so a player is never left without quests. New command `REROLL_QUEST`.
 Ranges are to be checked with sim-economy (G3) and tuned through the economy model.
+
+Amended 2026-10-10 after the G3 repeat audit (`docs/reports/G3-repeat-audit.md`):
+- Only the template just claimed/rerolled (`repeat.last`) is excluded; several active quests may share a
+  template if their subject/target differ. The list is always refilled to 3 slots when anything is eligible.
+- `collect_cash` target X = one hour of current base income in whole dollars (no $10 rounding); the $10
+  rounding applies to rewards only.
+- `produce_item` counts finished products when they are collected (`COLLECT_PRODUCTION`, event `PRODUCED`),
+  not batches queued by `START_PRODUCTION`.
+- Each quest stores `ref` (reference income at generation, optional for older saves). `validateSnapshot`
+  recomputes reward = max($100, round10(ref×25%)), XP = round(2√reward), no wood/stone, `ref` ≤ the
+  maximum reference income reachable at the current level, ids `r<n>` unique with n < seq, template and
+  subject valid for the map and unlocked at the current level, progress ≤ target,
+  `rerollAt` ≤ serverTime + 4 h (+5 min tolerance), and repeat state only after all authored quests.

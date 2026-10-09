@@ -64,7 +64,7 @@ export function event(s: SimState, action: string, kind: string, count = 1): voi
 }
 const REPEAT_ACTIONS: Record<string, [string, string?]> = {
   collect_cash: ['COLLECT', 'cash'], build_type: ['BUILD'], road_cells: ['ROAD', 'cells'], embank_cells: ['EMBANK', 'cells'], population: ['POPULATION'],
-  harvest_crop: ['HARVEST'], sell_item: ['SELL'], produce_item: ['PRODUCE'], till_cells: ['TILL', 'cells'],
+  harvest_crop: ['HARVEST'], sell_item: ['SELL'], produce_item: ['PRODUCED'], till_cells: ['TILL', 'cells'],
 };
 
 export function isFarBank(s: SimState, cells: Cell[]): boolean {

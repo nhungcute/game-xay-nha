@@ -139,6 +139,8 @@ export const RepeatQuestSchema = z.object({
   id: IdSchema, template: z.enum(['collect_cash', 'build_type', 'road_cells', 'embank_cells', 'population', 'harvest_crop', 'sell_item', 'produce_item', 'till_cells']),
   subject: IdSchema.optional(), target: IntegerSchema.min(1), progress: IntegerSchema,
   reward: z.object({ cash: IntegerSchema, wood: IntegerSchema, stone: IntegerSchema }).strict(), xp: IntegerSchema,
+  /** Reference income ($/h) at generation; lets validation recompute the reward (G3 audit). Optional for older saves. */
+  ref: IntegerSchema.optional(),
 }).strict();
 export const RepeatStateSchema = z.object({
   seq: IntegerSchema, rerollAt: IntegerSchema, last: IdSchema.optional(), active: z.array(RepeatQuestSchema).max(3),

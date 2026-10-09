@@ -1,4 +1,4 @@
-import type { Cost, RepeatQuest } from '@xay-nha/contracts';
+import { GRID, type BuildingDef, type Cost, type MapKind, type RepeatQuest, type WorldSnapshot } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { addXp, guard, refund, zeroCost } from './common';
 import { buildingLimit } from './construction';
@@ -26,14 +26,32 @@ const roundTo = (v: number, step: number) => Math.round(v / step) * step;
 /** Reference income for one hour (docs/16 §10.3). */
 export function referenceIncome(s: SimState): number {
   if (s.template.mapKind === 'city') return Object.values(s.rates).reduce((sum, r) => sum + r, 0);
-  const level = s.snapshot.progress.level;
-  const best = Math.max(0, ...Object.values(catalog.crops).filter(c => c.unlockLevel <= level)
-    .map(c => ((catalog.items[c.itemId]?.sellPrice ?? 0) * c.yield - c.seedCost) / (c.growSeconds / 3600)));
-  return fieldQuota(s) * best * R.farmIncomeFactor;
+  return fieldQuota(s) * bestCropRate(s.snapshot.progress.level) * R.farmIncomeFactor;
 }
-function reward(s: SimState): { reward: Cost; xp: number } {
-  const cash = Math.max(R.rewardMin, roundTo(referenceIncome(s) * R.rewardShare, R.rewardRound));
+export function rewardFor(ref: number): { reward: Cost; xp: number } {
+  const cash = Math.max(R.rewardMin, roundTo(ref * R.rewardShare, R.rewardRound));
   return { reward: { cash, wood: 0, stone: 0 }, xp: Math.round(R.xpMultiplier * Math.sqrt(cash)) };
+}
+function reward(s: SimState): { reward: Cost; xp: number; ref: number } {
+  const ref = Math.round(referenceIncome(s));
+  return { ...rewardFor(ref), ref };
+}
+const bestCropRate = (level: number) => Math.max(0, ...Object.values(catalog.crops).filter(c => c.unlockLevel <= level)
+  .map(c => ((catalog.items[c.itemId]?.sellPrice ?? 0) * c.yield - c.seedCost) / (c.growSeconds / 3600)));
+const countAt = (def: BuildingDef, level: number): number => {
+  if (def.unlockLevel > level) return 0;
+  if (!def.limit) return def.maxCount ?? Math.floor(GRID * GRID / (def.size[0] * def.size[1]));
+  const [base, step, cap] = def.limit;
+  return Math.min(cap, Math.floor(base + step * Math.max(0, level - def.unlockLevel)));
+};
+/** Upper bound on the reference income reachable at `level`; rejects forged repeat rewards. */
+export function maxReferenceIncome(mapKind: MapKind, level: number): number {
+  const tier = Math.max(...Object.values(economy.roadTiers).map(t => t.multiplier));
+  if (mapKind === 'farm') return Object.values(catalog.buildings).reduce((n, d) => n + (d.fieldQuota ?? 0) * countAt(d, level), 0)
+    * bestCropRate(level) * R.farmIncomeFactor;
+  return Object.values(catalog.buildings).filter(d => d.mapKinds.includes('city') && d.baseRatePerHour)
+    .reduce((n, d) => n + d.baseRatePerHour! * countAt(d, level) * tier
+      * (1 + economy.income.decorCap + (d.waterBonusOverride ?? economy.income.waterBonus)), 0);
 }
 
 /** Builds one quest for `template`, or null when it has no unlocked target right now. */
@@ -41,8 +59,9 @@ function build(s: SimState, template: Template, rnd: () => number): Omit<RepeatQ
   const level = s.snapshot.progress.level, z = R.sizing;
   switch (template) {
     case 'collect_cash': {
+      // X = one hour of current base income in whole dollars (docs/16 §10.3); $10 rounding is for rewards only.
       const hour = Math.round(referenceIncome(s));
-      return hour >= 100 ? { template, target: roundTo(hour, 10) } : null;
+      return hour >= 100 ? { template, target: hour } : null;
     }
     case 'build_type': {
       const options = Object.values(catalog.buildings).filter(d => d.mapKinds.includes(s.template.mapKind) && d.unlockLevel <= level
@@ -87,13 +106,15 @@ function build(s: SimState, template: Template, rnd: () => number): Omit<RepeatQ
 function next(s: SimState): RepeatQuest | null {
   const r = s.snapshot.progress.repeat!;
   const rnd = prng(`${s.snapshot.worldId}:repeat:${r.seq}`);
-  const all = (s.template.mapKind === 'city' ? CITY : FARM).filter(t => !r.active.some(q => q.template === t));
-  // Prefer a different template than the previous one; fall back to it rather than leaving the player without quests.
+  const all = s.template.mapKind === 'city' ? CITY : FARM;
+  const same = (q: { template: Template; subject?: string }) => r.active.some(a => a.template === q.template && a.subject === q.subject);
+  // Never the template just claimed/rerolled (docs/16 §10.3); active quests may share a template with different
+  // targets. Only when nothing else is eligible is the previous template reused (D024, Q009).
   for (const pool of [all.filter(t => t !== r.last), all]) {
     const order = pool.map(t => ({ t, k: rnd() })).sort((a, b) => a.k - b.k).map(x => x.t);
-    for (const template of order) {
+    for (const template of order) for (let attempt = 0; attempt < 3; attempt++) {
       const quest = build(s, template, rnd);
-      if (!quest) continue;
+      if (!quest || same(quest)) continue;
       const id = `r${r.seq}`; r.seq++;
       return { id, ...quest, progress: 0, ...reward(s) };
     }
@@ -130,4 +151,38 @@ export function rerollRepeat(s: SimState, questId: string, now: number): Cost {
   r.last = r.active[index]!.template; r.active.splice(index, 1); r.rerollAt = now + R.rerollHours * 3_600_000;
   ensureRepeatQuests(s);
   return zeroCost();
+}
+
+/** Semantic checks for persisted repeat quests, used by validateSnapshot (G3 repeat audit, finding 1). */
+export function validateRepeat(snapshot: WorldSnapshot): string[] {
+  const r = snapshot.progress.repeat, errors: string[] = [];
+  if (!r) return errors;
+  const kind = snapshot.mapKind, level = snapshot.progress.level, templates = kind === 'city' ? CITY : FARM;
+  if (snapshot.progress.questIndex < catalog.quests[kind].length) errors.push('REPEAT:BEFORE_AUTHORED_DONE');
+  if (r.active.length > R.slots) errors.push('REPEAT:TOO_MANY');
+  if (r.rerollAt > snapshot.serverTime + R.rerollHours * 3_600_000 + 300_000) errors.push('REPEAT:REROLL_TIME');
+  if (r.last !== undefined && !templates.includes(r.last as Template)) errors.push('REPEAT:LAST');
+  const maxRef = maxReferenceIncome(kind, level), seen = new Set<string>();
+  const unlocked = (u: number | undefined) => u !== undefined && u <= level;
+  for (const q of r.active) {
+    const label = `REPEAT:${q.id}`, n = /^r(\d+)$/.exec(q.id);
+    if (!n || Number(n[1]) >= r.seq) errors.push(`${label}:ID`);
+    if (seen.has(q.id)) errors.push(`${label}:DUPLICATE`);
+    seen.add(q.id);
+    if (!templates.includes(q.template)) errors.push(`${label}:TEMPLATE`);
+    if (q.progress > q.target) errors.push(`${label}:PROGRESS`);
+    if (q.ref !== undefined && q.ref > Math.ceil(maxRef)) errors.push(`${label}:REF`);
+    const expected = rewardFor(q.ref ?? maxRef).reward.cash;
+    if (q.reward.wood || q.reward.stone || (q.ref !== undefined ? q.reward.cash !== expected : q.reward.cash > expected)
+      || q.reward.cash < R.rewardMin) errors.push(`${label}:REWARD`);
+    if (q.xp !== Math.round(R.xpMultiplier * Math.sqrt(q.reward.cash))) errors.push(`${label}:XP`);
+    let subjectOk = q.subject === undefined;
+    if (q.template === 'build_type' || q.template === 'produce_item') {
+      const d = q.subject ? catalog.buildings[q.subject] : undefined;
+      subjectOk = !!d && d.mapKinds.includes(kind) && unlocked(d.unlockLevel) && (q.template === 'build_type' || !!d.production);
+    } else if (q.template === 'harvest_crop') subjectOk = unlocked(q.subject ? catalog.crops[q.subject]?.unlockLevel : undefined);
+    else if (q.template === 'sell_item') subjectOk = Object.values(catalog.crops).some(c => c.itemId === q.subject && unlocked(c.unlockLevel));
+    if (!subjectOk) errors.push(`${label}:SUBJECT`);
+  }
+  return errors;
 }

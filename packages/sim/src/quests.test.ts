@@ -5,7 +5,7 @@ import { createTestTemplate } from '@xay-nha/worldgen';
 import { event } from './common';
 import { recompute } from './economy';
 import { authoredQuestProgress, execute } from './engine';
-import { ensureRepeatQuests, referenceIncome } from './quests';
+import { ensureRepeatQuests, maxReferenceIncome, referenceIncome } from './quests';
 import { cloneState, createState, rebuildOccupancy, type SimState } from './state';
 import { validateSnapshot } from './snapshot';
 
@@ -21,14 +21,15 @@ const run = (s: SimState, type: CommandType, payload: unknown, now = NOW) =>
   execute(s, { type, payload, worldId: s.snapshot.worldId, expectedRevision: s.snapshot.revision, commandId: `00000000-0000-4000-8000-${String(s.snapshot.revision + 1).padStart(12, '0')}`, clientTime: now }, now);
 
 describe('repeat quests (docs/16 §10.3, D017, D024)', () => {
-  it('start only after the 12 authored quests, with 3 distinct templates', () => {
+  it('start only after the 12 authored quests and always fill 3 slots with distinct quests', () => {
     const fresh = createState(createTestTemplate('city'), NOW);
     ensureRepeatQuests(fresh);
     expect(fresh.snapshot.progress.repeat).toBeUndefined();
     const s = world('city');
     const active = s.snapshot.progress.repeat!.active;
     expect(active).toHaveLength(economy.repeatQuests.slots);
-    expect(new Set(active.map(q => q.template)).size).toBe(active.length);
+    expect(new Set(active.map(q => `${q.template}:${q.subject}:${q.target}`)).size).toBe(active.length);
+    for (const kind of ['city', 'farm'] as const) for (const level of [2, 6, 10]) expect(world(kind, level).snapshot.progress.repeat!.active).toHaveLength(3);
   });
   it('are deterministic per world and differ between worlds', () => {
     const a = world('city', 8, 'world-a'), b = world('city', 8, 'world-a'), c = world('city', 8, 'world-c');
@@ -70,7 +71,7 @@ describe('repeat quests (docs/16 §10.3, D017, D024)', () => {
     expect(s.snapshot.progress.repeat!.active).toHaveLength(3);
     const r = s.snapshot.progress.repeat!;
     const q = r.active[0]!;
-    const spec: Record<string, [string, string]> = { harvest_crop: ['HARVEST', q.subject ?? ''], sell_item: ['SELL', q.subject ?? ''], produce_item: ['PRODUCE', q.subject ?? ''], till_cells: ['TILL', 'cells'] };
+    const spec: Record<string, [string, string]> = { harvest_crop: ['HARVEST', q.subject ?? ''], sell_item: ['SELL', q.subject ?? ''], produce_item: ['PRODUCED', q.subject ?? ''], till_cells: ['TILL', 'cells'] };
     const [action, kind] = spec[q.template]!;
     event(s, action, 'something-else', 99);
     expect(q.progress).toBe(0);
@@ -116,6 +117,56 @@ describe('repeat quests (docs/16 §10.3, D017, D024)', () => {
     expect(run(s1, 'REROLL_QUEST', { questId: second }, NOW + HOUR).result).toMatchObject({ accepted: false, code: 'QUEST_NOT_READY' });
     expect(run(s1, 'REROLL_QUEST', { questId: second }, NOW + 4 * HOUR).result.accepted).toBe(true);
     expect(run(s1, 'REROLL_QUEST', { questId: 'r-missing' }, NOW + 5 * HOUR).result).toMatchObject({ accepted: false, code: 'NOT_FOUND' });
+  });
+  it('collect_cash target is exactly one hour of base income (not rounded to $10); reward keeps the $10 rounding', () => {
+    for (let seq = 0; seq < 40; seq++) {
+      const s = world('city', 10, `w-cash-${seq}`);
+      s.rates = { b_a: 287.4, b_b: 150 }; s.snapshot.progress.repeat = undefined; ensureRepeatQuests(s);
+      const q = s.snapshot.progress.repeat!.active.find(x => x.template === 'collect_cash');
+      if (!q) continue;
+      expect(q.target).toBe(437);
+      expect(q.ref).toBe(437);
+      expect(q.reward.cash).toBe(110);
+      return;
+    }
+    throw new Error('no collect_cash quest generated in 40 worlds');
+  });
+  it('validateSnapshot rejects forged repeat quests (reward, XP, id, subject, timing, map, progress)', () => {
+    const s = world('farm', 6);
+    const forge = (mutate: (r: NonNullable<SimState['snapshot']['progress']['repeat']>) => void, code: string) => {
+      const snap = structuredClone(s.snapshot); mutate(snap.progress.repeat!);
+      const checked = validateSnapshot(cloneState(s), snap, NOW);
+      expect(checked.ok ? [] : checked.errors.join(' ')).toContain(code);
+    };
+    forge(r => { r.active[0]!.reward.cash = 1_000_000; }, 'REWARD');
+    forge(r => { const q = r.active[0]!; q.reward.cash += 10; q.xp = Math.round(2 * Math.sqrt(q.reward.cash)); }, 'REWARD');
+    forge(r => { r.active[0]!.reward.wood = 50; }, 'REWARD');
+    forge(r => { r.active[0]!.xp += 1; }, ':XP');
+    forge(r => { r.active[0]!.ref = 10_000_000; }, ':REF');
+    forge(r => { r.active[0]!.id = `r${r.seq + 5}`; }, ':ID');
+    forge(r => { r.active[1]!.id = r.active[0]!.id; }, 'DUPLICATE');
+    forge(r => { r.active[0]!.template = 'road_cells'; r.active[0]!.subject = undefined; }, 'TEMPLATE');
+    forge(r => { r.active[0]!.template = 'harvest_crop'; r.active[0]!.subject = 'no-such-crop'; }, 'SUBJECT');
+    forge(r => { r.active[0]!.progress = r.active[0]!.target + 1; }, 'PROGRESS');
+    forge(r => { r.rerollAt = NOW + 48 * HOUR; }, 'REROLL_TIME');
+    forge(r => { r.active.push({ ...r.active[0]!, id: `r${r.seq}` }); r.seq++; }, 'progress.repeat.active'); // schema caps the list at 3
+    const early = structuredClone(s.snapshot); early.progress.questIndex = 3;
+    const checked = validateSnapshot(cloneState(s), early, NOW);
+    expect(checked.ok ? [] : checked.errors.join(' ')).toContain('BEFORE_AUTHORED_DONE');
+  });
+  it('locked subjects are rejected and the reference-income bound grows with level', () => {
+    const s = world('farm', 2);
+    const locked = Object.values(catalog.crops).find(c => c.unlockLevel > 2)!;
+    const snap = structuredClone(s.snapshot), q = snap.progress.repeat!.active[0]!;
+    q.template = 'harvest_crop'; q.subject = locked.id;
+    const checked = validateSnapshot(cloneState(s), snap, NOW);
+    expect(checked.ok ? [] : checked.errors.join(' ')).toContain('SUBJECT');
+    expect(maxReferenceIncome('farm', 10)).toBeGreaterThanOrEqual(maxReferenceIncome('farm', 2));
+    expect(maxReferenceIncome('city', 10)).toBeGreaterThan(maxReferenceIncome('city', 2));
+    for (const kind of ['city', 'farm'] as const) {
+      const w = world(kind, 8);
+      expect(referenceIncome(w)).toBeLessThanOrEqual(maxReferenceIncome(kind, 8));
+    }
   });
   it('snapshots with repeat quests pass validate-then-swap', () => {
     const s = world('farm', 6);

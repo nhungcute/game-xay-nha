@@ -311,6 +311,15 @@ describe('production queues and selling', () => {
     farm(s, cmd('START_PRODUCTION', { buildingId: b.id, recipeId: 'chicken_coop', count: 1 }), now);
     expect(s.snapshot.progress.questProgress['farm-9']).toBe(1);
   });
+  it('repeat "produce N" quest counts collected products, not queued jobs (G3 repeat audit)', () => {
+    const s = state(), b = building(s, 'chicken_coop'); s.snapshot.inventory.corn = 2;
+    const quest = { id: 'r0', template: 'produce_item' as const, subject: 'chicken_coop', target: 2, progress: 0, reward: { cash: 100, wood: 0, stone: 0 }, xp: 20 };
+    s.snapshot.progress.repeat = { seq: 1, rerollAt: 0, active: [quest] };
+    farm(s, cmd('START_PRODUCTION', { buildingId: b.id, recipeId: 'chicken_coop', count: 2 }), now);
+    expect(s.snapshot.progress.repeat.active[0]!.progress).toBe(0);
+    farm(s, cmd('COLLECT_PRODUCTION', { buildingId: b.id }), now + 365 * 24 * 3600 * 1000);
+    expect(s.snapshot.progress.repeat.active[0]!.progress).toBe(2);
+  });
   it('collects only ready prepaid output even after a long absence', () => {
     const s = state(), b = building(s, 'chicken_coop'); s.snapshot.inventory.corn = 2;
     farm(s, cmd('START_PRODUCTION', { buildingId: b.id, recipeId: 'chicken_coop', count: 2 }), now);

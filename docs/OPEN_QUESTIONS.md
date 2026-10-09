@@ -55,3 +55,11 @@ RESOLVED 2026-10-10: corrected docs/10 §2.1 as approved; D019.
 docs/10 §2.1 says lowering below water+5 becomes valid after embanking, while the higher-priority
 docs/15 §4.2.3 still requires h >= water+5 for embanked banks. Code and tests follow docs/15.
 Please approve correcting that QA line before the design document is edited.
+
+## Q009 — Repeat quests when only one template is eligible
+
+Open (non-blocking), 2026-10-10. docs/16 §10.3 says a template must not repeat back-to-back. Early Farm
+characters without a producer or free field quota can have only `sell_item`/`harvest_crop` eligible; in
+the degenerate case of a single eligible template, D024 reuses it (with a different subject/target where
+possible) rather than leave an empty slot. Please confirm, or choose "leave the slot empty until another
+template becomes eligible".

@@ -8,6 +8,7 @@ import { footprintCells } from './footprint';
 import { builderCapacity, buildingLimit, validateBridge } from './construction';
 import { costValue, recompute } from './economy';
 import { validateRoadPayments } from './road-value';
+import { validateRepeat } from './quests';
 
 export type SnapshotValidation = { ok: true; state: SimState } | { ok: false; errors: string[] };
 
@@ -29,6 +30,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
   while (level < economy.xp.maxLevel && snapshot.progress.xp >= table[level + 1]!) level++;
   if (snapshot.progress.level !== level) errors.push('LEVEL_XP');
   if (snapshot.progress.questIndex > catalog.quests[snapshot.mapKind].length) errors.push('QUEST_INDEX');
+  errors.push(...validateRepeat(snapshot));
   if ((snapshot.progress.questProgress.spend_xp_remainder ?? 0) >= economy.xp.spendDivisor
     || (snapshot.progress.questProgress.collect_xp_remainder ?? 0) >= economy.xp.collectDivisor) errors.push('XP_REMAINDER');
   const unlocked = new Set(snapshot.unlockedZones);

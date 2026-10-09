@@ -159,6 +159,8 @@ export function farm(s: SimState, cmd: Command, now: number): Cost | undefined {
         }
       }
       guard(collected > 0, remaining <= 0 ? 'STORAGE_FULL' : 'INVALID_COMMAND');
+      // Repeat "produce N" counts finished, collected products, not queued jobs (G3 repeat audit, finding 4).
+      event(s, 'PRODUCED', building.defId, collected);
       return result;
     }
     case 'SELL': {
