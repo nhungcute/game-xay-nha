@@ -1,0 +1,12 @@
+{
+  "mapId": "farm-valley-01",
+  "days": 60,
+  "level": 18,
+  "buildings": 28,
+  "bridges": 1,
+  "zones": 8,
+  "roadCells": 161,
+  "fields": 216,
+  "crops": 216,
+  "seconds": 139
+}

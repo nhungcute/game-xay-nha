@@ -1,0 +1,202 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-10T03:42:58.913Z",
+  "maps": {
+    "city": {
+      "world": {
+        "mapId": "city-coast-01",
+        "days": 60,
+        "level": 20,
+        "buildings": 229,
+        "bridges": 1,
+        "zones": 10,
+        "roadCells": 484,
+        "fields": 0,
+        "crops": 0,
+        "seconds": 332
+      },
+      "views": [
+        {
+          "quality": "high",
+          "view": "default",
+          "fps": 47,
+          "drawCalls": 165,
+          "triangles": 191438,
+          "geometries": 94
+        },
+        {
+          "quality": "high",
+          "view": "overview-75",
+          "fps": 40,
+          "drawCalls": 183,
+          "triangles": 196878,
+          "geometries": 109
+        },
+        {
+          "quality": "high",
+          "view": "oblique-45",
+          "fps": 41,
+          "drawCalls": 173,
+          "triangles": 194262,
+          "geometries": 116
+        },
+        {
+          "quality": "high",
+          "view": "close",
+          "fps": 53,
+          "drawCalls": 128,
+          "triangles": 175554,
+          "geometries": 116
+        },
+        {
+          "quality": "low",
+          "view": "default",
+          "fps": 55,
+          "drawCalls": 64,
+          "triangles": 158512,
+          "geometries": 116
+        },
+        {
+          "quality": "low",
+          "view": "overview-75",
+          "fps": 55,
+          "drawCalls": 108,
+          "triangles": 176668,
+          "geometries": 116
+        },
+        {
+          "quality": "low",
+          "view": "oblique-45",
+          "fps": 55,
+          "drawCalls": 98,
+          "triangles": 174052,
+          "geometries": 116
+        },
+        {
+          "quality": "low",
+          "view": "close",
+          "fps": 56,
+          "drawCalls": 64,
+          "triangles": 158512,
+          "geometries": 116
+        }
+      ],
+      "rebuild": {
+        "accepted": false,
+        "code": "OCCUPIED",
+        "stats": {
+          "lastRebuildMs": 0.10000002384185791,
+          "maxRebuildMs": 5.200000047683716,
+          "zonesRebuilt": 640
+        }
+      },
+      "checks": {
+        "desktopDrawCalls": true,
+        "desktopTriangles": true,
+        "lowDrawCalls": true,
+        "lowTriangles": true,
+        "zoneRebuildMs": true,
+        "noErrors": true
+      },
+      "errors": []
+    },
+    "farm": {
+      "world": {
+        "mapId": "farm-valley-01",
+        "days": 60,
+        "level": 18,
+        "buildings": 28,
+        "bridges": 1,
+        "zones": 8,
+        "roadCells": 161,
+        "fields": 216,
+        "crops": 216,
+        "seconds": 139
+      },
+      "views": [
+        {
+          "quality": "high",
+          "view": "default",
+          "fps": 51,
+          "drawCalls": 181,
+          "triangles": 202034,
+          "geometries": 107
+        },
+        {
+          "quality": "high",
+          "view": "overview-75",
+          "fps": 44,
+          "drawCalls": 179,
+          "triangles": 203274,
+          "geometries": 113
+        },
+        {
+          "quality": "high",
+          "view": "oblique-45",
+          "fps": 40,
+          "drawCalls": 175,
+          "triangles": 200634,
+          "geometries": 121
+        },
+        {
+          "quality": "high",
+          "view": "close",
+          "fps": 54,
+          "drawCalls": 124,
+          "triangles": 173082,
+          "geometries": 121
+        },
+        {
+          "quality": "low",
+          "view": "default",
+          "fps": 57,
+          "drawCalls": 54,
+          "triangles": 153174,
+          "geometries": 121
+        },
+        {
+          "quality": "low",
+          "view": "overview-75",
+          "fps": 46,
+          "drawCalls": 104,
+          "triangles": 181014,
+          "geometries": 121
+        },
+        {
+          "quality": "low",
+          "view": "oblique-45",
+          "fps": 37,
+          "drawCalls": 99,
+          "triangles": 178230,
+          "geometries": 121
+        },
+        {
+          "quality": "low",
+          "view": "close",
+          "fps": 56,
+          "drawCalls": 54,
+          "triangles": 153174,
+          "geometries": 121
+        }
+      ],
+      "rebuild": {
+        "accepted": false,
+        "code": "CELL_BLOCKED",
+        "stats": {
+          "lastRebuildMs": 0,
+          "maxRebuildMs": 2.8000000715255737,
+          "zonesRebuilt": 640
+        }
+      },
+      "checks": {
+        "desktopDrawCalls": true,
+        "desktopTriangles": true,
+        "lowDrawCalls": true,
+        "lowTriangles": true,
+        "zoneRebuildMs": true,
+        "noErrors": true
+      },
+      "errors": []
+    }
+  }
+}
