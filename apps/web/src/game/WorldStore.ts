@@ -73,6 +73,9 @@ export class WorldStore {
   now(): number { return Math.max(this.state.snapshot.serverTime, Date.now() + this.timeOffset); }
   /** Debug panel (docs/11 §10): server clock minus local clock, as last measured. */
   clockSkewMs(): number { return this.timeOffset; }
+  /** Presentation hooks (sound effects): local command results and time ticks, with the state before and after. */
+  onCommand?: (type: CommandType, accepted: boolean, before: SimState, after: SimState) => void;
+  onTick?: (before: SimState, after: SimState) => void;
   pendingCount(): number { return this.pending.length; }
   get online(): boolean { return this.transport !== null; }
 
@@ -99,7 +102,8 @@ export class WorldStore {
       this.message(t('queueFull'), true);
       return { state: this.state, cost: { cash: 0, wood: 0, stone: 0 }, dirtyZones: [], result: { commandId: command.commandId, accepted: false, code: 'REVISION_CONFLICT', revision: this.state.snapshot.revision, serverTime: this.now() } };
     }
-    const execution = execute(this.state, command, this.now()); this.results.set(command.commandId, execution);
+    const before = this.state, execution = execute(this.state, command, this.now()); this.results.set(command.commandId, execution);
+    this.onCommand?.(command.type, execution.result.accepted, before, execution.state);
     if (execution.result.accepted) {
       this.state = execution.state; this.publish(execution.dirtyZones, true); this.message(t('valid'));
       if (this.transport) { this.pending.push(command); this.updateSync(); void this.flush(); } else this.save();
@@ -172,7 +176,8 @@ export class WorldStore {
 
   tick(): void {
     const next = cloneState(this.state), before = JSON.stringify([next.snapshot.buildings, next.snapshot.bridges]);
-    advanceTime(next, this.now()); this.state = next;
+    const previous = this.state;
+    advanceTime(next, this.now()); this.state = next; this.onTick?.(previous, next);
     this.publish([], before !== JSON.stringify([next.snapshot.buildings, next.snapshot.bridges]));
     if (this.transport && this.pending.length && !this.inflight && useWorld.getState().connection === 'offline' && !this.retryTimer) void this.flush();
   }

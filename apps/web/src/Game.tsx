@@ -20,6 +20,12 @@ function GraphicsSettings({ quality, onChange }: { quality: 'high' | 'low' | und
       className={quality === level ? 'selected' : ''} onClick={() => onChange(level)}>{t(level === 'high' ? 'graphicsHigh' : 'graphicsLow')}</button>)}
   </div>;
 }
+function SoundSettings({ muted, onChange }: { muted: boolean | undefined; onChange: (muted: boolean) => void }) {
+  return <div className="settings" role="group" aria-label={t('sound')}><span>{t('sound')}</span>
+    {([false, true] as const).map(off => <button type="button" key={String(off)} aria-pressed={muted === off}
+      className={muted === off ? 'selected' : ''} onClick={() => onChange(off)}>{t(off ? 'soundOff' : 'soundOn')}</button>)}
+  </div>;
+}
 function Profile({ state }: { state: NonNullable<ReturnType<typeof useWorld.getState>['state']> }) {
   const s = state.snapshot, mat = (w: number, st: number) => w * economy.materialPrices.wood + st * economy.materialPrices.stone;
   const buildings = s.buildings.reduce((v, b) => v + b.investedValue, 0), bridges = s.bridges.reduce((v, b) => v + b.investedValue, 0);
@@ -99,6 +105,7 @@ export function Game({loader,onSwitchMap}:GameProps){
   const hasBank=!!state&&kind==='city'&&state.snapshot.buildings.some(b=>b.status==='ACTIVE'&&catalog.buildings[b.defId]?.bankCapHours&&access(state,b));
   const openPanel=(next:GamePanel)=>{gameRef.current?.tools.choose('explore');setPanel(current=>current===next?null:next);};
   const setQuality=(quality:'high'|'low')=>{gameRef.current?.setQuality(quality);setStats(gameRef.current?.metrics()??null);};
+  const setMuted=(muted:boolean)=>{gameRef.current?.sound.setMuted(muted);setStats(gameRef.current?.metrics()??null);};
   const switchMap=async()=>{
     const world=gameRef.current?.world;if(!world||!onSwitchMap||switchingMap)return;
     setSwitchingMap(true);
@@ -120,8 +127,8 @@ export function Game({loader,onSwitchMap}:GameProps){
       <div className="camera-buttons"><button aria-label="Phóng to" onClick={()=>gameRef.current?.rig.zoom(-140)}><GameIcon name="zoomIn"/></button><button aria-label="Thu nhỏ" onClick={()=>gameRef.current?.rig.zoom(140)}><GameIcon name="zoomOut"/></button><button aria-label={t('resetCamera')} onClick={()=>gameRef.current?.rig.reset()}><GameIcon name="reset"/></button></div>
       {panel&&<aside className="side panel"><button className="close" aria-label="Đóng bảng" onClick={()=>setPanel(null)}><GameIcon name="close"/></button>
         <h2 className="panel-heading"><GameIcon name={panel==='materials'?'wood':panel}/>{panel==='settings'?'Cài đặt':t(panel)}</h2>
-        {panel==='profile'?<><Profile state={state}/><GraphicsSettings quality={stats?.quality} onChange={setQuality}/></>
-          :panel==='settings'?<><p>Điều chỉnh đồ họa phù hợp với thiết bị của bạn.</p><GraphicsSettings quality={stats?.quality} onChange={setQuality}/></>
+        {panel==='profile'?<><Profile state={state}/><GraphicsSettings quality={stats?.quality} onChange={setQuality}/><SoundSettings muted={stats?.muted} onChange={setMuted}/></>
+          :panel==='settings'?<><p>Điều chỉnh đồ họa phù hợp với thiết bị của bạn.</p><GraphicsSettings quality={stats?.quality} onChange={setQuality}/><SoundSettings muted={stats?.muted} onChange={setMuted}/></>
           :panel==='materials'?(['wood','stone'] as const).map(material=><div className="item" key={material}><GameIcon name={material}/><span>{t(material)}</span>{[1,10].map(count=><button key={count} onClick={()=>apply('BUY_MATERIAL',{[material]:count})}>{t('buy')} {count}</button>)}</div>)
           :Object.keys(state.snapshot.inventory).length?Object.entries(state.snapshot.inventory).map(([id,count])=><div className="item" key={id}><span>{t(catalog.items[id]?.nameKey??id)} × {count}</span><button disabled={!count} onClick={()=>apply('SELL',{items:{[id]:count}})}>{t('sell')} {money(count*(catalog.items[id]?.sellPrice??0))}</button></div>)
           :<p className="empty-inventory"><GameIcon name="inventory"/>Kho đang trống. Thu hoạch hoặc thu sản phẩm để thêm hàng vào kho.</p>}
