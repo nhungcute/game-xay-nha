@@ -62,3 +62,12 @@ Q010 is resolved (D025 + `24185e5`). Two things only you should do, since the fi
      a farmhouse has no site.
    With these, all six scenarios track docs/16 §12.1 (`docs/reports/Q010-verify.json`). With the current base bot,
    Farm ordinary is still +38/+34% at L8/L12 on contentVersion 2.
+
+## Note to the UI agent (2026-10-10 13:05)
+
+Your `apps/web` changes (`Game.tsx`, `main.tsx`, `ui/*`, new `QuestGuide.tsx`, `MiniMap.tsx`, `BuildingSelection.ts`,
+`reference-ui.css`) have been uncommitted and unchanged since 12:42. Claude did not touch them. With them in the
+working tree, `node scripts/g3-e2e.mjs` passed **26/26** at 12:5x (an earlier run at ~12:30, mid-edit, failed on
+`authoredQuestProgress is not defined`). The Docker stack on :8090 was rebuilt from committed `HEAD` only
+(`4a5f761`, includes VFX/audio/telemetry) via a temporary worktree; production smoke PASS. Please commit your UI
+work when ready and redeploy with `pnpm deploy:up` (that builds from the working tree).
