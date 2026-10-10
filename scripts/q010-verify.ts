@@ -6,7 +6,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { WorldTemplateSchema } from '@xay-nha/contracts';
 import { contentVersion } from '@xay-nha/content';
 import { pacingComparison } from '../packages/tooling/sim-economy';
-import { CityBotV2, FarmBotV3 } from './q010-farm-bots';
+import { CityBotV2, FarmBotV3 } from '../packages/tooling/src/economy-bot-policies';
 // docs/16 §12.1 elapsed days for L5/8/10/12/15/18/20 (4 h = 0.17 d, 17 h = 0.71 d; null = not reached in 60 days).
 const TARGET = {"city": {"cham": [0.17, 2.5, 5, 10, 19, 33, 48], "thuong": [0.71, 3.5, 6, 11, 21, 35, 49], "nhan": [2, 9, 16, 28, 48, null, null]}, "farm": {"cham": [0.17, 2, 4, 8, 15, 24, 35], "thuong": [1, 4, 7, 12, 22, 37, 52], "nhan": [3, 12, 21, 35, 59, null, null]}} as Record<'city' | 'farm', Record<'cham' | 'thuong' | 'nhan', (number | null)[]>>;
 

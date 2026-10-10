@@ -32,3 +32,20 @@ describe('real sim economy bot', () => {
     await expect(runEconomy(['--fake', '1'])).rejects.toThrow('Unknown');
   });
 });
+
+describe('tuned bot policies (Q010, default of sim-economy)', () => {
+  it('createBot picks FarmBotV3 / CityBotV2 by map, or the base bot on request', async () => {
+    const { CityBotV2, FarmBotV3, createBot } = await import('./economy-bot-policies');
+    expect(createBot(createTestTemplate('farm'), 'thuong', 1)).toBeInstanceOf(FarmBotV3);
+    expect(createBot(createTestTemplate('city'), 'thuong', 1)).toBeInstanceOf(CityBotV2);
+    const base = createBot(createTestTemplate('city'), 'thuong', 1, undefined, 'base');
+    expect(base).toBeInstanceOf(EconomyBot); expect(base).not.toBeInstanceOf(CityBotV2);
+  });
+  it('one tuned day on each test map keeps a valid snapshot and a safe wallet', async () => {
+    const { createBot } = await import('./economy-bot-policies');
+    for (const kind of ['city', 'farm'] as const) {
+      const result = createBot(createTestTemplate(kind), 'thuong', 1).run();
+      expect(result.invariants).toMatchObject({ snapshotValid: true, walletSafe: true, occupancyValid: true });
+    }
+  });
+});

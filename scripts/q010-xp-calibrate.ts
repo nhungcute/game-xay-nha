@@ -8,7 +8,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { WorldTemplateSchema } from '@xay-nha/contracts';
 import { economy } from '@xay-nha/content';
 import { pacingComparison } from '../packages/tooling/sim-economy';
-import { FarmBotV3 } from './q010-farm-bots';
+import { FarmBotV3 } from '../packages/tooling/src/economy-bot-policies';
 import { EconomyBot } from '../packages/tooling/src/economy-bot-core';
 // @ts-expect-error untyped reference model (docs/tools/economy)
 import { simFarm, simCity, PLAYERS, sessions } from '../docs/tools/economy/model.mjs';

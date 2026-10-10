@@ -5,7 +5,7 @@ import { WorldTemplateSchema } from '@xay-nha/contracts';
 import { EconomyBot } from '../packages/tooling/src/economy-bot-core';
 import type { PlayStyle } from '../packages/tooling/src/economy-bot-schedule';
 import { pacingComparison } from '../packages/tooling/sim-economy';
-import { FarmBotV2, FarmBotV3 } from './q010-farm-bots';
+import { FarmBotV2, FarmBotV3 } from '../packages/tooling/src/economy-bot-policies';
 
 const days = Number(process.argv[2] ?? 60), style = (process.argv[3] ?? 'thuong') as PlayStyle;
 const template = WorldTemplateSchema.parse(JSON.parse(await readFile('apps/web/public/worlds/farm-valley-01/template.v2.json', 'utf8')));

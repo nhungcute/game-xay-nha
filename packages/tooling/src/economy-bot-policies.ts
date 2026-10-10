@@ -1,12 +1,14 @@
-// Q010 option 1 experiment: does a better Farm strategy close the pacing gap without changing any rule or number?
-// FarmBotV2 extends Codex's EconomyBot (file unchanged) and only changes the bot's choices, all through legal commands:
-//  - sell before harvesting (storage room first), then the base routine;
-//  - keep building every affordable producer, not one per tick;
-//  - add silos up to the level limit whenever storage rejected a harvest/collect.
-// Used by scripts/q010-farm-bot.ts and scripts/q010-farm-xp-calibrate.ts.
+// Tuned bot policies (Q010, D025), now the default of sim-economy.ts. They subclass the base EconomyBot and only
+// change the bot's choices, all through legal commands; no rule or number differs.
+//  Farm (FarmBotV3): sell before harvesting; build every affordable producer up to its limit; silos only after a
+//    storage rejection; the next farmhouse (24 more fields) before silo/producers/zones; zones with a 3x cash cushion.
+//  City (CityBotV2): keep placing buildings within a tick while one was placed (the base bot places at most one per
+//    5-minute tick, so short sessions under-build and hoard cash).
 import { catalog, economy } from '@xay-nha/content';
 import { buildingLimit } from '@xay-nha/sim';
-import { EconomyBot } from '../packages/tooling/src/economy-bot-core';
+import type { WorldTemplate } from '@xay-nha/contracts';
+import { EconomyBot } from './economy-bot-core';
+import type { PlayStyle } from './economy-bot-schedule';
 
 type Session = Parameters<EconomyBot['farm']>[0];
 export class FarmBotV2 extends EconomyBot {
@@ -65,4 +67,10 @@ export class CityBotV2 extends EconomyBot {
       if (this.s.snapshot.buildings.length === before) break;
     }
   }
+}
+
+/** The bot sim-economy.ts uses: tuned policies by default, the original base bot with `base`. */
+export function createBot(template: WorldTemplate, style: PlayStyle, days: number, onDay?: (day: number) => void, policy: 'tuned' | 'base' = 'tuned'): EconomyBot {
+  if (policy === 'base') return new EconomyBot(template, style, days, onDay);
+  return template.mapKind === 'farm' ? new FarmBotV3(template, style, days, onDay) : new CityBotV2(template, style, days, onDay);
 }
