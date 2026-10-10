@@ -13,7 +13,13 @@ map selection now use illustrated responsive layouts. Lint/typecheck/build PASS;
 
 Mode: auto-continue (approved 2026-10-10)
 
-## Current gate: runnable local MVP ready — G3 economy FAIL, Q010 awaiting owner
+## Current gate: MVP ACCEPTED by the user (2026-10-10, "MVP xong")
+
+Final state `1f4e030`: `pnpm check` 702/702, `pnpm test:api` 24/24, G3 E2E 26/26, production smoke PASS,
+official sim-economy 8/8 pacing PASS (D025, Q010 resolved), no open questions. Not verified (needs people/hardware):
+real-player playtest, reference-device performance, public tunnel link. Later work is P1 (see MVP-summary.md).
+
+## Previous heading: runnable local MVP ready — G3 economy FAIL, Q010 awaiting owner (superseded)
 
 Six-scenario economy comparison completed: CLI exit 0, 876.329 s, all invariants PASS; pacing FAIL.
 G3 balance approval waits on Q010; the first-time human tutorial and G4 reference-device performance are NOT RUN.
