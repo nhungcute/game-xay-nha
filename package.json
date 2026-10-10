@@ -22,6 +22,8 @@
     "deploy:up": "node scripts/ensure-env.mjs && docker compose -f infra/compose.yml up -d --build",
     "deploy:down": "docker compose -f infra/compose.yml --profile tunnel down",
     "deploy:logs": "docker compose -f infra/compose.yml logs -f --tail=100",
+    "db:backup": "docker compose -f infra/compose.yml exec -T backup /bin/sh /backup.sh once",
+    "db:restore": "node scripts/db-restore.mjs",
     "tunnel:up": "docker compose -f infra/compose.yml --profile tunnel up -d tunnel",
     "tunnel:url": "node scripts/tunnel-url.mjs",
     "tunnel:down": "docker compose -f infra/compose.yml --profile tunnel rm -sf tunnel",

@@ -46,6 +46,22 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  # Daily pg_dump into ../backups (kept: newest 7). `pnpm db:backup` makes an extra one now.
+  backup:
+    image: postgres:16.10-alpine
+    entrypoint: ["/bin/sh", "/backup.sh", "loop"]
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      KEEP: ${BACKUP_KEEP:-7}
+      INTERVAL_SECONDS: ${BACKUP_INTERVAL_SECONDS:-86400}
+    volumes:
+      - ./backup.sh:/backup.sh:ro
+      - ../backups:/backups
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
   # Started only with `pnpm tunnel:up` (profile "tunnel"). Publishes the web service at a
   # random https://*.trycloudflare.com URL. Never started automatically.
   tunnel:
