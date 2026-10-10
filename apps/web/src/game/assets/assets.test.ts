@@ -3,7 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { Box3, InstancedMesh, Scene } from 'three';
 import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { catalog } from '@xay-nha/content';
-import { createTestTemplate } from '@xay-nha/worldgen';
+import { WorldTemplateSchema } from '@xay-nha/contracts';
+import { createTestTemplate, generateEnvironment } from '@xay-nha/worldgen';
 import { cloneState, createState } from '@xay-nha/sim';
 import { AssetManager, type AssetManifestEntry } from './AssetManager';
 import { BuildingRenderer } from '../render/BuildingRenderer';
@@ -97,6 +98,22 @@ describe('actual placeholder GLB artifacts', () => {
       expect(mesh.castShadow).toBe(height >= 1.5);
     }
     expect(all.some(m => m.castShadow) && all.some(m => !m.castShadow)).toBe(true);
+    renderer.dispose(); manager.dispose();
+  });
+  it('low graphics drops flowers/reeds, thins bushes and merges batches; switching back restores everything', async () => {
+    const manager = await setup(), scene = new Scene(), renderer = new EnvRenderer(scene, manager);
+    const template = WorldTemplateSchema.parse(JSON.parse(await readFile(new URL('worlds/farm-valley-01/template.v2.json', new URL('../', assetRoot)), 'utf8')));
+    const s = createState(template, 1000, generateEnvironment(template)), total = () => meshes(scene).reduce((sum, mesh) => sum + mesh.count, 0);
+    renderer.update(s); const high = total();
+    expect(s.env.some(e => e.assetId.startsWith('flower'))).toBe(true);
+    renderer.setQuality('low');
+    const low = meshes(scene), assets = new Set(low.map(m => m.name.split(':').at(-1)));
+    expect(low.length).toBe(assets.size);
+    expect([...assets].some(id => id!.startsWith('flower') || id!.startsWith('reed'))).toBe(false);
+    const bushes = s.env.filter(e => e.assetId.startsWith('bush')).length, kept = low.filter(m => m.name.includes('bush')).reduce((n, m) => n + m.count, 0);
+    if (bushes > 10) { expect(kept).toBeGreaterThan(bushes * 0.3); expect(kept).toBeLessThan(bushes * 0.7); }
+    expect(total()).toBeLessThan(high);
+    renderer.setQuality('high'); expect(total()).toBe(high);
     renderer.dispose(); manager.dispose();
   });
   it('switches construction scaffolds to GLB buildings and removes demolished instances', async () => {

@@ -71,6 +71,9 @@ export class WorldStore {
   }
 
   now(): number { return Math.max(this.state.snapshot.serverTime, Date.now() + this.timeOffset); }
+  /** Debug panel (docs/11 §10): server clock minus local clock, as last measured. */
+  clockSkewMs(): number { return this.timeOffset; }
+  pendingCount(): number { return this.pending.length; }
   get online(): boolean { return this.transport !== null; }
 
   async load(): Promise<void> {

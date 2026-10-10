@@ -4,6 +4,7 @@ import type { SimState } from '@xay-nha/sim';
 import { AssetManager } from '../assets/AssetManager';
 import { InstanceBatches, type InstancePlacement } from '../assets/InstanceBatches';
 import { addInstance, cellCenter, matrix, terrainHeight } from '../assets/placement';
+import { keepInLow, type Quality } from '../quality';
 
 /** Environment batches are asset × map quadrant (not × zone): 4 frustum-cullable blocks per asset keep the
  * default views within the docs/11 §8 draw-call budget (G3 visual analysis: 522/638 calls with per-zone batches). */
@@ -15,20 +16,28 @@ const SHADOW_MIN_HEIGHT_M = 1.5;
 export class EnvRenderer {
   private readonly batches: InstanceBatches;
   private previous?: SimState;
+  private quality: Quality = 'high';
   constructor(scene: Scene, assets: AssetManager) {
     this.batches = new InstanceBatches(scene, assets, handle => handle.bounds.max.y - handle.bounds.min.y >= SHADOW_MIN_HEIGHT_M);
+  }
+  /** Low quality: no small decor, half the bushes, one batch per asset (fewest draw calls). */
+  setQuality(quality: Quality): void {
+    if (quality === this.quality) return;
+    this.quality = quality;
+    const s = this.previous; this.previous = undefined;
+    if (s) this.update(s);
   }
   update(s: SimState): void {
     if (this.previous === s) return;
     this.previous = s;
     const groups = new Map<string, InstancePlacement>(), removed = new Set(s.snapshot.delta.removedEnvIds);
     for (const env of s.env) {
-      if (removed.has(env.id)) continue;
+      if (removed.has(env.id) || (this.quality === 'low' && !keepInLow(env.assetId, env.id))) continue;
       const [cx, cz] = cellCenter(env.cell);
       // offsetXZ is in world meters in the immutable generated environment.
       const x = cx + env.offsetXZ[0], z = cz + env.offsetXZ[1];
       const footprintOffset = (env.footprint - 1) * CELL_SIZE_M / 2;
-      addInstance(groups, `${env.assetId}:${regionOf(env.cell)}`, env.assetId,
+      addInstance(groups, `${env.assetId}:${this.quality === 'low' ? 0 : regionOf(env.cell)}`, env.assetId,
         matrix(x + footprintOffset, terrainHeight(s, x + footprintOffset, z + footprintOffset), z + footprintOffset,
           env.yawDeg * Math.PI / 180, [env.scale, env.scale, env.scale]));
     }
