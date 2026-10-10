@@ -3,129 +3,129 @@
     "bot": "baseline",
     "style": "thuong",
     "days": 60,
-    "level": 15,
-    "cash": 1961651,
-    "buildings": 25,
-    "producers": 14,
-    "fields": 192,
-    "storageFull": 1255,
+    "level": 20,
+    "cash": 2328504,
+    "buildings": 29,
+    "producers": 16,
+    "fields": 240,
+    "storageFull": 1539,
     "snapshotValid": true,
     "pacing": [
       {
         "level": 8,
         "expected": 4,
-        "actual": 8.04,
-        "deviation": 101,
+        "actual": 5.5,
+        "deviation": 38,
         "status": "FAIL"
       },
       {
         "level": 12,
         "expected": 12,
-        "actual": 30.69,
-        "deviation": 156,
+        "actual": 16.04,
+        "deviation": 34,
         "status": "FAIL"
       },
       {
         "level": 15,
         "expected": 22,
-        "actual": 53.69,
-        "deviation": 144,
-        "status": "FAIL"
+        "actual": 26.69,
+        "deviation": 21,
+        "status": "PASS"
       },
       {
         "level": 20,
         "expected": 52,
-        "actual": null,
-        "deviation": null,
-        "status": "UNREACHED"
+        "actual": 57.04,
+        "deviation": 10,
+        "status": "PASS"
       }
     ],
-    "seconds": 53
+    "seconds": 75
   },
   {
     "bot": "v2",
     "style": "thuong",
     "days": 60,
-    "level": 16,
-    "cash": 1617519,
-    "buildings": 32,
-    "producers": 15,
-    "fields": 192,
-    "storageFull": 22,
+    "level": 20,
+    "cash": 1641499,
+    "buildings": 37,
+    "producers": 16,
+    "fields": 240,
+    "storageFull": 34,
     "snapshotValid": true,
     "pacing": [
       {
         "level": 8,
         "expected": 4,
-        "actual": 7.5,
-        "deviation": 88,
+        "actual": 5.5,
+        "deviation": 38,
         "status": "FAIL"
       },
       {
         "level": 12,
         "expected": 12,
-        "actual": 24.69,
-        "deviation": 106,
-        "status": "FAIL"
+        "actual": 13.69,
+        "deviation": 14,
+        "status": "PASS"
       },
       {
         "level": 15,
         "expected": 22,
-        "actual": 47.04,
-        "deviation": 114,
-        "status": "FAIL"
+        "actual": 24.04,
+        "deviation": 9,
+        "status": "PASS"
       },
       {
         "level": 20,
         "expected": 52,
-        "actual": null,
-        "deviation": null,
-        "status": "UNREACHED"
+        "actual": 54.69,
+        "deviation": 5,
+        "status": "PASS"
       }
     ],
-    "seconds": 55
+    "seconds": 66
   },
   {
     "bot": "v3",
     "style": "thuong",
     "days": 60,
-    "level": 16,
-    "cash": 1648214,
-    "buildings": 32,
-    "producers": 15,
-    "fields": 192,
-    "storageFull": 20,
+    "level": 20,
+    "cash": 1600198,
+    "buildings": 37,
+    "producers": 16,
+    "fields": 240,
+    "storageFull": 34,
     "snapshotValid": true,
     "pacing": [
       {
         "level": 8,
         "expected": 4,
-        "actual": 6.04,
-        "deviation": 51,
-        "status": "FAIL"
+        "actual": 4.04,
+        "deviation": 1,
+        "status": "PASS"
       },
       {
         "level": 12,
         "expected": 12,
-        "actual": 23.5,
-        "deviation": 96,
-        "status": "FAIL"
+        "actual": 13.04,
+        "deviation": 9,
+        "status": "PASS"
       },
       {
         "level": 15,
         "expected": 22,
-        "actual": 46.04,
-        "deviation": 109,
-        "status": "FAIL"
+        "actual": 23.5,
+        "deviation": 7,
+        "status": "PASS"
       },
       {
         "level": 20,
         "expected": 52,
-        "actual": null,
-        "deviation": null,
-        "status": "UNREACHED"
+        "actual": 54.69,
+        "deviation": 5,
+        "status": "PASS"
       }
     ],
-    "seconds": 61
+    "seconds": 82
   }
 ]
