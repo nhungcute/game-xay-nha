@@ -1,0 +1,66 @@
+{
+  "city": {
+    "audit": {
+      "objects": 188,
+      "meshes": 178,
+      "instanced": 103,
+      "sprites": 0,
+      "texturedPlanes": 0,
+      "largestPlaneM": 0,
+      "textures": 0
+    },
+    "metrics": {
+      "fps": 58.74153723616086,
+      "drawCalls": 84,
+      "triangles": 110700,
+      "geometries": 104,
+      "textures": 1,
+      "programs": 14,
+      "terrain": {
+        "lastRebuildMs": 0.10000002384185791,
+        "maxRebuildMs": 1.100000023841858,
+        "zonesRebuilt": 128
+      },
+      "revision": 0
+    },
+    "snapshot": {
+      "mapId": "city-coast-01",
+      "buildings": 0,
+      "bridges": 0,
+      "crops": 0
+    },
+    "errors": []
+  },
+  "farm": {
+    "audit": {
+      "objects": 192,
+      "meshes": 182,
+      "instanced": 105,
+      "sprites": 0,
+      "texturedPlanes": 0,
+      "largestPlaneM": 0,
+      "textures": 0
+    },
+    "metrics": {
+      "fps": 58.87635964474607,
+      "drawCalls": 96,
+      "triangles": 119016,
+      "geometries": 109,
+      "textures": 1,
+      "programs": 14,
+      "terrain": {
+        "lastRebuildMs": 0.19999992847442627,
+        "maxRebuildMs": 1.2000000476837158,
+        "zonesRebuilt": 128
+      },
+      "revision": 0
+    },
+    "snapshot": {
+      "mapId": "farm-valley-01",
+      "buildings": 0,
+      "bridges": 0,
+      "crops": 0
+    },
+    "errors": []
+  }
+}

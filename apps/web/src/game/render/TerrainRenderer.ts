@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import { GRID, Surface, ZONE_CELLS, cellIndex, vertIndex } from '@xay-nha/contracts';
 import type { SimState } from '@xay-nha/sim';
 import { ALL_ZONES, HEIGHT_COUNT, globalNormal, heightAt } from './geometry';
+import { groundColors } from './groundPalette';
 
-const COLORS = ['#79a951', '#a9875a', '#d3be82', '#88877a', '#765136', '#b49363', '#b5a68a', '#616e54'];
 const VERTICES = 17 * 17;
 
 export class TerrainRenderer {
@@ -19,7 +19,8 @@ export class TerrainRenderer {
   private transitionZones = new Set<number>();
   private state?: SimState;
   private initialized = false;
-  private readonly colors = COLORS.map(color => new THREE.Color(color));
+  /** Per-cell natural ground colour (display only), refreshed on every state update. */
+  private ground = new Float32Array(GRID * GRID * 3);
   private readonly normal = new THREE.Vector3();
 
   constructor(private readonly scene: THREE.Scene) {
@@ -46,6 +47,7 @@ export class TerrainRenderer {
 
   update(state: SimState, dirtyZones: readonly number[] = ALL_ZONES): void {
     this.state = state;
+    this.ground = groundColors(state, this.ground);
     this.origin.set(this.displayed);
     this.transitionElapsed = 0;
     this.target.set(state.heights);
@@ -90,19 +92,18 @@ export class TerrainRenderer {
     const tilled = geometry.getAttribute('tilledWeight') as THREE.BufferAttribute;
     const indices = geometry.index!;
     const ox = zone % 8 * ZONE_CELLS, oz = Math.floor(zone / 8) * ZONE_CELLS;
-    const color = new THREE.Color();
     for (let z = 0; z <= 16; z++) for (let x = 0; x <= 16; x++) {
       const gx = ox + x, gz = oz + z, vertex = z * 17 + x;
       position.setXYZ(vertex, gx * 2, this.displayed[vertIndex(gx, gz)]! / 10, gz * 2);
       globalNormal(this.displayed, gx, gz, this.normal); normals.setXYZ(vertex, this.normal.x, this.normal.y, this.normal.z);
-      color.setRGB(0, 0, 0); let count = 0, fieldCount = 0;
+      let r = 0, g = 0, b = 0, count = 0, fieldCount = 0;
       for (const nz of [gz - 1, gz]) for (const nx of [gx - 1, gx]) if (nx >= 0 && nz >= 0 && nx < GRID && nz < GRID) {
-        const surface = this.state.surface[cellIndex(nx, nz)] ?? Surface.GRASS;
-        color.add(this.colors[surface]!); count++; fieldCount += Number(surface === Surface.TILLED);
+        const cell = cellIndex(nx, nz);
+        r += this.ground[cell * 3]!; g += this.ground[cell * 3 + 1]!; b += this.ground[cell * 3 + 2]!;
+        count++; fieldCount += Number(this.state.surface[cell] === Surface.TILLED);
       }
       tilled.setX(vertex, fieldCount / count);
-      const noise = 0.96 + ((Math.imul(gx + 1, 374761393) ^ Math.imul(gz + 1, 668265263) ^ this.state.template.seed) >>> 0) % 100 / 1250;
-      color.multiplyScalar(noise / count); colors.setXYZ(vertex, color.r, color.g, color.b);
+      colors.setXYZ(vertex, r / count, g / count, b / count);
     }
     for (let z = 0; z < 16; z++) for (let x = 0; x < 16; x++) {
       const a = z * 17 + x, b = a + 1, c = a + 17, d = c + 1, cursor = (z * 16 + x) * 6;
