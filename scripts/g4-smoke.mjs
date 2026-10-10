@@ -6,6 +6,7 @@
 // Usage: BASE_URL=http://127.0.0.1:8090 node scripts/g4-smoke.mjs
 import { chromium, devices, webkit } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { SYNC, hudBar, materialsButton, openSwitchMap } from './lib/hud.mjs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8090', OUT = process.env.OUT ?? 'docs/evidence/g4/smoke';
 await mkdir(OUT, { recursive: true });
@@ -15,7 +16,7 @@ const runs = [
 ];
 const report = { base: BASE, startedAt: new Date().toISOString(), health: (await (await fetch(`${BASE}/health`)).text()).trim(), runs: {} };
 let failed = report.health !== 'ok';
-const synced = page => page.waitForFunction(() => /Đã đồng bộ/.test(document.querySelector('.sub-hud [role=status]')?.textContent ?? ''), null, { timeout: 30000 });
+const synced = page => page.waitForFunction(sel => /Đã đồng bộ/.test(document.querySelector(sel)?.textContent ?? ''), SYNC, { timeout: 30000 });
 const inGame = async page => { await page.waitForFunction(() => !!window.__debug?.snapshot, null, { timeout: 60000 }); await synced(page); await page.waitForTimeout(2000); };
 // Time-independent world summary (income/serverTime advance between loads, so the full state hash may differ).
 const essence = page => page.evaluate(() => { const s = window.__debug.snapshot();
@@ -31,11 +32,7 @@ for (const run of runs) {
   for (const kind of ['city', 'farm']) {
     const started = Date.now();
     if (kind === 'city') await page.goto(`${BASE}/?debug=1`);
-    else {
-      const switchMap = page.locator('button[aria-label="Đổi bản đồ"]');
-      if (!await switchMap.isVisible()) await page.getByRole('button', { name: 'Menu chức năng' }).click();
-      await switchMap.click();
-    }
+    else await openSwitchMap(page);
     const create = page.locator(`.map-card.${kind} button`, { hasText: 'Tạo nhân vật' });
     await create.waitFor({ timeout: 30000 });
     const mapScreenMs = Date.now() - started;
@@ -47,20 +44,20 @@ for (const run of runs) {
     if (kind === 'city') { recovery = await page.locator('p.code').innerText({ timeout: 30000 }); await page.locator('button', { hasText: 'Tiếp tục' }).click(); }
     await inGame(page);
     // One real UI command (buy 1 wood), confirmed by the server, so the reload check covers persistence.
-    await page.locator('.resources button').first().click();
+    await materialsButton(page).click();
     await page.locator('.side.panel .item', { hasText: 'Gỗ' }).locator('button', { hasText: 'Mua 1' }).first().click();
     await page.locator('.side.panel .close').click();
     await page.waitForFunction(() => window.__debug.snapshot().revision >= 1, null, { timeout: 20000 });
     await synced(page);
     const before = await essence(page);
     const metrics = await page.evaluate(() => window.__debug.metrics()), hooks = await page.evaluate(() => typeof window.__debug.command);
-    const hud = await page.locator('header.hud').innerText();
+    const hud = await hudBar(page).innerText();
     await page.screenshot({ path: `${OUT}/${run.name}-${kind}.jpg`, type: 'jpeg', quality: 78 });
     await page.reload();
     await inGame(page);
     const after = await essence(page);
     const checks = {
-      hud: hud.includes('XÂY NHÀ') && hud.includes(name.split(' ')[0]),
+      hud: hud.includes(name.split(' ')[0]),
       recoveryCode: kind === 'farm' || recovery.trim().length >= 8,
       noTestHooksInProduction: hooks === 'undefined',
       reloadSameWorld: after === before && JSON.parse(before).revision >= 1 && JSON.parse(before).mapId.startsWith(kind),

@@ -45,6 +45,9 @@ export class OverlayRenderer {
     this.status = status; this.visible = true; this.draw(state);
   }
   hide(): void { this.visible = false; this.mesh.visible = false; }
+  /** Locked-zone outlines on/off (the "layers" map control). */
+  setZonesVisible(visible: boolean): void { this.zones.visible = visible; }
+  get zonesVisible(): boolean { return this.zones.visible; }
 
   private draw(state: SimState): void {
     const positions = this.geometry.getAttribute('position') as THREE.BufferAttribute;

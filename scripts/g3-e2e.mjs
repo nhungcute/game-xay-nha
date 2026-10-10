@@ -9,6 +9,7 @@
  * Writes docs/evidence/g3/e2e/*.jpg and g3-e2e.json. Exit code 1 on any failed check.
  */
 import { chromium, webkit, devices } from '@playwright/test';
+import { claimButton, inventoryButton, openSwitchMap, pickBuilding, pickTool, waitSynced as hudSynced } from './lib/hud.mjs';
 import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5191';
@@ -27,10 +28,8 @@ function watch(page, label) {
 }
 const debug = (page, fn, arg) => page.evaluate(([f, a]) => window.__debug[f](...(a ?? [])), [fn, arg]);
 const snap = page => debug(page, 'snapshot');
-async function waitSynced(page, timeout = 20000) {
-  await page.waitForFunction(() => /Đã đồng bộ/.test(document.querySelector('.sub-hud [role=status]')?.textContent ?? ''), null, { timeout });
-}
-async function tool(page, label) { await page.locator('nav.tools button', { hasText: label }).first().click(); await page.waitForTimeout(120); }
+const waitSynced = (page, timeout = 20000) => hudSynced(page, timeout);
+const tool = (page, label) => pickTool(page, label);
 async function frame(page, cells, distance = 70) {
   const xs = cells.map(c => c[0] * 2 + 1), zs = cells.map(c => c[1] * 2 + 1);
   await debug(page, 'camera', [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...zs) + Math.max(...zs)) / 2 + 6, distance, 0, 62]); await page.waitForTimeout(200);
@@ -44,9 +43,8 @@ async function at(page, cell) {
 async function drag(page, a, b) { await frame(page, [a, b]); const p = await at(page, a), q = await at(page, b); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.mouse.move(q.x, q.y, { steps: 5 }); await page.mouse.up(); await page.waitForTimeout(250); }
 async function click(page, cell) { await frame(page, [cell]); const p = await at(page, cell); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.mouse.up(); await page.waitForTimeout(250); }
 async function claim(page, label) {
-  const button = page.locator('aside.quest button', { hasText: 'Nhận thưởng' });
-  await button.waitFor({ timeout: 10000 });
-  await page.waitForFunction(() => !document.querySelector('aside.quest button')?.hasAttribute('disabled'), null, { timeout: 15000 }).catch(() => undefined);
+  const button = claimButton(page);
+  await button.waitFor({ timeout: 20000 });
   const before = (await snap(page)).progress.questIndex;
   await button.click(); await page.waitForTimeout(400);
   const after = (await snap(page)).progress.questIndex;
@@ -74,7 +72,7 @@ await page.goto(`${BASE}/?debug=1`);
 await page.getByText('Chọn vùng đất').waitFor({ timeout: 20000 });
 const recovery = await createCharacter(page, 'city', 'Thị Trưởng E2E');
 check('city character created with a recovery code', /^[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}$/.test(recovery ?? ''), recovery);
-check('tutorial hint from "Bác Tư" is visible with the Clear tool highlighted', await page.locator('.tutor').isVisible() && await page.locator('nav.tools button.hint', { hasText: 'Dọn' }).isVisible());
+check('tutorial hint from "Bác Tư" is visible with the Clear tool highlighted', await page.locator('.hud3-mission-desc').isVisible() && await page.locator('.hud3-cat[data-cat=nature] .hud3-dot').isVisible());
 await shot(page, 'city-tutorial-start');
 const env = await debug(page, 'env');
 const trees = env.filter(e => e.blocking && e.assetId.startsWith('tree') && e.cell[1] >= 50 && e.cell[1] <= 78 && e.cell[0] >= 50 && e.cell[0] <= 78);
@@ -97,8 +95,7 @@ await tool(page, 'San nền'); await page.locator('.tool-options button', { hasT
 await claim(page, 'San phẳng 2×2');
 // quests 4–5: small house + grocery next to the road (instant during the tutorial)
 for (const [label, building, anchor] of [['Nhà nhỏ', 'Nhà nhỏ', [51, 64]], ['Tạp hóa', 'Tạp hóa', [54, 64]]]) {
-  await tool(page, 'Xây');
-  await page.locator('.catalog button', { hasText: building }).first().click();
+  await pickBuilding(page, building);
   const auto = page.locator('.tool-options label', { hasText: 'San tự động' }).locator('input');
   if (!(await auto.isChecked())) await auto.check();
   await click(page, anchor);
@@ -127,7 +124,7 @@ const reloaded = await snap(page);
 check('reload returns to the same City world with identical progress and buildings', reloaded.worldId === cityAfter.worldId && reloaded.revision === cityAfter.revision && reloaded.buildings.length === cityAfter.buildings.length);
 
 // ---------- 4. Farm loop (second character on the same account) ----------
-await page.locator('button[aria-label="Đổi bản đồ"]').click();
+await openSwitchMap(page);
 await page.getByText('Chọn vùng đất').waitFor({ timeout: 15000 });
 await shot(page, 'map-select-with-city');
 await createCharacter(page, 'farm', 'Lão Nông E2E');
@@ -139,7 +136,7 @@ const fenv = await debug(page, 'env');
 await tool(page, 'Dọn'); await drag(page, [70, 70], [77, 79]);
 await tool(page, 'Đường'); await drag(page, [72, 79], [72, 71]);
 for (const [label, anchor, quest] of [['Chợ', [73, 76], 'Xây Chợ và nối đường'], ['Nhà nông', [73, 72], 'Xây Nhà nông']]) {
-  await tool(page, 'Xây'); await page.locator('.catalog button', { hasText: label }).first().click();
+  await pickBuilding(page, label);
   const auto = page.locator('.tool-options label', { hasText: 'San tự động' }).locator('input'); if (!(await auto.isChecked())) await auto.check();
   await click(page, anchor);
   await tool(page, 'Khám phá');
@@ -156,7 +153,7 @@ await page.waitForTimeout(23000);
 await tool(page, 'Thu hoạch'); await drag(page, [65, 73], [70, 73]);
 await claim(page, 'Thu hoạch');
 const inv = (await snap(page)).inventory;
-await page.locator('.resources button', { hasText: 'Kho' }).click();
+await inventoryButton(page).click();
 for (const b of await page.locator('aside.side.panel .item button', { hasText: 'Bán' }).all()) await b.click();
 await page.locator('aside.side.panel .close').click();
 await page.waitForTimeout(400); await waitSynced(page);
@@ -168,7 +165,7 @@ await shot(page, 'farm-loop-done');
 const cdp = await ctx.newCDPSession(page);
 const heap = async () => { await cdp.send('HeapProfiler.collectGarbage'); return (await cdp.send('Runtime.getHeapUsage')).usedSize; };
 const switchTo = async kind => {
-  await page.locator('button[aria-label="Đổi bản đồ"]').click();
+  await openSwitchMap(page);
   await page.getByText('Chọn vùng đất').waitFor({ timeout: 15000 });
   await page.locator(`.map-card.${kind} button`, { hasText: 'Chơi tiếp' }).click();
   await page.waitForFunction(k => window.__debug?.snapshot?.().mapKind === k, kind, { timeout: 30000 });
@@ -208,9 +205,9 @@ for (const [label, browser, device] of [['chromium-pixel7', chrome, devices['Pix
   check(`${label}: game loads after creating a character`, loaded);
   if (!loaded) { await mctx.close(); continue; }
   await mp.waitForTimeout(1500);
-  await mp.locator('nav.tools button', { hasText: 'Dọn' }).tap();
+  await pickTool(mp, 'Dọn', { tap: true });
   const overflow = await mp.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
-  check(`${label}: no horizontal overflow, tool selected by tap`, !overflow && await mp.locator('nav.tools button.selected', { hasText: 'Dọn' }).isVisible());
+  check(`${label}: no horizontal overflow, tool selected by tap`, !overflow && await mp.locator('.hud3-tray .hud3-tool[aria-pressed=true]', { hasText: 'Dọn' }).isVisible());
   const metrics = await debug(mp, 'metrics');
   check(`${label}: WebGL renders (draw calls > 0)`, metrics.drawCalls > 0, { fps: +metrics.fps.toFixed(1), drawCalls: metrics.drawCalls });
   await mp.screenshot({ path: `${OUT}/${String(++shotNo).padStart(2, '0')}-${label}.jpg`, type: 'jpeg', quality: 75 });

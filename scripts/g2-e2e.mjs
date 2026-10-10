@@ -4,6 +4,7 @@
  * Writes docs/evidence/g2/*.jpg and g2-e2e.json; exit code 1 on any failed check.
  */
 import { chromium } from '@playwright/test';
+import { SYNC, claimButton, hudBar, materialsButton, pickBuilding, pickTool, syncText, waitSynced as hudSynced } from './lib/hud.mjs';
 import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5191';
@@ -30,17 +31,21 @@ const apiCall = (page, method, path, body) => page.evaluate(async ([m, p, b]) =>
 const stable = v => Array.isArray(v) ? v.map(stable) : v && typeof v === 'object' ? Object.fromEntries(Object.keys(v).sort().map(k => [k, stable(v[k])])) : v;
 const essence = s => JSON.stringify(stable({ revision: s.revision, wallet: s.wallet, progress: s.progress, buildings: s.buildings.map(b => [b.id, b.defId, b.anchor, b.status]), removed: [...s.delta.removedEnvIds].sort(), zones: Object.keys(s.delta.zones).sort() }));
 async function waitSynced(page, timeout = 15000) {
-  await page.waitForFunction(() => /Đã đồng bộ/.test(document.querySelector('.sub-hud [role=status]')?.textContent ?? ''), null, { timeout });
+  await hudSynced(page, timeout);
 }
-async function tool(page, label) { await page.locator('nav.tools button', { hasText: label }).first().click(); await page.waitForTimeout(150); }
+async function tool(page, label) { await pickTool(page, label); await page.waitForTimeout(150); }
 async function at(page, cell) {
   const p = await debug(page, 'project', [cell[0] * 2 + 1, cell[1] * 2 + 1]);
   const tag = await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.tagName, [p.x, p.y]);
   if (tag !== 'CANVAS') throw new Error(`cell ${cell} covered by ${tag}`);
   return p;
 }
-async function drag(page, a, b) { const p = await at(page, a), q = await at(page, b); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.mouse.move(q.x, q.y, { steps: 4 }); await page.mouse.up(); await page.waitForTimeout(300); }
-async function click(page, cell) { const p = await at(page, cell); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.mouse.up(); await page.waitForTimeout(300); }
+async function frame(page, cells, distance = 70) {
+  const xs = cells.map(c => c[0] * 2 + 1), zs = cells.map(c => c[1] * 2 + 1);
+  await debug(page, 'camera', [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...zs) + Math.max(...zs)) / 2 + 6, distance, 0, 62]); await page.waitForTimeout(200);
+}
+async function drag(page, a, b) { await frame(page, [a, b]); const p = await at(page, a), q = await at(page, b); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.mouse.move(q.x, q.y, { steps: 4 }); await page.mouse.up(); await page.waitForTimeout(300); }
+async function click(page, cell) { await frame(page, [cell]); const p = await at(page, cell); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.mouse.up(); await page.waitForTimeout(300); }
 
 // ---- 1. New player: map choice → name → recovery code → game ----
 const ctxA = await browser.newContext({ viewport: { width: 1440, height: 900 } });
@@ -62,23 +67,24 @@ await shot(page, 'recovery-code');
 await page.locator('button', { hasText: 'Tiếp tục' }).click();
 await page.waitForFunction(() => !!window.__debug?.snapshot, null, { timeout: 30000 });
 await waitSynced(page);
-const hud = await page.locator('header.hud').innerText();
-check('game HUD shows the new character (level 1, $2,000)', hud.includes(name) && /Cấp 1/.test(hud) && hud.includes('$2,000'), hud.split('\n').slice(0, 4));
+const hud = await hudBar(page).innerText(), levelBadge = await page.locator('.hud3-level').innerText();
+check('game HUD shows the new character (level 1, $2,000)', hud.includes(name) && levelBadge.trim() === '1' && hud.includes('$2,000'), hud.split('\n').slice(0, 4));
 await shot(page, 'game-start');
 
 // ---- 2. Play through the UI; every action reaches the server ----
-await debug(page, 'camera', [143, 157, 60, 0, 62]); await page.waitForTimeout(400);
-await page.locator('.resources button').first().click();
+// farm-valley-01 v2 (same cells as scripts/g3-e2e.mjs): clear north of ENTRY [72,79], road north, market beside it.
+await debug(page, 'camera', [147, 152, 70, 0, 62]); await page.waitForTimeout(400);
+await materialsButton(page).click();
 await page.locator('.side.panel .item', { hasText: 'Gỗ' }).locator('button', { hasText: 'Mua 10' }).click();
 await page.locator('.side.panel .close').click();
-await tool(page, 'Dọn'); await drag(page, [71, 77], [73, 79]);
-await tool(page, 'Xây');
-await page.locator('.catalog button', { hasText: 'Chợ' }).first().click();
+await tool(page, 'Dọn'); await drag(page, [70, 70], [77, 79]);
+await tool(page, 'Đường'); await drag(page, [72, 79], [72, 71]);
+await pickBuilding(page, 'Chợ');
 await page.locator('.tool-options label', { hasText: 'San tự động' }).locator('input').check();
-await click(page, [71, 77]);
+await click(page, [73, 76]);
 await tool(page, 'Khám phá');
 await waitSynced(page);
-const quest = page.locator('aside.quest button', { hasText: 'Nhận thưởng' });
+const quest = claimButton(page);
 await quest.click(); await page.waitForTimeout(500); await waitSynced(page);
 await shot(page, 'market-built');
 const local = await debug(page, 'snapshot');
@@ -95,11 +101,11 @@ check('reload goes straight back into the same character with identical state', 
 
 // ---- 4. Offline then online: queued command is delivered ----
 await ctxA.setOffline(true);
-await page.locator('.resources button').first().click();
+await materialsButton(page).click();
 await page.locator('.side.panel .item', { hasText: 'Đá' }).locator('button', { hasText: 'Mua 1' }).first().click();
 await page.locator('.side.panel .close').click();
-await page.waitForFunction(() => /Mất kết nối|Đang đồng bộ/.test(document.querySelector('.sub-hud [role=status]')?.textContent ?? ''), null, { timeout: 10000 });
-const offlineStatus = await page.locator('.sub-hud [role=status]').innerText();
+await page.waitForFunction(sel => /Mất kết nối|Đang đồng bộ/.test(document.querySelector(sel)?.textContent ?? ''), SYNC, { timeout: 10000 });
+const offlineStatus = await syncText(page);
 await shot(page, 'offline-queued');
 check('offline: action applied optimistically and shown as pending', /\(1\)/.test(offlineStatus), offlineStatus);
 await ctxA.setOffline(false);

@@ -5,6 +5,7 @@ import './style.css';
 import './start/start.css';
 import './ui/game-ui.css';
 import './ui/reference-ui.css';
+import './ui/hud3.css';
 
 installTelemetry();
 createRoot(document.getElementById('root')!).render(<Root/>);

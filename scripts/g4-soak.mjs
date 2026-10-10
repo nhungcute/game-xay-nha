@@ -5,6 +5,7 @@
 // Usage: BASE_URL=http://127.0.0.1:8090 MINUTES=15 node scripts/g4-soak.mjs
 import { chromium } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
+import { cameraButtons, claimButton, materialsButton, openSettings, openSwitchMap, pickTool, profileButton } from './lib/hud.mjs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8090', OUT = process.env.OUT ?? 'docs/evidence/g4/soak';
 const MINUTES = Number(process.env.MINUTES ?? 15), END = Date.now() + MINUTES * 60_000;
@@ -48,10 +49,9 @@ async function treeOnScreen() {
   });
 }
 async function useTool(label) {
-  const tool = page.locator('nav.tools button', { hasText: label });
-  if (!(await tool.count())) return;
-  await tool.click(); count(`tool:${label}`);
-  if (label === 'Xây') { const items = page.locator('.catalog.panel button'); const n = await items.count(); if (n) await items.nth(rnd(n)).click(); }
+  try { await pickTool(page, label); } catch { return; } // e.g. farm tools on a City map
+  count(`tool:${label}`);
+  if (label === 'Xây') { const items = page.locator('.hud3-tray .hud3-card:not([disabled])'); const n = await items.count(); if (!n) return; await items.nth(rnd(n)).click(); }
   const a = label === 'Dọn' ? await treeOnScreen() : await screenCell(rnd(9) - 4, rnd(9) - 4);
   const b = label === 'Dọn' && a ? { x: a.x + 12, y: a.y + 8 } : await screenCell(rnd(9) - 4, rnd(9) - 4);
   if (!a) return;
@@ -65,16 +65,17 @@ async function useTool(label) {
 const steps = [
   async () => { await page.mouse.move(700, 450); await page.mouse.down({ button: 'right' }); await page.mouse.move(700 + rnd(300) - 150, 450 + rnd(120) - 60, { steps: 8 }); await page.mouse.up({ button: 'right' }); count('orbit'); },
   async () => { await page.mouse.move(400 + rnd(600), 250 + rnd(400)); await page.mouse.wheel(0, rnd(2) ? 300 : -300); count('wheel'); },
-  async () => { await page.locator('.camera-buttons button').nth(rnd(3)).click(); count('camera-button'); },
+  async () => { await cameraButtons(page).nth(rnd(4)).click(); count('camera-button'); },
+  async () => { const p = await screenCell(rnd(7) - 3, rnd(7) - 3); if (!p) return; await pickTool(page, 'Khám phá'); await page.mouse.click(p.x, p.y); const items = page.locator('.hud3-radial-item'); if (await items.count()) { await items.nth(rnd(5)).click(); count('radial'); } },
   async () => { const key = ['w', 'a', 's', 'd'][rnd(4)]; await page.keyboard.down(key); await page.waitForTimeout(400); await page.keyboard.up(key); await page.keyboard.press('Escape'); count('keys'); },
   async () => useTool(['Dọn', 'San nền', 'Đường', 'Kè', 'Cầu', 'Xây', 'Phá', 'Khu đất', 'Cuốc', 'Gieo', 'Thu hoạch'][rnd(11)]),
   async () => useTool('Dọn'),
   async () => useTool('Đường'),
-  async () => { await page.locator('.resources button').first().click(); await page.locator('.side.panel .item button').nth(rnd(2) * 2).click(); await page.locator('.side.panel .close').click(); count('buy'); },
-  async () => { const c = page.locator('aside.quest button:not([disabled])', { hasText: 'Nhận thưởng' }); if (await c.count()) { await c.first().click(); count('claim'); } },
-  async () => { const c = page.locator('.resources button', { hasText: 'Thu tất cả' }); if (await c.count()) { await c.click(); count('collect-all'); } },
-  async () => { await page.locator('header .brand').click(); await page.waitForTimeout(300); await page.locator('.side.panel .close').click(); count('profile'); },
-  async () => { await page.locator('nav.tools button', { hasText: 'Khám phá' }).click(); count('explore'); },
+  async () => { await materialsButton(page).click(); await page.locator('.side.panel .item button').nth(rnd(2) * 2).click(); await page.locator('.side.panel .close').click(); count('buy'); },
+  async () => { const c = claimButton(page); if (await c.count()) { await c.first().click(); count('claim'); } },
+  async () => { const c = page.locator('.hud3-collect'); if (await c.count()) { await c.click(); count('collect-all'); } },
+  async () => { await profileButton(page).click(); await page.waitForTimeout(300); await page.locator('.side.panel .close').click(); count('profile'); },
+  async () => { await pickTool(page, 'Khám phá'); count('explore'); },
 ];
 
 await page.goto(`${BASE}/?debug=1`);
@@ -86,12 +87,12 @@ while (Date.now() < END) {
   const elapsed = (MINUTES * 60_000 - (END - Date.now())) / 60_000;
   try {
     if (!toggled && elapsed > MINUTES * 0.3) {
-      await page.locator('header .brand').click(); await page.locator('.settings button', { hasText: 'Thấp' }).click();
+      await openSettings(page); await page.locator('.settings button', { hasText: 'Thấp' }).click();
       await page.waitForTimeout(800); await page.locator('.settings button', { hasText: 'Cao' }).click(); await page.locator('.side.panel .close').click();
       toggled = true; count('graphics-toggle');
     }
     if (!switched && elapsed > MINUTES * 0.5) {
-      await page.locator('button[aria-label="Đổi bản đồ"]').click(); await create('farm', 'Thử Lâu Quê'); switched = true; count('map-switch');
+      await openSwitchMap(page); await create('farm', 'Thử Lâu Quê'); switched = true; count('map-switch');
       timeline.push({ minute: Number(elapsed.toFixed(1)), event: 'switched to farm', metrics: await metrics() });
     }
     await steps[rnd(steps.length)]();
@@ -99,7 +100,7 @@ while (Date.now() < END) {
   await page.waitForTimeout(250 + rnd(600));
   if (++i % 100 === 0) { const m = await metrics(); timeline.push({ minute: Number(elapsed.toFixed(1)), revision: m.revision, fps: Math.round(m.fps), drawCalls: m.drawCalls, geometries: m.geometries, textures: m.textures, programs: m.programs, errors: errors.length }); console.log(JSON.stringify(timeline.at(-1))); }
 }
-await page.locator('button[aria-label="Đổi bản đồ"]').click(); await page.locator('.map-card.city button', { hasText: 'Chơi tiếp' }).click(); await inGame();
+await openSwitchMap(page); await page.locator('.map-card.city button', { hasText: 'Chơi tiếp' }).click(); await inGame();
 const end = await metrics(), snapshot = await page.evaluate(() => { const s = window.__debug.snapshot(); return { revision: s.revision, level: s.progress.level, buildings: s.buildings.length, cash: s.wallet.cash, netWorth: s.character.netWorth }; });
 await page.screenshot({ path: `${OUT}/end.jpg`, type: 'jpeg', quality: 78 });
 const report = { base: BASE, minutes: MINUTES, actions, warm, end, cityAtEnd: snapshot, timeline, errors,

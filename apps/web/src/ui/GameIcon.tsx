@@ -3,6 +3,7 @@ import {
   House, HousePlus, Layers, LayoutGrid, Menu, Minus, PackageOpen, Pickaxe, Plus, Hammer, Settings,
   RotateCcw, RotateCw, Route, ScrollText, Shovel, Sprout, Star, Trash2,
   TreePine, Users, Wallet, Wheat, Wifi, WifiOff, X, Map, ChartColumn, Crosshair, ChevronRight, Gift,
+  Mail, Trophy, Sun, Moon, Trees, Zap, Armchair, ChevronUp, Lock, Leaf,
 } from 'lucide-react';
 
 const icons = {
@@ -14,6 +15,8 @@ const icons = {
   confirm: Check, close: X, zoomIn: Plus, zoomOut: Minus, reset: RotateCcw, rotate: RotateCw, terrain: Layers,
   stats: ChartColumn, focus: Crosshair, next: ChevronRight, gift: Gift,
   construction: Hammer,
+  mail: Mail, trophy: Trophy, sun: Sun, moon: Moon, layers: Layers, forest: Trees, utilities: Zap, decor: Armchair,
+  buildings: House, crops: Leaf, up: ChevronUp, lock: Lock, wheat: Wheat,
 };
 export type GameIconName = keyof typeof icons;
 
