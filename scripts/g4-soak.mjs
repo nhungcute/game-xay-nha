@@ -95,7 +95,7 @@ while (Date.now() < END) {
       timeline.push({ minute: Number(elapsed.toFixed(1)), event: 'switched to farm', metrics: await metrics() });
     }
     await steps[rnd(steps.length)]();
-  } catch (error) { count('step-skipped'); await page.keyboard.press('Escape').catch(() => {}); }
+  } catch { count('step-skipped'); await page.keyboard.press('Escape').catch(() => {}); }
   await page.waitForTimeout(250 + rnd(600));
   if (++i % 100 === 0) { const m = await metrics(); timeline.push({ minute: Number(elapsed.toFixed(1)), revision: m.revision, fps: Math.round(m.fps), drawCalls: m.drawCalls, geometries: m.geometries, textures: m.textures, programs: m.programs, errors: errors.length }); console.log(JSON.stringify(timeline.at(-1))); }
 }
