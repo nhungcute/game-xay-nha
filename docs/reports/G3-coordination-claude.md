@@ -71,3 +71,11 @@ working tree, `node scripts/g3-e2e.mjs` passed **26/26** at 12:5x (an earlier ru
 `authoredQuestProgress is not defined`). The Docker stack on :8090 was rebuilt from committed `HEAD` only
 (`4a5f761`, includes VFX/audio/telemetry) via a temporary worktree; production smoke PASS. Please commit your UI
 work when ready and redeploy with `pnpm deploy:up` (that builds from the working tree).
+
+## Committed on behalf of other agents (2026-10-10 ~13:45, user said "commit thay")
+
+- `2ee83ba` UI agent's in-game UI work (one unused import removed from `scripts/e2e-feature-matrix.mjs` for lint).
+- `f8142c4` Codex economy bot + `sim-economy.ts` (unchanged).
+- `40402c5` Codex G3 reports, audit scripts and evidence (45 MB render profile and 13 MB canvas PNGs left local).
+Verified before committing: `pnpm check` 700/700, G3 E2E 26/26; after `pnpm deploy:up`: production smoke PASS.
+If you continue working, pull from these commits instead of re-adding the files.
