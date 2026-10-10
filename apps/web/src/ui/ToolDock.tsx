@@ -5,9 +5,8 @@ import { t } from '../i18n';
 import { GameIcon } from './GameIcon';
 
 const GROUPS: { id: string; label: string; tools: Tool[]; farmOnly?: boolean }[] = [
-  { id: 'explore', label: 'Khám phá', tools: ['explore', 'zone'] },
-  { id: 'build', label: 'Xây dựng', tools: ['build', 'demolish'] },
-  { id: 'terrain', label: 'Hạ tầng', tools: ['clear', 'terraform', 'road', 'embank', 'bridge'] },
+  { id: 'build', label: 'Xây dựng', tools: ['explore', 'zone', 'build', 'demolish'] },
+  { id: 'terrain', label: 'Hạ tầng', tools: ['road', 'bridge', 'embank', 'terraform', 'clear'] },
   { id: 'farm', label: 'Nông trại', tools: ['till', 'plant', 'harvest'], farmOnly: true },
 ];
 
@@ -26,7 +25,7 @@ export function ToolDock({ kind, selected, hint, onChoose }: { kind: MapKind; se
   return <div className="tool-dock">
     <nav className="tool-categories" aria-label="Nhóm công cụ">{groups.map(group => <button type="button" key={group.id}
       aria-label={group.label} aria-pressed={activeGroup.id === group.id} onClick={() => onChoose(group.tools.includes(selected) ? selected : group.tools[0]!)}>
-      {group.label}{hint && group.tools.includes(hint) && activeGroup.id !== group.id && <span className="category-hint" aria-label="Có công cụ hướng dẫn"/>}
+      <GameIcon name={group.id === 'build' ? 'construction' : group.id === 'terrain' ? 'road' : 'farm'}/>{group.label}{hint && group.tools.includes(hint) && activeGroup.id !== group.id && <span className="category-hint" aria-label="Có công cụ hướng dẫn"/>}
     </button>)}</nav>
     <nav className="tools panel" aria-label="Công cụ" ref={strip}>{groups.map(group => <div className={`tool-group group-${group.id}`} key={group.id}
       role="group" aria-label={group.label}><span className="tool-group-title">{group.label}</span><div className="tool-group-buttons">

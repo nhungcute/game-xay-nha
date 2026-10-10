@@ -1,6 +1,6 @@
 {
-  "base": "http://127.0.0.1:5191",
-  "startedAt": "2026-10-10T02:52:30.195Z",
+  "base": "http://127.0.0.1:8090",
+  "startedAt": "2026-10-10T05:29:30.455Z",
   "scope": "Real dev API and Postgres; recovery code never persisted",
   "checks": [
     "first character receives one-time code",
@@ -13,5 +13,5 @@
     "no browser or HTTP errors"
   ],
   "errors": [],
-  "finishedAt": "2026-10-10T02:52:36.976Z"
+  "finishedAt": "2026-10-10T05:29:37.054Z"
 }

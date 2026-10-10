@@ -1,0 +1,28 @@
+PASS city character created with a recovery code — "NXTH-4GBB-SCYV"
+PASS tutorial hint from "Bác Tư" is visible with the Clear tool highlighted
+PASS quest claimed: Chặt 3 cây — {"before":0,"after":1}
+PASS quest claimed: Làm đường ≥ 6 ô — {"before":1,"after":2}
+PASS quest claimed: San phẳng 2×2 — {"before":2,"after":3}
+PASS quest claimed: Xây Nhà nhỏ — {"before":3,"after":4}
+PASS quest claimed: Xây Tạp hóa — {"before":4,"after":5}
+PASS quest claimed: Thu tiền lần đầu — {"before":5,"after":6}
+PASS City tutorial complete (6 quests, tutorialDone) and level ≥ 2 — {"questIndex":6,"level":2,"seconds":18}
+PASS reload returns to the same City world with identical progress and buildings
+PASS farm character is independent (level 1, $2,000)
+PASS quest claimed: Xây Chợ và nối đường — {"before":0,"after":1}
+PASS quest claimed: Xây Nhà nông — {"before":1,"after":2}
+PASS quest claimed: Cuốc 6 ô — {"before":2,"after":3}
+PASS quest claimed: Gieo Rau cải — {"before":3,"after":4}
+PASS quest claimed: Thu hoạch — {"before":4,"after":5}
+PASS farm loop: harvested crops were sold for cash — {"inventoryBefore":{"veg_greens":12},"cash":1806}
+PASS 10 map switches: JS heap grows < 30 % — {"beforeMB":20.5,"afterMB":21.6}
+PASS recovery restores both characters
+PASS chromium-pixel7: game loads after creating a character
+PASS chromium-pixel7: no horizontal overflow, tool selected by tap
+PASS chromium-pixel7: WebGL renders (draw calls > 0) — {"fps":22.7,"drawCalls":55}
+PASS webkit-iphone13: game loads after creating a character
+PASS webkit-iphone13: no horizontal overflow, tool selected by tap
+PASS webkit-iphone13: WebGL renders (draw calls > 0) — {"fps":12,"drawCalls":62}
+PASS no page/console errors — []
+
+26/26 checks passed

@@ -1,0 +1,1636 @@
+{
+  "base": "http://127.0.0.1:5191",
+  "startedAt": "2026-10-10T05:41:30.077Z",
+  "checks": [
+    {
+      "name": "desktop-city: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "NM",
+        "name": "Nguyễn Minh Anh",
+        "level": 1,
+        "bar": "0",
+        "tools": 9
+      }
+    },
+    {
+      "name": "desktop-city: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "height": 900,
+        "hud": {
+          "top": 18,
+          "bottom": 109,
+          "right": 1416
+        },
+        "dock": {
+          "top": 700,
+          "bottom": 876,
+          "right": 1416
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "desktop-city: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "desktop-city: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "desktop-city: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "desktop-city-profile: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "height": 900,
+        "hud": {
+          "top": 18,
+          "bottom": 109,
+          "right": 1416
+        },
+        "dock": {
+          "top": 700,
+          "bottom": 876,
+          "right": 1416
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "desktop-city-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "height": 900,
+        "hud": {
+          "top": 18,
+          "bottom": 109,
+          "right": 1416
+        },
+        "dock": {
+          "top": 700,
+          "bottom": 876,
+          "right": 1416
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "desktop-city: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "desktop-city: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "desktop-city-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "height": 900,
+        "hud": {
+          "top": 18,
+          "bottom": 109,
+          "right": 1416
+        },
+        "dock": {
+          "top": 635,
+          "bottom": 876,
+          "right": 1416
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "desktop-city: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "desktop-farm: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "TT",
+        "name": "Trần Thanh Bình",
+        "level": 1,
+        "bar": "0",
+        "tools": 12
+      }
+    },
+    {
+      "name": "desktop-farm: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "height": 900,
+        "hud": {
+          "top": 18,
+          "bottom": 109,
+          "right": 1416
+        },
+        "dock": {
+          "top": 700,
+          "bottom": 876,
+          "right": 1416
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "desktop-farm: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "desktop-farm: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "desktop-farm: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "desktop-farm-profile: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "height": 900,
+        "hud": {
+          "top": 18,
+          "bottom": 109,
+          "right": 1416
+        },
+        "dock": {
+          "top": 700,
+          "bottom": 876,
+          "right": 1416
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "desktop-farm-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "height": 900,
+        "hud": {
+          "top": 18,
+          "bottom": 109,
+          "right": 1416
+        },
+        "dock": {
+          "top": 700,
+          "bottom": 876,
+          "right": 1416
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "desktop-farm: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "desktop-farm: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "desktop-farm-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "height": 900,
+        "hud": {
+          "top": 18,
+          "bottom": 109,
+          "right": 1416
+        },
+        "dock": {
+          "top": 635,
+          "bottom": 876,
+          "right": 1416
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "desktop-farm: empty inventory has guidance",
+      "ok": true
+    },
+    {
+      "name": "desktop-farm: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "tablet-city: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "NM",
+        "name": "Nguyễn Minh Anh",
+        "level": 1,
+        "bar": "0",
+        "tools": 9
+      }
+    },
+    {
+      "name": "tablet-city: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 820,
+        "height": 1180,
+        "hud": {
+          "top": 12,
+          "bottom": 151,
+          "right": 804
+        },
+        "dock": {
+          "top": 982,
+          "bottom": 1156,
+          "right": 796
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "tablet-city: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "tablet-city: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "tablet-city: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "tablet-city-profile: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 820,
+        "height": 1180,
+        "hud": {
+          "top": 12,
+          "bottom": 151,
+          "right": 804
+        },
+        "dock": {
+          "top": 982,
+          "bottom": 1156,
+          "right": 796
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "tablet-city-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 820,
+        "height": 1180,
+        "hud": {
+          "top": 12,
+          "bottom": 151,
+          "right": 804
+        },
+        "dock": {
+          "top": 982,
+          "bottom": 1156,
+          "right": 796
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "tablet-city: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "tablet-city: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "tablet-city-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 820,
+        "height": 1180,
+        "hud": {
+          "top": 12,
+          "bottom": 151,
+          "right": 804
+        },
+        "dock": {
+          "top": 917,
+          "bottom": 1156,
+          "right": 796
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "tablet-city: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "tablet-farm: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "TT",
+        "name": "Trần Thanh Bình",
+        "level": 1,
+        "bar": "0",
+        "tools": 12
+      }
+    },
+    {
+      "name": "tablet-farm: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 820,
+        "height": 1180,
+        "hud": {
+          "top": 12,
+          "bottom": 151,
+          "right": 804
+        },
+        "dock": {
+          "top": 982,
+          "bottom": 1156,
+          "right": 796
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "tablet-farm: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "tablet-farm: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "tablet-farm: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "tablet-farm-profile: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 820,
+        "height": 1180,
+        "hud": {
+          "top": 12,
+          "bottom": 151,
+          "right": 804
+        },
+        "dock": {
+          "top": 982,
+          "bottom": 1156,
+          "right": 796
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "tablet-farm-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 820,
+        "height": 1180,
+        "hud": {
+          "top": 12,
+          "bottom": 151,
+          "right": 804
+        },
+        "dock": {
+          "top": 982,
+          "bottom": 1156,
+          "right": 796
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "tablet-farm: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "tablet-farm: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "tablet-farm-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 820,
+        "height": 1180,
+        "hud": {
+          "top": 12,
+          "bottom": 151,
+          "right": 804
+        },
+        "dock": {
+          "top": 917,
+          "bottom": 1156,
+          "right": 796
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "tablet-farm: empty inventory has guidance",
+      "ok": true
+    },
+    {
+      "name": "tablet-farm: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "phone-small-city: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "NM",
+        "name": "Nguyễn Minh Anh",
+        "level": 1,
+        "bar": "0",
+        "tools": 9
+      }
+    },
+    {
+      "name": "phone-small-city: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "height": 667,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 367
+        },
+        "dock": {
+          "top": 506,
+          "bottom": 660,
+          "right": 367
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-small-city: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "phone-small-city: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "phone-small-city: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "phone-small-city-profile: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "height": 667,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 367
+        },
+        "dock": {
+          "top": 506,
+          "bottom": 660,
+          "right": 367
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-small-city-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "height": 667,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 367
+        },
+        "dock": {
+          "top": 506,
+          "bottom": 660,
+          "right": 367
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-small-city: mobile menu opens",
+      "ok": true
+    },
+    {
+      "name": "phone-small-city: Escape closes menu and restores focus",
+      "ok": true
+    },
+    {
+      "name": "phone-small-city: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "phone-small-city: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "phone-small-city-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "height": 667,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 367
+        },
+        "dock": {
+          "top": 392,
+          "bottom": 660,
+          "right": 367
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-small-city: category selects a tool and exposes selection",
+      "ok": true,
+      "detail": {
+        "selectedText": "Đường",
+        "left": 156,
+        "right": 218,
+        "viewportLeft": 8,
+        "viewportRight": 367
+      }
+    },
+    {
+      "name": "phone-small-city: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "phone-small-farm: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "TT",
+        "name": "Trần Thanh Bình",
+        "level": 1,
+        "bar": "0",
+        "tools": 12
+      }
+    },
+    {
+      "name": "phone-small-farm: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "height": 667,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 367
+        },
+        "dock": {
+          "top": 506,
+          "bottom": 660,
+          "right": 367
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-small-farm: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "phone-small-farm: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "phone-small-farm: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "phone-small-farm-profile: controls fit, no document overflow, panels clear dock",
+      "ok": false,
+      "detail": {
+        "width": 375,
+        "height": 667,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 367
+        },
+        "dock": {
+          "top": 506,
+          "bottom": 660,
+          "right": 367
+        },
+        "overflow": false,
+        "panelsFit": false,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-small-farm-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "height": 667,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 367
+        },
+        "dock": {
+          "top": 506,
+          "bottom": 660,
+          "right": 367
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-small-farm: mobile menu opens",
+      "ok": true
+    },
+    {
+      "name": "phone-small-farm: Escape closes menu and restores focus",
+      "ok": true
+    },
+    {
+      "name": "phone-small-farm: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "phone-small-farm: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "phone-small-farm-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 375,
+        "height": 667,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 367
+        },
+        "dock": {
+          "top": 392,
+          "bottom": 660,
+          "right": 367
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-small-farm: category selects a tool and exposes selection",
+      "ok": true,
+      "detail": {
+        "selectedText": "Đường",
+        "left": 156,
+        "right": 218,
+        "viewportLeft": 8,
+        "viewportRight": 367
+      }
+    },
+    {
+      "name": "phone-small-farm: empty inventory has guidance",
+      "ok": true
+    },
+    {
+      "name": "phone-small-farm: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-city: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "NM",
+        "name": "Nguyễn Minh Anh",
+        "level": 1,
+        "bar": "0",
+        "tools": 9
+      }
+    },
+    {
+      "name": "phone-narrow-city: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "height": 740,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 312
+        },
+        "dock": {
+          "top": 579,
+          "bottom": 733,
+          "right": 312
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-narrow-city: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-city: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-city: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-city-profile: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "height": 740,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 312
+        },
+        "dock": {
+          "top": 579,
+          "bottom": 733,
+          "right": 312
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-narrow-city-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "height": 740,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 312
+        },
+        "dock": {
+          "top": 579,
+          "bottom": 733,
+          "right": 312
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-narrow-city: mobile menu opens",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-city: Escape closes menu and restores focus",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-city: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-city: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-city-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "height": 740,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 312
+        },
+        "dock": {
+          "top": 465,
+          "bottom": 733,
+          "right": 312
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-narrow-city: category selects a tool and exposes selection",
+      "ok": true,
+      "detail": {
+        "selectedText": "Đường",
+        "left": 129,
+        "right": 191,
+        "viewportLeft": 8,
+        "viewportRight": 312
+      }
+    },
+    {
+      "name": "phone-narrow-city: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-farm: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "TT",
+        "name": "Trần Thanh Bình",
+        "level": 1,
+        "bar": "0",
+        "tools": 12
+      }
+    },
+    {
+      "name": "phone-narrow-farm: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "height": 740,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 312
+        },
+        "dock": {
+          "top": 579,
+          "bottom": 733,
+          "right": 312
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-narrow-farm: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-farm: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-farm: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-farm-profile: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "height": 740,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 312
+        },
+        "dock": {
+          "top": 579,
+          "bottom": 733,
+          "right": 312
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-narrow-farm-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "height": 740,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 312
+        },
+        "dock": {
+          "top": 579,
+          "bottom": 733,
+          "right": 312
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-narrow-farm: mobile menu opens",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-farm: Escape closes menu and restores focus",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-farm: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-farm: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-farm-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "height": 740,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 312
+        },
+        "dock": {
+          "top": 465,
+          "bottom": 733,
+          "right": 312
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "phone-narrow-farm: category selects a tool and exposes selection",
+      "ok": true,
+      "detail": {
+        "selectedText": "Đường",
+        "left": 129,
+        "right": 191,
+        "viewportLeft": 8,
+        "viewportRight": 312
+      }
+    },
+    {
+      "name": "phone-narrow-farm: empty inventory has guidance",
+      "ok": true
+    },
+    {
+      "name": "phone-narrow-farm: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "iphone-city: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "NM",
+        "name": "Nguyễn Minh Anh",
+        "level": 1,
+        "bar": "0",
+        "tools": 9
+      }
+    },
+    {
+      "name": "iphone-city: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "height": 664,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 382
+        },
+        "dock": {
+          "top": 503,
+          "bottom": 657,
+          "right": 382
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "iphone-city: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "iphone-city: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "iphone-city: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "iphone-city-profile: controls fit, no document overflow, panels clear dock",
+      "ok": false,
+      "detail": {
+        "width": 390,
+        "height": 664,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 382
+        },
+        "dock": {
+          "top": 503,
+          "bottom": 657,
+          "right": 382
+        },
+        "overflow": false,
+        "panelsFit": false,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "iphone-city-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "height": 664,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 382
+        },
+        "dock": {
+          "top": 503,
+          "bottom": 657,
+          "right": 382
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "iphone-city: mobile menu opens",
+      "ok": true
+    },
+    {
+      "name": "iphone-city: Escape closes menu and restores focus",
+      "ok": true
+    },
+    {
+      "name": "iphone-city: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "iphone-city: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "iphone-city-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "height": 664,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 382
+        },
+        "dock": {
+          "top": 389,
+          "bottom": 657,
+          "right": 382
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "iphone-city: category selects a tool and exposes selection",
+      "ok": true,
+      "detail": {
+        "selectedText": "Đường",
+        "left": 164,
+        "right": 226,
+        "viewportLeft": 8,
+        "viewportRight": 382
+      }
+    },
+    {
+      "name": "iphone-city: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "iphone-farm: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "TT",
+        "name": "Trần Thanh Bình",
+        "level": 1,
+        "bar": "0",
+        "tools": 12
+      }
+    },
+    {
+      "name": "iphone-farm: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "height": 664,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 382
+        },
+        "dock": {
+          "top": 503,
+          "bottom": 657,
+          "right": 382
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "iphone-farm: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "iphone-farm: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "iphone-farm: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "iphone-farm-profile: controls fit, no document overflow, panels clear dock",
+      "ok": false,
+      "detail": {
+        "width": 390,
+        "height": 664,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 382
+        },
+        "dock": {
+          "top": 503,
+          "bottom": 657,
+          "right": 382
+        },
+        "overflow": false,
+        "panelsFit": false,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "iphone-farm-materials: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "height": 664,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 382
+        },
+        "dock": {
+          "top": 503,
+          "bottom": 657,
+          "right": 382
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "iphone-farm: mobile menu opens",
+      "ok": true
+    },
+    {
+      "name": "iphone-farm: Escape closes menu and restores focus",
+      "ok": true
+    },
+    {
+      "name": "iphone-farm: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "iphone-farm: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "iphone-farm-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "height": 664,
+        "hud": {
+          "top": 8,
+          "bottom": 142,
+          "right": 382
+        },
+        "dock": {
+          "top": 389,
+          "bottom": 657,
+          "right": 382
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "iphone-farm: category selects a tool and exposes selection",
+      "ok": true,
+      "detail": {
+        "selectedText": "Đường",
+        "left": 164,
+        "right": 226,
+        "viewportLeft": 8,
+        "viewportRight": 382
+      }
+    },
+    {
+      "name": "iphone-farm: empty inventory has guidance",
+      "ok": true
+    },
+    {
+      "name": "iphone-farm: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "landscape-city: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "NM",
+        "name": "Nguyễn Minh Anh",
+        "level": 1,
+        "bar": "0",
+        "tools": 9
+      }
+    },
+    {
+      "name": "landscape-city: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 812,
+        "height": 375,
+        "hud": {
+          "top": 5,
+          "bottom": 80,
+          "right": 804
+        },
+        "dock": {
+          "top": 246,
+          "bottom": 370,
+          "right": 804
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "landscape-city: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "landscape-city: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "landscape-city: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "landscape-city-profile: controls fit, no document overflow, panels clear dock",
+      "ok": false,
+      "detail": {
+        "width": 812,
+        "height": 375,
+        "hud": {
+          "top": 5,
+          "bottom": 80,
+          "right": 804
+        },
+        "dock": {
+          "top": 246,
+          "bottom": 370,
+          "right": 804
+        },
+        "overflow": false,
+        "panelsFit": false,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "landscape-city-materials: controls fit, no document overflow, panels clear dock",
+      "ok": false,
+      "detail": {
+        "width": 812,
+        "height": 375,
+        "hud": {
+          "top": 5,
+          "bottom": 80,
+          "right": 804
+        },
+        "dock": {
+          "top": 246,
+          "bottom": 370,
+          "right": 804
+        },
+        "overflow": false,
+        "panelsFit": false,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "landscape-city: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "landscape-city: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "landscape-city-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 812,
+        "height": 375,
+        "hud": {
+          "top": 5,
+          "bottom": 80,
+          "right": 804
+        },
+        "dock": {
+          "top": 191,
+          "bottom": 370,
+          "right": 804
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "landscape-city: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "landscape-farm: avatar, name, level, XP and map tools",
+      "ok": true,
+      "detail": {
+        "initials": "TT",
+        "name": "Trần Thanh Bình",
+        "level": 1,
+        "bar": "0",
+        "tools": 12
+      }
+    },
+    {
+      "name": "landscape-farm: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 812,
+        "height": 375,
+        "hud": {
+          "top": 5,
+          "bottom": 80,
+          "right": 804
+        },
+        "dock": {
+          "top": 246,
+          "bottom": 370,
+          "right": 804
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "landscape-farm: real minimap visible",
+      "ok": true
+    },
+    {
+      "name": "landscape-farm: minimap moves the camera",
+      "ok": true
+    },
+    {
+      "name": "landscape-farm: profile opens from character card",
+      "ok": true
+    },
+    {
+      "name": "landscape-farm-profile: controls fit, no document overflow, panels clear dock",
+      "ok": false,
+      "detail": {
+        "width": 812,
+        "height": 375,
+        "hud": {
+          "top": 5,
+          "bottom": 80,
+          "right": 804
+        },
+        "dock": {
+          "top": 246,
+          "bottom": 370,
+          "right": 804
+        },
+        "overflow": false,
+        "panelsFit": false,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "landscape-farm-materials: controls fit, no document overflow, panels clear dock",
+      "ok": false,
+      "detail": {
+        "width": 812,
+        "height": 375,
+        "hud": {
+          "top": 5,
+          "bottom": 80,
+          "right": 804
+        },
+        "dock": {
+          "top": 246,
+          "bottom": 370,
+          "right": 804
+        },
+        "overflow": false,
+        "panelsFit": false,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "landscape-farm: settings changes quality",
+      "ok": true
+    },
+    {
+      "name": "landscape-farm: building catalog opens",
+      "ok": true
+    },
+    {
+      "name": "landscape-farm-catalog: controls fit, no document overflow, panels clear dock",
+      "ok": true,
+      "detail": {
+        "width": 812,
+        "height": 375,
+        "hud": {
+          "top": 5,
+          "bottom": 80,
+          "right": 804
+        },
+        "dock": {
+          "top": 191,
+          "bottom": 370,
+          "right": 804
+        },
+        "overflow": false,
+        "panelsFit": true,
+        "controlsFit": true
+      }
+    },
+    {
+      "name": "landscape-farm: empty inventory has guidance",
+      "ok": true
+    },
+    {
+      "name": "landscape-farm: quest visibility can be toggled",
+      "ok": true
+    },
+    {
+      "name": "XP fixture L8: validated snapshot",
+      "ok": true,
+      "detail": {
+        "ok": true
+      }
+    },
+    {
+      "name": "XP fixture L8: relative progress and max-level text",
+      "ok": true,
+      "detail": {
+        "now": 1000,
+        "max": 1870,
+        "text": "1.000 / 1.870 XP"
+      }
+    },
+    {
+      "name": "XP fixture L8: large wallet is compact",
+      "ok": true
+    },
+    {
+      "name": "XP fixture L9: validated snapshot",
+      "ok": true,
+      "detail": {
+        "ok": true
+      }
+    },
+    {
+      "name": "XP fixture L9: relative progress and max-level text",
+      "ok": true,
+      "detail": {
+        "now": 0,
+        "max": 2950,
+        "text": "0 / 2.950 XP"
+      }
+    },
+    {
+      "name": "XP fixture L9: large wallet is compact",
+      "ok": true
+    },
+    {
+      "name": "XP fixture L20: validated snapshot",
+      "ok": true,
+      "detail": {
+        "ok": true
+      }
+    },
+    {
+      "name": "XP fixture L20: relative progress and max-level text",
+      "ok": true,
+      "detail": {
+        "now": 1,
+        "max": 1,
+        "text": "Cấp tối đa"
+      }
+    },
+    {
+      "name": "XP fixture L20: large wallet is compact",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "finishedAt": "2026-10-10T05:42:58.190Z",
+  "passed": 158,
+  "total": 165
+}

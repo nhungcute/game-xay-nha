@@ -1,14 +1,14 @@
 {
   "base": "http://127.0.0.1:5191",
-  "at": "2026-10-10T05:28:54.382Z",
+  "at": "2026-10-10T06:42:15.820Z",
   "timings": {
-    "cityTutorialSeconds": 17
+    "cityTutorialSeconds": 18
   },
   "checks": [
     {
       "name": "city character created with a recovery code",
       "ok": true,
-      "detail": "50QJ-4GMM-4R5S"
+      "detail": "Z3KV-EDR9-13NK"
     },
     {
       "name": "tutorial hint from \"Bác Tư\" is visible with the Clear tool highlighted",
@@ -68,7 +68,7 @@
       "detail": {
         "questIndex": 6,
         "level": 2,
-        "seconds": 17
+        "seconds": 18
       }
     },
     {
@@ -133,8 +133,8 @@
       "name": "10 map switches: JS heap grows < 30 %",
       "ok": true,
       "detail": {
-        "beforeMB": 20.2,
-        "afterMB": 21.1
+        "beforeMB": 20.6,
+        "afterMB": 21.3
       }
     },
     {
@@ -153,7 +153,7 @@
       "name": "chromium-pixel7: WebGL renders (draw calls > 0)",
       "ok": true,
       "detail": {
-        "fps": 3,
+        "fps": 21.7,
         "drawCalls": 55
       }
     },
@@ -169,7 +169,7 @@
       "name": "webkit-iphone13: WebGL renders (draw calls > 0)",
       "ok": true,
       "detail": {
-        "fps": 8.3,
+        "fps": 11.2,
         "drawCalls": 62
       }
     },

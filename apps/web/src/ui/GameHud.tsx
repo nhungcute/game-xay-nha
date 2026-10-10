@@ -5,7 +5,7 @@ import { money, t } from '../i18n';
 import { CharacterCard } from './CharacterCard';
 import { GameIcon } from './GameIcon';
 
-export type GamePanel = 'profile' | 'materials' | 'inventory' | 'settings';
+export type GamePanel = 'profile' | 'materials' | 'inventory' | 'settings' | 'people';
 const cashFormatter = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
 const compactCash = (cash: number) => cash >= 1_000_000 ? `$${cashFormatter.format(cash)}` : money(cash);
 
@@ -31,17 +31,18 @@ export function GameHud({ state, busy, status, connected, panel, hasBank, quests
   const act = (action: () => void) => { setMenuOpen(false); action(); };
   const snapshot = state.snapshot, farm = snapshot.mapKind === 'farm';
   const people = farm ? null : populationAndJobs(state);
+  const income = Object.values(state.rates).reduce((total, rate) => total + rate, 0);
   return <header className="hud" ref={setHeader}>
     <CharacterCard snapshot={snapshot} active={panel === 'profile'} onClick={() => act(() => onPanel('profile'))}/>
     <div className="hud-wallet" title={`${t('money')}: ${money(snapshot.wallet.cash)}`}>
       <span className="wallet-icon"><GameIcon name="cash"/></span><div><small>Tiền mặt</small>
-        <strong className="cash" aria-label={`${t('money')}: ${money(snapshot.wallet.cash)}`}>{compactCash(snapshot.wallet.cash)}</strong></div>
+        <strong className="cash" aria-label={`${t('money')}: ${money(snapshot.wallet.cash)}`}>{compactCash(snapshot.wallet.cash)}</strong><small className="resource-income">+{money(income)} / giờ</small></div>
     </div>
     <div className="resources">
       <button type="button" className="resource-pill material-pill" aria-label={t('materials')} title={t('materials')}
         aria-pressed={panel === 'materials'} onClick={() => act(() => onPanel('materials'))}>
-        <span><GameIcon name="wood"/><strong>{snapshot.wallet.wood.toLocaleString('vi-VN')}</strong></span>
-        <span><GameIcon name="stone"/><strong>{snapshot.wallet.stone.toLocaleString('vi-VN')}</strong></span>
+        <span><GameIcon name="wood"/><span><strong>{snapshot.wallet.wood.toLocaleString('vi-VN')}</strong><small>Gỗ</small></span></span>
+        <span><GameIcon name="stone"/><span><strong>{snapshot.wallet.stone.toLocaleString('vi-VN')}</strong><small>Đá</small></span></span>
       </button>
       <span className="resource-pill resource-stat" title={t('builders')}><GameIcon name="builders"/>
         <span><small>{t('builders')}</small><strong>{busy}/{builderCapacity(state)}</strong></span></span>
@@ -56,12 +57,14 @@ export function GameHud({ state, busy, status, connected, panel, hasBank, quests
     <button type="button" className="hud-menu-toggle" ref={menuButton} aria-label="Menu chức năng" aria-controls={menuId}
       aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><GameIcon name={menuOpen ? 'close' : 'menu'}/></button>
     <nav className={`game-menu ${menuOpen ? 'is-open' : ''}`} id={menuId} aria-label="Chức năng">
-      <button type="button" aria-label={t('quests')} aria-expanded={questsOpen} className={questsOpen ? 'menu-active' : ''}
+      {onSwitchMap && <button type="button" aria-label={t('switchMap')} title={t('switchMap')} disabled={switchingMap}
+        onClick={() => act(onSwitchMap)}><GameIcon name="maps"/><span>{switchingMap ? 'Đang đổi…' : 'Bản đồ'}</span></button>}
+      <button type="button" aria-label="Thống kê" aria-pressed={panel === 'profile'} onClick={() => act(() => onPanel('profile'))}><GameIcon name="stats"/><span>Thống kê</span></button>
+      <button type="button" aria-label="Cư dân" aria-pressed={panel === 'people'} onClick={() => act(() => onPanel('people'))}><GameIcon name="people"/><span>Cư dân</span></button>
+      <button type="button" aria-label={t('quests')} aria-expanded={questsOpen} className={questsOpen ? 'menu-guide menu-active' : 'menu-guide'}
         onClick={() => act(onQuests)}><GameIcon name="quests"/><span>Nhiệm vụ</span></button>
       <button type="button" aria-label="Cài đặt" aria-pressed={panel === 'settings'} onClick={() => act(() => onPanel('settings'))}>
         <GameIcon name="settings"/><span>Cài đặt</span></button>
-      {onSwitchMap && <button type="button" aria-label={t('switchMap')} title={t('switchMap')} disabled={switchingMap}
-        onClick={() => act(onSwitchMap)}><GameIcon name="maps"/><span>{switchingMap ? 'Đang đổi…' : 'Đổi map'}</span></button>}
     </nav>
     <div className="sub-hud"><span className="hud-worth"><GameIcon name="profile"/>{t('worth')} <strong>{money(snapshot.character.netWorth)}</strong></span>
       {farm && <span className="hud-fields"><GameIcon name="farm"/>{t('fields')} {snapshot.crops.length}/{fieldQuota(state)}</span>}

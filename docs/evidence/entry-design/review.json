@@ -1,6 +1,6 @@
 {
-  "base": "http://127.0.0.1:5191",
-  "startedAt": "2026-10-10T02:47:23.870Z",
+  "base": "http://127.0.0.1:8090",
+  "startedAt": "2026-10-10T05:28:46.233Z",
   "scope": "API-fixture browser layout/error review; not real API evidence",
   "runs": [
     {
@@ -190,6 +190,6 @@
       "expectedRejections": 2
     }
   ],
-  "finishedAt": "2026-10-10T02:47:51.580Z",
+  "finishedAt": "2026-10-10T05:29:18.490Z",
   "checkCount": 131
 }

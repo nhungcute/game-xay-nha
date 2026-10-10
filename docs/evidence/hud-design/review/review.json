@@ -1,6 +1,6 @@
 {
-  "base": "http://127.0.0.1:5191",
-  "startedAt": "2026-10-10T03:50:16.424Z",
+  "base": "http://127.0.0.1:8090",
+  "startedAt": "2026-10-10T05:30:12.390Z",
   "checks": [
     {
       "name": "desktop-city: avatar, name, level, XP and map tools",
@@ -1484,8 +1484,8 @@
       "ok": true,
       "detail": {
         "now": 1000,
-        "max": 3100,
-        "text": "1.000 / 3.100 XP"
+        "max": 1870,
+        "text": "1.000 / 1.870 XP"
       }
     },
     {
@@ -1504,8 +1504,8 @@
       "ok": true,
       "detail": {
         "now": 0,
-        "max": 5200,
-        "text": "0 / 5.200 XP"
+        "max": 2950,
+        "text": "0 / 2.950 XP"
       }
     },
     {
@@ -1534,7 +1534,7 @@
     }
   ],
   "errors": [],
-  "finishedAt": "2026-10-10T03:51:31.887Z",
+  "finishedAt": "2026-10-10T05:31:23.806Z",
   "passed": 141,
   "total": 141
 }

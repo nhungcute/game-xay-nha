@@ -4,6 +4,7 @@ import { installTelemetry } from './net/telemetry';
 import './style.css';
 import './start/start.css';
 import './ui/game-ui.css';
+import './ui/reference-ui.css';
 
 installTelemetry();
 createRoot(document.getElementById('root')!).render(<Root/>);

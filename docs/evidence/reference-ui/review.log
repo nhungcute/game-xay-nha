@@ -1,0 +1,166 @@
+PASS desktop-city: avatar, name, level, XP and map tools
+PASS desktop-city: controls fit, no document overflow, panels clear dock
+PASS desktop-city: real minimap visible
+PASS desktop-city: minimap moves the camera
+PASS desktop-city: profile opens from character card
+PASS desktop-city-profile: controls fit, no document overflow, panels clear dock
+PASS desktop-city-materials: controls fit, no document overflow, panels clear dock
+PASS desktop-city: settings changes quality
+PASS desktop-city: building catalog opens
+PASS desktop-city-catalog: controls fit, no document overflow, panels clear dock
+PASS desktop-city: quest visibility can be toggled
+PASS desktop-farm: avatar, name, level, XP and map tools
+PASS desktop-farm: controls fit, no document overflow, panels clear dock
+PASS desktop-farm: real minimap visible
+PASS desktop-farm: minimap moves the camera
+PASS desktop-farm: profile opens from character card
+PASS desktop-farm-profile: controls fit, no document overflow, panels clear dock
+PASS desktop-farm-materials: controls fit, no document overflow, panels clear dock
+PASS desktop-farm: settings changes quality
+PASS desktop-farm: building catalog opens
+PASS desktop-farm-catalog: controls fit, no document overflow, panels clear dock
+PASS desktop-farm: empty inventory has guidance
+PASS desktop-farm: quest visibility can be toggled
+PASS tablet-city: avatar, name, level, XP and map tools
+PASS tablet-city: controls fit, no document overflow, panels clear dock
+PASS tablet-city: real minimap visible
+PASS tablet-city: minimap moves the camera
+PASS tablet-city: profile opens from character card
+PASS tablet-city-profile: controls fit, no document overflow, panels clear dock
+PASS tablet-city-materials: controls fit, no document overflow, panels clear dock
+PASS tablet-city: settings changes quality
+PASS tablet-city: building catalog opens
+PASS tablet-city-catalog: controls fit, no document overflow, panels clear dock
+PASS tablet-city: quest visibility can be toggled
+PASS tablet-farm: avatar, name, level, XP and map tools
+PASS tablet-farm: controls fit, no document overflow, panels clear dock
+PASS tablet-farm: real minimap visible
+PASS tablet-farm: minimap moves the camera
+PASS tablet-farm: profile opens from character card
+PASS tablet-farm-profile: controls fit, no document overflow, panels clear dock
+PASS tablet-farm-materials: controls fit, no document overflow, panels clear dock
+PASS tablet-farm: settings changes quality
+PASS tablet-farm: building catalog opens
+PASS tablet-farm-catalog: controls fit, no document overflow, panels clear dock
+PASS tablet-farm: empty inventory has guidance
+PASS tablet-farm: quest visibility can be toggled
+PASS phone-small-city: avatar, name, level, XP and map tools
+PASS phone-small-city: controls fit, no document overflow, panels clear dock
+PASS phone-small-city: real minimap visible
+PASS phone-small-city: minimap moves the camera
+PASS phone-small-city: profile opens from character card
+PASS phone-small-city-profile: controls fit, no document overflow, panels clear dock
+PASS phone-small-city-materials: controls fit, no document overflow, panels clear dock
+PASS phone-small-city: mobile menu opens
+PASS phone-small-city: Escape closes menu and restores focus
+PASS phone-small-city: settings changes quality
+PASS phone-small-city: building catalog opens
+PASS phone-small-city-catalog: controls fit, no document overflow, panels clear dock
+PASS phone-small-city: category selects a tool and exposes selection
+PASS phone-small-city: quest visibility can be toggled
+PASS phone-small-farm: avatar, name, level, XP and map tools
+PASS phone-small-farm: controls fit, no document overflow, panels clear dock
+PASS phone-small-farm: real minimap visible
+PASS phone-small-farm: minimap moves the camera
+PASS phone-small-farm: profile opens from character card
+FAIL phone-small-farm-profile: controls fit, no document overflow, panels clear dock
+PASS phone-small-farm-materials: controls fit, no document overflow, panels clear dock
+PASS phone-small-farm: mobile menu opens
+PASS phone-small-farm: Escape closes menu and restores focus
+PASS phone-small-farm: settings changes quality
+PASS phone-small-farm: building catalog opens
+PASS phone-small-farm-catalog: controls fit, no document overflow, panels clear dock
+PASS phone-small-farm: category selects a tool and exposes selection
+PASS phone-small-farm: empty inventory has guidance
+PASS phone-small-farm: quest visibility can be toggled
+PASS phone-narrow-city: avatar, name, level, XP and map tools
+PASS phone-narrow-city: controls fit, no document overflow, panels clear dock
+PASS phone-narrow-city: real minimap visible
+PASS phone-narrow-city: minimap moves the camera
+PASS phone-narrow-city: profile opens from character card
+PASS phone-narrow-city-profile: controls fit, no document overflow, panels clear dock
+PASS phone-narrow-city-materials: controls fit, no document overflow, panels clear dock
+PASS phone-narrow-city: mobile menu opens
+PASS phone-narrow-city: Escape closes menu and restores focus
+PASS phone-narrow-city: settings changes quality
+PASS phone-narrow-city: building catalog opens
+PASS phone-narrow-city-catalog: controls fit, no document overflow, panels clear dock
+PASS phone-narrow-city: category selects a tool and exposes selection
+PASS phone-narrow-city: quest visibility can be toggled
+PASS phone-narrow-farm: avatar, name, level, XP and map tools
+PASS phone-narrow-farm: controls fit, no document overflow, panels clear dock
+PASS phone-narrow-farm: real minimap visible
+PASS phone-narrow-farm: minimap moves the camera
+PASS phone-narrow-farm: profile opens from character card
+PASS phone-narrow-farm-profile: controls fit, no document overflow, panels clear dock
+PASS phone-narrow-farm-materials: controls fit, no document overflow, panels clear dock
+PASS phone-narrow-farm: mobile menu opens
+PASS phone-narrow-farm: Escape closes menu and restores focus
+PASS phone-narrow-farm: settings changes quality
+PASS phone-narrow-farm: building catalog opens
+PASS phone-narrow-farm-catalog: controls fit, no document overflow, panels clear dock
+PASS phone-narrow-farm: category selects a tool and exposes selection
+PASS phone-narrow-farm: empty inventory has guidance
+PASS phone-narrow-farm: quest visibility can be toggled
+PASS iphone-city: avatar, name, level, XP and map tools
+PASS iphone-city: controls fit, no document overflow, panels clear dock
+PASS iphone-city: real minimap visible
+PASS iphone-city: minimap moves the camera
+PASS iphone-city: profile opens from character card
+FAIL iphone-city-profile: controls fit, no document overflow, panels clear dock
+PASS iphone-city-materials: controls fit, no document overflow, panels clear dock
+PASS iphone-city: mobile menu opens
+PASS iphone-city: Escape closes menu and restores focus
+PASS iphone-city: settings changes quality
+PASS iphone-city: building catalog opens
+PASS iphone-city-catalog: controls fit, no document overflow, panels clear dock
+PASS iphone-city: category selects a tool and exposes selection
+PASS iphone-city: quest visibility can be toggled
+PASS iphone-farm: avatar, name, level, XP and map tools
+PASS iphone-farm: controls fit, no document overflow, panels clear dock
+PASS iphone-farm: real minimap visible
+PASS iphone-farm: minimap moves the camera
+PASS iphone-farm: profile opens from character card
+FAIL iphone-farm-profile: controls fit, no document overflow, panels clear dock
+PASS iphone-farm-materials: controls fit, no document overflow, panels clear dock
+PASS iphone-farm: mobile menu opens
+PASS iphone-farm: Escape closes menu and restores focus
+PASS iphone-farm: settings changes quality
+PASS iphone-farm: building catalog opens
+PASS iphone-farm-catalog: controls fit, no document overflow, panels clear dock
+PASS iphone-farm: category selects a tool and exposes selection
+PASS iphone-farm: empty inventory has guidance
+PASS iphone-farm: quest visibility can be toggled
+PASS landscape-city: avatar, name, level, XP and map tools
+PASS landscape-city: controls fit, no document overflow, panels clear dock
+PASS landscape-city: real minimap visible
+PASS landscape-city: minimap moves the camera
+PASS landscape-city: profile opens from character card
+FAIL landscape-city-profile: controls fit, no document overflow, panels clear dock
+FAIL landscape-city-materials: controls fit, no document overflow, panels clear dock
+PASS landscape-city: settings changes quality
+PASS landscape-city: building catalog opens
+PASS landscape-city-catalog: controls fit, no document overflow, panels clear dock
+PASS landscape-city: quest visibility can be toggled
+PASS landscape-farm: avatar, name, level, XP and map tools
+PASS landscape-farm: controls fit, no document overflow, panels clear dock
+PASS landscape-farm: real minimap visible
+PASS landscape-farm: minimap moves the camera
+PASS landscape-farm: profile opens from character card
+FAIL landscape-farm-profile: controls fit, no document overflow, panels clear dock
+FAIL landscape-farm-materials: controls fit, no document overflow, panels clear dock
+PASS landscape-farm: settings changes quality
+PASS landscape-farm: building catalog opens
+PASS landscape-farm-catalog: controls fit, no document overflow, panels clear dock
+PASS landscape-farm: empty inventory has guidance
+PASS landscape-farm: quest visibility can be toggled
+PASS XP fixture L8: validated snapshot
+PASS XP fixture L8: relative progress and max-level text
+PASS XP fixture L8: large wallet is compact
+PASS XP fixture L9: validated snapshot
+PASS XP fixture L9: relative progress and max-level text
+PASS XP fixture L9: large wallet is compact
+PASS XP fixture L20: validated snapshot
+PASS XP fixture L20: relative progress and max-level text
+PASS XP fixture L20: large wallet is compact
+Reference UI review: 158/165, 0 errors
