@@ -1,0 +1,6 @@
+desktop: 27 checks PASS, 0 unexpected errors
+tablet: 26 checks PASS, 0 unexpected errors
+mobile: 26 checks PASS, 0 unexpected errors
+narrow: 26 checks PASS, 0 unexpected errors
+webkit: 26 checks PASS, 0 unexpected errors
+Entrance review PASS: 131 checks across 5 layouts.

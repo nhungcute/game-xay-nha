@@ -1,0 +1,17 @@
+{
+  "base": "http://127.0.0.1:5191",
+  "startedAt": "2026-10-10T02:52:30.195Z",
+  "scope": "Real dev API and Postgres; recovery code never persisted",
+  "checks": [
+    "first character receives one-time code",
+    "city enters synced game",
+    "second map suggests existing display name",
+    "farm enters game without another one-time code",
+    "real recovery restores both named characters",
+    "recovered city is the original world",
+    "recovered login survives reload",
+    "no browser or HTTP errors"
+  ],
+  "errors": [],
+  "finishedAt": "2026-10-10T02:52:36.976Z"
+}

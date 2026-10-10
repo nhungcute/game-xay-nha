@@ -2,6 +2,10 @@
 
 Updated: 2026-10-10 (Asia/Bangkok).
 
+Post-MVP entrance redesign: [report](reports/ENTRY-design-report.md). Login/recovery, character creation and
+map selection now use illustrated responsive layouts. Lint/typecheck/build PASS; 131 fixture browser checks,
+8 real dev recovery checks and local production smoke (four cases / 24 checks) PASS. Economy remains unchanged.
+
 Mode: auto-continue (approved 2026-10-10)
 
 ## Current gate: runnable local MVP ready — G3 economy FAIL, Q010 awaiting owner

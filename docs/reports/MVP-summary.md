@@ -3,6 +3,10 @@
 2026-10-10 (Asia/Bangkok). **Runnable local MVP ready; final validation PASS; economy FAIL awaiting Q010.**
 Source: `f5ab34a`; G3/G4 evidence and Q010 committed in `2303cb5`.
 
+Post-MVP update: [entrance redesign](ENTRY-design-report.md) adds illustrated map selection, live character-name
+preview and recovery login. New validation: 131 layout checks, eight real dev recovery checks and local production
+smoke PASS; economy unchanged. Original closeout counts below retain their original provenance.
+
 ## Run
 
 Requirements: Docker Desktop/Compose, Node 22.20.0 and pnpm 10.18.3.
@@ -95,7 +99,7 @@ Intel Iris Xe, Snapdragon 7-series or iPhone 12 performance.
 - Three reference devices and the full-world stress workload: NOT RUN. Some exact long-loop GPU/gesture combinations in docs/10 remain unverified.
 - All **74 GLBs are procedural placeholders**; every ID/file is in [the inventory](MVP-placeholder-assets.md). No final-art approval is implied.
 - Audio and client telemetry are not implemented; metrics are log-only and in-process. Backups stay on this machine unless copied elsewhere.
-- Production build emits a large-chunk warning: main JS 949.89 kB (265.22 kB gzip); build succeeds. Code splitting remains follow-up work.
+- Production build emits a large-chunk warning: closeout main JS 949.89 kB (265.22 kB gzip), entrance redesign 960.65 kB (268.38 kB gzip); both builds succeed. Code splitting remains follow-up work.
 - IP rate limiting and the online cache limitations from [G2](G2-report.md) remain. Public tunnel/network behavior and concurrency/load are not validated here.
 - ECO is P2. No public hosting or Botkeep deployment was performed.
 

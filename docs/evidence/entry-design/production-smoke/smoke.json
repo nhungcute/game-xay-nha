@@ -1,0 +1,190 @@
+{
+  "base": "http://127.0.0.1:8090",
+  "startedAt": "2026-10-10T02:48:28.916Z",
+  "health": "ok",
+  "runs": {
+    "chromium-desktop": {
+      "maps": {
+        "city": {
+          "world": {
+            "worldId": "5ff48eef-ff54-4fdf-b01a-fdbd561a315e",
+            "mapId": "city-coast-01",
+            "revision": 1,
+            "wallet": {
+              "cash": 1985,
+              "wood": 21,
+              "stone": 10
+            },
+            "level": 1,
+            "xp": 0,
+            "questIndex": 0,
+            "buildings": [],
+            "removed": []
+          },
+          "mapScreenMs": 233,
+          "metrics": {
+            "quality": "high",
+            "pending": 0,
+            "clockSkewMs": -70,
+            "fps": 56.64314816655072,
+            "drawCalls": 150,
+            "triangles": 173370,
+            "geometries": 82,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0,
+              "maxRebuildMs": 2,
+              "zonesRebuilt": 128
+            },
+            "revision": 1
+          },
+          "checks": {
+            "hud": true,
+            "recoveryCode": true,
+            "noTestHooksInProduction": true,
+            "reloadSameWorld": true,
+            "graphicsDefault": true,
+            "drawCallBudget": true
+          }
+        },
+        "farm": {
+          "world": {
+            "worldId": "c8abfacf-01f9-448a-9266-d86ec5f427a3",
+            "mapId": "farm-valley-01",
+            "revision": 1,
+            "wallet": {
+              "cash": 1985,
+              "wood": 21,
+              "stone": 10
+            },
+            "level": 1,
+            "xp": 0,
+            "questIndex": 0,
+            "buildings": [],
+            "removed": []
+          },
+          "mapScreenMs": 82,
+          "metrics": {
+            "quality": "high",
+            "pending": 0,
+            "clockSkewMs": -83,
+            "fps": 56.152103241059976,
+            "drawCalls": 168,
+            "triangles": 186062,
+            "geometries": 94,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.10000002384185791,
+              "maxRebuildMs": 0.5,
+              "zonesRebuilt": 128
+            },
+            "revision": 1
+          },
+          "checks": {
+            "hud": true,
+            "recoveryCode": true,
+            "noTestHooksInProduction": true,
+            "reloadSameWorld": true,
+            "graphicsDefault": true,
+            "drawCallBudget": true
+          }
+        }
+      },
+      "errors": []
+    },
+    "webkit-iphone13": {
+      "maps": {
+        "city": {
+          "world": {
+            "worldId": "d2fdb506-d338-48b8-a056-7c19063af3ba",
+            "mapId": "city-coast-01",
+            "revision": 1,
+            "wallet": {
+              "cash": 1985,
+              "wood": 21,
+              "stone": 10
+            },
+            "level": 1,
+            "xp": 0,
+            "questIndex": 0,
+            "buildings": [],
+            "removed": []
+          },
+          "mapScreenMs": 184,
+          "metrics": {
+            "quality": "low",
+            "pending": 0,
+            "clockSkewMs": -39,
+            "fps": 21.890547263681594,
+            "drawCalls": 57,
+            "triangles": 139052,
+            "geometries": 56,
+            "textures": 0,
+            "programs": 13,
+            "terrain": {
+              "lastRebuildMs": 0,
+              "maxRebuildMs": 2,
+              "zonesRebuilt": 128
+            },
+            "revision": 1
+          },
+          "checks": {
+            "hud": true,
+            "recoveryCode": true,
+            "noTestHooksInProduction": true,
+            "reloadSameWorld": true,
+            "graphicsDefault": true,
+            "drawCallBudget": true
+          }
+        },
+        "farm": {
+          "world": {
+            "worldId": "09647db7-58f1-4ba5-8468-76fdb85b68ae",
+            "mapId": "farm-valley-01",
+            "revision": 1,
+            "wallet": {
+              "cash": 1985,
+              "wood": 21,
+              "stone": 10
+            },
+            "level": 1,
+            "xp": 0,
+            "questIndex": 0,
+            "buildings": [],
+            "removed": []
+          },
+          "mapScreenMs": 316,
+          "metrics": {
+            "quality": "low",
+            "pending": 0,
+            "clockSkewMs": -70,
+            "fps": 25.641025641025642,
+            "drawCalls": 62,
+            "triangles": 150284,
+            "geometries": 61,
+            "textures": 0,
+            "programs": 13,
+            "terrain": {
+              "lastRebuildMs": 0,
+              "maxRebuildMs": 1.0000000000009095,
+              "zonesRebuilt": 128
+            },
+            "revision": 1
+          },
+          "checks": {
+            "hud": true,
+            "recoveryCode": true,
+            "noTestHooksInProduction": true,
+            "reloadSameWorld": true,
+            "graphicsDefault": true,
+            "drawCallBudget": true
+          }
+        }
+      },
+      "errors": []
+    }
+  },
+  "finishedAt": "2026-10-10T02:49:00.569Z"
+}

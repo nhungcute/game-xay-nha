@@ -6,21 +6,9 @@
   .tool-options button, .resources button, .quest button, .side button, .catalog button, .tools button, .close { min-height: 44px; min-width: 44px; }
 }
 
-/* Start screens (online mode): map choice, character creation, recovery code. */
-.start{display:grid;place-items:center;min-height:100dvh;background:linear-gradient(160deg,#cfe3c0,#e9e6c8 55%,#c9dcd6);padding:16px}
-.start-card{width:min(760px,100%);padding:24px;display:flex;flex-direction:column;gap:12px}
-.start-card h1{margin:0;font-size:30px;letter-spacing:2px;color:#2f5a42}.start-card h2{margin:4px 0 8px;font-size:18px}
-.lead{margin:0;color:#4d6450}.note{margin:0;color:#5c6f55;font-size:12px;line-height:1.5}
-.map-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.map-card{border:1px solid #d6dcc7;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;background:#fbfaf0}
-.map-card.city{border-top:5px solid #c76b4f}.map-card.farm{border-top:5px solid #6f9a45}.map-card.eco{border-top:5px solid #4f9aa0;opacity:.75}
-.map-card h2{margin:0}.map-card p{margin:0;font-size:12px}.map-card .who{font-weight:600;color:#2f5a42}
-.badge{align-self:flex-start;background:#e3efcf;color:#3b6b2d;border-radius:20px;padding:2px 10px;font-size:11px}.badge.muted{background:#ececec;color:#777}
-.field{display:flex;flex-direction:column;gap:6px;font-weight:600}.field input{font:inherit;font-size:16px;padding:12px;border-radius:10px;border:1px solid #c9d2bd}
+/* Shared in-game layout; entrance-specific styles live in start/start.css. */
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.check{display:flex;align-items:center;gap:6px}
-.code{font-family:ui-monospace,Consolas,monospace;font-size:26px;letter-spacing:3px;text-align:center;padding:14px;border-radius:12px;background:#203d30;color:#f6efcf;margin:0}
 button.link{background:none;border:none;color:#2f6249;text-decoration:underline;align-self:flex-start;padding:4px 0;min-height:auto}
-button.wide{width:100%}
 .quest.repeat{gap:8px}.repeat-quest{display:flex;flex-direction:column;gap:4px;padding:6px 0;border-top:1px solid #e1e6d4}.repeat-quest .row button{flex:1;min-height:32px;padding:4px 8px}
 .tutor{background:#fff7d6;border:1px solid #e8d48b;border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.45}.tutor .link{display:block;font-size:11px;margin-top:4px}
 .tools button.hint{animation:hint-pulse 1.2s ease-in-out infinite;background:#fff1b8}@keyframes hint-pulse{0%,100%{box-shadow:0 0 0 0 #e7b92f}50%{box-shadow:0 0 0 6px #e7b92f55}}
