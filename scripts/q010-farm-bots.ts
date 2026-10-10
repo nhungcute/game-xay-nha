@@ -54,3 +54,15 @@ export class FarmBotV3 extends FarmBotV2 {
   }
 }
 
+
+/** City counterpart (Q010): the base bot builds at most one building per 5-minute tick, so an ordinary player's
+ * 8–10-minute sessions place ~2 buildings while cash piles up. V2 keeps building within the same tick while it can. */
+export class CityBotV2 extends EconomyBot {
+  override city(): void {
+    for (let i = 0; i < 12; i++) {
+      const before = this.s.snapshot.buildings.length;
+      super.city();
+      if (this.s.snapshot.buildings.length === before) break;
+    }
+  }
+}

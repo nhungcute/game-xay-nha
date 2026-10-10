@@ -64,7 +64,7 @@ the degenerate case of a single eligible template, D024 reuses it (with a differ
 possible) rather than leave an empty slot. Please confirm, or choose "leave the slot empty until another
 template becomes eligible".
 
-## Q010 — Real-sim economy pacing versus docs/16 §12 — FARM RESOLVED (D025), CITY EARLY LEVELS OPEN
+## Q010 — Real-sim economy pacing versus docs/16 §12 — RESOLVED (D025: Farm table; City: bot fix, no number change)
 
 2026-10-10. Balance decision required; **no economic values were changed**.
 The current 60-day, six-scenario run uses `f5ab34a` (topology optimization over baseline `47fe17d`), contentVersion 1 and the real sim.
@@ -180,7 +180,7 @@ City bot and were not recalibrated); quest XP and rewards unchanged. If approved
 (update `P.xpCumMap.farm` in `docs/tools/economy/model.mjs`, regenerate content, bump `contentVersion`, rerun all six
 real-sim scenarios and the test suite). Existing Farm characters would level up on load (XP is kept, thresholds drop).
 
-### Proposed City XP table — NOT applied, awaiting approval (Claude, 2026-10-10)
+### Proposed City XP table — WITHDRAWN (City gap was the bot, see below)
 
 `npx tsx scripts/q010-xp-calibrate.ts 3 city` (unchanged `EconomyBot`, in-memory table only;
 `docs/reports/Q010-city-xp-proposal.json`). L2–L4 unchanged.
@@ -200,3 +200,16 @@ Design caveat: docs/16 §12.1 describes City as the idle map (careful only ~5–
 careful player is already ~1.9× faster at L8; with the proposal 2.4× at L8, 1.3× at L15, 1.1× at L20. Early City
 levels (L5–L11) become much cheaper. Recommendation: approve the Farm table; for City either accept the early-level
 drop or fix the early pacing by bot/model review first (City late game already passes without any change).
+
+### City resolution: the gap was a bot throttle (Claude, 2026-10-10)
+
+The base `EconomyBot.city()` places at most one building per 5-minute tick, so an ordinary player's 8–10-minute
+sessions add ~2 buildings while cash piles up ($69 602 unspent on day 3 with 25 buildings; the model has 53).
+`CityBotV2` (`scripts/q010-farm-bots.ts`) keeps building within the tick while it can — legal commands only.
+With the **current, unchanged City table** (ordinary player): L8 d4.0 (+15%), L12 d12.0 (+9%), L15 d21.0 (0%),
+L20 d48.5 (−1%) — PASS. Day 14: L12, 126 buildings, $117k/h (model: L12, 126, $113k). Careful: L8/12/15/20 at
+d2.5/10.0/19.0/45.4 (model 2.5/10/19/48); casual ends L16 (model L16). The City proposal above is therefore not
+needed. Closing evidence for both maps × three styles: `scripts/q010-verify.ts` → `docs/reports/Q010-verify.json`.
+Recommendation for the bot owner: adopt the FarmBotV3/CityBotV2 policies in `packages/tooling` so
+`sim-economy.ts` reports the same.
+

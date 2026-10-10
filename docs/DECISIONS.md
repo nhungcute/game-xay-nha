@@ -215,7 +215,12 @@ only in the sense that levels gained are kept).
   FarmBotV3) to the docs/16 §12.1 times; L2–L4 unchanged. docs/16 §8.2, `model.mjs` `P.xpCumMap.farm`, generated content.
 - `contentVersion` 1 → 2. `validateSnapshot` migrates v1 snapshots: XP kept, level recomputed (never lower);
   other versions are still rejected. Level-up cash rewards are not paid retroactively for migrated levels.
-- City table unchanged: its L15/L20 already pass; the City proposal would make early levels much cheaper and the
-  careful player 2.4× faster at L8, against the "idle City" identity — left open in Q010.
+- City table unchanged: the City L8/L12 gap came from the bot placing one building per 5-minute tick; CityBotV2
+  passes all four milestones with the current table (+15/+9/0/−1%). The City table proposal was withdrawn.
 - Result (Farm, ordinary, 60 days, applied content): FarmBotV3 L8/L12/L15/L20 = +1/+9/+7/+5% (PASS);
   Codex's unchanged EconomyBot +38/+34/+21/+10% (was +101/+156/+144%/unreached).
+- Closing evidence (`scripts/q010-verify.ts` → `docs/reports/Q010-verify.json`, FarmBotV3/CityBotV2, 60 days, contentVersion 2):
+  every map × style follows the docs/16 §12.1 targets closely (e.g. City careful L20 d45.4 vs 48, Farm careful L20 d36.0
+  vs 35, Farm casual L15 d59 vs 59). Note: `model.mjs --sim` with the D025 Farm table now levels Farm faster than §12.1
+  because of its known simplifications (instant input purchase/sale); §12.1 stays the design target and the real-sim
+  bots are the reference for Farm pacing.

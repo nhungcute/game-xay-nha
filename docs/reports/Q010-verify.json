@@ -1,0 +1,288 @@
+{
+  "contentVersion": 2,
+  "note": "levels = elapsed days, bot vs docs/16 §12.1 target",
+  "rows": [
+    {
+      "map": "city",
+      "style": "cham",
+      "finalLevel": 20,
+      "snapshotValid": true,
+      "levels": {
+        "5": {
+          "bot": 0.38,
+          "target": 0.17
+        },
+        "8": {
+          "bot": 2.54,
+          "target": 2.5
+        },
+        "10": {
+          "bot": 5.17,
+          "target": 5
+        },
+        "12": {
+          "bot": 9.96,
+          "target": 10
+        },
+        "15": {
+          "bot": 18.96,
+          "target": 19
+        },
+        "18": {
+          "bot": 31.96,
+          "target": 33
+        },
+        "20": {
+          "bot": 45.38,
+          "target": 48
+        }
+      },
+      "seconds": 301
+    },
+    {
+      "map": "city",
+      "style": "thuong",
+      "finalLevel": 20,
+      "snapshotValid": true,
+      "levels": {
+        "5": {
+          "bot": 1.5,
+          "target": 0.71
+        },
+        "8": {
+          "bot": 4.04,
+          "target": 3.5
+        },
+        "10": {
+          "bot": 7.04,
+          "target": 6
+        },
+        "12": {
+          "bot": 12.04,
+          "target": 11
+        },
+        "15": {
+          "bot": 21.04,
+          "target": 21
+        },
+        "18": {
+          "bot": 34.5,
+          "target": 35
+        },
+        "20": {
+          "bot": 48.5,
+          "target": 49
+        }
+      },
+      "gate": [
+        {
+          "level": 8,
+          "expected": 3.5,
+          "actual": 4.04,
+          "deviation": 15,
+          "status": "PASS"
+        },
+        {
+          "level": 12,
+          "expected": 11,
+          "actual": 12.04,
+          "deviation": 9,
+          "status": "PASS"
+        },
+        {
+          "level": 15,
+          "expected": 21,
+          "actual": 21.04,
+          "deviation": 0,
+          "status": "PASS"
+        },
+        {
+          "level": 20,
+          "expected": 49,
+          "actual": 48.5,
+          "deviation": -1,
+          "status": "PASS"
+        }
+      ],
+      "seconds": 174
+    },
+    {
+      "map": "city",
+      "style": "nhan",
+      "finalLevel": 16,
+      "snapshotValid": true,
+      "levels": {
+        "5": {
+          "bot": 4.01,
+          "target": 2
+        },
+        "8": {
+          "bot": 11,
+          "target": 9
+        },
+        "10": {
+          "bot": 18.01,
+          "target": 16
+        },
+        "12": {
+          "bot": 30,
+          "target": 28
+        },
+        "15": {
+          "bot": 49,
+          "target": 48
+        },
+        "18": {
+          "bot": null,
+          "target": null
+        },
+        "20": {
+          "bot": null,
+          "target": null
+        }
+      },
+      "seconds": 64
+    },
+    {
+      "map": "farm",
+      "style": "cham",
+      "finalLevel": 20,
+      "snapshotValid": true,
+      "levels": {
+        "5": {
+          "bot": 0.04,
+          "target": 0.17
+        },
+        "8": {
+          "bot": 1.38,
+          "target": 2
+        },
+        "10": {
+          "bot": 3.17,
+          "target": 4
+        },
+        "12": {
+          "bot": 7.17,
+          "target": 8
+        },
+        "15": {
+          "bot": 14.54,
+          "target": 15
+        },
+        "18": {
+          "bot": 24.96,
+          "target": 24
+        },
+        "20": {
+          "bot": 35.96,
+          "target": 35
+        }
+      },
+      "seconds": 125
+    },
+    {
+      "map": "farm",
+      "style": "thuong",
+      "finalLevel": 20,
+      "snapshotValid": true,
+      "levels": {
+        "5": {
+          "bot": 1.04,
+          "target": 1
+        },
+        "8": {
+          "bot": 4.04,
+          "target": 4
+        },
+        "10": {
+          "bot": 7.5,
+          "target": 7
+        },
+        "12": {
+          "bot": 13.04,
+          "target": 12
+        },
+        "15": {
+          "bot": 23.5,
+          "target": 22
+        },
+        "18": {
+          "bot": 38.5,
+          "target": 37
+        },
+        "20": {
+          "bot": 54.69,
+          "target": 52
+        }
+      },
+      "gate": [
+        {
+          "level": 8,
+          "expected": 4,
+          "actual": 4.04,
+          "deviation": 1,
+          "status": "PASS"
+        },
+        {
+          "level": 12,
+          "expected": 12,
+          "actual": 13.04,
+          "deviation": 9,
+          "status": "PASS"
+        },
+        {
+          "level": 15,
+          "expected": 22,
+          "actual": 23.5,
+          "deviation": 7,
+          "status": "PASS"
+        },
+        {
+          "level": 20,
+          "expected": 52,
+          "actual": 54.69,
+          "deviation": 5,
+          "status": "PASS"
+        }
+      ],
+      "seconds": 84
+    },
+    {
+      "map": "farm",
+      "style": "nhan",
+      "finalLevel": 15,
+      "snapshotValid": true,
+      "levels": {
+        "5": {
+          "bot": 2.01,
+          "target": 3
+        },
+        "8": {
+          "bot": 9,
+          "target": 12
+        },
+        "10": {
+          "bot": 16,
+          "target": 21
+        },
+        "12": {
+          "bot": 30,
+          "target": 35
+        },
+        "15": {
+          "bot": 59,
+          "target": 59
+        },
+        "18": {
+          "bot": null,
+          "target": null
+        },
+        "20": {
+          "bot": null,
+          "target": null
+        }
+      },
+      "seconds": 21
+    }
+  ]
+}
