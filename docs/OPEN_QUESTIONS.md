@@ -58,6 +58,8 @@ Please approve correcting that QA line before the design document is edited.
 
 ## Q009 — Repeat quests when only one template is eligible
 
+RESOLVED 2026-10-10: D026 keeps the reuse fallback.
+
 Open (non-blocking), 2026-10-10. docs/16 §10.3 says a template must not repeat back-to-back. Early Farm
 characters without a producer or free field quota can have only `sell_item`/`harvest_crop` eligible; in
 the degenerate case of a single eligible template, D024 reuses it (with a different subject/target where

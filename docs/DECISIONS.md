@@ -224,3 +224,12 @@ only in the sense that levels gained are kept).
   vs 35, Farm casual L15 d59 vs 59). Note: `model.mjs --sim` with the D025 Farm table now levels Farm faster than §12.1
   because of its known simplifications (instant input purchase/sale); §12.1 stays the design target and the real-sim
   bots are the reference for Farm pacing.
+
+## D026 — 2026-10-10 — Q009: repeat-quest fallback reuses the only eligible template
+
+Taken by the agent under the user's auto-continue / "skip confirmations" instruction. When only one repeat-quest
+template is eligible (early Farm characters without a producer or free field quota), the slot is filled with that
+template again (a different subject/target where possible) instead of being left empty, so a player always has three
+quests. Already implemented and tested (D024 amendment, `packages/sim/src/quests.ts`); no code change. Reversible:
+returning `null` from `next()` when only `repeat.last` is eligible would leave the slot empty.
+
