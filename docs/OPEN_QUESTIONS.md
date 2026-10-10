@@ -136,3 +136,21 @@ From `G3-economy-current.json` daily rows and rejection counts:
 - **City late pacing passes but money piles up.** City/thuong reaches 229 buildings on day 59 exactly as §12.2
   predicts, but ends with $251 M unspent (income keeps flowing after building limits are reached). Not a pacing
   failure, but a possible lack of late-game money sinks to review for P1 (docs/16 does not define a cash target).
+
+### Option 1 experiment: does a better Farm bot close the gap? (Claude, 2026-10-10)
+
+`scripts/q010-farm-bot.ts` subclasses Codex's `EconomyBot` (file unchanged) and changes only choices, all through
+legal commands; no rule or number changed. Farm, ordinary player, 60 days (`docs/reports/Q010-farm-bot-thuong.json`):
+
+| Bot | L8 (target d4) | L12 (target d12) | L15 (target d22) | L20 | Final | Storage rejections |
+|---|---|---|---|---|---|---:|
+| baseline (current bot) | d8.0 (+101%) | d30.7 (+156%) | d53.7 (+144%) | unreached | L15 | 1 255 |
+| V2: sell before harvest, all producers, silos on demand | d7.5 (+88%) | d24.7 (+106%) | d47.0 (+114%) | unreached | L16 | 22 |
+| V3: V2 + next farmhouse first, zones only with a cash cushion | d6.0 (+51%) | d23.5 (+96%) | d46.0 (+109%) | unreached | L16 | 20 |
+
+All snapshots valid. Reading: the early gap is largely bot strategy (the baseline spends $6 150 on zones, a silo and a
+coop before the 2nd farmhouse, so day-1 fields are 24 vs the model's 48). From L8 on, even the improved bot needs about
+twice the model's time although it reaches the same 192 fields, so the remaining gap is a model-vs-rules difference
+(e.g. instant input purchase/sale, harvest timing between sessions), not storage or build order. Conclusion: Option 1
+alone will not close Farm pacing; after reconciling the model, a Farm XP recalibration (Option 2 scope) is still
+likely needed. City was not re-run (its L15/L20 already pass).

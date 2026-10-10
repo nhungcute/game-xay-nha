@@ -1,0 +1,131 @@
+[
+  {
+    "bot": "baseline",
+    "style": "thuong",
+    "days": 60,
+    "level": 15,
+    "cash": 1961651,
+    "buildings": 25,
+    "producers": 14,
+    "fields": 192,
+    "storageFull": 1255,
+    "snapshotValid": true,
+    "pacing": [
+      {
+        "level": 8,
+        "expected": 4,
+        "actual": 8.04,
+        "deviation": 101,
+        "status": "FAIL"
+      },
+      {
+        "level": 12,
+        "expected": 12,
+        "actual": 30.69,
+        "deviation": 156,
+        "status": "FAIL"
+      },
+      {
+        "level": 15,
+        "expected": 22,
+        "actual": 53.69,
+        "deviation": 144,
+        "status": "FAIL"
+      },
+      {
+        "level": 20,
+        "expected": 52,
+        "actual": null,
+        "deviation": null,
+        "status": "UNREACHED"
+      }
+    ],
+    "seconds": 53
+  },
+  {
+    "bot": "v2",
+    "style": "thuong",
+    "days": 60,
+    "level": 16,
+    "cash": 1617519,
+    "buildings": 32,
+    "producers": 15,
+    "fields": 192,
+    "storageFull": 22,
+    "snapshotValid": true,
+    "pacing": [
+      {
+        "level": 8,
+        "expected": 4,
+        "actual": 7.5,
+        "deviation": 88,
+        "status": "FAIL"
+      },
+      {
+        "level": 12,
+        "expected": 12,
+        "actual": 24.69,
+        "deviation": 106,
+        "status": "FAIL"
+      },
+      {
+        "level": 15,
+        "expected": 22,
+        "actual": 47.04,
+        "deviation": 114,
+        "status": "FAIL"
+      },
+      {
+        "level": 20,
+        "expected": 52,
+        "actual": null,
+        "deviation": null,
+        "status": "UNREACHED"
+      }
+    ],
+    "seconds": 55
+  },
+  {
+    "bot": "v3",
+    "style": "thuong",
+    "days": 60,
+    "level": 16,
+    "cash": 1648214,
+    "buildings": 32,
+    "producers": 15,
+    "fields": 192,
+    "storageFull": 20,
+    "snapshotValid": true,
+    "pacing": [
+      {
+        "level": 8,
+        "expected": 4,
+        "actual": 6.04,
+        "deviation": 51,
+        "status": "FAIL"
+      },
+      {
+        "level": 12,
+        "expected": 12,
+        "actual": 23.5,
+        "deviation": 96,
+        "status": "FAIL"
+      },
+      {
+        "level": 15,
+        "expected": 22,
+        "actual": 46.04,
+        "deviation": 109,
+        "status": "FAIL"
+      },
+      {
+        "level": 20,
+        "expected": 52,
+        "actual": null,
+        "deviation": null,
+        "status": "UNREACHED"
+      }
+    ],
+    "seconds": 61
+  }
+]
