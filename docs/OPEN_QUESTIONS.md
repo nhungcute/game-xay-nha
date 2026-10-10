@@ -157,7 +157,7 @@ likely needed. City was not re-run (its L15/L20 already pass).
 
 ### Proposed Farm XP table — NOT applied, awaiting approval (Claude, 2026-10-10)
 
-`scripts/q010-farm-xp-calibrate.ts` fits the Farm cumulative-XP table to the docs/16 reference-model level times using
+`scripts/q010-xp-calibrate.ts 3 farm` fits the Farm cumulative-XP table to the docs/16 reference-model level times using
 the real sim and FarmBotV3, patching the table **in memory only** (`docs/reports/Q010-farm-xp-proposal.json`).
 L2–L4 keep the current 40/120/220 (reached in the first session through tutorial quests).
 
@@ -179,3 +179,24 @@ Caveats: fitted to one bot strategy (V3), City unchanged (its L15/L20 pass; L8/L
 City bot and were not recalibrated); quest XP and rewards unchanged. If approved, apply through docs/16 §11
 (update `P.xpCumMap.farm` in `docs/tools/economy/model.mjs`, regenerate content, bump `contentVersion`, rerun all six
 real-sim scenarios and the test suite). Existing Farm characters would level up on load (XP is kept, thresholds drop).
+
+### Proposed City XP table — NOT applied, awaiting approval (Claude, 2026-10-10)
+
+`npx tsx scripts/q010-xp-calibrate.ts 3 city` (unchanged `EconomyBot`, in-memory table only;
+`docs/reports/Q010-city-xp-proposal.json`). L2–L4 unchanged.
+
+| Level | 5 | 8 | 10 | 12 | 15 | 18 | 20 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Current cumulative XP | 1 600 | 6 100 | 14 000 | 36 000 | 100 000 | 240 000 | 430 000 |
+| Proposed | 440 | 2 040 | 5 240 | 19 490 | 79 960 | 228 900 | 431 790 |
+
+| Style | L8 | L12 | L15 | L20 | docs/16 §12.1 model |
+|---|---|---|---|---|---|
+| Ordinary (gate) | d3.7 (+5%) PASS | d11.5 (+5%) PASS | d20.7 (−1%) PASS | d49 (0%) PASS | 3.5 / 11 / 21 / 49 |
+| Careful | d1.6 | d7 | d16 | d45 | 2.5 / 10 / 19 / 48 |
+| Casual | d12 | d34 | d54 | — (L15) | 9 / 28 / 48 / — |
+
+Design caveat: docs/16 §12.1 describes City as the idle map (careful only ~5–10% faster). With the current bot the
+careful player is already ~1.9× faster at L8; with the proposal 2.4× at L8, 1.3× at L15, 1.1× at L20. Early City
+levels (L5–L11) become much cheaper. Recommendation: approve the Farm table; for City either accept the early-level
+drop or fix the early pacing by bot/model review first (City late game already passes without any change).
