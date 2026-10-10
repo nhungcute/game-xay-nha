@@ -1,0 +1,197 @@
+{
+  "base": "http://127.0.0.1:8090",
+  "minutes": 15,
+  "actions": {
+    "keys": 84,
+    "tool:Đường": 117,
+    "orbit": 94,
+    "profile": 100,
+    "step-skipped": 12,
+    "buy": 81,
+    "tool:Khu đất": 10,
+    "camera-button": 103,
+    "explore": 76,
+    "wheel": 61,
+    "tool:San nền": 20,
+    "tool:Dọn": 85,
+    "tool:Cầu": 20,
+    "tool:Kè": 10,
+    "tool:Xây": 7,
+    "claim": 1,
+    "graphics-toggle": 1,
+    "map-switch": 1,
+    "tool:Thu hoạch": 9,
+    "tool:Cuốc": 7,
+    "tool:Gieo": 5
+  },
+  "warm": {
+    "quality": "high",
+    "pending": 0,
+    "clockSkewMs": -67,
+    "fps": 57.25002467673475,
+    "drawCalls": 150,
+    "triangles": 173370,
+    "geometries": 82,
+    "textures": 1,
+    "programs": 14,
+    "terrain": {
+      "lastRebuildMs": 0.09999990463256836,
+      "maxRebuildMs": 1.0999999046325684,
+      "zonesRebuilt": 128
+    },
+    "revision": 0
+  },
+  "end": {
+    "quality": "high",
+    "pending": 0,
+    "clockSkewMs": -94,
+    "fps": 56.784219964140235,
+    "drawCalls": 150,
+    "triangles": 173098,
+    "geometries": 82,
+    "textures": 1,
+    "programs": 14,
+    "terrain": {
+      "lastRebuildMs": 0.10000002384185791,
+      "maxRebuildMs": 0.20000004768371582,
+      "zonesRebuilt": 128
+    },
+    "revision": 75
+  },
+  "cityAtEnd": {
+    "revision": 75,
+    "level": 2,
+    "buildings": 0,
+    "cash": 255,
+    "netWorth": 3030
+  },
+  "timeline": [
+    {
+      "minute": 1.4,
+      "revision": 12,
+      "fps": 56,
+      "drawCalls": 150,
+      "geometries": 104,
+      "textures": 1,
+      "programs": 14,
+      "errors": 0
+    },
+    {
+      "minute": 2.8,
+      "revision": 24,
+      "fps": 57,
+      "drawCalls": 124,
+      "geometries": 105,
+      "textures": 1,
+      "programs": 14,
+      "errors": 0
+    },
+    {
+      "minute": 4.2,
+      "revision": 43,
+      "fps": 56,
+      "drawCalls": 72,
+      "geometries": 107,
+      "textures": 1,
+      "programs": 14,
+      "errors": 0
+    },
+    {
+      "minute": 5.4,
+      "revision": 54,
+      "fps": 57,
+      "drawCalls": 150,
+      "geometries": 107,
+      "textures": 1,
+      "programs": 27,
+      "errors": 0
+    },
+    {
+      "minute": 6.7,
+      "revision": 72,
+      "fps": 56,
+      "drawCalls": 105,
+      "geometries": 107,
+      "textures": 1,
+      "programs": 27,
+      "errors": 0
+    },
+    {
+      "minute": 7.5,
+      "event": "switched to farm",
+      "metrics": {
+        "quality": "high",
+        "pending": 0,
+        "clockSkewMs": -92,
+        "fps": 56.59253375694931,
+        "drawCalls": 168,
+        "triangles": 186062,
+        "geometries": 94,
+        "textures": 1,
+        "programs": 14,
+        "terrain": {
+          "lastRebuildMs": 0,
+          "maxRebuildMs": 0.20000004768371582,
+          "zonesRebuilt": 128
+        },
+        "revision": 0
+      }
+    },
+    {
+      "minute": 8.5,
+      "revision": 12,
+      "fps": 57,
+      "drawCalls": 134,
+      "geometries": 102,
+      "textures": 1,
+      "programs": 14,
+      "errors": 0
+    },
+    {
+      "minute": 9.9,
+      "revision": 22,
+      "fps": 57,
+      "drawCalls": 136,
+      "geometries": 103,
+      "textures": 1,
+      "programs": 14,
+      "errors": 0
+    },
+    {
+      "minute": 11.2,
+      "revision": 28,
+      "fps": 56,
+      "drawCalls": 146,
+      "geometries": 104,
+      "textures": 1,
+      "programs": 14,
+      "errors": 0
+    },
+    {
+      "minute": 12.5,
+      "revision": 48,
+      "fps": 58,
+      "drawCalls": 111,
+      "geometries": 105,
+      "textures": 1,
+      "programs": 14,
+      "errors": 0
+    },
+    {
+      "minute": 14,
+      "revision": 64,
+      "fps": 57,
+      "drawCalls": 120,
+      "geometries": 106,
+      "textures": 1,
+      "programs": 14,
+      "errors": 0
+    }
+  ],
+  "errors": [],
+  "gpuGrowth": {
+    "geometries": 0,
+    "textures": 0,
+    "programs": 0
+  }
+}
