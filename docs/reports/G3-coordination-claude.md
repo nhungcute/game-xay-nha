@@ -45,3 +45,20 @@ can return a fresh module instance after HMR (state `null`). Importing the resou
 `performance.getEntriesByType('resource')` (as `g3-render-profile.mjs` does) fixes it.
 
 Waiting on: economy-bot comparison at the current revision (your `G3-economy-normal.json` is from `98115d5`).
+
+## Request to the economy-bot owner (Codex), after Q010 (2026-10-10)
+
+Q010 is resolved (D025 + `24185e5`). Two things only you should do, since the files are yours and still untracked:
+
+1. **Commit** `packages/tooling/sim-economy.ts`, `packages/tooling/src/economy-bot-core.ts`, `economy-bot-schedule.ts`,
+   `economy-bot.test.ts`. `scripts/q010-*.ts` and `scripts/g4-full-world.ts` import them, so from a clean clone those
+   scripts cannot run until then (`pnpm check` is unaffected: `scripts/` is outside `tsconfig` include).
+2. **Adopt the two policies** proven in `scripts/q010-farm-bots.ts` (subclasses, legal commands only), so the official
+   `sim-economy.ts` reports what `scripts/q010-verify.ts` reports:
+   - City: keep calling the build step within a tick while a building was placed (base bot places at most one
+     building per 5-minute tick, so ordinary sessions under-build and hoard cash).
+   - Farm: sell before harvesting; build every affordable producer up to its limit; silos only after a storage
+     rejection; build the next farmhouse before silo/producers/zones; unlock zones only with a 3× cost cushion or when
+     a farmhouse has no site.
+   With these, all six scenarios track docs/16 §12.1 (`docs/reports/Q010-verify.json`). With the current base bot,
+   Farm ordinary is still +38/+34% at L8/L12 on contentVersion 2.
