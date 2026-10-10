@@ -116,3 +116,23 @@ Four stated transaction reversals pass finite real-sim checks; all adversarial r
 Both options follow docs/16 §11 after approval: edit model parameters → `node model.mjs --tables`
 → `node calibrate-xp.mjs city` / `farm` → `node model.mjs --sim` → update docs/16 and generated content,
 bump `contentVersion`, run real-sim six scenarios plus regression tests. Q010 remains open until that decision.
+
+### Additional reading of the same run (Claude, 2026-10-10; data only, nothing changed)
+
+From `G3-economy-current.json` daily rows and rejection counts:
+
+| Scenario | Level d59 | Cash d12 | Cash d59 | Buildings d59 | `STORAGE_FULL` rejections |
+|---|---|---:|---:|---:|---:|
+| City / thuong | 20 | $6.2 M | $251 M | 229 | 0 |
+| Farm / cham | 18 | $207 k | $3.1 M | 28 | 2 030 |
+| Farm / thuong | 15 | $69 k | $1.96 M | 25 | 1 255 |
+| Farm / nhan | 10 | $8.5 k | $298 k | 16 | 234 |
+
+- **Farm is throughput-bound, not cash-bound.** The ordinary Farm bot sits on unspent cash all game, yet
+  its fields lag docs/16 §12.3 (24 vs 48 on day 1, 96 vs 120 on day 7, 144 vs 192 on day 30) and 1 255 harvest/
+  collect commands bounce on full storage. Levels therefore come only from slow activity XP. This points at the bot's
+  storage/selling/producer policy (and the model's "sell instantly" simplification) more than at catalog numbers,
+  i.e. supports Option 1 before any XP retuning.
+- **City late pacing passes but money piles up.** City/thuong reaches 229 buildings on day 59 exactly as §12.2
+  predicts, but ends with $251 M unspent (income keeps flowing after building limits are reached). Not a pacing
+  failure, but a possible lack of late-game money sinks to review for P1 (docs/16 does not define a cash target).
