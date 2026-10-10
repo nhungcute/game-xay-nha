@@ -1,0 +1,86 @@
+{
+  "samples": 24487,
+  "totalMilliseconds": 40411.99400000003,
+  "topSelf": [
+    {
+      "functionName": "encodeUint8",
+      "milliseconds": 13312.790000000032
+    },
+    {
+      "functionName": "decodeUint8",
+      "milliseconds": 7141.325000000022
+    },
+    {
+      "functionName": "validateSnapshot",
+      "milliseconds": 4565.315999999985
+    },
+    {
+      "functionName": "decodeInt16",
+      "milliseconds": 4008.2249999999967
+    },
+    {
+      "functionName": "(anonymous)",
+      "milliseconds": 2737.780000000003
+    },
+    {
+      "functionName": "(garbage collector)",
+      "milliseconds": 2626.594
+    },
+    {
+      "functionName": "RegExp: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+      "milliseconds": 1700.4519999999998
+    },
+    {
+      "functionName": "inBounds",
+      "milliseconds": 538.301
+    },
+    {
+      "functionName": "cloneState",
+      "milliseconds": 390.309
+    },
+    {
+      "functionName": "zoneOf",
+      "milliseconds": 286.34299999999996
+    },
+    {
+      "functionName": "netWorth",
+      "milliseconds": 259.846
+    },
+    {
+      "functionName": "cellIndex",
+      "milliseconds": 259.254
+    },
+    {
+      "functionName": "_parse",
+      "milliseconds": 244.4279999999999
+    },
+    {
+      "functionName": "stateHash",
+      "milliseconds": 208.74499999999995
+    },
+    {
+      "functionName": "writeDeltas",
+      "milliseconds": 189.59099999999992
+    },
+    {
+      "functionName": "canonical",
+      "milliseconds": 169.69399999999993
+    },
+    {
+      "functionName": "createState",
+      "milliseconds": 163.83699999999996
+    },
+    {
+      "functionName": "isUnlocked",
+      "milliseconds": 131.32600000000002
+    },
+    {
+      "functionName": "affectedVertexCells",
+      "milliseconds": 117.166
+    },
+    {
+      "functionName": "restoreDeltas",
+      "milliseconds": 107.93799999999996
+    }
+  ]
+}

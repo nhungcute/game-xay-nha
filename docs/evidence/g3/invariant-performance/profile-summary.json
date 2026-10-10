@@ -1,0 +1,28 @@
+{
+  "node": "v24.19.0",
+  "sourceSha256": "edf0184d9812835e18966bb2fe2eb35d43a989977324f0d3c29fb5ce9a9791e7",
+  "elapsedMilliseconds": 40292.6698,
+  "timings": {
+    "stateHash": {
+      "calls": 1802,
+      "milliseconds": 527.0295999999389
+    },
+    "execute": {
+      "calls": 1019,
+      "milliseconds": 3490.846699999929
+    },
+    "cloneState": {
+      "calls": 1019,
+      "milliseconds": 193.00300000009884
+    },
+    "rebuildOccupancy": {
+      "calls": 1019,
+      "milliseconds": 24.449499999990167
+    },
+    "validateSnapshot": {
+      "calls": 1019,
+      "milliseconds": 35762.709600000024
+    }
+  },
+  "note": "Same seeded test source and assertions via node:assert; no Vitest scheduling. API timings include their nested calls."
+}

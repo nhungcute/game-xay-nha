@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "worldId": "audit-city",
+  "accountId": "audit",
+  "mapId": "city-test-01",
+  "mapKind": "city",
+  "seed": 20261009,
+  "generatorVersion": "veg-1.0.0",
+  "templateVersion": 1,
+  "contentVersion": 1,
+  "revision": 1,
+  "serverTime": 10000000000,
+  "character": {
+    "displayName": "Kiểm tra",
+    "tag": "0001",
+    "createdAt": 10000000000,
+    "netWorth": 1036000
+  },
+  "wallet": {
+    "cash": 1001000,
+    "wood": 1000,
+    "stone": 1000
+  },
+  "progress": {
+    "xp": 6100,
+    "level": 8,
+    "questIndex": 12,
+    "questProgress": {
+      "city-12": 1
+    },
+    "tutorialDone": true,
+    "repeat": {
+      "seq": 3,
+      "rerollAt": 0,
+      "active": [
+        {
+          "id": "r0",
+          "template": "build_type",
+          "subject": "house_town",
+          "target": 3,
+          "progress": 0,
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 20
+        },
+        {
+          "id": "r1",
+          "template": "embank_cells",
+          "target": 8,
+          "progress": 0,
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 20
+        },
+        {
+          "id": "r2",
+          "template": "population",
+          "target": 15,
+          "progress": 0,
+          "reward": {
+            "cash": 100,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 20
+        }
+      ]
+    }
+  },
+  "unlockedZones": [
+    27,
+    28,
+    35,
+    36
+  ],
+  "landValue": 0,
+  "delta": {
+    "zones": {},
+    "removedEnvIds": []
+  },
+  "buildings": [],
+  "bridges": [],
+  "crops": [],
+  "inventory": {}
+}

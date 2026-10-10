@@ -1,0 +1,3284 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "startedAt": "2026-10-09T23:27:35.832Z",
+  "browserVersion": "154.0.8037.98",
+  "mode": "Existing offline Vite. Only the farm-g1 template fetch is fulfilled with the actual G3 template bytes; fresh context per map. No API or DB writes.",
+  "maps": {
+    "city": {
+      "templatePath": "apps/web/public/worlds/city-coast-01/template.v2.json",
+      "templateSha256": "7544f569054e0a443725b98c47b4c944fb1621b18b694e68651f789cbeab52f6",
+      "defaultCamera": {
+        "distance": 160,
+        "yaw": 40,
+        "pitch": 55,
+        "target": [
+          128,
+          5,
+          132
+        ]
+      },
+      "actualWorld": {
+        "mapId": "city-coast-01",
+        "templateVersion": 2,
+        "generatorVersion": "veg-1.0.0",
+        "envCount": 2378,
+        "treeWaterFootprintCells": 0,
+        "envWaterFootprintCells": 0,
+        "naturalRoadCells": 49,
+        "pavedRoadCells": 0,
+        "embankedCells": 0,
+        "tilledCells": 0,
+        "roadWaterCells": 0,
+        "buildings": 0,
+        "bridges": 0,
+        "crops": 0
+      },
+      "audit": {
+        "objects": 899,
+        "meshes": 889,
+        "instanced": 814,
+        "sprites": 0,
+        "texturedPlanes": 0,
+        "largestPlaneM": 0,
+        "textures": 0
+      },
+      "colorEvidence": {
+        "method": "Median displayed-sRGB luminance of 3×3 pixel patches projected from natural-road cell centers and empty grass three cells away; shadows/perspective remain in the samples.",
+        "grassLum": 0.5577247058823529,
+        "roadLum": 0.3702298039215686,
+        "differencePct": 33.61782255354036,
+        "grassSamples": [
+          {
+            "world": [
+              7,
+              139
+            ],
+            "pixel": [
+              4,
+              158
+            ],
+            "luminance": 0.5700400000000001
+          },
+          {
+            "world": [
+              7,
+              127
+            ],
+            "pixel": [
+              104,
+              71
+            ],
+            "luminance": 0.5541789106753813
+          },
+          {
+            "world": [
+              9,
+              139
+            ],
+            "pixel": [
+              23,
+              165
+            ],
+            "luminance": 0.5749903267973855
+          },
+          {
+            "world": [
+              9,
+              127
+            ],
+            "pixel": [
+              123,
+              78
+            ],
+            "luminance": 0.5579117211328977
+          },
+          {
+            "world": [
+              11,
+              139
+            ],
+            "pixel": [
+              42,
+              172
+            ],
+            "luminance": 0.5698547276688455
+          },
+          {
+            "world": [
+              11,
+              127
+            ],
+            "pixel": [
+              141,
+              84
+            ],
+            "luminance": 0.5659383877995642
+          },
+          {
+            "world": [
+              13,
+              139
+            ],
+            "pixel": [
+              61,
+              179
+            ],
+            "luminance": 0.554364183006536
+          },
+          {
+            "world": [
+              13,
+              127
+            ],
+            "pixel": [
+              160,
+              90
+            ],
+            "luminance": 0.5607113725490196
+          },
+          {
+            "world": [
+              15,
+              139
+            ],
+            "pixel": [
+              81,
+              187
+            ],
+            "luminance": 0.5538975163398693
+          },
+          {
+            "world": [
+              15,
+              127
+            ],
+            "pixel": [
+              179,
+              97
+            ],
+            "luminance": 0.5548273638344227
+          },
+          {
+            "world": [
+              17,
+              139
+            ],
+            "pixel": [
+              100,
+              194
+            ],
+            "luminance": 0.5600881045751634
+          },
+          {
+            "world": [
+              17,
+              127
+            ],
+            "pixel": [
+              198,
+              104
+            ],
+            "luminance": 0.5617389106753812
+          },
+          {
+            "world": [
+              19,
+              139
+            ],
+            "pixel": [
+              120,
+              202
+            ],
+            "luminance": 0.4883756862745098
+          },
+          {
+            "world": [
+              19,
+              127
+            ],
+            "pixel": [
+              217,
+              110
+            ],
+            "luminance": 0.5550463616557735
+          },
+          {
+            "world": [
+              21,
+              139
+            ],
+            "pixel": [
+              141,
+              209
+            ],
+            "luminance": 0.24469254901960782
+          },
+          {
+            "world": [
+              21,
+              127
+            ],
+            "pixel": [
+              236,
+              117
+            ],
+            "luminance": 0.507671633986928
+          },
+          {
+            "world": [
+              23,
+              139
+            ],
+            "pixel": [
+              161,
+              217
+            ],
+            "luminance": 0.5655678431372548
+          },
+          {
+            "world": [
+              23,
+              127
+            ],
+            "pixel": [
+              256,
+              124
+            ],
+            "luminance": 0.35250352941176466
+          },
+          {
+            "world": [
+              25,
+              139
+            ],
+            "pixel": [
+              181,
+              225
+            ],
+            "luminance": 0.30714823529411767
+          },
+          {
+            "world": [
+              25,
+              127
+            ],
+            "pixel": [
+              276,
+              131
+            ],
+            "luminance": 0.5616462745098039
+          },
+          {
+            "world": [
+              27,
+              139
+            ],
+            "pixel": [
+              202,
+              232
+            ],
+            "luminance": 0.5577247058823529
+          },
+          {
+            "world": [
+              27,
+              127
+            ],
+            "pixel": [
+              296,
+              137
+            ],
+            "luminance": 0.30596165577342044
+          },
+          {
+            "world": [
+              29,
+              139
+            ],
+            "pixel": [
+              223,
+              240
+            ],
+            "luminance": 0.5613346405228757
+          },
+          {
+            "world": [
+              29,
+              127
+            ],
+            "pixel": [
+              316,
+              144
+            ],
+            "luminance": 0.5498956862745098
+          },
+          {
+            "world": [
+              31,
+              139
+            ],
+            "pixel": [
+              244,
+              248
+            ],
+            "luminance": 0.25294623093681917
+          },
+          {
+            "world": [
+              33,
+              139
+            ],
+            "pixel": [
+              266,
+              256
+            ],
+            "luminance": 0.5577247058823529
+          },
+          {
+            "world": [
+              33,
+              127
+            ],
+            "pixel": [
+              357,
+              159
+            ],
+            "luminance": 0.3114036601307189
+          },
+          {
+            "world": [
+              35,
+              139
+            ],
+            "pixel": [
+              287,
+              265
+            ],
+            "luminance": 0.5500703267973858
+          },
+          {
+            "world": [
+              35,
+              127
+            ],
+            "pixel": [
+              377,
+              166
+            ],
+            "luminance": 0.5688603921568627
+          },
+          {
+            "world": [
+              37,
+              139
+            ],
+            "pixel": [
+              309,
+              273
+            ],
+            "luminance": 0.5602441830065359
+          },
+          {
+            "world": [
+              37,
+              127
+            ],
+            "pixel": [
+              397,
+              168
+            ],
+            "luminance": 0.5745231372549019
+          },
+          {
+            "world": [
+              39,
+              139
+            ],
+            "pixel": [
+              331,
+              281
+            ],
+            "luminance": 0.5701343790849673
+          },
+          {
+            "world": [
+              39,
+              127
+            ],
+            "pixel": [
+              418,
+              176
+            ],
+            "luminance": 0.5655678431372548
+          },
+          {
+            "world": [
+              41,
+              139
+            ],
+            "pixel": [
+              353,
+              287
+            ],
+            "luminance": 0.5738689324618735
+          },
+          {
+            "world": [
+              41,
+              127
+            ],
+            "pixel": [
+              440,
+              183
+            ],
+            "luminance": 0.5616462745098039
+          },
+          {
+            "world": [
+              43,
+              139
+            ],
+            "pixel": [
+              375,
+              296
+            ],
+            "luminance": 0.566401568627451
+          },
+          {
+            "world": [
+              43,
+              127
+            ],
+            "pixel": [
+              461,
+              190
+            ],
+            "luminance": 0.5538031372549019
+          },
+          {
+            "world": [
+              45,
+              139
+            ],
+            "pixel": [
+              398,
+              304
+            ],
+            "luminance": 0.5670248366013071
+          },
+          {
+            "world": [
+              45,
+              127
+            ],
+            "pixel": [
+              483,
+              198
+            ],
+            "luminance": 0.5655678431372548
+          },
+          {
+            "world": [
+              47,
+              139
+            ],
+            "pixel": [
+              421,
+              313
+            ],
+            "luminance": 0.5646614379084967
+          },
+          {
+            "world": [
+              47,
+              127
+            ],
+            "pixel": [
+              505,
+              206
+            ],
+            "luminance": 0.5616462745098039
+          },
+          {
+            "world": [
+              49,
+              139
+            ],
+            "pixel": [
+              445,
+              322
+            ],
+            "luminance": 0.5568493246187364
+          },
+          {
+            "world": [
+              49,
+              127
+            ],
+            "pixel": [
+              527,
+              213
+            ],
+            "luminance": 0.550164705882353
+          },
+          {
+            "world": [
+              51,
+              139
+            ],
+            "pixel": [
+              468,
+              329
+            ],
+            "luminance": 0.3186108061002178
+          },
+          {
+            "world": [
+              51,
+              127
+            ],
+            "pixel": [
+              550,
+              221
+            ],
+            "luminance": 0.5567898039215686
+          },
+          {
+            "world": [
+              53,
+              139
+            ],
+            "pixel": [
+              492,
+              338
+            ],
+            "luminance": 0.31753812636165585
+          },
+          {
+            "world": [
+              53,
+              127
+            ],
+            "pixel": [
+              573,
+              229
+            ],
+            "luminance": 0.5574130718954248
+          },
+          {
+            "world": [
+              55,
+              139
+            ],
+            "pixel": [
+              516,
+              347
+            ],
+            "luminance": 0.5577247058823529
+          },
+          {
+            "world": [
+              55,
+              127
+            ],
+            "pixel": [
+              596,
+              237
+            ],
+            "luminance": 0.567555468409586
+          },
+          {
+            "world": [
+              57,
+              139
+            ],
+            "pixel": [
+              540,
+              356
+            ],
+            "luminance": 0.5616462745098039
+          },
+          {
+            "world": [
+              57,
+              127
+            ],
+            "pixel": [
+              619,
+              245
+            ],
+            "luminance": 0.5519670588235295
+          },
+          {
+            "world": [
+              59,
+              139
+            ],
+            "pixel": [
+              565,
+              365
+            ],
+            "luminance": 0.5573204357298475
+          },
+          {
+            "world": [
+              59,
+              127
+            ],
+            "pixel": [
+              642,
+              253
+            ],
+            "luminance": 0.5578173420479302
+          },
+          {
+            "world": [
+              61,
+              139
+            ],
+            "pixel": [
+              590,
+              375
+            ],
+            "luminance": 0.5577247058823529
+          },
+          {
+            "world": [
+              61,
+              127
+            ],
+            "pixel": [
+              666,
+              261
+            ],
+            "luminance": 0.5639769934640522
+          },
+          {
+            "world": [
+              63,
+              139
+            ],
+            "pixel": [
+              615,
+              384
+            ],
+            "luminance": 0.5616462745098039
+          },
+          {
+            "world": [
+              63,
+              127
+            ],
+            "pixel": [
+              690,
+              269
+            ],
+            "luminance": 0.5538031372549019
+          },
+          {
+            "world": [
+              65,
+              139
+            ],
+            "pixel": [
+              641,
+              394
+            ],
+            "luminance": 0.5577247058823529
+          },
+          {
+            "world": [
+              65,
+              127
+            ],
+            "pixel": [
+              714,
+              278
+            ],
+            "luminance": 0.5613346405228757
+          },
+          {
+            "world": [
+              67,
+              139
+            ],
+            "pixel": [
+              667,
+              403
+            ],
+            "luminance": 0.5649730718954247
+          },
+          {
+            "world": [
+              69,
+              139
+            ],
+            "pixel": [
+              693,
+              413
+            ],
+            "luminance": 0.5655678431372548
+          },
+          {
+            "world": [
+              69,
+              127
+            ],
+            "pixel": [
+              763,
+              295
+            ],
+            "luminance": 0.5549559912854031
+          },
+          {
+            "world": [
+              71,
+              139
+            ],
+            "pixel": [
+              719,
+              423
+            ],
+            "luminance": 0.5573541612200436
+          },
+          {
+            "world": [
+              71,
+              127
+            ],
+            "pixel": [
+              788,
+              303
+            ],
+            "luminance": 0.5586236165577341
+          },
+          {
+            "world": [
+              73,
+              139
+            ],
+            "pixel": [
+              746,
+              433
+            ],
+            "luminance": 0.5490478431372549
+          },
+          {
+            "world": [
+              73,
+              127
+            ],
+            "pixel": [
+              814,
+              312
+            ],
+            "luminance": 0.5561413507625272
+          },
+          {
+            "world": [
+              75,
+              139
+            ],
+            "pixel": [
+              773,
+              448
+            ],
+            "luminance": 0.5535252287581699
+          },
+          {
+            "world": [
+              77,
+              139
+            ],
+            "pixel": [
+              800,
+              458
+            ],
+            "luminance": 0.5499462309368193
+          },
+          {
+            "world": [
+              77,
+              127
+            ],
+            "pixel": [
+              864,
+              334
+            ],
+            "luminance": 0.5538031372549019
+          },
+          {
+            "world": [
+              79,
+              139
+            ],
+            "pixel": [
+              827,
+              468
+            ],
+            "luminance": 0.5654420043572983
+          },
+          {
+            "world": [
+              79,
+              127
+            ],
+            "pixel": [
+              890,
+              343
+            ],
+            "luminance": 0.5538031372549019
+          },
+          {
+            "world": [
+              81,
+              139
+            ],
+            "pixel": [
+              855,
+              479
+            ],
+            "luminance": 0.5496125490196078
+          },
+          {
+            "world": [
+              81,
+              127
+            ],
+            "pixel": [
+              917,
+              352
+            ],
+            "luminance": 0.5630106318082788
+          },
+          {
+            "world": [
+              83,
+              139
+            ],
+            "pixel": [
+              883,
+              489
+            ],
+            "luminance": 0.28735128540305005
+          },
+          {
+            "world": [
+              83,
+              127
+            ],
+            "pixel": [
+              943,
+              362
+            ],
+            "luminance": 0.4093450980392156
+          },
+          {
+            "world": [
+              85,
+              139
+            ],
+            "pixel": [
+              912,
+              500
+            ],
+            "luminance": 0.3004219607843137
+          },
+          {
+            "world": [
+              87,
+              139
+            ],
+            "pixel": [
+              941,
+              511
+            ],
+            "luminance": 0.5616462745098039
+          },
+          {
+            "world": [
+              87,
+              127
+            ],
+            "pixel": [
+              997,
+              380
+            ],
+            "luminance": 0.31362283224400866
+          },
+          {
+            "world": [
+              89,
+              139
+            ],
+            "pixel": [
+              970,
+              522
+            ],
+            "luminance": 0.5595247930283224
+          },
+          {
+            "world": [
+              89,
+              127
+            ],
+            "pixel": [
+              1025,
+              390
+            ],
+            "luminance": 0.5657531154684095
+          },
+          {
+            "world": [
+              91,
+              139
+            ],
+            "pixel": [
+              1001,
+              529
+            ],
+            "luminance": 0.5654734640522875
+          },
+          {
+            "world": [
+              91,
+              127
+            ],
+            "pixel": [
+              1052,
+              399
+            ],
+            "luminance": 0.5577247058823529
+          },
+          {
+            "world": [
+              93,
+              139
+            ],
+            "pixel": [
+              1031,
+              541
+            ],
+            "luminance": 0.567555468409586
+          },
+          {
+            "world": [
+              93,
+              127
+            ],
+            "pixel": [
+              1080,
+              409
+            ],
+            "luminance": 0.5577247058823529
+          },
+          {
+            "world": [
+              101,
+              133
+            ],
+            "pixel": [
+              1178,
+              513
+            ],
+            "luminance": 0.5688946405228759
+          },
+          {
+            "world": [
+              95,
+              139
+            ],
+            "pixel": [
+              1062,
+              552
+            ],
+            "luminance": 0.5538031372549019
+          },
+          {
+            "world": [
+              95,
+              127
+            ],
+            "pixel": [
+              1109,
+              419
+            ],
+            "luminance": 0.40095137254901964
+          },
+          {
+            "world": [
+              103,
+              133
+            ],
+            "pixel": [
+              1209,
+              524
+            ],
+            "luminance": 0.5616462745098039
+          },
+          {
+            "world": [
+              97,
+              139
+            ],
+            "pixel": [
+              1093,
+              564
+            ],
+            "luminance": 0.5621094553376905
+          },
+          {
+            "world": [
+              97,
+              127
+            ],
+            "pixel": [
+              1137,
+              429
+            ],
+            "luminance": 0.3071167755991286
+          }
+        ],
+        "roadSamples": [
+          {
+            "world": [
+              7,
+              133
+            ],
+            "pixel": [
+              58,
+              118
+            ],
+            "luminance": 0.37303450980392144
+          },
+          {
+            "world": [
+              9,
+              133
+            ],
+            "pixel": [
+              77,
+              125
+            ],
+            "luminance": 0.37303450980392144
+          },
+          {
+            "world": [
+              11,
+              133
+            ],
+            "pixel": [
+              96,
+              131
+            ],
+            "luminance": 0.37303450980392144
+          },
+          {
+            "world": [
+              13,
+              133
+            ],
+            "pixel": [
+              114,
+              138
+            ],
+            "luminance": 0.37303450980392144
+          },
+          {
+            "world": [
+              15,
+              133
+            ],
+            "pixel": [
+              134,
+              145
+            ],
+            "luminance": 0.2601676688453159
+          },
+          {
+            "world": [
+              17,
+              133
+            ],
+            "pixel": [
+              153,
+              152
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              19,
+              133
+            ],
+            "pixel": [
+              172,
+              159
+            ],
+            "luminance": 0.1987343790849673
+          },
+          {
+            "world": [
+              21,
+              133
+            ],
+            "pixel": [
+              192,
+              166
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              23,
+              133
+            ],
+            "pixel": [
+              212,
+              174
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              25,
+              133
+            ],
+            "pixel": [
+              232,
+              181
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              27,
+              133
+            ],
+            "pixel": [
+              252,
+              188
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              29,
+              133
+            ],
+            "pixel": [
+              273,
+              196
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              31,
+              133
+            ],
+            "pixel": [
+              293,
+              203
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              33,
+              133
+            ],
+            "pixel": [
+              314,
+              211
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              35,
+              133
+            ],
+            "pixel": [
+              335,
+              218
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              37,
+              133
+            ],
+            "pixel": [
+              357,
+              226
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              39,
+              133
+            ],
+            "pixel": [
+              378,
+              234
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              41,
+              133
+            ],
+            "pixel": [
+              400,
+              242
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              43,
+              133
+            ],
+            "pixel": [
+              422,
+              250
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              45,
+              133
+            ],
+            "pixel": [
+              444,
+              258
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              47,
+              133
+            ],
+            "pixel": [
+              467,
+              266
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              49,
+              133
+            ],
+            "pixel": [
+              489,
+              274
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              51,
+              133
+            ],
+            "pixel": [
+              512,
+              282
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              53,
+              133
+            ],
+            "pixel": [
+              535,
+              291
+            ],
+            "luminance": 0.3702298039215686
+          },
+          {
+            "world": [
+              55,
+              133
+            ],
+            "pixel": [
+              559,
+              299
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              57,
+              133
+            ],
+            "pixel": [
+              582,
+              308
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              59,
+              133
+            ],
+            "pixel": [
+              606,
+              316
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              61,
+              133
+            ],
+            "pixel": [
+              630,
+              325
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              63,
+              133
+            ],
+            "pixel": [
+              655,
+              334
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              65,
+              133
+            ],
+            "pixel": [
+              679,
+              343
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              67,
+              133
+            ],
+            "pixel": [
+              704,
+              352
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              69,
+              133
+            ],
+            "pixel": [
+              729,
+              361
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              71,
+              133
+            ],
+            "pixel": [
+              755,
+              370
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              73,
+              133
+            ],
+            "pixel": [
+              780,
+              379
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              75,
+              133
+            ],
+            "pixel": [
+              806,
+              389
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              77,
+              133
+            ],
+            "pixel": [
+              833,
+              398
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              79,
+              133
+            ],
+            "pixel": [
+              859,
+              408
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              81,
+              133
+            ],
+            "pixel": [
+              886,
+              418
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              83,
+              133
+            ],
+            "pixel": [
+              913,
+              427
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              85,
+              133
+            ],
+            "pixel": [
+              941,
+              437
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              87,
+              133
+            ],
+            "pixel": [
+              969,
+              447
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              89,
+              133
+            ],
+            "pixel": [
+              997,
+              458
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              91,
+              133
+            ],
+            "pixel": [
+              1025,
+              468
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              93,
+              133
+            ],
+            "pixel": [
+              1054,
+              478
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              95,
+              133
+            ],
+            "pixel": [
+              1083,
+              489
+            ],
+            "luminance": 0.468278431372549
+          },
+          {
+            "world": [
+              97,
+              133
+            ],
+            "pixel": [
+              1113,
+              500
+            ],
+            "luminance": 0.1794291938997821
+          }
+        ]
+      },
+      "samples": [
+        {
+          "fps": 33.94907638542187,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 51.777357363337664,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 51.777357363337664,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 51.777357363337664,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 51.777357363337664,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 48.79020213083739,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 48.79020213083739,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 48.79020213083739,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 48.79020213083739,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 48.79020213083739,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 49.94007191370356,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 49.94007191370356,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 49.94007191370356,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 49.94007191370356,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 49.94007191370356,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 46.85942173479561,
+          "drawCalls": 522,
+          "triangles": 106788,
+          "geometries": 82,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.20000004768371582,
+            "maxRebuildMs": 5.5,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        }
+      ],
+      "shots": [
+        {
+          "label": "default",
+          "intent": "Template camera, untouched world",
+          "camera": {
+            "distance": 160,
+            "yaw": 40,
+            "pitch": 55,
+            "target": [
+              128,
+              5,
+              132
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/city-default.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/city-default-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 42.87566058430553,
+            "drawCalls": 522,
+            "triangles": 106788,
+            "geometries": 82,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.20000004768371582,
+              "maxRebuildMs": 5.5,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        },
+        {
+          "label": "topdown",
+          "intent": "Requested pitch 90°, actual clamped 75° perspective; true orthographic top-down is unavailable in the debug API",
+          "camera": {
+            "distance": 220,
+            "yaw": 0,
+            "pitch": 75,
+            "target": [
+              128,
+              5,
+              128
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/city-topdown.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/city-topdown-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 34.891835310537324,
+            "drawCalls": 667,
+            "triangles": 124746,
+            "geometries": 98,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.20000004768371582,
+              "maxRebuildMs": 5.5,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        },
+        {
+          "label": "rotate180",
+          "intent": "Opposite angle from the default template camera",
+          "camera": {
+            "distance": 160,
+            "yaw": 220,
+            "pitch": 55,
+            "target": [
+              128,
+              5,
+              132
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/city-rotate180.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/city-rotate180-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 41.8827283605903,
+            "drawCalls": 515,
+            "triangles": 99476,
+            "geometries": 103,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.20000004768371582,
+              "maxRebuildMs": 5.5,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        },
+        {
+          "label": "shore",
+          "intent": "Natural river/stream shore close-up, before player construction",
+          "camera": {
+            "distance": 83,
+            "yaw": 30,
+            "pitch": 50,
+            "target": [
+              127,
+              4.5,
+              64
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/city-shore.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/city-shore-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 37.85237573463494,
+            "drawCalls": 208,
+            "triangles": 51680,
+            "geometries": 103,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.20000004768371582,
+              "maxRebuildMs": 5.5,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        },
+        {
+          "label": "road-trees",
+          "intent": "Natural road and adjacent vegetation, untouched template",
+          "camera": {
+            "distance": 83,
+            "yaw": 25,
+            "pitch": 55,
+            "target": [
+              72,
+              5,
+              141
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/city-road-trees.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/city-road-trees-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 46.88279301745636,
+            "drawCalls": 194,
+            "triangles": 47504,
+            "geometries": 103,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.20000004768371582,
+              "maxRebuildMs": 5.5,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        }
+      ],
+      "errors": [],
+      "requests": [],
+      "webgl": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 750 (0x00004C8A) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (Intel)"
+      }
+    },
+    "farm": {
+      "templatePath": "apps/web/public/worlds/farm-valley-01/template.v2.json",
+      "templateSha256": "5cd00d31ef6408ab84df2480ee87fcfd9e399a301d1afbd179baca6b0b1e4768",
+      "defaultCamera": {
+        "distance": 160,
+        "yaw": 10,
+        "pitch": 55,
+        "target": [
+          130,
+          4.5,
+          136
+        ]
+      },
+      "actualWorld": {
+        "mapId": "farm-valley-01",
+        "templateVersion": 2,
+        "generatorVersion": "veg-1.0.0",
+        "envCount": 2561,
+        "treeWaterFootprintCells": 0,
+        "envWaterFootprintCells": 0,
+        "naturalRoadCells": 49,
+        "pavedRoadCells": 0,
+        "embankedCells": 0,
+        "tilledCells": 0,
+        "roadWaterCells": 0,
+        "buildings": 0,
+        "bridges": 0,
+        "crops": 0
+      },
+      "audit": {
+        "objects": 951,
+        "meshes": 941,
+        "instanced": 864,
+        "sprites": 0,
+        "texturedPlanes": 0,
+        "largestPlaneM": 0,
+        "textures": 0
+      },
+      "colorEvidence": {
+        "method": "Median displayed-sRGB luminance of 3×3 pixel patches projected from natural-road cell centers and empty grass three cells away; shadows/perspective remain in the samples.",
+        "grassLum": 0.5475833551198258,
+        "roadLum": 0.36911294117647053,
+        "differencePct": 32.592373795639055,
+        "grassSamples": [
+          {
+            "world": [
+              151,
+              159
+            ],
+            "pixel": [
+              888,
+              313
+            ],
+            "luminance": 0.5453756862745098
+          },
+          {
+            "world": [
+              139,
+              159
+            ],
+            "pixel": [
+              738,
+              259
+            ],
+            "luminance": 0.5500388671023966
+          },
+          {
+            "world": [
+              145,
+              153
+            ],
+            "pixel": [
+              842,
+              236
+            ],
+            "luminance": 0.5655363834422658
+          },
+          {
+            "world": [
+              151,
+              161
+            ],
+            "pixel": [
+              879,
+              330
+            ],
+            "luminance": 0.560837734204793
+          },
+          {
+            "world": [
+              139,
+              161
+            ],
+            "pixel": [
+              726,
+              277
+            ],
+            "luminance": 0.5547369934640523
+          },
+          {
+            "world": [
+              145,
+              155
+            ],
+            "pixel": [
+              832,
+              253
+            ],
+            "luminance": 0.5655678431372548
+          },
+          {
+            "world": [
+              151,
+              163
+            ],
+            "pixel": [
+              869,
+              349
+            ],
+            "luminance": 0.5652847058823528
+          },
+          {
+            "world": [
+              139,
+              163
+            ],
+            "pixel": [
+              715,
+              296
+            ],
+            "luminance": 0.5574130718954248
+          },
+          {
+            "world": [
+              145,
+              157
+            ],
+            "pixel": [
+              822,
+              271
+            ],
+            "luminance": 0.5475833551198258
+          },
+          {
+            "world": [
+              151,
+              165
+            ],
+            "pixel": [
+              858,
+              369
+            ],
+            "luminance": 0.5643498039215685
+          },
+          {
+            "world": [
+              139,
+              165
+            ],
+            "pixel": [
+              703,
+              314
+            ],
+            "luminance": 0.5650062745098039
+          },
+          {
+            "world": [
+              151,
+              167
+            ],
+            "pixel": [
+              848,
+              390
+            ],
+            "luminance": 0.5538031372549019
+          },
+          {
+            "world": [
+              139,
+              167
+            ],
+            "pixel": [
+              691,
+              334
+            ],
+            "luminance": 0.30372357298474945
+          },
+          {
+            "world": [
+              151,
+              169
+            ],
+            "pixel": [
+              837,
+              411
+            ],
+            "luminance": 0.3107866666666666
+          },
+          {
+            "world": [
+              139,
+              169
+            ],
+            "pixel": [
+              679,
+              349
+            ],
+            "luminance": 0.5386242265795206
+          },
+          {
+            "world": [
+              151,
+              171
+            ],
+            "pixel": [
+              826,
+              432
+            ],
+            "luminance": 0.5548930718954249
+          },
+          {
+            "world": [
+              139,
+              171
+            ],
+            "pixel": [
+              666,
+              369
+            ],
+            "luminance": 0.5416731154684097
+          },
+          {
+            "world": [
+              151,
+              173
+            ],
+            "pixel": [
+              815,
+              455
+            ],
+            "luminance": 0.30499529411764703
+          },
+          {
+            "world": [
+              139,
+              173
+            ],
+            "pixel": [
+              653,
+              390
+            ],
+            "luminance": 0.38649751633986923
+          },
+          {
+            "world": [
+              151,
+              175
+            ],
+            "pixel": [
+              803,
+              477
+            ],
+            "luminance": 0.5577247058823529
+          },
+          {
+            "world": [
+              151,
+              177
+            ],
+            "pixel": [
+              791,
+              501
+            ],
+            "luminance": 0.5662162962962962
+          },
+          {
+            "world": [
+              139,
+              177
+            ],
+            "pixel": [
+              626,
+              433
+            ],
+            "luminance": 0.5655678431372548
+          },
+          {
+            "world": [
+              151,
+              179
+            ],
+            "pixel": [
+              779,
+              524
+            ],
+            "luminance": 0.560305882352941
+          },
+          {
+            "world": [
+              139,
+              179
+            ],
+            "pixel": [
+              612,
+              455
+            ],
+            "luminance": 0.5600611764705882
+          },
+          {
+            "world": [
+              151,
+              181
+            ],
+            "pixel": [
+              766,
+              549
+            ],
+            "luminance": 0.5505397821350762
+          },
+          {
+            "world": [
+              139,
+              181
+            ],
+            "pixel": [
+              598,
+              478
+            ],
+            "luminance": 0.5385618300653595
+          },
+          {
+            "world": [
+              151,
+              183
+            ],
+            "pixel": [
+              753,
+              574
+            ],
+            "luminance": 0.3032266666666667
+          },
+          {
+            "world": [
+              139,
+              183
+            ],
+            "pixel": [
+              582,
+              499
+            ],
+            "luminance": 0.5414878431372548
+          },
+          {
+            "world": [
+              151,
+              185
+            ],
+            "pixel": [
+              740,
+              600
+            ],
+            "luminance": 0.541235642701525
+          },
+          {
+            "world": [
+              139,
+              185
+            ],
+            "pixel": [
+              567,
+              521
+            ],
+            "luminance": 0.538157037037037
+          },
+          {
+            "world": [
+              151,
+              187
+            ],
+            "pixel": [
+              726,
+              627
+            ],
+            "luminance": 0.5109692374727669
+          },
+          {
+            "world": [
+              139,
+              187
+            ],
+            "pixel": [
+              551,
+              546
+            ],
+            "luminance": 0.5553939869281046
+          },
+          {
+            "world": [
+              151,
+              189
+            ],
+            "pixel": [
+              712,
+              652
+            ],
+            "luminance": 0.5339278431372549
+          },
+          {
+            "world": [
+              139,
+              189
+            ],
+            "pixel": [
+              535,
+              571
+            ],
+            "luminance": 0.5574264923747276
+          },
+          {
+            "world": [
+              151,
+              191
+            ],
+            "pixel": [
+              697,
+              680
+            ],
+            "luminance": 0.5441913725490196
+          },
+          {
+            "world": [
+              139,
+              191
+            ],
+            "pixel": [
+              519,
+              598
+            ],
+            "luminance": 0.5364760784313726
+          },
+          {
+            "world": [
+              151,
+              193
+            ],
+            "pixel": [
+              683,
+              709
+            ],
+            "luminance": 0.5526577777777778
+          },
+          {
+            "world": [
+              139,
+              193
+            ],
+            "pixel": [
+              502,
+              624
+            ],
+            "luminance": 0.5616462745098039
+          },
+          {
+            "world": [
+              151,
+              195
+            ],
+            "pixel": [
+              667,
+              739
+            ],
+            "luminance": 0.5384314596949893
+          },
+          {
+            "world": [
+              139,
+              195
+            ],
+            "pixel": [
+              484,
+              652
+            ],
+            "luminance": 0.5538031372549019
+          },
+          {
+            "world": [
+              151,
+              197
+            ],
+            "pixel": [
+              651,
+              770
+            ],
+            "luminance": 0.5454094117647058
+          },
+          {
+            "world": [
+              139,
+              197
+            ],
+            "pixel": [
+              466,
+              681
+            ],
+            "luminance": 0.5577247058823529
+          },
+          {
+            "world": [
+              151,
+              199
+            ],
+            "pixel": [
+              635,
+              802
+            ],
+            "luminance": 0.3043720261437908
+          },
+          {
+            "world": [
+              139,
+              199
+            ],
+            "pixel": [
+              448,
+              710
+            ],
+            "luminance": 0.546243137254902
+          },
+          {
+            "world": [
+              151,
+              201
+            ],
+            "pixel": [
+              618,
+              834
+            ],
+            "luminance": 0.5346100217864924
+          },
+          {
+            "world": [
+              139,
+              201
+            ],
+            "pixel": [
+              430,
+              742
+            ],
+            "luminance": 0.5391176470588235
+          },
+          {
+            "world": [
+              151,
+              203
+            ],
+            "pixel": [
+              601,
+              866
+            ],
+            "luminance": 0.5375662745098039
+          },
+          {
+            "world": [
+              139,
+              203
+            ],
+            "pixel": [
+              410,
+              773
+            ],
+            "luminance": 0.5336447058823529
+          },
+          {
+            "world": [
+              139,
+              205
+            ],
+            "pixel": [
+              391,
+              807
+            ],
+            "luminance": 0.5422289324618738
+          },
+          {
+            "world": [
+              139,
+              207
+            ],
+            "pixel": [
+              370,
+              839
+            ],
+            "luminance": 0.549881568627451
+          },
+          {
+            "world": [
+              139,
+              209
+            ],
+            "pixel": [
+              349,
+              873
+            ],
+            "luminance": 0.5490478431372549
+          }
+        ],
+        "roadSamples": [
+          {
+            "world": [
+              145,
+              159
+            ],
+            "pixel": [
+              812,
+              289
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              145,
+              161
+            ],
+            "pixel": [
+              801,
+              308
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              145,
+              163
+            ],
+            "pixel": [
+              790,
+              327
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              145,
+              165
+            ],
+            "pixel": [
+              779,
+              346
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              145,
+              167
+            ],
+            "pixel": [
+              768,
+              366
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              145,
+              169
+            ],
+            "pixel": [
+              756,
+              386
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              145,
+              171
+            ],
+            "pixel": [
+              745,
+              407
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              145,
+              173
+            ],
+            "pixel": [
+              732,
+              428
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              145,
+              175
+            ],
+            "pixel": [
+              720,
+              450
+            ],
+            "luminance": 0.36994666666666665
+          },
+          {
+            "world": [
+              145,
+              177
+            ],
+            "pixel": [
+              707,
+              472
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              179
+            ],
+            "pixel": [
+              694,
+              495
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              181
+            ],
+            "pixel": [
+              681,
+              519
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              183
+            ],
+            "pixel": [
+              667,
+              543
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              185
+            ],
+            "pixel": [
+              653,
+              568
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              187
+            ],
+            "pixel": [
+              638,
+              593
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              189
+            ],
+            "pixel": [
+              623,
+              620
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              191
+            ],
+            "pixel": [
+              608,
+              647
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              193
+            ],
+            "pixel": [
+              592,
+              674
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              195
+            ],
+            "pixel": [
+              576,
+              703
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              197
+            ],
+            "pixel": [
+              559,
+              732
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              199
+            ],
+            "pixel": [
+              542,
+              762
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              201
+            ],
+            "pixel": [
+              524,
+              793
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              203
+            ],
+            "pixel": [
+              506,
+              825
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              205
+            ],
+            "pixel": [
+              487,
+              859
+            ],
+            "luminance": 0.36911294117647053
+          },
+          {
+            "world": [
+              145,
+              207
+            ],
+            "pixel": [
+              468,
+              893
+            ],
+            "luminance": 0.36911294117647053
+          }
+        ]
+      },
+      "samples": [
+        {
+          "fps": 53.81165919282511,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 53.81165919282511,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 53.81165919282511,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 53.81165919282511,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 55.909759686120644,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 55.909759686120644,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 55.909759686120644,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 55.909759686120644,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 55.909759686120644,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 52.857285329610036,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 52.857285329610036,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 52.857285329610036,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 52.857285329610036,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 53.88683764095403,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 53.88683764095403,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        },
+        {
+          "fps": 53.88683764095403,
+          "drawCalls": 638,
+          "triangles": 130642,
+          "geometries": 93,
+          "textures": 1,
+          "programs": 14,
+          "terrain": {
+            "lastRebuildMs": 0.2999999523162842,
+            "maxRebuildMs": 1.8000000715255737,
+            "zonesRebuilt": 128
+          },
+          "revision": 0
+        }
+      ],
+      "shots": [
+        {
+          "label": "default",
+          "intent": "Template camera, untouched world",
+          "camera": {
+            "distance": 160,
+            "yaw": 10,
+            "pitch": 55,
+            "target": [
+              130,
+              4.5,
+              136
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/farm-default.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/farm-default-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 55.826936496859716,
+            "drawCalls": 638,
+            "triangles": 130642,
+            "geometries": 93,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.2999999523162842,
+              "maxRebuildMs": 1.8000000715255737,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        },
+        {
+          "label": "topdown",
+          "intent": "Requested pitch 90°, actual clamped 75° perspective; true orthographic top-down is unavailable in the debug API",
+          "camera": {
+            "distance": 220,
+            "yaw": 0,
+            "pitch": 75,
+            "target": [
+              128,
+              4.5,
+              128
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/farm-topdown.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/farm-topdown-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 49.925112331502746,
+            "drawCalls": 729,
+            "triangles": 152656,
+            "geometries": 101,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.2999999523162842,
+              "maxRebuildMs": 1.8000000715255737,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        },
+        {
+          "label": "rotate180",
+          "intent": "Opposite angle from the default template camera",
+          "camera": {
+            "distance": 160,
+            "yaw": 190,
+            "pitch": 55,
+            "target": [
+              130,
+              4.5,
+              136
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/farm-rotate180.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/farm-rotate180-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 50.85252766975768,
+            "drawCalls": 539,
+            "triangles": 110058,
+            "geometries": 109,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.2999999523162842,
+              "maxRebuildMs": 1.8000000715255737,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        },
+        {
+          "label": "shore",
+          "intent": "Natural river/stream shore close-up, before player construction",
+          "camera": {
+            "distance": 83,
+            "yaw": 35,
+            "pitch": 50,
+            "target": [
+              112,
+              5,
+              112
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/farm-shore.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/farm-shore-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 53.87608500448971,
+            "drawCalls": 260,
+            "triangles": 60478,
+            "geometries": 109,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.2999999523162842,
+              "maxRebuildMs": 1.8000000715255737,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        },
+        {
+          "label": "road-trees",
+          "intent": "Natural road and adjacent vegetation, untouched template",
+          "camera": {
+            "distance": 83,
+            "yaw": 25,
+            "pitch": 55,
+            "target": [
+              145,
+              5,
+              175
+            ]
+          },
+          "image": "docs/evidence/g3/parallel-visual/farm-road-trees.jpg",
+          "canvas": "docs/evidence/g3/parallel-visual/farm-road-trees-canvas.png",
+          "histogram": {
+            "width": 1440,
+            "height": 900,
+            "blownPct": 0,
+            "threshold": "all RGB channels ≥250"
+          },
+          "metrics": {
+            "fps": 54.87379028235063,
+            "drawCalls": 229,
+            "triangles": 52672,
+            "geometries": 109,
+            "textures": 1,
+            "programs": 14,
+            "terrain": {
+              "lastRebuildMs": 0.2999999523162842,
+              "maxRebuildMs": 1.8000000715255737,
+              "zonesRebuilt": 128
+            },
+            "revision": 0
+          }
+        }
+      ],
+      "errors": [],
+      "requests": [],
+      "webgl": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 750 (0x00004C8A) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (Intel)"
+      }
+    }
+  },
+  "sourceHashesBefore": {
+    "apps/web/src/Game.tsx": "be5e8c18f9433c029a3d8c381cc5c8e41cdb3ff3df1dd5effb40351016cb9442",
+    "apps/web/src/Root.tsx": "8caf5d74d6152caf721b07e4afc1f3465937f91b8c8741444c1243093ebc5cf4",
+    "apps/web/src/game/GameLoop.ts": "a44d260869b52b089ed3792ac2867eefcb7061d1997262064c1021a2f48d1393",
+    "apps/web/src/game/render/TerrainRenderer.ts": "f6423a9c9a069e81ef1df9c882b862d303fc963647086856e4192198f9276b82",
+    "apps/web/src/game/render/EnvRenderer.ts": "a8ba83ecdff4668a9abc9b80fa3fac4b90d3bc16fdd6c50bb57cfe37fc73b95b"
+  },
+  "finishedAt": "2026-10-09T23:28:01.875Z",
+  "sourceHashesAfter": {
+    "apps/web/src/Game.tsx": "be5e8c18f9433c029a3d8c381cc5c8e41cdb3ff3df1dd5effb40351016cb9442",
+    "apps/web/src/Root.tsx": "8caf5d74d6152caf721b07e4afc1f3465937f91b8c8741444c1243093ebc5cf4",
+    "apps/web/src/game/GameLoop.ts": "a44d260869b52b089ed3792ac2867eefcb7061d1997262064c1021a2f48d1393",
+    "apps/web/src/game/render/TerrainRenderer.ts": "f6423a9c9a069e81ef1df9c882b862d303fc963647086856e4192198f9276b82",
+    "apps/web/src/game/render/EnvRenderer.ts": "a8ba83ecdff4668a9abc9b80fa3fac4b90d3bc16fdd6c50bb57cfe37fc73b95b"
+  },
+  "sourceChangedDuringRun": []
+}

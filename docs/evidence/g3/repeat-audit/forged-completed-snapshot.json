@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "worldId": "audit-farm",
+  "accountId": "audit",
+  "mapId": "farm-test-01",
+  "mapKind": "farm",
+  "seed": 20261009,
+  "generatorVersion": "veg-1.0.0",
+  "templateVersion": 1,
+  "contentVersion": 1,
+  "revision": 20,
+  "serverTime": 10000060000,
+  "character": {
+    "displayName": "Kiểm tra",
+    "tag": "0001",
+    "createdAt": 10000000000,
+    "netWorth": 1034920
+  },
+  "wallet": {
+    "cash": 999160,
+    "wood": 986,
+    "stone": 995
+  },
+  "progress": {
+    "xp": 5794,
+    "level": 8,
+    "questIndex": 12,
+    "questProgress": {
+      "infra_paid_road_10054": 5,
+      "infra_paid_road_9926": 5,
+      "infra_paid_road_9798": 5,
+      "infra_paid_road_9670": 5,
+      "infra_paid_road_9542": 5,
+      "infra_paid_road_9414": 5,
+      "infra_paid_road_9286": 5,
+      "infra_paid_road_9158": 5,
+      "infra_paid_road_9030": 5,
+      "spend_xp_remainder": 5
+    },
+    "tutorialDone": true,
+    "repeat": {
+      "seq": 3,
+      "rerollAt": 0,
+      "active": [
+        {
+          "id": "r0",
+          "template": "harvest_crop",
+          "subject": "corn",
+          "target": 13,
+          "progress": 0,
+          "reward": {
+            "cash": 180,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 27
+        },
+        {
+          "id": "r1",
+          "template": "till_cells",
+          "target": 16,
+          "progress": 16,
+          "reward": {
+            "cash": 1000180,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 1000027
+        },
+        {
+          "id": "r2",
+          "template": "sell_item",
+          "subject": "watermelon",
+          "target": 29,
+          "progress": 0,
+          "reward": {
+            "cash": 180,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 27
+        }
+      ]
+    }
+  },
+  "unlockedZones": [
+    27,
+    28,
+    35,
+    36
+  ],
+  "landValue": 0,
+  "delta": {
+    "zones": {
+      "36": {
+        "heightsDm": "IwAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyACMAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAjADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAIwAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyACMAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAjADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAIwAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyACMAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAjADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAIwAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyACMAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAjADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAIwAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyACMAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAjADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAIwAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyACMAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgAyADIAMgA=",
+        "surface": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgYGAAAAAAAAAAAAAAAABQYGBgAAAAAAAAAAAAAAAAUGBgYAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAAAAAAAUGBgYAAAAAAAAAAAAAAAAFBgYGAAAAAAAAAAAAAAAABQYGBgAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAA==",
+        "flags": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA==",
+        "roadTier": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=="
+      }
+    },
+    "removedEnvIds": []
+  },
+  "buildings": [
+    {
+      "id": "b_2_0",
+      "defId": "farmhouse",
+      "anchor": [
+        71,
+        69
+      ],
+      "rotation": 0,
+      "placedAt": 10000000000,
+      "buildEndsAt": 10000060000,
+      "status": "ACTIVE",
+      "cashPaid": 500,
+      "materialsPaid": {
+        "cash": 500,
+        "wood": 10,
+        "stone": 5
+      },
+      "investedValue": 750
+    },
+    {
+      "id": "b_3_0",
+      "defId": "market",
+      "anchor": [
+        71,
+        74
+      ],
+      "rotation": 0,
+      "placedAt": 10000000000,
+      "buildEndsAt": 10000030000,
+      "status": "ACTIVE",
+      "cashPaid": 200,
+      "materialsPaid": {
+        "cash": 200,
+        "wood": 5,
+        "stone": 0
+      },
+      "investedValue": 275
+    }
+  ],
+  "bridges": [],
+  "crops": [],
+  "inventory": {}
+}

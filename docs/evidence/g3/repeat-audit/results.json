@@ -1,0 +1,2416 @@
+{
+  "generatedAt": "2026-10-09T23:36:32.142Z",
+  "fixtureCaveat": "Synthetic level-8/resources/quest history, provisional template. Command transitions are real sim execution; not normal-play progression or 30–60 minute pace proof.",
+  "sourceStable": true,
+  "sourceHashes": {
+    "packages/sim/src/quests.ts": "bc95a4ecaeeee49446c2f669f60134b24763f364c2fa15ab100450b9407c59c2",
+    "packages/sim/src/snapshot.ts": "82ccf6cdf1b808e53e0d4ab42f6b0a628f1d02808ff9436ffcb8596fdbb7e887",
+    "packages/sim/src/common.ts": "20309c7fb19d3847a2d18968d4b148f97cac45df897f726ef19539e5d95ea91a",
+    "packages/sim/src/engine.ts": "dc579da93981a787e158303e00bb8c96bf3cc27708620b1438aabbfdfb7dc67b",
+    "packages/contracts/src/schema.ts": "80bf13af6c47c0729f986f9a507a8da9c6706737c22ad0a0525c8be4b4113019",
+    "packages/content/economy.v1.json": "8e95e0f94ae8a1f20162a9535aa999d9c0900eedee68173f672448203e27ce93",
+    "docs/16_ECONOMY_AND_BALANCE.md": "6c81cdd93e35bf4e9715ff42463429632b7b33dde36f7fb0830e3623b51505f5",
+    "docs/DECISIONS.md": "980a0cd017d4695046ce362180fb4b808377d264d5b6522178700030b85a2098"
+  },
+  "endHashes": {
+    "packages/sim/src/quests.ts": "bc95a4ecaeeee49446c2f669f60134b24763f364c2fa15ab100450b9407c59c2",
+    "packages/sim/src/snapshot.ts": "82ccf6cdf1b808e53e0d4ab42f6b0a628f1d02808ff9436ffcb8596fdbb7e887",
+    "packages/sim/src/common.ts": "20309c7fb19d3847a2d18968d4b148f97cac45df897f726ef19539e5d95ea91a",
+    "packages/sim/src/engine.ts": "dc579da93981a787e158303e00bb8c96bf3cc27708620b1438aabbfdfb7dc67b",
+    "packages/contracts/src/schema.ts": "80bf13af6c47c0729f986f9a507a8da9c6706737c22ad0a0525c8be4b4113019",
+    "packages/content/economy.v1.json": "8e95e0f94ae8a1f20162a9535aa999d9c0900eedee68173f672448203e27ce93",
+    "docs/16_ECONOMY_AND_BALANCE.md": "6c81cdd93e35bf4e9715ff42463429632b7b33dde36f7fb0830e3623b51505f5",
+    "docs/DECISIONS.md": "980a0cd017d4695046ce362180fb4b808377d264d5b6522178700030b85a2098"
+  },
+  "passed": 44,
+  "failed": 20,
+  "checks": [
+    {
+      "name": "no repeats before quest 12 is claimed",
+      "pass": true,
+      "actual": null,
+      "expected": "Repeat state absent",
+      "scope": "Q005"
+    },
+    {
+      "name": "quest 12 claim creates exactly 3 active City repeats",
+      "pass": true,
+      "actual": {
+        "seq": 3,
+        "rerollAt": 0,
+        "active": [
+          {
+            "id": "r0",
+            "template": "build_type",
+            "subject": "house_town",
+            "target": 3,
+            "progress": 0,
+            "reward": {
+              "cash": 100,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 20
+          },
+          {
+            "id": "r1",
+            "template": "embank_cells",
+            "target": 8,
+            "progress": 0,
+            "reward": {
+              "cash": 100,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 20
+          },
+          {
+            "id": "r2",
+            "template": "population",
+            "target": 15,
+            "progress": 0,
+            "reward": {
+              "cash": 100,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 20
+          }
+        ]
+      },
+      "expected": "Exactly 3 active quests",
+      "scope": "Q005"
+    },
+    {
+      "name": "City without income: income reference",
+      "pass": true,
+      "actual": {
+        "actual": 0,
+        "income": 0
+      },
+      "expected": "Independent approved City/Farm formula",
+      "scope": "Q005"
+    },
+    {
+      "name": "City without income: generated reward and XP",
+      "pass": true,
+      "actual": {
+        "income": 0,
+        "cash": 100,
+        "xp": 20,
+        "quests": [
+          {
+            "id": "r0",
+            "template": "build_type",
+            "subject": "house_town",
+            "target": 3,
+            "progress": 0,
+            "reward": {
+              "cash": 100,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 20
+          },
+          {
+            "id": "r1",
+            "template": "embank_cells",
+            "target": 8,
+            "progress": 0,
+            "reward": {
+              "cash": 100,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 20
+          },
+          {
+            "id": "r2",
+            "template": "population",
+            "target": 15,
+            "progress": 0,
+            "reward": {
+              "cash": 100,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 20
+          }
+        ]
+      },
+      "expected": "25% reference, round $10, minimum $100; round(2*sqrt(cash))",
+      "scope": "Q005"
+    },
+    {
+      "name": "supported Farm has 3 active repeat quests",
+      "pass": true,
+      "actual": {
+        "seq": 3,
+        "rerollAt": 0,
+        "active": [
+          {
+            "id": "r0",
+            "template": "harvest_crop",
+            "subject": "corn",
+            "target": 13,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          },
+          {
+            "id": "r1",
+            "template": "till_cells",
+            "target": 16,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          },
+          {
+            "id": "r2",
+            "template": "sell_item",
+            "subject": "watermelon",
+            "target": 29,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          }
+        ]
+      },
+      "expected": "Exactly 3 active quests",
+      "scope": "Q005"
+    },
+    {
+      "name": "Farm with connected field quota: income reference",
+      "pass": true,
+      "actual": {
+        "actual": 720,
+        "income": 720
+      },
+      "expected": "Independent approved City/Farm formula",
+      "scope": "Q005"
+    },
+    {
+      "name": "Farm with connected field quota: generated reward and XP",
+      "pass": true,
+      "actual": {
+        "income": 720,
+        "cash": 180,
+        "xp": 27,
+        "quests": [
+          {
+            "id": "r0",
+            "template": "harvest_crop",
+            "subject": "corn",
+            "target": 13,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          },
+          {
+            "id": "r1",
+            "template": "till_cells",
+            "target": 16,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          },
+          {
+            "id": "r2",
+            "template": "sell_item",
+            "subject": "watermelon",
+            "target": 29,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          }
+        ]
+      },
+      "expected": "25% reference, round $10, minimum $100; round(2*sqrt(cash))",
+      "scope": "Q005"
+    },
+    {
+      "name": "City valid repeat snapshot roundtrip",
+      "pass": true,
+      "actual": {
+        "hash": "2b3d9b4e"
+      },
+      "expected": "Validated identical snapshot",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "Farm valid repeat snapshot roundtrip",
+      "pass": true,
+      "actual": {
+        "hash": "ab208290"
+      },
+      "expected": "Validated identical snapshot",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects forged cash reward",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 1000180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: forged cash reward",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects forged XP reward",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 1000027
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: forged XP reward",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects material reward outside Q005",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 99,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: material reward outside Q005",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects duplicate quest IDs",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r0",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: duplicate quest IDs",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects consecutive generated templates",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: consecutive generated templates",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects unknown target subject",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "unknown_crop",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: unknown target subject",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects crop above character level",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "coffee",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: crop above character level",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects wrong-map City template",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "build_type",
+              "subject": "house_small",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: wrong-map City template",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects progress above target",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 14,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: progress above target",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects zero target",
+      "pass": true,
+      "actual": [
+        "SCHEMA:progress.repeat.active.0.target:Number must be greater than or equal to 1"
+      ],
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: zero target",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects nonfinite reward",
+      "pass": true,
+      "actual": [
+        "SCHEMA:progress.repeat.active.0.reward.cash:Expected integer, received float",
+        "SCHEMA:progress.repeat.active.0.reward.cash:Number must be less than or equal to 9007199254740991"
+      ],
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: nonfinite reward",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects nonfinite target",
+      "pass": true,
+      "actual": [
+        "SCHEMA:progress.repeat.active.0.target:Expected number, received nan"
+      ],
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: nonfinite target",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects nonfinite reroll clock",
+      "pass": true,
+      "actual": [
+        "SCHEMA:progress.repeat.rerollAt:Expected integer, received float",
+        "SCHEMA:progress.repeat.rerollAt:Number must be less than or equal to 9007199254740991"
+      ],
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: nonfinite reroll clock",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects reroll clock beyond 4h",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 11440060000,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: reroll clock beyond 4h",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects repeat state before authored quests end",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: repeat state before authored quests end",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects quest ID beyond generation sequence",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r999999999",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: quest ID beyond generation sequence",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot rejects fewer than 3 active repeat quests",
+      "pass": false,
+      "actual": {
+        "accepted": true,
+        "repeat": {
+          "seq": 3,
+          "rerollAt": 0,
+          "active": [
+            {
+              "id": "r0",
+              "template": "harvest_crop",
+              "subject": "corn",
+              "target": 13,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r1",
+              "template": "till_cells",
+              "target": 16,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ]
+        }
+      },
+      "expected": "Reject malformed/semantically invalid repeat state before publishing",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "snapshot preserves current state: fewer than 3 active repeat quests",
+      "pass": true,
+      "actual": {
+        "before": "ab208290",
+        "after": "ab208290"
+      },
+      "expected": "No mutation of current state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "real till commands advance matching repeat progress",
+      "pass": true,
+      "actual": [
+        {
+          "id": "r0",
+          "template": "harvest_crop",
+          "subject": "corn",
+          "target": 13,
+          "progress": 0,
+          "reward": {
+            "cash": 180,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 27
+        },
+        {
+          "id": "r1",
+          "template": "till_cells",
+          "target": 16,
+          "progress": 16,
+          "reward": {
+            "cash": 180,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 27
+        },
+        {
+          "id": "r2",
+          "template": "sell_item",
+          "subject": "watermelon",
+          "target": 29,
+          "progress": 0,
+          "reward": {
+            "cash": 180,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 27
+        }
+      ],
+      "expected": "Matching TILL events reach target",
+      "scope": "Q005"
+    },
+    {
+      "name": "forged completed reward cannot validate then pay",
+      "pass": false,
+      "actual": {
+        "validationAccepted": true,
+        "commandAccepted": true,
+        "cashDelta": 1026280,
+        "xpAfter": 1005821
+      },
+      "expected": "Snapshot rejected before CLAIM_QUEST",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "completed repeat claim pays exact cash and XP",
+      "pass": true,
+      "actual": {
+        "claimed": {
+          "accepted": true,
+          "commandId": "00000000-0000-4000-8000-000000000023",
+          "revision": 21,
+          "serverTime": 10000060000,
+          "patch": {
+            "wallet": {
+              "cash": 999340,
+              "wood": 986,
+              "stone": 995
+            },
+            "progress": {
+              "xp": 5821,
+              "level": 8,
+              "questIndex": 12,
+              "questProgress": {
+                "infra_paid_road_10054": 5,
+                "infra_paid_road_9926": 5,
+                "infra_paid_road_9798": 5,
+                "infra_paid_road_9670": 5,
+                "infra_paid_road_9542": 5,
+                "infra_paid_road_9414": 5,
+                "infra_paid_road_9286": 5,
+                "infra_paid_road_9158": 5,
+                "infra_paid_road_9030": 5,
+                "spend_xp_remainder": 5
+              },
+              "tutorialDone": true,
+              "repeat": {
+                "seq": 4,
+                "rerollAt": 0,
+                "active": [
+                  {
+                    "id": "r0",
+                    "template": "harvest_crop",
+                    "subject": "corn",
+                    "target": 13,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  },
+                  {
+                    "id": "r2",
+                    "template": "sell_item",
+                    "subject": "watermelon",
+                    "target": 29,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  },
+                  {
+                    "id": "r3",
+                    "template": "till_cells",
+                    "target": 8,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  }
+                ],
+                "last": "till_cells"
+              }
+            },
+            "character": {
+              "displayName": "Kiểm tra",
+              "tag": "0001",
+              "createdAt": 10000000000,
+              "netWorth": 1035100
+            },
+            "unlockedZones": [
+              27,
+              28,
+              35,
+              36
+            ],
+            "landValue": 0,
+            "zones": {},
+            "buildings": {
+              "upsert": [
+                {
+                  "id": "b_2_0",
+                  "defId": "farmhouse",
+                  "anchor": [
+                    71,
+                    69
+                  ],
+                  "rotation": 0,
+                  "placedAt": 10000000000,
+                  "buildEndsAt": 10000060000,
+                  "status": "ACTIVE",
+                  "cashPaid": 500,
+                  "materialsPaid": {
+                    "cash": 500,
+                    "wood": 10,
+                    "stone": 5
+                  },
+                  "investedValue": 750
+                },
+                {
+                  "id": "b_3_0",
+                  "defId": "market",
+                  "anchor": [
+                    71,
+                    74
+                  ],
+                  "rotation": 0,
+                  "placedAt": 10000000000,
+                  "buildEndsAt": 10000030000,
+                  "status": "ACTIVE",
+                  "cashPaid": 200,
+                  "materialsPaid": {
+                    "cash": 200,
+                    "wood": 5,
+                    "stone": 0
+                  },
+                  "investedValue": 275
+                }
+              ],
+              "remove": []
+            },
+            "bridges": {
+              "upsert": [],
+              "remove": []
+            },
+            "crops": [],
+            "inventory": {},
+            "removedEnvIds": []
+          },
+          "events": [
+            {
+              "type": "QUEST_COMPLETED",
+              "questId": "r1"
+            }
+          ]
+        },
+        "cashDelta": 180,
+        "xpDelta": 27
+      },
+      "expected": "Exactly approved quest reward",
+      "scope": "Q005"
+    },
+    {
+      "name": "completed Farm repeat is replaced immediately to 3 slots",
+      "pass": true,
+      "actual": {
+        "seq": 4,
+        "rerollAt": 0,
+        "active": [
+          {
+            "id": "r0",
+            "template": "harvest_crop",
+            "subject": "corn",
+            "target": 13,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          },
+          {
+            "id": "r2",
+            "template": "sell_item",
+            "subject": "watermelon",
+            "target": 29,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          },
+          {
+            "id": "r3",
+            "template": "till_cells",
+            "target": 8,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          }
+        ],
+        "last": "till_cells"
+      },
+      "expected": "Exactly 3 after CLAIM_QUEST",
+      "scope": "Q005"
+    },
+    {
+      "name": "replacement never repeats just-completed template",
+      "pass": false,
+      "actual": {
+        "previous": "till_cells",
+        "replacements": [
+          {
+            "id": "r3",
+            "template": "till_cells",
+            "target": 8,
+            "progress": 0,
+            "reward": {
+              "cash": 180,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 27
+          }
+        ]
+      },
+      "expected": "A different template (Q005 has no fallback exception)",
+      "scope": "Q005"
+    },
+    {
+      "name": "repeat CLAIM_QUEST command is idempotent",
+      "pass": true,
+      "actual": {
+        "first": {
+          "accepted": true,
+          "commandId": "00000000-0000-4000-8000-000000000023",
+          "revision": 21,
+          "serverTime": 10000060000,
+          "patch": {
+            "wallet": {
+              "cash": 999340,
+              "wood": 986,
+              "stone": 995
+            },
+            "progress": {
+              "xp": 5821,
+              "level": 8,
+              "questIndex": 12,
+              "questProgress": {
+                "infra_paid_road_10054": 5,
+                "infra_paid_road_9926": 5,
+                "infra_paid_road_9798": 5,
+                "infra_paid_road_9670": 5,
+                "infra_paid_road_9542": 5,
+                "infra_paid_road_9414": 5,
+                "infra_paid_road_9286": 5,
+                "infra_paid_road_9158": 5,
+                "infra_paid_road_9030": 5,
+                "spend_xp_remainder": 5
+              },
+              "tutorialDone": true,
+              "repeat": {
+                "seq": 4,
+                "rerollAt": 0,
+                "active": [
+                  {
+                    "id": "r0",
+                    "template": "harvest_crop",
+                    "subject": "corn",
+                    "target": 13,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  },
+                  {
+                    "id": "r2",
+                    "template": "sell_item",
+                    "subject": "watermelon",
+                    "target": 29,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  },
+                  {
+                    "id": "r3",
+                    "template": "till_cells",
+                    "target": 8,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  }
+                ],
+                "last": "till_cells"
+              }
+            },
+            "character": {
+              "displayName": "Kiểm tra",
+              "tag": "0001",
+              "createdAt": 10000000000,
+              "netWorth": 1035100
+            },
+            "unlockedZones": [
+              27,
+              28,
+              35,
+              36
+            ],
+            "landValue": 0,
+            "zones": {},
+            "buildings": {
+              "upsert": [
+                {
+                  "id": "b_2_0",
+                  "defId": "farmhouse",
+                  "anchor": [
+                    71,
+                    69
+                  ],
+                  "rotation": 0,
+                  "placedAt": 10000000000,
+                  "buildEndsAt": 10000060000,
+                  "status": "ACTIVE",
+                  "cashPaid": 500,
+                  "materialsPaid": {
+                    "cash": 500,
+                    "wood": 10,
+                    "stone": 5
+                  },
+                  "investedValue": 750
+                },
+                {
+                  "id": "b_3_0",
+                  "defId": "market",
+                  "anchor": [
+                    71,
+                    74
+                  ],
+                  "rotation": 0,
+                  "placedAt": 10000000000,
+                  "buildEndsAt": 10000030000,
+                  "status": "ACTIVE",
+                  "cashPaid": 200,
+                  "materialsPaid": {
+                    "cash": 200,
+                    "wood": 5,
+                    "stone": 0
+                  },
+                  "investedValue": 275
+                }
+              ],
+              "remove": []
+            },
+            "bridges": {
+              "upsert": [],
+              "remove": []
+            },
+            "crops": [],
+            "inventory": {},
+            "removedEnvIds": []
+          },
+          "events": [
+            {
+              "type": "QUEST_COMPLETED",
+              "questId": "r1"
+            }
+          ]
+        },
+        "repeated": {
+          "accepted": true,
+          "commandId": "00000000-0000-4000-8000-000000000023",
+          "revision": 21,
+          "serverTime": 10000060000,
+          "patch": {
+            "wallet": {
+              "cash": 999340,
+              "wood": 986,
+              "stone": 995
+            },
+            "progress": {
+              "xp": 5821,
+              "level": 8,
+              "questIndex": 12,
+              "questProgress": {
+                "infra_paid_road_10054": 5,
+                "infra_paid_road_9926": 5,
+                "infra_paid_road_9798": 5,
+                "infra_paid_road_9670": 5,
+                "infra_paid_road_9542": 5,
+                "infra_paid_road_9414": 5,
+                "infra_paid_road_9286": 5,
+                "infra_paid_road_9158": 5,
+                "infra_paid_road_9030": 5,
+                "spend_xp_remainder": 5
+              },
+              "tutorialDone": true,
+              "repeat": {
+                "seq": 4,
+                "rerollAt": 0,
+                "active": [
+                  {
+                    "id": "r0",
+                    "template": "harvest_crop",
+                    "subject": "corn",
+                    "target": 13,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  },
+                  {
+                    "id": "r2",
+                    "template": "sell_item",
+                    "subject": "watermelon",
+                    "target": 29,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  },
+                  {
+                    "id": "r3",
+                    "template": "till_cells",
+                    "target": 8,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  }
+                ],
+                "last": "till_cells"
+              }
+            },
+            "character": {
+              "displayName": "Kiểm tra",
+              "tag": "0001",
+              "createdAt": 10000000000,
+              "netWorth": 1035100
+            },
+            "unlockedZones": [
+              27,
+              28,
+              35,
+              36
+            ],
+            "landValue": 0,
+            "zones": {},
+            "buildings": {
+              "upsert": [
+                {
+                  "id": "b_2_0",
+                  "defId": "farmhouse",
+                  "anchor": [
+                    71,
+                    69
+                  ],
+                  "rotation": 0,
+                  "placedAt": 10000000000,
+                  "buildEndsAt": 10000060000,
+                  "status": "ACTIVE",
+                  "cashPaid": 500,
+                  "materialsPaid": {
+                    "cash": 500,
+                    "wood": 10,
+                    "stone": 5
+                  },
+                  "investedValue": 750
+                },
+                {
+                  "id": "b_3_0",
+                  "defId": "market",
+                  "anchor": [
+                    71,
+                    74
+                  ],
+                  "rotation": 0,
+                  "placedAt": 10000000000,
+                  "buildEndsAt": 10000030000,
+                  "status": "ACTIVE",
+                  "cashPaid": 200,
+                  "materialsPaid": {
+                    "cash": 200,
+                    "wood": 5,
+                    "stone": 0
+                  },
+                  "investedValue": 275
+                }
+              ],
+              "remove": []
+            },
+            "bridges": {
+              "upsert": [],
+              "remove": []
+            },
+            "crops": [],
+            "inventory": {},
+            "removedEnvIds": []
+          },
+          "events": [
+            {
+              "type": "QUEST_COMPLETED",
+              "questId": "r1"
+            }
+          ]
+        },
+        "claimedHash": "06d34540",
+        "repeatedHash": "06d34540"
+      },
+      "expected": "Same result, no second payment",
+      "scope": "Command integrity"
+    },
+    {
+      "name": "first reroll is free and schedules exactly 4h",
+      "pass": true,
+      "actual": {
+        "wallet": {
+          "cash": 1001000,
+          "wood": 1000,
+          "stone": 1000
+        },
+        "rerollAt": 10014400000
+      },
+      "expected": "No charge; now + 4h",
+      "scope": "Q005"
+    },
+    {
+      "name": "reroll rejected 1ms before 4h and preserves state",
+      "pass": true,
+      "actual": {
+        "accepted": false,
+        "commandId": "00000000-0000-4000-8000-000000000025",
+        "code": "QUEST_NOT_READY",
+        "detail": "QUEST_NOT_READY",
+        "revision": 2,
+        "serverTime": 10000000000
+      },
+      "expected": "QUEST_NOT_READY; unchanged state",
+      "scope": "Q005"
+    },
+    {
+      "name": "reroll accepted exactly at 4h",
+      "pass": true,
+      "actual": {
+        "seq": 5,
+        "rerollAt": 10028800000,
+        "active": [
+          {
+            "id": "r2",
+            "template": "population",
+            "target": 15,
+            "progress": 0,
+            "reward": {
+              "cash": 100,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 20
+          },
+          {
+            "id": "r3",
+            "template": "road_cells",
+            "target": 11,
+            "progress": 0,
+            "reward": {
+              "cash": 100,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 20
+          },
+          {
+            "id": "r4",
+            "template": "build_type",
+            "subject": "shop_cafe",
+            "target": 2,
+            "progress": 0,
+            "reward": {
+              "cash": 100,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 20
+          }
+        ],
+        "last": "embank_cells"
+      },
+      "expected": "Cooldown renewed for 4h",
+      "scope": "Q005"
+    },
+    {
+      "name": "malformed missing quest ID rejected atomically/idempotently",
+      "pass": true,
+      "actual": {
+        "first": {
+          "accepted": false,
+          "commandId": "00000000-0000-4000-8000-000000000027",
+          "code": "INVALID_COMMAND",
+          "detail": [
+            {
+              "code": "invalid_type",
+              "expected": "string",
+              "received": "undefined",
+              "path": [
+                "payload",
+                "questId"
+              ],
+              "message": "Required"
+            }
+          ],
+          "revision": 3,
+          "serverTime": 10014400000
+        },
+        "second": {
+          "accepted": false,
+          "commandId": "00000000-0000-4000-8000-000000000027",
+          "code": "INVALID_COMMAND",
+          "detail": [
+            {
+              "code": "invalid_type",
+              "expected": "string",
+              "received": "undefined",
+              "path": [
+                "payload",
+                "questId"
+              ],
+              "message": "Required"
+            }
+          ],
+          "revision": 3,
+          "serverTime": 10014400000
+        },
+        "before": "81440710",
+        "after": "81440710"
+      },
+      "expected": "INVALID_COMMAND, unchanged state, cached same rejection",
+      "scope": "Command integrity"
+    },
+    {
+      "name": "malformed nonstring quest ID rejected atomically/idempotently",
+      "pass": true,
+      "actual": {
+        "first": {
+          "accepted": false,
+          "commandId": "00000000-0000-4000-8000-000000000028",
+          "code": "INVALID_COMMAND",
+          "detail": [
+            {
+              "code": "invalid_type",
+              "expected": "string",
+              "received": "number",
+              "path": [
+                "payload",
+                "questId"
+              ],
+              "message": "Expected string, received number"
+            }
+          ],
+          "revision": 3,
+          "serverTime": 10014400000
+        },
+        "second": {
+          "accepted": false,
+          "commandId": "00000000-0000-4000-8000-000000000028",
+          "code": "INVALID_COMMAND",
+          "detail": [
+            {
+              "code": "invalid_type",
+              "expected": "string",
+              "received": "number",
+              "path": [
+                "payload",
+                "questId"
+              ],
+              "message": "Expected string, received number"
+            }
+          ],
+          "revision": 3,
+          "serverTime": 10014400000
+        },
+        "before": "81440710",
+        "after": "81440710"
+      },
+      "expected": "INVALID_COMMAND, unchanged state, cached same rejection",
+      "scope": "Command integrity"
+    },
+    {
+      "name": "malformed extra key rejected atomically/idempotently",
+      "pass": true,
+      "actual": {
+        "first": {
+          "accepted": false,
+          "commandId": "00000000-0000-4000-8000-000000000029",
+          "code": "INVALID_COMMAND",
+          "detail": [
+            {
+              "code": "unrecognized_keys",
+              "keys": [
+                "extra"
+              ],
+              "path": [
+                "payload"
+              ],
+              "message": "Unrecognized key(s) in object: 'extra'"
+            }
+          ],
+          "revision": 3,
+          "serverTime": 10014400000
+        },
+        "second": {
+          "accepted": false,
+          "commandId": "00000000-0000-4000-8000-000000000029",
+          "code": "INVALID_COMMAND",
+          "detail": [
+            {
+              "code": "unrecognized_keys",
+              "keys": [
+                "extra"
+              ],
+              "path": [
+                "payload"
+              ],
+              "message": "Unrecognized key(s) in object: 'extra'"
+            }
+          ],
+          "revision": 3,
+          "serverTime": 10014400000
+        },
+        "before": "81440710",
+        "after": "81440710"
+      },
+      "expected": "INVALID_COMMAND, unchanged state, cached same rejection",
+      "scope": "Command integrity"
+    },
+    {
+      "name": "support-loss first reroll keeps 3 active quests",
+      "pass": false,
+      "actual": {
+        "quota": 0,
+        "repeat": {
+          "seq": 4,
+          "rerollAt": 10014460000,
+          "active": [
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            },
+            {
+              "id": "r3",
+              "template": "till_cells",
+              "target": 8,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ],
+          "last": "harvest_crop"
+        }
+      },
+      "expected": "Exactly 3 per character after quest 12",
+      "scope": "Q005"
+    },
+    {
+      "name": "Farm with zero connected quota still gets exactly 3 quests",
+      "pass": false,
+      "actual": {
+        "quota": 0,
+        "repeat": {
+          "seq": 4,
+          "rerollAt": 10028860000,
+          "active": [
+            {
+              "id": "r2",
+              "template": "sell_item",
+              "subject": "watermelon",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 180,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 27
+            }
+          ],
+          "last": "till_cells"
+        }
+      },
+      "expected": "Exactly 3 per character after quest 12",
+      "scope": "Q005"
+    },
+    {
+      "name": "support-loss reroll avoids same template consecutively",
+      "pass": false,
+      "actual": {
+        "previous": "sell_item",
+        "repeat": {
+          "seq": 5,
+          "rerollAt": 10043260000,
+          "active": [
+            {
+              "id": "r4",
+              "template": "sell_item",
+              "subject": "corn",
+              "target": 29,
+              "progress": 0,
+              "reward": {
+                "cash": 100,
+                "wood": 0,
+                "stone": 0
+              },
+              "xp": 20
+            }
+          ],
+          "last": "sell_item"
+        }
+      },
+      "expected": "Never same template twice consecutively",
+      "scope": "Q005"
+    },
+    {
+      "name": "generated targets are unlocked across 320 setup states",
+      "pass": true,
+      "actual": [],
+      "expected": "Only unlocked map-compatible targets",
+      "scope": "Generator fixture sweep"
+    },
+    {
+      "name": "City collect target equals exactly one hour of current base rate",
+      "pass": false,
+      "actual": {
+        "referenceIncome": 748.0000000000001,
+        "collectionQuest": {
+          "id": "r2",
+          "template": "collect_cash",
+          "target": 750,
+          "progress": 0,
+          "reward": {
+            "cash": 190,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 28
+        }
+      },
+      "expected": "X = current one-hour base income (Q005 specifies reward rounding, not target rounding)",
+      "scope": "Q005"
+    },
+    {
+      "name": "City nonzero income: income reference",
+      "pass": true,
+      "actual": {
+        "actual": 748.0000000000001,
+        "income": 748.0000000000001
+      },
+      "expected": "Independent approved City/Farm formula",
+      "scope": "Q005"
+    },
+    {
+      "name": "City nonzero income: generated reward and XP",
+      "pass": true,
+      "actual": {
+        "income": 748.0000000000001,
+        "cash": 190,
+        "xp": 28,
+        "quests": [
+          {
+            "id": "r0",
+            "template": "build_type",
+            "subject": "shop_restaurant",
+            "target": 2,
+            "progress": 0,
+            "reward": {
+              "cash": 190,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 28
+          },
+          {
+            "id": "r1",
+            "template": "road_cells",
+            "target": 11,
+            "progress": 0,
+            "reward": {
+              "cash": 190,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 28
+          },
+          {
+            "id": "r2",
+            "template": "collect_cash",
+            "target": 750,
+            "progress": 0,
+            "reward": {
+              "cash": 190,
+              "wood": 0,
+              "stone": 0
+            },
+            "xp": 28
+          }
+        ]
+      },
+      "expected": "25% reference, round $10, minimum $100; round(2*sqrt(cash))",
+      "scope": "Q005"
+    },
+    {
+      "name": "production fixture snapshot validates before execution",
+      "pass": true,
+      "actual": true,
+      "expected": "Valid supported producer state",
+      "scope": "Snapshot integrity"
+    },
+    {
+      "name": "produce-N-units quest cannot be claimed while every job is still queued",
+      "pass": false,
+      "actual": {
+        "template": {
+          "id": "r1",
+          "template": "produce_item",
+          "subject": "chicken_coop",
+          "target": 4,
+          "progress": 0,
+          "reward": {
+            "cash": 180,
+            "wood": 0,
+            "stone": 0
+          },
+          "xp": 27
+        },
+        "queued": [
+          {
+            "recipeId": "chicken_coop",
+            "startedAt": 10000360000,
+            "readyAt": 10001560000
+          },
+          {
+            "recipeId": "chicken_coop",
+            "startedAt": 10000360000,
+            "readyAt": 10001560000
+          },
+          {
+            "recipeId": "chicken_coop",
+            "startedAt": 10000360000,
+            "readyAt": 10001560000
+          },
+          {
+            "recipeId": "chicken_coop",
+            "startedAt": 10000360000,
+            "readyAt": 10001560000
+          }
+        ],
+        "serverTime": 10000360000,
+        "progressAfterQueue": 4,
+        "claim": {
+          "accepted": true,
+          "commandId": "00000000-0000-4000-8000-000000000047",
+          "revision": 26,
+          "serverTime": 10000360000,
+          "patch": {
+            "wallet": {
+              "cash": 997970,
+              "wood": 967,
+              "stone": 990
+            },
+            "progress": {
+              "xp": 5937,
+              "level": 8,
+              "questIndex": 12,
+              "questProgress": {
+                "infra_paid_road_10054": 5,
+                "infra_paid_road_9926": 5,
+                "infra_paid_road_9798": 5,
+                "infra_paid_road_9670": 5,
+                "infra_paid_road_9542": 5,
+                "infra_paid_road_9414": 5,
+                "infra_paid_road_9286": 5,
+                "infra_paid_road_9158": 5,
+                "infra_paid_road_9030": 5,
+                "spend_xp_remainder": 0,
+                "infra_paid_road_9287": 5,
+                "infra_paid_road_9288": 5,
+                "infra_paid_road_9289": 5,
+                "infra_paid_road_9290": 5,
+                "infra_paid_road_9291": 5,
+                "infra_paid_road_9292": 5,
+                "infra_paid_road_9293": 5
+              },
+              "tutorialDone": true,
+              "repeat": {
+                "seq": 4,
+                "rerollAt": 0,
+                "active": [
+                  {
+                    "id": "r0",
+                    "template": "harvest_crop",
+                    "subject": "tomato",
+                    "target": 17,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  },
+                  {
+                    "id": "r2",
+                    "template": "sell_item",
+                    "subject": "sugarcane",
+                    "target": 22,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  },
+                  {
+                    "id": "r3",
+                    "template": "till_cells",
+                    "target": 8,
+                    "progress": 0,
+                    "reward": {
+                      "cash": 180,
+                      "wood": 0,
+                      "stone": 0
+                    },
+                    "xp": 27
+                  }
+                ],
+                "last": "produce_item"
+              }
+            },
+            "character": {
+              "displayName": "Kiểm tra",
+              "tag": "0001",
+              "createdAt": 10000000000,
+              "netWorth": 1035456
+            },
+            "unlockedZones": [
+              27,
+              28,
+              35,
+              36
+            ],
+            "landValue": 0,
+            "zones": {},
+            "buildings": {
+              "upsert": [
+                {
+                  "id": "b_2_0",
+                  "defId": "farmhouse",
+                  "anchor": [
+                    71,
+                    69
+                  ],
+                  "rotation": 0,
+                  "placedAt": 10000000000,
+                  "buildEndsAt": 10000060000,
+                  "status": "ACTIVE",
+                  "cashPaid": 500,
+                  "materialsPaid": {
+                    "cash": 500,
+                    "wood": 10,
+                    "stone": 5
+                  },
+                  "investedValue": 750
+                },
+                {
+                  "id": "b_3_0",
+                  "defId": "market",
+                  "anchor": [
+                    71,
+                    74
+                  ],
+                  "rotation": 0,
+                  "placedAt": 10000000000,
+                  "buildEndsAt": 10000030000,
+                  "status": "ACTIVE",
+                  "cashPaid": 200,
+                  "materialsPaid": {
+                    "cash": 200,
+                    "wood": 5,
+                    "stone": 0
+                  },
+                  "investedValue": 275
+                },
+                {
+                  "id": "b_23_0",
+                  "defId": "chicken_coop",
+                  "anchor": [
+                    75,
+                    69
+                  ],
+                  "rotation": 0,
+                  "placedAt": 10000060000,
+                  "buildEndsAt": 10000360000,
+                  "status": "ACTIVE",
+                  "cashPaid": 1500,
+                  "materialsPaid": {
+                    "cash": 1500,
+                    "wood": 20,
+                    "stone": 5
+                  },
+                  "investedValue": 1900,
+                  "slots": [
+                    [
+                      {
+                        "recipeId": "chicken_coop",
+                        "startedAt": 10000360000,
+                        "readyAt": 10001560000
+                      }
+                    ],
+                    [
+                      {
+                        "recipeId": "chicken_coop",
+                        "startedAt": 10000360000,
+                        "readyAt": 10001560000
+                      }
+                    ],
+                    [
+                      {
+                        "recipeId": "chicken_coop",
+                        "startedAt": 10000360000,
+                        "readyAt": 10001560000
+                      }
+                    ],
+                    [
+                      {
+                        "recipeId": "chicken_coop",
+                        "startedAt": 10000360000,
+                        "readyAt": 10001560000
+                      }
+                    ],
+                    [],
+                    []
+                  ]
+                }
+              ],
+              "remove": []
+            },
+            "bridges": {
+              "upsert": [],
+              "remove": []
+            },
+            "crops": [],
+            "inventory": {
+              "corn": 16
+            },
+            "removedEnvIds": []
+          },
+          "events": [
+            {
+              "type": "QUEST_COMPLETED",
+              "questId": "r1"
+            }
+          ]
+        }
+      },
+      "expected": "Production quest requires produced units, not only submitting the queue",
+      "scope": "Q005"
+    }
+  ]
+}

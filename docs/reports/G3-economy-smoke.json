@@ -1,0 +1,265 @@
+{
+  "revision": "f70cd03271b1bb38adf25374b35a513d651c9cf1",
+  "dirtyFiles": [
+    "M apps/web/src/game/GameLoop.ts",
+    "?? docs/evidence/g3/invariant-performance/",
+    "?? docs/evidence/g3/parallel-visual/",
+    "?? docs/reports/G3-coordination-claude.md",
+    "?? docs/reports/G3-economy-normal.json",
+    "?? docs/reports/G3-economy-smoke.json",
+    "?? docs/reports/G3-invariant-performance.md",
+    "?? docs/reports/G3-parallel-task-plan.md",
+    "?? docs/reports/G3-visual-analysis.md",
+    "?? map/ThreeJS_Realistic_Building_Prompts.zip",
+    "?? packages/tooling/sim-economy.ts",
+    "?? packages/tooling/src/economy-bot-core.ts",
+    "?? packages/tooling/src/economy-bot-schedule.ts",
+    "?? packages/tooling/src/economy-bot.test.ts",
+    "?? scripts/g3-visual-check.mjs",
+    "?? scripts/profile-invariants.ts"
+  ],
+  "contentVersion": 1,
+  "schedules": {
+    "cham": {
+      "day1": [
+        [
+          480,
+          60
+        ],
+        [
+          720,
+          15
+        ],
+        [
+          1020,
+          15
+        ],
+        [
+          1260,
+          15
+        ]
+      ],
+      "daily": [
+        [
+          420,
+          15
+        ],
+        [
+          720,
+          15
+        ],
+        [
+          1020,
+          15
+        ],
+        [
+          1260,
+          15
+        ]
+      ]
+    },
+    "thuong": {
+      "day1": [
+        [
+          1200,
+          25
+        ]
+      ],
+      "daily": [
+        [
+          480,
+          8
+        ],
+        [
+          750,
+          8
+        ],
+        [
+          1260,
+          10
+        ]
+      ]
+    },
+    "nhan": {
+      "day1": [
+        [
+          1260,
+          15
+        ]
+      ],
+      "daily": [
+        [
+          1260,
+          10
+        ]
+      ]
+    }
+  },
+  "results": [
+    {
+      "result": {
+        "mapKind": "city",
+        "style": "thuong",
+        "days": 10,
+        "templateId": "city-coast-01",
+        "templateVersion": 2,
+        "firstMinute": 1200,
+        "levelAtDays": {
+          "2": 0.001388888888888889,
+          "3": 0.004166666666666667,
+          "4": 0.6875,
+          "5": 2.6875,
+          "6": 4.041666666666667,
+          "7": 5.041666666666667,
+          "8": 6.5,
+          "9": 8.041666666666666
+        },
+        "commands": 1493,
+        "rejected": {
+          "ZONE_LOCKED": 48,
+          "AFFECTS_NEIGHBOR": 434,
+          "TOO_STEEP": 160,
+          "SHORE_RULE": 19
+        },
+        "daily": [
+          {
+            "day": 1,
+            "level": 3,
+            "cash": 2303,
+            "buildings": 7,
+            "fields": 0,
+            "rate": 1201.5000000000002
+          },
+          {
+            "day": 2,
+            "level": 4,
+            "cash": 14490,
+            "buildings": 16,
+            "fields": 0,
+            "rate": 2605
+          },
+          {
+            "day": 3,
+            "level": 4,
+            "cash": 69602,
+            "buildings": 25,
+            "fields": 0,
+            "rate": 6632
+          },
+          {
+            "day": 4,
+            "level": 5,
+            "cash": 199266,
+            "buildings": 34,
+            "fields": 0,
+            "rate": 10248
+          },
+          {
+            "day": 5,
+            "level": 6,
+            "cash": 403715,
+            "buildings": 43,
+            "fields": 0,
+            "rate": 16341
+          },
+          {
+            "day": 6,
+            "level": 7,
+            "cash": 711032,
+            "buildings": 52,
+            "fields": 0,
+            "rate": 21295
+          },
+          {
+            "day": 7,
+            "level": 7,
+            "cash": 1173690,
+            "buildings": 61,
+            "fields": 0,
+            "rate": 29898
+          },
+          {
+            "day": 8,
+            "level": 8,
+            "cash": 1816107,
+            "buildings": 70,
+            "fields": 0,
+            "rate": 32888.5
+          },
+          {
+            "day": 9,
+            "level": 9,
+            "cash": 2590588,
+            "buildings": 79,
+            "fields": 0,
+            "rate": 44113.5
+          },
+          {
+            "day": 10,
+            "level": 9,
+            "cash": 3524834,
+            "buildings": 86,
+            "fields": 0,
+            "rate": 53809.5
+          }
+        ],
+        "final": {
+          "level": 9,
+          "xp": 13373,
+          "cash": 3524834,
+          "netWorth": 3738489,
+          "buildings": 86,
+          "zones": 11,
+          "fields": 0,
+          "producers": 0,
+          "questIndex": 11,
+          "repeatClaims": 0,
+          "rate": 53809.5
+        },
+        "invariants": {
+          "snapshotValid": true,
+          "errors": [],
+          "walletSafe": true,
+          "occupancyValid": true
+        },
+        "limitations": [
+          "Bot strategy is an input, not proof of optimal player progression.",
+          "Production inputs must be grown; reference-model purchases at sell price are not permitted commands.",
+          "Infrastructure uses paid legal commands; failed bridge-site planning is reported, never replaced with virtual quest completion.",
+          "No geometry-free overhead payment, virtual construction XP, crop sales outside market access, or injected quest rewards."
+        ]
+      },
+      "pacing": [
+        {
+          "level": 8,
+          "expectedDays": 3.5,
+          "actualDays": 6.5,
+          "deviation": 0.8571428571428571,
+          "status": "FAIL"
+        },
+        {
+          "level": 12,
+          "expectedDays": 11,
+          "actualDays": null,
+          "deviation": null,
+          "status": "UNREACHED"
+        },
+        {
+          "level": 15,
+          "expectedDays": 21,
+          "actualDays": null,
+          "deviation": null,
+          "status": "UNREACHED"
+        },
+        {
+          "level": 20,
+          "expectedDays": 49,
+          "actualDays": null,
+          "deviation": null,
+          "status": "UNREACHED"
+        }
+      ],
+      "wallSeconds": 115.5366626
+    }
+  ]
+}
