@@ -140,7 +140,7 @@ export function Game({loader,onSwitchMap}:GameProps){
   const preview=ui.preview;
   return <main className={`game-shell hud3-shell game-${kind}`}>
     <canvas ref={canvas} aria-label="Bản đồ 3D"/>
-    {!ready&&<div className="loading"><h1>Xây Nhà</h1><p>{loadingError||t('loading')}</p>{loadingError&&<button onClick={()=>{setLoadingError('');setAttempt(attempt+1);}}>{t('retry')}</button>}</div>}
+    {!ready&&<div className="loading"><h1>AI Farm</h1><p>{loadingError||t('loading')}</p>{loadingError&&<button onClick={()=>{setLoadingError('');setAttempt(attempt+1);}}>{t('retry')}</button>}</div>}
     {ready&&state&&<>
       <TopBar state={state} panel={panel} status={status} connected={connection==='online'||connection==='local'} unread={alerts.length>0&&signature!==seen}
         hasBank={hasBank} onPanel={openPanel} onCollect={()=>apply('COLLECT',{buildingIds:[]})} onMeasure={hudRef}/>

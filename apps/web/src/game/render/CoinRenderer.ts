@@ -6,7 +6,7 @@ import { terrainHeight } from '../assets/placement';
 
 const MAX = 512;
 /**
- * Gold coin floating above city buildings whose stored income ≥ the bubble fraction of their cap
+ * Green dollar coin floating above city buildings whose stored income ≥ the bubble fraction of their cap
  * (docs/16 §6.4, docs/09 §2). One InstancedMesh, owned and disposed here (docs/02 §10.1).
  */
 export class CoinRenderer {
@@ -17,7 +17,7 @@ export class CoinRenderer {
   constructor(private readonly scene: Scene) {
     const geometry = new CylinderGeometry(0.9, 0.9, 0.22, 20);
     geometry.rotateX(Math.PI / 2);
-    this.mesh = new InstancedMesh(geometry, new MeshStandardMaterial({ color: '#f2c335', metalness: 0.6, roughness: 0.35, emissive: '#5a3f00', emissiveIntensity: 0.35 }), MAX);
+    this.mesh = new InstancedMesh(geometry, new MeshStandardMaterial({ color: '#2fa35f', metalness: 0.45, roughness: 0.4, emissive: '#0b4a25', emissiveIntensity: 0.4 }), MAX);
     this.mesh.name = 'income-coins'; this.mesh.count = 0; this.mesh.frustumCulled = false;
     scene.add(this.mesh);
   }

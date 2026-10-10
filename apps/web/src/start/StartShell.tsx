@@ -9,9 +9,9 @@ export function StartShell({ stage, onHome, onRecover, children }: {
   return <main className={`start entry-${stage}`}>
     <div className="entry-container">
       <header className="entry-header">
-        <div className="entry-brand" aria-label="Xây Nhà">
+        <div className="entry-brand" aria-label="AI Farm">
           <span className="entry-brand-mark"><EntryIcon name="home"/></span>
-          <span><strong>XÂY NHÀ<span className="brand-dot">.</span></strong><small>Một nơi để trở về</small></span>
+          <span><strong>AI FARM<span className="brand-dot">.</span></strong><small>Một nơi để trở về</small></span>
         </div>
         {stage !== 'boot' && stage !== 'code' && <button type="button" className="entry-header-action"
           onClick={stage === 'recover' ? onHome : onRecover}>
