@@ -26,3 +26,7 @@ button.wide{width:100%}
 .tools button.hint{animation:hint-pulse 1.2s ease-in-out infinite;background:#fff1b8}@keyframes hint-pulse{0%,100%{box-shadow:0 0 0 0 #e7b92f}50%{box-shadow:0 0 0 6px #e7b92f55}}
 .brand{cursor:pointer}.profile p{margin:4px 0;font-size:12px}.profile table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}.profile td{padding:4px 0;border-bottom:1px solid #e1e6d4}.profile td:last-child{text-align:right}.profile tr.total td{font-weight:700;border-bottom:0}
 .settings{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:12px}.settings span{flex:1;font-weight:600}
+/* Panels follow the measured HUD height (Game.tsx useHudBottom) instead of fixed offsets; tool buttons never shrink (labels were clipped on phones). */
+.quest{top:calc(var(--hud-bottom,140px) + 10px)}.side,.catalog{top:calc(var(--hud-bottom,140px) + 10px)}.catalog{max-height:calc(100dvh - var(--hud-bottom,140px) - 210px)}.side{max-height:calc(100dvh - var(--hud-bottom,140px) - 220px)}.tools button{flex-shrink:0}
+@media(min-width:701px){.debug{top:calc(var(--hud-bottom,140px) + 10px)}}
+@media(max-width:480px){.brand{flex:1 1 100%;min-width:0}.resources{flex:1 1 100%;justify-content:space-between;flex-wrap:nowrap}.resources .cash{margin-right:auto}}

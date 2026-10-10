@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
 import type { CommandType } from '@xay-nha/contracts';
 import { access, authoredQuestProgress, builderCapacity, buildingLimit, fieldQuota, inventoryCount, populationAndJobs, repeatQuestProgress, storageCapacity } from '@xay-nha/sim';
@@ -60,11 +60,22 @@ const HINTS: Record<string, { tool: Tool; text: string }> = {
 };
 const SKIP_KEY = 'xay-nha.skipTutorial';
 const skipped = () => { try { return localStorage.getItem(SKIP_KEY) === '1'; } catch { return false; } };
+/** Panels sit below the HUD, whose height depends on screen width and wrapping: publish it as --hud-bottom. */
+function useHudBottom(): (element: HTMLElement | null) => void {
+  const observer = useRef<ResizeObserver | null>(null);
+  useEffect(() => () => observer.current?.disconnect(), []);
+  return useCallback((element: HTMLElement | null) => {
+    observer.current?.disconnect();
+    if (!element) return;
+    const publish = () => document.documentElement.style.setProperty('--hud-bottom', `${Math.ceil(element.getBoundingClientRect().bottom)}px`);
+    observer.current = new ResizeObserver(publish); observer.current.observe(element); publish();
+  }, []);
+}
 export interface GameProps { loader:()=>Promise<WorldStore>; onSwitchMap?:(world:WorldStore)=>void }
 export function Game({loader,onSwitchMap}:GameProps){
   const canvas=useRef<HTMLCanvasElement>(null),gameRef=useRef<GameLoop|null>(null);
   const [ready,setReady]=useState(false),[hideHints,setHideHints]=useState(skipped()),[loadingError,setLoadingError]=useState(''),[attempt,setAttempt]=useState(0),[panel,setPanel]=useState<'inventory'|'materials'|'profile'|null>(null),[stats,setStats]=useState<ReturnType<GameLoop['metrics']>|null>(null);
-  const {state,message,error,cacheStatus,connection,pending}=useWorld(),ui=useTools();
+  const {state,message,error,cacheStatus,connection,pending}=useWorld(),ui=useTools(),hudRef=useHudBottom();
   useEffect(()=>{
     let cancelled=false;let game:GameLoop|undefined;let world:WorldStore|undefined;const assets=new AssetManager();
     const start=async()=>{
@@ -93,7 +104,7 @@ export function Game({loader,onSwitchMap}:GameProps){
     <canvas ref={canvas} aria-label="Bản đồ 3D"/>
     {!ready&&<div className="loading"><h1>Xây Nhà</h1><p>{loadingError||t('loading')}</p>{loadingError&&<button onClick={()=>{setLoadingError('');setAttempt(attempt+1);}}>{t('retry')}</button>}</div>}
     {ready&&state&&<>
-      <header className="hud"><div className="brand" role="button" tabIndex={0} title={t('profile')} onClick={()=>setPanel(panel==='profile'?null:'profile')}><span className="brand-icon">⌂</span><div><strong>XÂY NHÀ <small>{kindLabel}</small></strong><span>{state.snapshot.character.displayName}#{state.snapshot.character.tag} · {t('level')} {state.snapshot.progress.level} · {state.snapshot.progress.xp} XP</span></div></div><div className="resources"><strong className="cash">{money(state.snapshot.wallet.cash)}</strong><button onClick={()=>setPanel(panel==='materials'?null:'materials')}>🪵 {state.snapshot.wallet.wood} &nbsp; ◇ {state.snapshot.wallet.stone}</button><span>{t('builders')} {busy}/{builderCapacity(state)}</span>{kind==='farm'?<button onClick={()=>setPanel(panel==='inventory'?null:'inventory')}>{t('storage')} {inventoryCount(state)}/{storageCapacity(state)}</button>:<span>{t('people')} {people?.population??0}/{people?.jobs??0}</span>}{hasBank&&<button onClick={()=>apply('COLLECT',{buildingIds:[]})}>{t('collectAll')}</button>}{onSwitchMap&&<button aria-label={t('switchMap')} title={t('switchMap')} onClick={()=>{const w=gameRef.current?.world;if(w)onSwitchMap(w);}}>🗺</button>}</div><div className="sub-hud"><span>{t('worth')} {money(state.snapshot.character.netWorth)}</span>{kind==='farm'&&<span>{t('fields')} {state.snapshot.crops.length}/{fieldQuota(state)}</span>}<span className={connection==='offline'?'error':''} role="status">{status}</span></div></header>
+      <header className="hud" ref={hudRef}><div className="brand" role="button" tabIndex={0} title={t('profile')} onClick={()=>setPanel(panel==='profile'?null:'profile')}><span className="brand-icon">⌂</span><div><strong>XÂY NHÀ <small>{kindLabel}</small></strong><span>{state.snapshot.character.displayName}#{state.snapshot.character.tag} · {t('level')} {state.snapshot.progress.level} · {state.snapshot.progress.xp} XP</span></div></div><div className="resources"><strong className="cash">{money(state.snapshot.wallet.cash)}</strong><button onClick={()=>setPanel(panel==='materials'?null:'materials')}>🪵 {state.snapshot.wallet.wood} &nbsp; ◇ {state.snapshot.wallet.stone}</button><span>{t('builders')} {busy}/{builderCapacity(state)}</span>{kind==='farm'?<button onClick={()=>setPanel(panel==='inventory'?null:'inventory')}>{t('storage')} {inventoryCount(state)}/{storageCapacity(state)}</button>:<span>{t('people')} {people?.population??0}/{people?.jobs??0}</span>}{hasBank&&<button onClick={()=>apply('COLLECT',{buildingIds:[]})}>{t('collectAll')}</button>}{onSwitchMap&&<button aria-label={t('switchMap')} title={t('switchMap')} onClick={()=>{const w=gameRef.current?.world;if(w)onSwitchMap(w);}}>🗺</button>}</div><div className="sub-hud"><span>{t('worth')} {money(state.snapshot.character.netWorth)}</span>{kind==='farm'&&<span>{t('fields')} {state.snapshot.crops.length}/{fieldQuota(state)}</span>}<span className={connection==='offline'?'error':''} role="status">{status}</span></div></header>
       {q&&<aside className="quest panel">{hint&&<div className="tutor" role="note"><b>Bác Tư:</b> {hint.text}<button className="link" onClick={()=>{try{localStorage.setItem(SKIP_KEY,'1');}catch{/* storage blocked */}setHideHints(true);}}>{t('skipTutorial')}</button></div>}<small>{t('quests')} {state.snapshot.progress.questIndex+1}/{catalog.quests[kind].length}</small><strong>{t(q.nameKey)}</strong><span>{Math.min(q.target,authoredQuestProgress(state))}/{q.target} · {money(q.reward.cash)} · {q.xp} XP</span><button disabled={authoredQuestProgress(state)<q.target} onClick={()=>apply('CLAIM_QUEST',{questId:q.id})}>{t('claim')}</button></aside>}
       {!q&&state.snapshot.progress.repeat&&<aside className="quest panel repeat"><small>{t('repeatQuests')}</small>{state.snapshot.progress.repeat.active.map(rq=>{const done=repeatQuestProgress(state,rq)>=rq.target,rerollReady=state.snapshot.serverTime>=state.snapshot.progress.repeat!.rerollAt;return <div key={rq.id} className="repeat-quest"><strong>{repeatTitle(rq)}</strong><span>{Math.min(rq.target,repeatQuestProgress(state,rq))}/{rq.target} · {money(rq.reward.cash)} · {rq.xp} XP</span><div className="row"><button disabled={!done} onClick={()=>apply('CLAIM_QUEST',{questId:rq.id})}>{t('claim')}</button><button disabled={!rerollReady} title={rerollReady?'':`${t('rerollIn')} ${duration(state.snapshot.progress.repeat!.rerollAt-state.snapshot.serverTime)}`} onClick={()=>apply('REROLL_QUEST',{questId:rq.id})}>{t('reroll')}</button></div></div>;})}</aside>}
       <div className="camera-buttons"><button aria-label="Phóng to" onClick={()=>gameRef.current?.rig.zoom(-140)}>＋</button><button aria-label="Thu nhỏ" onClick={()=>gameRef.current?.rig.zoom(140)}>−</button><button aria-label={t('resetCamera')} onClick={()=>gameRef.current?.rig.reset()}>⟲</button></div>
