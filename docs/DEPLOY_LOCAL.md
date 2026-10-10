@@ -55,4 +55,4 @@ pnpm tunnel:url         # đợi ~10 giây nếu chưa có link
 - Ai có link đều tạo được tài khoản (giới hạn 5 tài khoản/giờ/IP) và dữ liệu nằm trên máy này. Chỉ gửi link cho người tin cậy và tắt tunnel khi không dùng.
 - Xóa sạch dữ liệu: `docker compose -f infra/compose.yml down -v` (**không hoàn tác được**).
 - Cổng web chỉ mở trên `127.0.0.1`. Bên ngoài chỉ vào được qua tunnel.
-- Hook kiểm thử (`__debug.command`, `advance`, `loadSnapshot`) **không có** trong bản production; đã kiểm bằng `scripts/web-smoke.mjs`.
+- Hook kiểm thử (`__debug.command`, `advance`, `loadSnapshot`) **không có** trong bản production; kiểm bằng `BASE_URL=http://127.0.0.1:8090 node scripts/g4-smoke.mjs` (Chromium + WebKit iPhone 13, tạo nhân vật thật — tính vào giới hạn 5 tài khoản/giờ/IP).
