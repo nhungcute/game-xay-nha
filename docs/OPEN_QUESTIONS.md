@@ -64,7 +64,7 @@ the degenerate case of a single eligible template, D024 reuses it (with a differ
 possible) rather than leave an empty slot. Please confirm, or choose "leave the slot empty until another
 template becomes eligible".
 
-## Q010 — Real-sim economy pacing versus docs/16 §12 — OPEN
+## Q010 — Real-sim economy pacing versus docs/16 §12 — FARM RESOLVED (D025), CITY EARLY LEVELS OPEN
 
 2026-10-10. Balance decision required; **no economic values were changed**.
 The current 60-day, six-scenario run uses `f5ab34a` (topology optimization over baseline `47fe17d`), contentVersion 1 and the real sim.
@@ -155,7 +155,7 @@ twice the model's time although it reaches the same 192 fields, so the remaining
 alone will not close Farm pacing; after reconciling the model, a Farm XP recalibration (Option 2 scope) is still
 likely needed. City was not re-run (its L15/L20 already pass).
 
-### Proposed Farm XP table — NOT applied, awaiting approval (Claude, 2026-10-10)
+### Proposed Farm XP table — APPLIED as D025 (contentVersion 2)
 
 `scripts/q010-xp-calibrate.ts 3 farm` fits the Farm cumulative-XP table to the docs/16 reference-model level times using
 the real sim and FarmBotV3, patching the table **in memory only** (`docs/reports/Q010-farm-xp-proposal.json`).

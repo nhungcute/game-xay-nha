@@ -205,3 +205,17 @@ Amended 2026-10-10 after the G3 repeat audit (`docs/reports/G3-repeat-audit.md`)
   maximum reference income reachable at the current level, ids `r<n>` unique with n < seq, template and
   subject valid for the map and unlocked at the current level, progress ≤ target,
   `rerollAt` ≤ serverTime + 4 h (+5 min tolerance), and repeat state only after all authored quests.
+
+## D025 — 2026-10-10 — Farm XP table recalibrated (contentVersion 2), City unchanged
+
+Context: Q010 (real-sim pacing FAIL). Taken by the agent under the user's auto-continue / "skip confirmations"
+instruction, choosing the option it had recommended; reversible with `git revert` (snapshot migration is one-way
+only in the sense that levels gained are kept).
+- Farm cumulative XP for L5–L20 replaced by the table fitted on the real sim (`scripts/q010-xp-calibrate.ts 3 farm`,
+  FarmBotV3) to the docs/16 §12.1 times; L2–L4 unchanged. docs/16 §8.2, `model.mjs` `P.xpCumMap.farm`, generated content.
+- `contentVersion` 1 → 2. `validateSnapshot` migrates v1 snapshots: XP kept, level recomputed (never lower);
+  other versions are still rejected. Level-up cash rewards are not paid retroactively for migrated levels.
+- City table unchanged: its L15/L20 already pass; the City proposal would make early levels much cheaper and the
+  careful player 2.4× faster at L8, against the "idle City" identity — left open in Q010.
+- Result (Farm, ordinary, 60 days, applied content): FarmBotV3 L8/L12/L15/L20 = +1/+9/+7/+5% (PASS);
+  Codex's unchanged EconomyBot +38/+34/+21/+10% (was +101/+156/+144%/unreached).

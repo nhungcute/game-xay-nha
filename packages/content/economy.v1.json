@@ -1,5 +1,5 @@
 {
-  "contentVersion": 1,
+  "contentVersion": 2,
   "sources": [
     "docs/16_ECONOMY_AND_BALANCE.md",
     "docs/tools/economy/model.mjs"
@@ -206,22 +206,22 @@
         40,
         120,
         220,
-        960,
-        2200,
-        3500,
-        5700,
-        8800,
-        14000,
-        21000,
-        33000,
-        45000,
-        58000,
-        75000,
-        95000,
-        120000,
-        150000,
-        190000,
-        240000
+        780,
+        1360,
+        2560,
+        3450,
+        5320,
+        8270,
+        11910,
+        17530,
+        23080,
+        29270,
+        37370,
+        46380,
+        57430,
+        70150,
+        86820,
+        107100
       ]
     },
     "levelReward": 150,
@@ -289,7 +289,7 @@
     }
   },
   "catalog": {
-    "contentVersion": 1,
+    "contentVersion": 2,
     "buildings": {
       "house_small": {
         "id": "house_small",

@@ -36,7 +36,7 @@ describe('docs/16 generated economy content', () => {
   });
   it('contains all catalog balance tables in the economy artifact', () => {
     expect(economy.catalog).toEqual(catalog);
-    expect(contentVersion).toBe(1);
+    expect(contentVersion).toBe(2); // D025
     expect(catalog.contentVersion).toBe(contentVersion);
   });
   it.each(cityRows)('matches city table %s', (id, _name, size, cash, wood, stone, _value, level, population, jobs, rate) => {
@@ -76,7 +76,7 @@ describe('docs/16 generated economy content', () => {
     expect(economy.xp.cumulative.city).toHaveLength(economy.xp.maxLevel + 1);
     expect(economy.xp.cumulative.farm).toHaveLength(economy.xp.maxLevel + 1);
     expect(economy.xp.cumulative.city[20]).toBe(430000);
-    expect(economy.xp.cumulative.farm[20]).toBe(240000);
+    expect(economy.xp.cumulative.farm[20]).toBe(107100); // D025
     for (const table of Object.values(economy.xp.cumulative)) {
       for (let level = 2; level <= economy.xp.maxLevel; level++) {
         expect(table[level]).toBeGreaterThan(table[level - 1] ?? 0);

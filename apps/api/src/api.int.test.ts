@@ -191,6 +191,17 @@ describe('world access and commands', () => {
     const r = await call('GET', `/api/worlds/${p.worldId}`, undefined, p.token);
     expect(r.status).toBe(500); expect(r.body.error).toBe('INVALID_SNAPSHOT');
   });
+  it('a stored contentVersion 1 Farm world migrates on read (D025): XP kept, level recomputed, then persists as v2', async () => {
+    const p = await newPlayer('farm', 'Bản Cũ');
+    await db.execute(sql`UPDATE worlds SET snapshot = jsonb_set(jsonb_set(jsonb_set(snapshot, '{contentVersion}', '1'), '{progress,xp}', '5700'), '{progress,level}', '8') WHERE id = ${p.worldId}`);
+    const first = await snapshotOf(p.token, p.worldId);
+    expect(first.snapshot.contentVersion).toBe(2);
+    expect(first.snapshot.progress).toMatchObject({ xp: 5700, level: 9 });
+    const r = await send(p.token, p.worldId, [command(first.snapshot, 'BUY_MATERIAL', { wood: 1 })]);
+    expect(r.body.results[0].accepted).toBe(true);
+    const [row] = (await db.execute(sql`SELECT snapshot->>'contentVersion' AS v, level FROM worlds WHERE id = ${p.worldId}`)).rows as { v: string; level: number }[];
+    expect(row).toMatchObject({ v: '2', level: 9 });
+  });
   it('delete requires the exact character name', async () => {
     const p = await newPlayer('farm', 'Xóa Đi');
     expect((await call('DELETE', `/api/worlds/${p.worldId}`, { confirmName: 'Sai' }, p.token)).body.error).toBe('CONFIRM_NAME_MISMATCH');

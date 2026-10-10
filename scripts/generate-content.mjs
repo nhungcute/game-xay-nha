@@ -2,6 +2,8 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 const root = new URL('../', import.meta.url);
+// Bump on every balance change (docs/16 §11). v2 = D025 Farm XP table; snapshots migrate in sim validateSnapshot.
+const CONTENT_VERSION = 2;
 const source = await readFile(new URL('docs/16_ECONOMY_AND_BALANCE.md', root), 'utf8');
 // The reference model's CLI must stay silent when used as a data source.
 const savedArgs = process.argv;
@@ -138,7 +140,7 @@ const buildSection = section('### 3.1', '### 3.2');
 const incomeSection = section('### 6.3', '### 6.4');
 const farmSection = section('### 7.1', '### 7.2');
 const economy = {
-  contentVersion: 1,
+  contentVersion: CONTENT_VERSION,
   sources: ['docs/16_ECONOMY_AND_BALANCE.md', 'docs/tools/economy/model.mjs'],
   principles: { paybackBaseH: P.paybackBaseH, paybackGrowth: P.paybackGrowth,
     housePaybackMul: P.housePaybackMul, bankPaybackMul: P.bankPaybackMul,
@@ -222,13 +224,13 @@ const quests = Object.fromEntries(Object.entries(questRules).map(([mapKind, rule
       xp: /XP/.test(row[2]) ? capture(/(\d+) XP/, row[2]) : 0, tutorial: index < economy.construction.tutorialInstantThroughQuest };
   })];
 }));
-const catalog = { contentVersion: 1, buildings, crops, recipes, items, bridges, quests };
+const catalog = { contentVersion: CONTENT_VERSION, buildings, crops, recipes, items, bridges, quests };
 // docs/16 requires the economy artifact to contain every balance table.
 economy.catalog = catalog;
 const files = {
   'packages/content/economy.v1.json': economy,
   'packages/content/catalog.v1.json': catalog,
-  'packages/content/quests.v1.json': { contentVersion: 1, quests },
+  'packages/content/quests.v1.json': { contentVersion: CONTENT_VERSION, quests },
   'packages/content/i18n/vi.json': translations,
 };
 for (const [relativePath, value] of Object.entries(files)) {

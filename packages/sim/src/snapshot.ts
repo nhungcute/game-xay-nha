@@ -10,13 +10,26 @@ import { costValue, recompute } from './economy';
 import { validateRoadPayments } from './road-value';
 import { validateRepeat } from './quests';
 
+/**
+ * Content migrations (docs/16 §11). v1 → v2 (D025): Farm XP thresholds lowered; XP is kept and the level is
+ * recomputed from it (never lower, since thresholds only dropped). Unknown/newer versions are left for the
+ * CONTENT_VERSION check to reject.
+ */
+export function migrateContent(snapshot: WorldSnapshot): WorldSnapshot {
+  if (snapshot.contentVersion !== 1 || economy.contentVersion !== 2) return snapshot;
+  const table = economy.xp.cumulative[snapshot.mapKind];
+  let level = 1;
+  while (level < economy.xp.maxLevel && snapshot.progress.xp >= table[level + 1]!) level++;
+  return { ...snapshot, contentVersion: 2, progress: { ...snapshot.progress, level: Math.max(level, snapshot.progress.level) } };
+}
+
 export type SnapshotValidation = { ok: true; state: SimState } | { ok: false; errors: string[] };
 
 /** No current-state, scene or cache mutation occurs while validating a replacement snapshot. */
 export function validateSnapshot(current: SimState, input: unknown, now: number): SnapshotValidation {
   const parsed = WorldSnapshotSchema.safeParse(input);
   if (!parsed.success) return { ok: false, errors: parsed.error.issues.map(issue => `SCHEMA:${issue.path.join('.')}:${issue.message}`) };
-  const snapshot = parsed.data, errors: string[] = [], template = current.template;
+  const snapshot = migrateContent(parsed.data), errors: string[] = [], template = current.template;
   for (const key of ['mapId', 'mapKind', 'templateVersion', 'seed', 'generatorVersion'] as const) {
     if (snapshot[key] !== template[key]) errors.push(`TEMPLATE_MISMATCH:${key}`);
   }

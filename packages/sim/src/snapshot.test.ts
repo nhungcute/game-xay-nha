@@ -249,3 +249,28 @@ describe('validate everything then swap snapshot', () => {
     if (!result.ok) expect(result.errors.some(error => error.includes('ENTRY_REMOVED'))).toBe(true);
   });
 });
+
+describe('content migration v1 → v2 (D025)', () => {
+  it('a v1 Farm world (old thresholds) loads: XP kept, level recomputed upwards, contentVersion 2', () => {
+    const state = createState(createTestTemplate('farm'), NOW), snapshot = snapshotCopy(state);
+    // Level 8 under the v1 Farm table (5 700 XP); the v2 table puts 5 700 XP at level 9 (5 320 ≤ xp < 8 270).
+    snapshot.contentVersion = 1; snapshot.progress.xp = 5700; snapshot.progress.level = 8;
+    const result = validateSnapshot(state, snapshot, NOW);
+    expect(result.ok ? 'ok' : result.errors).toBe('ok');
+    if (result.ok) {
+      expect(result.state.snapshot.contentVersion).toBe(2);
+      expect(result.state.snapshot.progress).toMatchObject({ xp: 5700, level: 9 });
+    }
+    expect(state.snapshot.contentVersion).toBe(economy.contentVersion);
+  });
+  it('a v1 City world keeps its level (City table unchanged)', () => {
+    const state = playingState(), snapshot = snapshotCopy(state);
+    snapshot.contentVersion = 1; snapshot.progress.xp = economy.xp.cumulative.city[6]!; snapshot.progress.level = 6;
+    const result = validateSnapshot(state, snapshot, NOW);
+    expect(result.ok && result.state.snapshot.progress.level).toBe(6);
+  });
+  it('unknown future versions are still rejected', () => {
+    const state = playingState();
+    rejectsWithoutMutation(state, snapshot => { snapshot.contentVersion = 3; }, 'CONTENT_VERSION');
+  });
+});
