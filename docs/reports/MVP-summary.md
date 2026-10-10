@@ -6,7 +6,11 @@
 > `contentVersion` 2, v1 snapshots migrate on load (29/29 stored Docker worlds load; unit + API migration tests).
 > Farm ordinary player with FarmBotV3: L8/L12/L15/L20 +1/+9/+7/+5% PASS (unchanged EconomyBot +38/+34/+21/+10%).
 > City table unchanged: its L8/L12 gap was a bot throttle; CityBotV2 passes +15/+9/0/−1% (`24185e5`).
-> All 2 maps × 3 styles track docs/16 §12.1 (`docs/reports/Q010-verify.json`). Re-validated after D025:
+> All 2 maps × 3 styles track docs/16 §12.1 (`docs/reports/Q010-verify.json`).
+> Official tool (`sim-economy.ts`, tuned bots by default since `d704426`): 8/8 pacing milestones PASS
+> (`docs/reports/G3-economy-tuned.json`). Since this summary: client telemetry, synthesized sound effects,
+> ambience, generative music, VFX, the UI agent's new in-game UI and Codex's bot are committed; `pnpm check`
+> 702/702, G3 E2E 26/26, production smoke PASS on the redeployed stack. Re-validated after D025:
 > `pnpm check` 685/685, `pnpm test:api` 23/23, production smoke PASS on the redeployed stack.
 > Full-world render check (`docs/evidence/g4/full-world/`): draw calls ≤ 183, 57–59 FPS steady (City overview 51).
 Source: `f5ab34a`; G3/G4 evidence and Q010 committed in `2303cb5`.

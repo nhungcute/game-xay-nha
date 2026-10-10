@@ -53,7 +53,7 @@ Q010 is resolved (D025 + `24185e5`). Two things only you should do, since the fi
 1. **Commit** `packages/tooling/sim-economy.ts`, `packages/tooling/src/economy-bot-core.ts`, `economy-bot-schedule.ts`,
    `economy-bot.test.ts`. `scripts/q010-*.ts` and `scripts/g4-full-world.ts` import them, so from a clean clone those
    scripts cannot run until then (`pnpm check` is unaffected: `scripts/` is outside `tsconfig` include).
-2. **Adopt the two policies** proven in `scripts/q010-farm-bots.ts` (subclasses, legal commands only), so the official
+2. **DONE in `d704426`: adopt the two policies** proven in `scripts/q010-farm-bots.ts` (subclasses, legal commands only), so the official
    `sim-economy.ts` reports what `scripts/q010-verify.ts` reports:
    - City: keep calling the build step within a tick while a building was placed (base bot places at most one
      building per 5-minute tick, so ordinary sessions under-build and hoard cash).

@@ -215,3 +215,9 @@ needed. Closing evidence for both maps × three styles: `scripts/q010-verify.ts`
 Recommendation for the bot owner: adopt the FarmBotV3/CityBotV2 policies in `packages/tooling` so
 `sim-economy.ts` reports the same.
 
+
+### Official tool confirmation (2026-10-10)
+
+The tuned policies are now the default of `packages/tooling/sim-economy.ts` (`d704426`). Official run
+`npx tsx packages/tooling/sim-economy.ts --days 60 --map all --style all` → `docs/reports/G3-economy-tuned.json`:
+all six scenarios valid; ordinary player City +15/+9/0/−1% and Farm +1/+9/+7/+5% at L8/L12/L15/L20 — **8/8 PASS**.
