@@ -1,13 +1,13 @@
 {
   "base": "http://127.0.0.1:8090",
-  "startedAt": "2026-10-10T05:20:10.884Z",
+  "startedAt": "2026-10-10T05:25:27.606Z",
   "health": "ok",
   "runs": {
     "chromium-desktop": {
       "maps": {
         "city": {
           "world": {
-            "worldId": "340a5969-9760-448c-8983-c06e7eaabc74",
+            "worldId": "ba2026d7-8ab2-4365-8249-122c59c2e142",
             "mapId": "city-coast-01",
             "revision": 1,
             "wallet": {
@@ -21,13 +21,13 @@
             "buildings": [],
             "removed": []
           },
-          "mapScreenMs": 303,
+          "mapScreenMs": 334,
           "metrics": {
             "quality": "high",
             "muted": false,
             "pending": 0,
-            "clockSkewMs": -117,
-            "fps": 58.89987022062495,
+            "clockSkewMs": -41,
+            "fps": 59.00285180450388,
             "drawCalls": 150,
             "triangles": 173370,
             "geometries": 82,
@@ -35,7 +35,7 @@
             "programs": 14,
             "terrain": {
               "lastRebuildMs": 0,
-              "maxRebuildMs": 1.5,
+              "maxRebuildMs": 1.399999976158142,
               "zonesRebuilt": 128
             },
             "revision": 1
@@ -51,7 +51,7 @@
         },
         "farm": {
           "world": {
-            "worldId": "48984374-3ddf-404b-8e2d-0a0b925d28db",
+            "worldId": "2ba2ecf9-f315-44f1-b3bb-07b145ee52dc",
             "mapId": "farm-valley-01",
             "revision": 1,
             "wallet": {
@@ -65,21 +65,21 @@
             "buildings": [],
             "removed": []
           },
-          "mapScreenMs": 110,
+          "mapScreenMs": 87,
           "metrics": {
             "quality": "high",
             "muted": false,
             "pending": 0,
-            "clockSkewMs": -66,
-            "fps": 58.91751547833036,
+            "clockSkewMs": -51,
+            "fps": 58.92339958054528,
             "drawCalls": 168,
             "triangles": 186062,
             "geometries": 94,
             "textures": 1,
             "programs": 14,
             "terrain": {
-              "lastRebuildMs": 0,
-              "maxRebuildMs": 0.8000000715255737,
+              "lastRebuildMs": 0.10000002384185791,
+              "maxRebuildMs": 0.6000000238418579,
               "zonesRebuilt": 128
             },
             "revision": 1
@@ -100,7 +100,7 @@
       "maps": {
         "city": {
           "world": {
-            "worldId": "d8810859-f796-4649-9e38-d9496e401b0e",
+            "worldId": "5bc566c2-96e0-458d-9fac-d046aeb30664",
             "mapId": "city-coast-01",
             "revision": 1,
             "wallet": {
@@ -114,13 +114,13 @@
             "buildings": [],
             "removed": []
           },
-          "mapScreenMs": 227,
+          "mapScreenMs": 267,
           "metrics": {
             "quality": "low",
             "muted": false,
             "pending": 0,
-            "clockSkewMs": -67,
-            "fps": 14.9402390438247,
+            "clockSkewMs": -64,
+            "fps": 15.0093808630394,
             "drawCalls": 57,
             "triangles": 139052,
             "geometries": 56,
@@ -144,7 +144,7 @@
         },
         "farm": {
           "world": {
-            "worldId": "46b609d9-c222-4c43-b291-f610ff772ba4",
+            "worldId": "7f064df0-e75e-4b0c-9680-082e730addc6",
             "mapId": "farm-valley-01",
             "revision": 1,
             "wallet": {
@@ -158,13 +158,13 @@
             "buildings": [],
             "removed": []
           },
-          "mapScreenMs": 888,
+          "mapScreenMs": 1013,
           "metrics": {
             "quality": "low",
             "muted": false,
             "pending": 0,
-            "clockSkewMs": -66,
-            "fps": 17.013232514177695,
+            "clockSkewMs": -32,
+            "fps": 12.732615083251714,
             "drawCalls": 62,
             "triangles": 150284,
             "geometries": 61,
@@ -190,5 +190,5 @@
       "errors": []
     }
   },
-  "finishedAt": "2026-10-10T05:20:47.446Z"
+  "finishedAt": "2026-10-10T05:26:05.160Z"
 }

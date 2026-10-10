@@ -40,3 +40,16 @@ describe('sound effects (docs/13 §4.8)', () => {
     expect(() => new SoundEffects().play(['levelUp'])).not.toThrow();
   });
 });
+
+describe('ambience water proximity', () => {
+  it('is 1 on the shore, fades with distance and is 0 beyond the radius', async () => {
+    const { waterNearby } = await import('./audio');
+    const { GRID, Surface, cellIndex } = await import('@xay-nha/contracts');
+    const surface = new Uint8Array(GRID * GRID);
+    surface[cellIndex(60, 60)] = Surface.WATER;
+    expect(waterNearby(surface, 60, 60)).toBe(1);
+    expect(waterNearby(surface, 66, 60)).toBeCloseTo(0.5);
+    expect(waterNearby(surface, 80, 60)).toBe(0);
+    expect(waterNearby(surface, 0, 0)).toBe(0);
+  });
+});

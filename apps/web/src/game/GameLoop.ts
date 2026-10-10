@@ -19,7 +19,7 @@ import { ToolController, useTools } from './ToolController';
 import { CameraRig } from './CameraRig';
 import { PointerRouter } from './PointerRouter';
 import { loadQuality, pixelRatio, saveQuality, type Quality } from './quality';
-import { commandSounds, SoundEffects, tickSounds } from './audio';
+import { commandSounds, SoundEffects, tickSounds, waterNearby } from './audio';
 
 export class GameLoop {
   readonly scene=new Scene();
@@ -65,7 +65,7 @@ export class GameLoop {
     this.rig=new CameraRig(world.state,(x,z)=>this.terrain.sampleHeight(x,z));this.tools=new ToolController(world);
     this.pointer=new PointerRouter(canvas,this.rig,this.tools,this.terrain.meshes);
     this.subscriptions.push(world.subscribe((state,dirty,entitiesChanged)=>{this.rig.setState(state);if(dirty.length){this.terrain.update(state,dirty);this.overlay.update(state);}if(entitiesChanged)for(const renderer of this.renderers)renderer.update(state);else {this.crops.update(state);this.coins.update(state);}}),useTools.subscribe(ui=>{const p=ui.preview;const status=p?.valid?(p.warning?'warning':'valid'):'invalid';if(p)this.overlay.preview(p.cells,world.state,status);else this.overlay.hide();if(p&&ui.tool==='build'&&ui.cell)this.ghost.preview(ui.buildingId,ui.cell,ui.rotation,world.state,status);else this.ghost.hide();}));
-    this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.resize();this.frameId=requestAnimationFrame(this.frame);
+    canvas.addEventListener('pointerdown',this.unlockAudio);this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.resize();this.frameId=requestAnimationFrame(this.frame);
     if(new URLSearchParams(location.search).get('debug')==='1')this.installDebug();
   }
   /** docs/11 §8 low-graphics mode: shadows off, lower pixel ratio, thinner scenery. Persisted per browser. */
@@ -76,12 +76,15 @@ export class GameLoop {
     this.scene.traverse(o=>{const m=(o as Mesh).material;if(m)for(const x of Array.isArray(m)?m:[m])x.needsUpdate=true;});
     this.env.setQuality(quality);
   }
+  /** Ambience follows the camera: running water near shores, wind stronger when zoomed out. */
+  private updateAmbience():void {const t=this.rig.target,s=this.world.state;this.sound.ambient(waterNearby(s.surface,Math.floor(t.x/2),Math.floor(t.z/2)),Math.max(0,Math.min(1,(260-this.rig.distance)/200)));}
+  private unlockAudio=():void=>this.sound.unlock();
   private resize():void {const rect=this.canvas.getBoundingClientRect();this.renderer.setSize(rect.width,rect.height,false);this.rig.resize(rect.width,rect.height);}
   private frame=(now:number):void=>{
     const dt=Math.min((now-this.last)/1000,.1);this.last=now;this.pointer.update(dt);this.terrain.animate(dt);this.water.animate(dt);this.coins.animate(dt);
     this.sun.target.position.copy(this.rig.target);this.sun.position.copy(this.rig.target).add(new Vector3(-50,90,40));
     this.renderer.render(this.scene,this.rig.camera);this.frameCount++;
-    if(now-this.second>=1000){this.fps=this.frameCount*1000/(now-this.second);this.second=now;this.frameCount=0;this.world.tick();}
+    if(now-this.second>=1000){this.fps=this.frameCount*1000/(now-this.second);this.second=now;this.frameCount=0;this.world.tick();this.updateAmbience();}
     this.frameId=requestAnimationFrame(this.frame);
   };
   project(x:number,z:number):{x:number;y:number} {const point=new Vector3(x,this.terrain.sampleHeight(x,z),z).project(this.rig.camera),r=this.canvas.getBoundingClientRect();return{x:r.left+(point.x+1)*r.width/2,y:r.top+(1-point.y)*r.height/2};}
@@ -101,5 +104,5 @@ export class GameLoop {
     });
     return {objects,meshes,instanced,sprites,texturedPlanes,largestPlaneM,textures:textures.size};
   }
-  dispose():void {cancelAnimationFrame(this.frameId);this.resizeObserver.disconnect();for(const unsubscribe of this.subscriptions)unsubscribe();this.pointer.dispose();this.overlay.dispose();this.ghost.dispose();for(const renderer of this.renderers)renderer.dispose();this.terrain.dispose();this.water.dispose();this.assets.dispose();this.renderer.dispose();this.world.onCommand=undefined;this.world.onTick=undefined;this.sound.dispose();this.world.dispose();Reflect.deleteProperty(window,'__debug');}
+  dispose():void {cancelAnimationFrame(this.frameId);this.resizeObserver.disconnect();for(const unsubscribe of this.subscriptions)unsubscribe();this.canvas.removeEventListener('pointerdown',this.unlockAudio);this.pointer.dispose();this.overlay.dispose();this.ghost.dispose();for(const renderer of this.renderers)renderer.dispose();this.terrain.dispose();this.water.dispose();this.assets.dispose();this.renderer.dispose();this.world.onCommand=undefined;this.world.onTick=undefined;this.sound.dispose();this.world.dispose();Reflect.deleteProperty(window,'__debug');}
 }

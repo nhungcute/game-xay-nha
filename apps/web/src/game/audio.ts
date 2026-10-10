@@ -1,9 +1,9 @@
-import type { CommandType } from '@xay-nha/contracts';
+import { GRID, Surface, cellIndex, type CommandType } from '@xay-nha/contracts';
 import type { SimState } from '@xay-nha/sim';
 
 /**
  * Sound effects (docs/13 §4.8 "Hiệu ứng"), synthesized with WebAudio: no audio files, nothing to license or download.
- * Music and ambience need real recordings and are not part of this module. The AudioContext is created lazily on the
+ * Ambience (wind, running water near the camera, occasional birds) is synthesized too; music needs real recordings. The AudioContext is created lazily on the
  * first sound, which always follows a user gesture (a command), so browsers allow it. Mute is remembered per browser.
  */
 export type Sound = 'chop' | 'dig' | 'build' | 'complete' | 'coin' | 'harvest' | 'levelUp' | 'error';
@@ -31,6 +31,17 @@ export function tickSounds(before: SimState, after: SimState): Sound[] {
   return sounds;
 }
 
+/** 0..1: how close the nearest water cell is to (x, z) within `radius` cells (1 = on the shore). */
+export function waterNearby(surface: Uint8Array, x: number, z: number, radius = 12): number {
+  let best = Infinity;
+  for (let dz = -radius; dz <= radius; dz++) for (let dx = -radius; dx <= radius; dx++) {
+    const cx = x + dx, cz = z + dz;
+    if (cx < 0 || cz < 0 || cx >= GRID || cz >= GRID || surface[cellIndex(cx, cz)] !== Surface.WATER) continue;
+    best = Math.min(best, Math.hypot(dx, dz));
+  }
+  return best === Infinity ? 0 : Math.max(0, 1 - best / radius);
+}
+
 const KEY = 'xay-nha.sound';
 type Voice = { wave: OscillatorType | 'noise'; from: number; to?: number; at: number; length: number; gain: number; filter?: number };
 const NOTES: Record<Sound, Voice[]> = {
@@ -47,6 +58,7 @@ const NOTES: Record<Sound, Voice[]> = {
 export class SoundEffects {
   private context?: AudioContext;
   private noise?: AudioBuffer;
+  private ambience?: { master: GainNode; wind: GainNode; water: GainNode };
   muted: boolean;
   constructor() {
     let stored: string | null = null;
@@ -55,7 +67,47 @@ export class SoundEffects {
   }
   setMuted(muted: boolean): void {
     this.muted = muted;
+    if (this.ambience && this.context) this.ambience.master.gain.setTargetAtTime(muted ? 0 : 1, this.context.currentTime, .3);
     try { localStorage.setItem(KEY, muted ? 'off' : 'on'); } catch { /* storage blocked */ }
+  }
+  /** Creates the AudioContext inside a user gesture (browsers block audio until then). */
+  unlock(): void {
+    if (this.muted || typeof AudioContext === 'undefined') return;
+    try { this.context ??= new AudioContext(); if (this.context.state === 'suspended') void this.context.resume(); } catch { /* no audio */ }
+  }
+  /** Called about once a second: `water` 0..1 from waterNearby, `zoom` 0..1 (1 = close to the ground). */
+  ambient(water: number, zoom: number): void {
+    const ctx = this.context;
+    if (!ctx || this.muted) return;
+    try {
+      if (!this.ambience) {
+        const master = ctx.createGain(); master.gain.value = 1; master.connect(ctx.destination);
+        const loop = (type: BiquadFilterType, frequency: number, q: number) => {
+          const src = ctx.createBufferSource(); src.buffer = this.noiseBuffer(ctx); src.loop = true;
+          const filter = ctx.createBiquadFilter(); filter.type = type; filter.frequency.value = frequency; filter.Q.value = q;
+          const gain = ctx.createGain(); gain.gain.value = 0;
+          src.connect(filter); filter.connect(gain); gain.connect(master); src.start();
+          return gain;
+        };
+        this.ambience = { master, wind: loop('lowpass', 420, .4), water: loop('bandpass', 1300, .6) };
+      }
+      const now = ctx.currentTime, gust = .75 + .25 * Math.sin(now / 7);
+      this.ambience.wind.gain.setTargetAtTime(.035 * gust * (.6 + .4 * (1 - zoom)), now, 1.5);
+      this.ambience.water.gain.setTargetAtTime(.09 * water * zoom, now, 1);
+      if (zoom > .3 && Math.random() < .12 * zoom) this.chirp(ctx, this.ambience.master, now);
+    } catch { /* audio unavailable */ }
+  }
+  private chirp(ctx: AudioContext, out: AudioNode, now: number): void {
+    const base = 2400 + Math.random() * 1400, notes = 2 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < notes; i++) this.voice(ctx, out, { wave: 'sine', from: base, to: base * 1.35, at: i * .11, length: .07, gain: .045 }, now + .05);
+  }
+  private noiseBuffer(ctx: AudioContext): AudioBuffer {
+    if (!this.noise) {
+      this.noise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+      const data = this.noise.getChannelData(0); let seed = 1;
+      for (let i = 0; i < data.length; i++) { seed = (seed * 16807) % 2147483647; data[i] = seed / 1073741823.5 - 1; }
+    }
+    return this.noise;
   }
   play(sounds: readonly Sound[]): void {
     if (this.muted || !sounds.length || typeof AudioContext === 'undefined') return;
@@ -73,12 +125,7 @@ export class SoundEffects {
     env.gain.setValueAtTime(0.0001, t); env.gain.exponentialRampToValueAtTime(v.gain, t + .01); env.gain.exponentialRampToValueAtTime(0.0001, t + v.length);
     let source: AudioScheduledSourceNode;
     if (v.wave === 'noise') {
-      if (!this.noise) {
-        this.noise = ctx.createBuffer(1, ctx.sampleRate / 2, ctx.sampleRate);
-        const data = this.noise.getChannelData(0); let seed = 1;
-        for (let i = 0; i < data.length; i++) { seed = (seed * 16807) % 2147483647; data[i] = seed / 1073741823.5 - 1; }
-      }
-      const node = ctx.createBufferSource(); node.buffer = this.noise; source = node;
+      const node = ctx.createBufferSource(); node.buffer = this.noiseBuffer(ctx); source = node;
       const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = v.filter ?? v.from; filter.Q.value = 1.2;
       node.connect(filter); filter.connect(env);
     } else {
@@ -88,5 +135,5 @@ export class SoundEffects {
     }
     env.connect(out); source.start(t); source.stop(t + v.length + .02);
   }
-  dispose(): void { void this.context?.close(); this.context = undefined; }
+  dispose(): void { void this.context?.close(); this.context = undefined; this.ambience = undefined; }
 }

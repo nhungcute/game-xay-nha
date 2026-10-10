@@ -67,7 +67,7 @@ Measurements are browser/host-specific; emulation FPS is not real-phone performa
 - Real-device performance (docs/10 §6, three reference devices) and the "full world" stress scenario (400 buildings, 2 000 road cells, 20 bridges, 1 000 fields): **not run**.
 - Human playtest: tutorial time for a real first-time player is NOT RUN (historical bot 15 s, closeout 16 s); the 15-minute session was automated only.
 - Tunnel: never started by the agent (rule). `pnpm tunnel:up` / `tunnel:url` are unchanged from G2 and untested in G4.
-- Audio: sound effects implemented after the gate (synthesized WebAudio, docs/13 §4.8 effects, mute in Settings/Profile); music and ambience still need real recordings.
+- Audio: sound effects implemented after the gate (synthesized WebAudio, docs/13 §4.8 effects, mute in Settings/Profile) plus synthesized ambience (wind, water near the camera, birds); music still needs real recordings.
 - Client telemetry `/api/telemetry` (docs/11 §10): implemented after the gate (`apps/api/src/telemetry.ts`, `apps/web/src/net/telemetry.ts`); verified end to end on the Docker stack (JS error + unhandled rejection appear as `client-error` log lines). Log only, no dashboard.
 - Metrics are in-process and log-only (single API instance); no dashboard.
 - Backups stay on the same machine unless copied elsewhere.
