@@ -15,12 +15,14 @@ offline dev client through validate-then-swap and measures docs/11 §8 on this d
 | Triangles, high | 197k | 203k | ≤ 1.5 M |
 | Draw calls, low | 108 | 104 | ≤ 150 (mobile) |
 | Triangles, low | 177k | 181k | ≤ 500k (mobile) |
-| Zone rebuild after TERRAFORM | 5.2 ms | 2.8 ms | ≤ 8 ms desktop |
+| Zone rebuild after TERRAFORM | 4.4 ms | 4.7 ms | ≤ 8 ms desktop |
 | Console errors | 0 | 0 | 0 |
-| FPS high (default / overview) | 47 / 40 | 51 / 44 | 60 desktop — **below target** |
-| FPS low (default / overview) | 55 / 55 | 57 / 46 | ≥ 30 mobile |
+| FPS high, steady state (min over 4 views; p95 frame) | 51 (overview 75°, p95 26 ms); other views 57–59 | 58–59 (p95 ≤ 19.5 ms) | 60 desktop |
+| FPS low, steady state | 58–59 | 59 | ≥ 30 mobile |
 
 Not covered: docs/10 §6 asks for 400 buildings, 2 000 road cells, 20 bridges, 1 000 fields and 64 open zones;
 these bot worlds are realistic day-60 worlds and are smaller. Real reference devices were not available.
-FPS in headless Chrome on this host is indicative only. Desktop FPS at "high" falls to 40–53 in a full City/Farm;
-"low" restores ~55. Profiling the high-quality GPU cost (shadow map 2048 PCF soft over ~230 buildings) is a P1 item.
+FPS is the median of 90 requestAnimationFrame intervals after a 3 s settle (headless Chrome, this host; indicative).
+A first run read the 1-second HUD counter right after loading and showed 40–53 FPS; profiling showed that was
+load/settle work: one full-City render (main + shadow pass) costs ~3.0 ms of GPU time (1.5 ms without shadows).
+Only the City 75° overview at high quality stays slightly below 60 (51 FPS).

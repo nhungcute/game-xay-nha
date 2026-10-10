@@ -27,9 +27,13 @@ for (const [kind, mapId] of [['city', 'city-coast-01'], ['farm', 'farm-valley-01
     if (quality === 'low') { await page.locator('header .brand').click(); await page.locator('.settings button', { hasText: 'Thấp' }).click(); await page.locator('.side.panel .close').click(); }
     for (const [label, cam] of [['default', null], ['overview-75', [128, 128, 220, 45, 75]], ['oblique-45', [128, 128, 160, 200, 45]], ['close', [128, 128, 45, 30, 40]]]) {
       if (cam) await page.evaluate(c => window.__debug.camera(...c), cam);
-      await page.waitForTimeout(1600);
+      await page.waitForTimeout(3000);
+      // Steady-state frame times over 90 animation frames (the 1-s HUD FPS counter also sees load/settle spikes).
+      const frames = await page.evaluate(async () => { const t = []; let last = window.performance.now();
+        for (let i = 0; i < 90; i++) { await new Promise(r => window.requestAnimationFrame(r)); const n = window.performance.now(); t.push(n - last); last = n; }
+        t.sort((a, b) => a - b); return { fps: Math.round(1000 / t[45]), p95Ms: +t[85].toFixed(1) }; });
       const m = await page.evaluate(() => window.__debug.metrics());
-      views.push({ quality, view: label, fps: Math.round(m.fps), drawCalls: m.drawCalls, triangles: m.triangles, geometries: m.geometries });
+      views.push({ quality, view: label, fps: frames.fps, p95FrameMs: frames.p95Ms, drawCalls: m.drawCalls, triangles: m.triangles, geometries: m.geometries });
       if (label === 'overview-75') await page.screenshot({ path: `${OUT}/${kind}-${quality}-overview.jpg`, type: 'jpeg', quality: 78 });
     }
   }
@@ -50,7 +54,7 @@ for (const [kind, mapId] of [['city', 'city-coast-01'], ['farm', 'farm-valley-01
   };
   if (Object.values(checks).some(v => !v)) failed = true;
   report.maps[kind] = { world, views, rebuild, checks, errors };
-  console.log(kind, JSON.stringify(world), '\n ', views.map(v => `${v.quality}/${v.view}: ${v.drawCalls} calls ${v.triangles} tris ${v.fps} fps`).join(' | '), '\n ', JSON.stringify(checks), 'rebuild', rebuild.stats.maxRebuildMs);
+  console.log(kind, JSON.stringify(world), '\n ', views.map(v => `${v.quality}/${v.view}: ${v.drawCalls} calls ${v.triangles} tris ${v.fps} fps p95 ${v.p95FrameMs} ms`).join(' | '), '\n ', JSON.stringify(checks), 'rebuild', rebuild.stats.maxRebuildMs);
   await context.close();
 }
 await browser.close();

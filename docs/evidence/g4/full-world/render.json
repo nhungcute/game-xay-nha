@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:5190",
-  "at": "2026-10-10T03:42:58.913Z",
+  "at": "2026-10-10T03:47:08.747Z",
   "maps": {
     "city": {
       "world": {
@@ -19,7 +19,8 @@
         {
           "quality": "high",
           "view": "default",
-          "fps": 47,
+          "fps": 57,
+          "p95FrameMs": 23.8,
           "drawCalls": 165,
           "triangles": 191438,
           "geometries": 94
@@ -27,7 +28,8 @@
         {
           "quality": "high",
           "view": "overview-75",
-          "fps": 40,
+          "fps": 51,
+          "p95FrameMs": 26.4,
           "drawCalls": 183,
           "triangles": 196878,
           "geometries": 109
@@ -35,7 +37,8 @@
         {
           "quality": "high",
           "view": "oblique-45",
-          "fps": 41,
+          "fps": 59,
+          "p95FrameMs": 20,
           "drawCalls": 173,
           "triangles": 194262,
           "geometries": 116
@@ -43,7 +46,8 @@
         {
           "quality": "high",
           "view": "close",
-          "fps": 53,
+          "fps": 59,
+          "p95FrameMs": 19.2,
           "drawCalls": 128,
           "triangles": 175554,
           "geometries": 116
@@ -51,7 +55,8 @@
         {
           "quality": "low",
           "view": "default",
-          "fps": 55,
+          "fps": 59,
+          "p95FrameMs": 18.3,
           "drawCalls": 64,
           "triangles": 158512,
           "geometries": 116
@@ -59,7 +64,8 @@
         {
           "quality": "low",
           "view": "overview-75",
-          "fps": 55,
+          "fps": 59,
+          "p95FrameMs": 19.1,
           "drawCalls": 108,
           "triangles": 176668,
           "geometries": 116
@@ -67,7 +73,8 @@
         {
           "quality": "low",
           "view": "oblique-45",
-          "fps": 55,
+          "fps": 58,
+          "p95FrameMs": 18.7,
           "drawCalls": 98,
           "triangles": 174052,
           "geometries": 116
@@ -75,7 +82,8 @@
         {
           "quality": "low",
           "view": "close",
-          "fps": 56,
+          "fps": 59,
+          "p95FrameMs": 18.8,
           "drawCalls": 64,
           "triangles": 158512,
           "geometries": 116
@@ -85,9 +93,9 @@
         "accepted": false,
         "code": "OCCUPIED",
         "stats": {
-          "lastRebuildMs": 0.10000002384185791,
-          "maxRebuildMs": 5.200000047683716,
-          "zonesRebuilt": 640
+          "lastRebuildMs": 0,
+          "maxRebuildMs": 4.399999976158142,
+          "zonesRebuilt": 576
         }
       },
       "checks": {
@@ -117,7 +125,8 @@
         {
           "quality": "high",
           "view": "default",
-          "fps": 51,
+          "fps": 58,
+          "p95FrameMs": 19.5,
           "drawCalls": 181,
           "triangles": 202034,
           "geometries": 107
@@ -125,7 +134,8 @@
         {
           "quality": "high",
           "view": "overview-75",
-          "fps": 44,
+          "fps": 59,
+          "p95FrameMs": 18.8,
           "drawCalls": 179,
           "triangles": 203274,
           "geometries": 113
@@ -133,7 +143,8 @@
         {
           "quality": "high",
           "view": "oblique-45",
-          "fps": 40,
+          "fps": 59,
+          "p95FrameMs": 18.6,
           "drawCalls": 175,
           "triangles": 200634,
           "geometries": 121
@@ -141,7 +152,8 @@
         {
           "quality": "high",
           "view": "close",
-          "fps": 54,
+          "fps": 59,
+          "p95FrameMs": 19,
           "drawCalls": 124,
           "triangles": 173082,
           "geometries": 121
@@ -149,7 +161,8 @@
         {
           "quality": "low",
           "view": "default",
-          "fps": 57,
+          "fps": 59,
+          "p95FrameMs": 17.6,
           "drawCalls": 54,
           "triangles": 153174,
           "geometries": 121
@@ -157,7 +170,8 @@
         {
           "quality": "low",
           "view": "overview-75",
-          "fps": 46,
+          "fps": 59,
+          "p95FrameMs": 18.2,
           "drawCalls": 104,
           "triangles": 181014,
           "geometries": 121
@@ -165,7 +179,8 @@
         {
           "quality": "low",
           "view": "oblique-45",
-          "fps": 37,
+          "fps": 59,
+          "p95FrameMs": 18.3,
           "drawCalls": 99,
           "triangles": 178230,
           "geometries": 121
@@ -173,7 +188,8 @@
         {
           "quality": "low",
           "view": "close",
-          "fps": 56,
+          "fps": 59,
+          "p95FrameMs": 19.1,
           "drawCalls": 54,
           "triangles": 153174,
           "geometries": 121
@@ -183,8 +199,8 @@
         "accepted": false,
         "code": "CELL_BLOCKED",
         "stats": {
-          "lastRebuildMs": 0,
-          "maxRebuildMs": 2.8000000715255737,
+          "lastRebuildMs": 0.10000002384185791,
+          "maxRebuildMs": 4.699999928474426,
           "zonesRebuilt": 640
         }
       },
