@@ -4,16 +4,41 @@ Updated: 2026-10-10 (Asia/Bangkok).
 
 Mode: auto-continue (approved 2026-10-10)
 
-## Current gate: G3 — IN PROGRESS (G2 complete 2026-10-10, see docs/reports/G2-report.md)
+## Current gate: MVP local closeout — G3 economy FAIL, final validation pending
+
+Six-scenario economy comparison completed: CLI exit 0, 876.329 s, all invariants PASS; pacing FAIL.
+G3 balance approval waits on Q010; the first-time human tutorial and G4 reference-device performance are NOT RUN.
+MVP closeout is authorized in auto-continue mode; balance changes still need the product owner's decision.
+The incomplete prior background run was preserved in its original scratch file and stopped by its verified
+process ID. The 08:16 run exposed repeated far-bank flood fills; its partial result was preserved in
+`docs/reports/G3-economy-pre-topology-cache.json`. `f5ab34a` caches immutable water topology in the sim,
+with six parity/lifecycle tests and no economy or bot changes. Baseline check: 676/676; post-fix check: 682/682,
+both exit 0. The fresh six-scenario rerun uses `f5ab34a`, with output at `docs/reports/G3-economy-current.json`
+and log at `docs/evidence/mvp-final/economy.log`. All 55 fingerprinted files stayed unchanged during the run.
 
 ## G3 task plan
 
-- [ ] Authored layouts → templates for CITY (docs/03 §2) and FARM (docs/04 §2) via packages/tooling; validator; 5-angle screenshots per map.
-- [ ] Map-aware client polish: city income bubbles/collect-all with bank, farm crops/production UI, catalog limits X/Y, profile + net worth panel.
-- [ ] Quests: 24 authored + repeat quests (D017) in sim + UI; tutorial flow (docs/09 §5) incl. tutorial speed-ups.
-- [ ] packages/tooling/sim-economy.ts on the real sim; compare pacing with docs/16 §12 (≤ 25%).
-- [ ] E2E docs/10 §4 on Chromium + WebKit mobile emulation; visual review per map.
-- [ ] Full check, docs/reports/G3-report.md, commit.
+- [x] Authored layouts → templates for CITY (`city-coast-01` v2) and FARM (`farm-valley-01` v2); validator; 5-angle screenshots per map (`ee648ec`).
+- [x] Map-aware client polish: income coins, collect-all with bank, farm crops/production UI, catalog limits X/Y, profile + net worth panel (`98115d5`).
+- [x] Quests: 24 authored + repeat quests (D017/D024) in sim + UI; tutorial + Bác Tư hints; state-based authored progress (`f70cd03`); repeat-quest audit fixes (`103f652`).
+- [x] Codex follow-ups: codec perf (`6aeece0`), draw calls 819/978 → 182/200 (`0d1fae0`), natural ground colours requested by the user (`66dc010`).
+- [x] Real-sim economy: six 60-day scenarios at `f5ab34a`; compared docs/16 §12. Five milestone FAIL, two PASS, Farm L20 UNREACHED. Q010 recorded; no numbers changed. Farm careful speed 2.266× / 1.689× / 1.562× at L8/12/15; L20 comparison unobservable.
+- [x] Supplemental economy audit: `npx tsx scripts/mvp-economy-audit.ts` exit 0; ten build/cancel and ten build/demolish reversals, buy/sell-material rejection, duplicate-clear rejection. `docs/reports/G3-economy-audit.json`; full exploit absence is not proved. Best-case Tạp hóa payback bound 0.901 h; buildings unlocked after L5 all ≥ 1 h.
+- [x] Far-bank topology performance fix (`f5ab34a`): repeated placement scans use cached component labels; bridge status stays live; no snapshot/content fields added. Focused suites 84/84, full check 682/682. `docs/reports/G3-economy-bot-observations.md`.
+- [x] E2E smoke on Chromium + WebKit mobile emulation: closeout rerun 26/26, 0 errors, automated tutorial 16 s; tracked visual evidence in `docs/evidence/g3/ground/` and map shots. Exact long-loop QA combinations are not all certified.
+- [x] Full check 682/682 exit 0; `docs/reports/G3-report.md` complete (economy FAIL is explicit), documentation ready for path-limited commit.
+- [ ] First-time human tutorial ≤ 6 minutes — NOT RUN.
+
+## G4 task plan
+
+- [x] Low-graphics mode (shadows off, lower DPR, thinner scenery; default on touch) + debug panel fields (`ccfd992`).
+- [x] API observability: per-command JSON log, periodic metrics (`f8c8d1c`).
+- [x] Postgres backup service (daily, keep 7) + `pnpm db:backup` / `pnpm db:restore`, round trip verified (`c5f0245`).
+- [x] Clean `git clone` → ensure-env → compose up → production smoke PASS on Chromium + WebKit (`e67307a`).
+- [x] 15-minute automated UI soak: retained `docs/evidence/g4/soak/soak.json`, 904 actions, 0 console/page/HTTP errors, GPU growth +0 (`3ebefea`). Human normal-play session: NOT RUN.
+- [ ] Performance on the 3 reference devices (docs/10 §6) — needs real hardware; report as NOT RUN unless measured.
+- [x] G4 retained-evidence report and complete 74-placeholder inventory prepared (`docs/reports/MVP-placeholder-assets.md`).
+- [ ] Final `pnpm check`, `pnpm test:api`, local deploy + production smoke, final MVP summary and documentation commit.
 
 ## G2 task plan — DONE
 
@@ -42,7 +67,9 @@ Mode: auto-continue (approved 2026-10-10)
 - [x] G0.7: atomic snapshot validation/load, delta boundaries, preview/command results.
 - [x] G0.8: 604 passing unit cases, 1000-command invariant test, full check and gate report.
 
-## Evidence and limitations
+## Historical G0 evidence and limitations
+
+The following records G0 only; current G1–G4 results and limitations are above and in the gate reports.
 
 - Existing prototype tests and screenshots from earlier reviews are NOT G0 evidence.
 - Host Node: v24.19.0; actual full check also run with Node v22.20.0.
@@ -64,5 +91,7 @@ Mode: auto-continue (approved 2026-10-10)
 
 ## Next steps
 
-Commit the approved documentation changes, then implement G1. Q001–Q004 retain the reviewed G0
-interpretations; do not change their gameplay/economy rules without a further approval.
+Commit completed G3/G4 documentation and explicitly authorized G3 E2E evidence with owned paths only.
+Finalize the MVP summary, then run `pnpm check`, `pnpm test:api`, local `pnpm deploy:up` and production G4 smoke.
+Never start the tunnel or a public deployment. Q009 and Q010 remain open; Q010 contains all eight comparisons,
+model/bot differences and two approval options. Do not change economy numbers without approval.

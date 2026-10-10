@@ -1,0 +1,107 @@
+
+> xay-nha@0.1.0 check D:\Core_LVB_BIDC\Project\Game_xay_nha
+> pnpm content:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build
+
+
+> xay-nha@0.1.0 content:check D:\Core_LVB_BIDC\Project\Game_xay_nha
+> node scripts/generate-content.mjs --check
+
+Verified 4 content files from docs/16 + economy model (D:\Core_LVB_BIDC\Project\Game_xay_nha\).
+
+> xay-nha@0.1.0 lint D:\Core_LVB_BIDC\Project\Game_xay_nha
+> eslint packages scripts apps --max-warnings 0
+
+
+> xay-nha@0.1.0 typecheck D:\Core_LVB_BIDC\Project\Game_xay_nha
+> tsc --noEmit
+
+
+> xay-nha@0.1.0 test D:\Core_LVB_BIDC\Project\Game_xay_nha
+> vitest run
+
+
+ RUN  v3.2.4 D:/Core_LVB_BIDC/Project/Game_xay_nha
+
+ ✓ packages/contracts/src/contracts.test.ts (80 tests) 1223ms
+   ✓ template and snapshot schemas > base64 codec round-trips every length and rejects noncanonical padding bits directly  1141ms
+ ✓ packages/sim/src/construction.test.ts (49 tests) 1465ms
+ ✓ packages/sim/src/quests.test.ts (15 tests) 1741ms
+   ✓ repeat quests (docs/16 §10.3, D017, D024) > validateSnapshot rejects forged repeat quests (reward, XP, id, subject, timing, map, progress)  659ms
+ ✓ packages/tooling/src/authored-template.test.ts (3 tests) 1936ms
+   ✓ provisional G1 Farm authoring > builds real river/lakes/waterfall with untouched terrain and dry ENTRY path  636ms
+   ✓ provisional G1 Farm authoring > builds deterministically and refuses water-crossing authored roads  923ms
+   ✓ provisional G1 Farm authoring > rejects authored region water overlaps before exporting a map  374ms
+ ✓ packages/sim/src/economy.test.ts (49 tests) 2666ms
+ ✓ packages/sim/src/engine.test.ts (38 tests) 2716ms
+   ✓ atomic command engine and previews > validate and preview cost match accepted apply without modifying input  523ms
+   ✓ quests and tutorial completion > Farm tutorial completes through real commands in under six minutes at level >=2  494ms
+ ✓ packages/tooling/src/economy-bot.test.ts (6 tests) 3360ms
+   ✓ real sim economy bot > city bot uses commands to progress from starting resources without violating state invariants  856ms
+   ✓ real sim economy bot > farm bot uses commands to progress from starting resources without violating state invariants  1502ms
+   ✓ real sim economy bot > reports missing milestones as UNREACHED instead of passing them  961ms
+ ✓ apps/web/src/game/render/renderers.test.ts (13 tests) 3015ms
+   ✓ shared terrain geometry > reuses all chunk geometries and buffers during fifty terrain edits  1587ms
+   ✓ shared terrain geometry > interpolates visual heights to simulation targets in exactly 200 ms without modifying state  357ms
+ ✓ packages/worldgen/src/worldgen.test.ts (31 tests) 4093ms
+   ✓ deterministic environment generation > excludes water, roads and ENTRY across every blocking footprint  1244ms
+   ✓ deterministic environment generation > large rocks and trees never overlap or cross generating zone edges  1158ms
+ ✓ apps/web/src/game/assets/assets.test.ts (8 tests) 3155ms
+   ✓ actual placeholder GLB artifacts > loads every model with valid triangles, bottom pivot, footprint bounds and explicit provenance  1348ms
+   ✓ actual placeholder GLB artifacts > low graphics drops flowers/reeds, thins bushes and merges batches; switching back restores everything  698ms
+ ✓ packages/sim/src/road-value.test.ts (7 tests) 1045ms
+ ✓ apps/web/src/game/render/groundPalette.test.ts (4 tests) 1578ms
+   ✓ natural ground palette (G3 map art request) > city-coast-01: grass is broken into earthy, shore and rock patches, not one flat green  801ms
+   ✓ natural ground palette (G3 map art request) > farm-valley-01: grass is broken into earthy, shore and rock patches, not one flat green  568ms
+ ✓ packages/content/src/content.test.ts (33 tests) 889ms
+   ✓ docs/16 generated economy content > regenerates deterministically and passes check mode  850ms
+ ✓ packages/tooling/src/cli.test.ts (3 tests) 592ms
+ ✓ packages/worldgen/src/banks.test.ts (4 tests) 537ms
+ ✓ packages/sim/src/banks.test.ts (6 tests) 788ms
+ ✓ apps/web/src/game/quality.test.ts (4 tests) 10ms
+ ✓ apps/api/src/metrics.test.ts (2 tests) 8ms
+ ✓ packages/sim/src/farm.test.ts (74 tests) 5863ms
+ ✓ packages/sim/src/terrain.test.ts (53 tests) 6711ms
+   ✓ terrain commands through atomic engine > raises exactly four corners by 5dm for $12  613ms
+   ✓ terrain commands through atomic engine > requires clearing a blocking tree first  324ms
+   ✓ terrain commands through atomic engine > rejects deformation that makes an adjacent road too steep  330ms
+ ✓ packages/tooling/src/browser-fixture.test.ts (2 tests) 16ms
+ ✓ packages/sim/src/snapshot.test.ts (51 tests) 6916ms
+   ✓ validate everything then swap snapshot > loads a valid 3-building snapshot into a separate state with matching hash  688ms
+ ✓ packages/sim/src/footprint.test.ts (146 tests) 7577ms
+stdout | packages/sim/src/invariants.test.ts > 1000 seeded random commands preserve occupancy, integer wallet, unique IDs and all shared edges
+1000 random commands: 217 accepted, 783 rejected; 23 command types; invariants checked after every command.
+
+ ✓ packages/sim/src/invariants.test.ts (1 test) 28385ms
+   ✓ 1000 seeded random commands preserve occupancy, integer wallet, unique IDs and all shared edges  28383ms
+
+ Test Files  24 passed (24)
+      Tests  682 passed (682)
+   Start at  08:34:05
+   Duration  29.67s (transform 3.90s, setup 0ms, collect 13.61s, tests 86.29s, environment 8ms, prepare 6.76s)
+
+
+> xay-nha@0.1.0 build D:\Core_LVB_BIDC\Project\Game_xay_nha
+> tsc -p tsconfig.build.json && pnpm build:web
+
+
+> xay-nha@0.1.0 build:web D:\Core_LVB_BIDC\Project\Game_xay_nha
+> pnpm --filter @xay-nha/web build
+
+
+> @xay-nha/web@0.1.0 build D:\Core_LVB_BIDC\Project\Game_xay_nha\apps\web
+> vite build
+
+vite v7.1.9 building for production...
+transforming...
+✓ 102 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.48 kB
+dist/assets/index-BI0PFuPy.css    8.45 kB │ gzip:   2.65 kB
+dist/assets/index-D_zFoOxq.js   949.89 kB │ gzip: 265.22 kB │ map: 4,067.54 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.57s

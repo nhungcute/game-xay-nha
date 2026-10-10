@@ -1,0 +1,264 @@
+{
+  "revision": "f5ab34a0099808cc8325fca451cf25f33b21dbea",
+  "contentVersion": 1,
+  "sourceDigest": "308b529ccbb0ff146bdea2f76c8d6d494b291a07c7972dcb51fc1d892b9394a2",
+  "sourceUnchanged": true,
+  "fingerprintFiles": 55,
+  "pacingGate": "FAIL",
+  "allInvariantsPass": true,
+  "totalSeconds": 876.3293161,
+  "scenarios": [
+    {
+      "map": "city",
+      "style": "cham",
+      "final": {
+        "level": 20,
+        "xp": 639842,
+        "cash": 304561710,
+        "netWorth": 305957025,
+        "buildings": 229,
+        "zones": 10,
+        "fields": 0,
+        "producers": 0,
+        "questIndex": 12,
+        "repeatClaims": 9,
+        "rate": 322814.5
+      },
+      "commands": 7792,
+      "seconds": 327.25920779999996,
+      "elapsedHorizonDays": 59.552083333333336,
+      "invariants": {
+        "snapshotValid": true,
+        "errors": [],
+        "walletSafe": true,
+        "occupancyValid": true
+      }
+    },
+    {
+      "map": "city",
+      "style": "thuong",
+      "final": {
+        "level": 20,
+        "xp": 551349,
+        "cash": 251106993,
+        "netWorth": 256991163,
+        "buildings": 229,
+        "zones": 48,
+        "fields": 0,
+        "producers": 0,
+        "questIndex": 12,
+        "repeatClaims": 35,
+        "rate": 309210
+      },
+      "commands": 13619,
+      "seconds": 266.9348044,
+      "elapsedHorizonDays": 59.048611111111114,
+      "invariants": {
+        "snapshotValid": true,
+        "errors": [],
+        "walletSafe": true,
+        "occupancyValid": true
+      }
+    },
+    {
+      "map": "city",
+      "style": "nhan",
+      "final": {
+        "level": 14,
+        "xp": 90346,
+        "cash": 37985261,
+        "netWorth": 38576131,
+        "buildings": 152,
+        "zones": 9,
+        "fields": 0,
+        "producers": 0,
+        "questIndex": 10,
+        "repeatClaims": 0,
+        "rate": 148428
+      },
+      "commands": 2694,
+      "seconds": 47.466827300000006,
+      "elapsedHorizonDays": 59.00694444444444,
+      "invariants": {
+        "snapshotValid": true,
+        "errors": [],
+        "walletSafe": true,
+        "occupancyValid": true
+      }
+    },
+    {
+      "map": "farm",
+      "style": "cham",
+      "final": {
+        "level": 18,
+        "xp": 155682,
+        "cash": 3131474,
+        "netWorth": 3495190,
+        "buildings": 28,
+        "zones": 8,
+        "fields": 216,
+        "producers": 16,
+        "questIndex": 12,
+        "repeatClaims": 16,
+        "rate": 0
+      },
+      "commands": 36839,
+      "seconds": 145.46947039999998,
+      "elapsedHorizonDays": 59.552083333333336,
+      "invariants": {
+        "snapshotValid": true,
+        "errors": [],
+        "walletSafe": true,
+        "occupancyValid": true
+      }
+    },
+    {
+      "map": "farm",
+      "style": "thuong",
+      "final": {
+        "level": 15,
+        "xp": 87737,
+        "cash": 1961651,
+        "netWorth": 2215062,
+        "buildings": 25,
+        "zones": 8,
+        "fields": 192,
+        "producers": 14,
+        "questIndex": 12,
+        "repeatClaims": 21,
+        "rate": 0
+      },
+      "commands": 16441,
+      "seconds": 70.69882460000005,
+      "elapsedHorizonDays": 59.048611111111114,
+      "invariants": {
+        "snapshotValid": true,
+        "errors": [],
+        "walletSafe": true,
+        "occupancyValid": true
+      }
+    },
+    {
+      "map": "farm",
+      "style": "nhan",
+      "final": {
+        "level": 10,
+        "xp": 20047,
+        "cash": 297634,
+        "netWorth": 378260,
+        "buildings": 16,
+        "zones": 7,
+        "fields": 120,
+        "producers": 8,
+        "questIndex": 12,
+        "repeatClaims": 21,
+        "rate": 0
+      },
+      "commands": 4254,
+      "seconds": 18.500181600000012,
+      "elapsedHorizonDays": 59.00694444444444,
+      "invariants": {
+        "snapshotValid": true,
+        "errors": [],
+        "walletSafe": true,
+        "occupancyValid": true
+      }
+    }
+  ],
+  "milestones": [
+    {
+      "map": "city",
+      "level": 8,
+      "expectedDays": 3.5,
+      "actualDays": 6.5,
+      "deviation": 0.8571428571428571,
+      "status": "FAIL"
+    },
+    {
+      "map": "city",
+      "level": 12,
+      "expectedDays": 11,
+      "actualDays": 14.6875,
+      "deviation": 0.3352272727272727,
+      "status": "FAIL"
+    },
+    {
+      "map": "city",
+      "level": 15,
+      "expectedDays": 21,
+      "actualDays": 24.5,
+      "deviation": 0.16666666666666666,
+      "status": "PASS"
+    },
+    {
+      "map": "city",
+      "level": 20,
+      "expectedDays": 49,
+      "actualDays": 51.5,
+      "deviation": 0.05102040816326531,
+      "status": "PASS"
+    },
+    {
+      "map": "farm",
+      "level": 8,
+      "expectedDays": 4,
+      "actualDays": 8.041666666666666,
+      "deviation": 1.0104166666666665,
+      "status": "FAIL"
+    },
+    {
+      "map": "farm",
+      "level": 12,
+      "expectedDays": 12,
+      "actualDays": 30.6875,
+      "deviation": 1.5572916666666667,
+      "status": "FAIL"
+    },
+    {
+      "map": "farm",
+      "level": 15,
+      "expectedDays": 22,
+      "actualDays": 53.6875,
+      "deviation": 1.4403409090909092,
+      "status": "FAIL"
+    },
+    {
+      "map": "farm",
+      "level": 20,
+      "expectedDays": 52,
+      "actualDays": null,
+      "deviation": null,
+      "status": "UNREACHED"
+    }
+  ],
+  "farmSpeed": [
+    {
+      "level": 8,
+      "normalDays": 8.041666666666666,
+      "carefulDays": 3.5493055555555557,
+      "ratio": 2.2657014282919192,
+      "status": "PASS"
+    },
+    {
+      "level": 12,
+      "normalDays": 30.6875,
+      "carefulDays": 18.166666666666668,
+      "ratio": 1.6892201834862384,
+      "status": "PASS"
+    },
+    {
+      "level": 15,
+      "normalDays": 53.6875,
+      "carefulDays": 34.38125,
+      "ratio": 1.5615342664970004,
+      "status": "PASS"
+    },
+    {
+      "level": 20,
+      "normalDays": null,
+      "carefulDays": null,
+      "ratio": null,
+      "status": "UNREACHED"
+    }
+  ]
+}

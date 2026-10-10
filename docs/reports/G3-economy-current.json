@@ -1,0 +1,3626 @@
+{
+  "revision": "f5ab34a0099808cc8325fca451cf25f33b21dbea",
+  "dirtyFiles": [
+    "M docs/IMPLEMENTATION_STATUS.md",
+    " M docs/OPEN_QUESTIONS.md",
+    " M docs/evidence/g3/e2e/01-city-tutorial-start.jpg",
+    " M docs/evidence/g3/e2e/02-city-tutorial-done.jpg",
+    " M docs/evidence/g3/e2e/03-map-select-with-city.jpg",
+    " M docs/evidence/g3/e2e/04-farm-loop-done.jpg",
+    " M docs/evidence/g3/e2e/05-recovered-both.jpg",
+    " M docs/evidence/g3/e2e/06-chromium-pixel7.jpg",
+    " M docs/evidence/g3/e2e/07-webkit-iphone13.jpg",
+    " M docs/evidence/g3/e2e/g3-e2e.json",
+    "?? docs/evidence/g3/invariant-performance/",
+    "?? docs/evidence/g3/parallel-visual/",
+    "?? docs/evidence/g3/render-performance/",
+    "?? docs/evidence/g3/repeat-audit/",
+    "?? docs/evidence/mvp-final/",
+    "?? docs/reports/G3-codex-follow-up.md",
+    "?? docs/reports/G3-economy-audit.json",
+    "?? docs/reports/G3-economy-bot-observations.md",
+    "?? docs/reports/G3-economy-current.json",
+    "?? docs/reports/G3-economy-normal.json",
+    "?? docs/reports/G3-economy-pre-topology-cache.json",
+    "?? docs/reports/G3-economy-smoke.json",
+    "?? docs/reports/G3-invariant-performance.md",
+    "?? docs/reports/G3-map-art-request.md",
+    "?? docs/reports/G3-parallel-task-plan.md",
+    "?? docs/reports/G3-repeat-audit.md",
+    "?? docs/reports/G3-report.md",
+    "?? docs/reports/G3-visual-analysis.md",
+    "?? docs/reports/G4-report.md",
+    "?? docs/reports/MVP-placeholder-assets.md",
+    "?? docs/reports/MVP-summary.md",
+    "?? map/ThreeJS_Realistic_Building_Prompts.zip",
+    "?? packages/tooling/sim-economy.ts",
+    "?? packages/tooling/src/economy-bot-core.ts",
+    "?? packages/tooling/src/economy-bot-schedule.ts",
+    "?? packages/tooling/src/economy-bot.test.ts",
+    "?? scripts/g3-render-profile.mjs",
+    "?? scripts/g3-repeat-audit.ts",
+    "?? scripts/g3-visual-check.mjs",
+    "?? scripts/mvp-economy-audit.ts",
+    "?? scripts/profile-invariants.ts"
+  ],
+  "source": {
+    "digest": "308b529ccbb0ff146bdea2f76c8d6d494b291a07c7972dcb51fc1d892b9394a2",
+    "files": {
+      "apps/web/public/worlds/city-coast-01/template.v2.json": "7544f569054e0a443725b98c47b4c944fb1621b18b694e68651f789cbeab52f6",
+      "apps/web/public/worlds/farm-valley-01/template.v2.json": "5cd00d31ef6408ab84df2480ee87fcfd9e399a301d1afbd179baca6b0b1e4768",
+      "packages/content/catalog.v1.json": "015c1e0f11f326952ff98d524ba9fa84675e2cd344980520ed0a0f0b4d5f1ea5",
+      "packages/content/economy.v1.json": "8e95e0f94ae8a1f20162a9535aa999d9c0900eedee68173f672448203e27ce93",
+      "packages/content/i18n/vi.json": "b6360fedbfd1a080c16dd191f9077d922d423160225aac6bd26faf56074a2705",
+      "packages/content/package.json": "c1e2ae31a59d93700eff4b3c30b696bd149b1ced8df2d46c9dad9b8345f9f972",
+      "packages/content/quests.v1.json": "3020507b0ed174e90905c00dc642e65ff43a0dffb5618bf6b5dffed3447dfbbc",
+      "packages/content/src/content.test.ts": "6d21b5578437a026186ae3c83d4630a86c8a7d16688ee2e78d6965f79dac8205",
+      "packages/content/src/index.ts": "af2f50010af9a9257bbe3095cc4fcbb7d489623760e44f17dbadf27ced3eded6",
+      "packages/content/src/schema.ts": "bd8e4d7f945bc9954f0ff8d12774405afa902a206b8d0edd17a32f755dfc1198",
+      "packages/contracts/src/codec.ts": "641fe9642640327bde94731cabbcafefdd279cd3d17493dc87af502dbc33585c",
+      "packages/contracts/src/commands.ts": "c8cfcabfac209ec52f271e0a42308196a9ede4c0cbce48db354fa9769da7827b",
+      "packages/contracts/src/content.ts": "fb54f55e3f8c38aa3f195ad69f21e9e36acea739b394169e9ce4d695a243d8d0",
+      "packages/contracts/src/contracts.test.ts": "8ca254915b7b3d73f444912ea9f67ddade188da8a30c546227fe843dfee59abb",
+      "packages/contracts/src/grid.ts": "c7e30a2f7ef05c0c06482ce86f1f5c417ec4ab8d04a9b731352e250b0f92f7eb",
+      "packages/contracts/src/index.ts": "ceffef9c779d3afd601e4ec5cbb20c555b571f58c6e5217dd2b7f38e4f802595",
+      "packages/contracts/src/schema.ts": "ed19be67fcdc5825913f090f721fb030660266cb486c60d7dba71fa973bd40aa",
+      "packages/sim/src/banks.test.ts": "bb49c11291450e19acdda8d1096b62c2e89a68114bcd33a8f8ad4897cea01675",
+      "packages/sim/src/banks.ts": "13acd5c3b120e4a9ee92a0ace661add3d931c9c7cb5731bed5d43ad2ca51e074",
+      "packages/sim/src/common.ts": "01cc2df8a51f84b7d5668ad4cf17257fca6a3f3cac384d2e70ea295b881dd3af",
+      "packages/sim/src/construction.test.ts": "0d748c5c7f2983694fcb3d62bccefc22512da583a67a2154b67d46d5e653d292",
+      "packages/sim/src/construction.ts": "5d71f241e9375c5252113206080f2fe1f14ac8cd981f587bbc0da671ed2ce586",
+      "packages/sim/src/economy.test.ts": "f3cf80ca85057af772d2fa285e2c93c7291b1c767181c774e68cb6b52791cc4e",
+      "packages/sim/src/economy.ts": "884aeac129db2fde8381e9a0ec62b1cdada14692f893ff5ef52faaf456ddbe1f",
+      "packages/sim/src/engine.test.ts": "d10e56c221e5eba0f95ddb546906fba0c093d0aad0c1f929663eac0fd10343dc",
+      "packages/sim/src/engine.ts": "dc579da93981a787e158303e00bb8c96bf3cc27708620b1438aabbfdfb7dc67b",
+      "packages/sim/src/farm.test.ts": "30353bd87787b16c78bbbbe72e36db5628007d722677968536ba1abd7ce404fa",
+      "packages/sim/src/farm.ts": "d3e0ac076566aeebb6cbcabd7e5609efd309d7e8bc86be7ea2828910bd9cf41c",
+      "packages/sim/src/footprint.test.ts": "0427deb62a3e6d5f4e1159c7d0ff2502abd68d7a8a69c13e65a84b55de7f9d18",
+      "packages/sim/src/footprint.ts": "660ae95637adb9b93d17315a775f25b4eae75fb5be5e1fa809b4e6a29cb88ff9",
+      "packages/sim/src/index.ts": "1a84a51de90d1c08fa10743f65ee1d76653df89a78bcdd0998bc0fd231b96558",
+      "packages/sim/src/invariants.test.ts": "edf0184d9812835e18966bb2fe2eb35d43a989977324f0d3c29fb5ce9a9791e7",
+      "packages/sim/src/quests.test.ts": "2c8f8fa152e4e2b8a639c26d8ac794a3957b0d60f3358e0a61457a4cb4c16ad4",
+      "packages/sim/src/quests.ts": "f2bd38e241e9e45e7c4140490220f9df1dac6af5b15e5e9f6a89ef03108fd4a1",
+      "packages/sim/src/road-value.test.ts": "840ad5e8fa29e0d1f92e63073a32087ea51a02956a57310341506229a6e539a6",
+      "packages/sim/src/road-value.ts": "38189bc2772751abc6fd89a847847c3a9263f5eb1ef46ddfec81d54166272328",
+      "packages/sim/src/roads.ts": "cc1cc650bb5fafade751a7cfcc4f098d02d9c59683e1c4702d666374cb5c1c65",
+      "packages/sim/src/snapshot.test.ts": "cffc80df1c6569562b8f1e0b809e52fbebd66ba60537a24e81f5386451285cf2",
+      "packages/sim/src/snapshot.ts": "ec7a8bff3f95e8690fc6451785640cfb9d215ff023580bbc286cd1157c62141c",
+      "packages/sim/src/state.ts": "da1035b9e0c022aa4100f5b032eee1914fd33871d76b6a591871e0bb72419568",
+      "packages/sim/src/terrain.test.ts": "27df9034c6d4b4ecc235c4e33c0318561855a5a275f97814530ae1c579b25491",
+      "packages/sim/src/terrain.ts": "c9dda0324e8d966599c9859376aa9468415364f5abed9cf7316d947275ae5fd9",
+      "packages/tooling/sim-economy.ts": "5f1ea7fd6cda9ab3fa2a3775596ee27df07075c7f9dfcbcd3a968bbde850147a",
+      "packages/tooling/src/economy-bot-core.ts": "f9d5dee8e75390bf36735d1edcb568f44e88cdc949fb4efddb3aaa82af6f60fc",
+      "packages/tooling/src/economy-bot-schedule.ts": "b94151ccf66f760456502c423615ff8ec30399664a12640281f1901b06ef5640",
+      "packages/worldgen/src/banks.test.ts": "ede00f092c7f584746fc800c538ad72f3108a9b42aa2d65197e55a370d2eb495",
+      "packages/worldgen/src/codec.ts": "65687f63635e4b048116d124699e3eea0fe1d0b0e49e70d6dc6d8c1a15ae0546",
+      "packages/worldgen/src/environment.ts": "4a30aca246c127c1bfcd7d550588a49bf204ace85c4f9435e101837926554135",
+      "packages/worldgen/src/fixture.ts": "446535d7f90b0dd3444bb067ed27cbea4360226f1e0ad3ffe0e72a0beecaeb71",
+      "packages/worldgen/src/geometry.ts": "36aa63ab85b71590fb7026d0f67da7ad89eabad22e655e0ed8570c71c1ec5bda",
+      "packages/worldgen/src/index.ts": "a0777b68468d6664c8d4c4b7df487e64627eacb78f9d77352ce94199e140a7cd",
+      "packages/worldgen/src/layers.ts": "59f3624b5e658d1136f97ee62a35b3818e7932e86dbb2cf0c2cb784b1657c775",
+      "packages/worldgen/src/random.ts": "dce6c958447865428ed20b539fbb818655c8caa544c50fc63512abf31ac41695",
+      "packages/worldgen/src/validator.ts": "f73b4f6c6bd7e37356619c229d9bef0c930e987ff27278e22f04f3fbb2b5df26",
+      "packages/worldgen/src/worldgen.test.ts": "f8e5efe7d208b6e1841e58586e2cb719da05e44a6d900059cf52673497843b80"
+    }
+  },
+  "sourceChangedDuringRun": false,
+  "contentVersion": 1,
+  "schedules": {
+    "cham": {
+      "day1": [
+        [
+          480,
+          60
+        ],
+        [
+          720,
+          15
+        ],
+        [
+          1020,
+          15
+        ],
+        [
+          1260,
+          15
+        ]
+      ],
+      "daily": [
+        [
+          420,
+          15
+        ],
+        [
+          720,
+          15
+        ],
+        [
+          1020,
+          15
+        ],
+        [
+          1260,
+          15
+        ]
+      ]
+    },
+    "thuong": {
+      "day1": [
+        [
+          1200,
+          25
+        ]
+      ],
+      "daily": [
+        [
+          480,
+          8
+        ],
+        [
+          750,
+          8
+        ],
+        [
+          1260,
+          10
+        ]
+      ]
+    },
+    "nhan": {
+      "day1": [
+        [
+          1260,
+          15
+        ]
+      ],
+      "daily": [
+        [
+          1260,
+          10
+        ]
+      ]
+    }
+  },
+  "results": [
+    {
+      "result": {
+        "mapKind": "city",
+        "style": "cham",
+        "days": 60,
+        "templateId": "city-coast-01",
+        "templateVersion": 2,
+        "firstMinute": 480,
+        "levelAtDays": {
+          "2": 0.001388888888888889,
+          "3": 0.004166666666666667,
+          "4": 0.02847222222222222,
+          "5": 1.1666666666666667,
+          "6": 1.9583333333333333,
+          "7": 2.5416666666666665,
+          "8": 3.3819444444444446,
+          "9": 4.958333333333333,
+          "10": 6.166666666666667,
+          "11": 7.958333333333333,
+          "12": 10.958333333333334,
+          "13": 13.958333333333334,
+          "14": 16.541666666666668,
+          "15": 19.958333333333332,
+          "16": 24.166666666666668,
+          "17": 27.958333333333332,
+          "18": 32.958333333333336,
+          "19": 39.541666666666664,
+          "20": 46.375
+        },
+        "commands": 7792,
+        "rejected": {
+          "ZONE_LOCKED": 25,
+          "AFFECTS_NEIGHBOR": 2501,
+          "INSUFFICIENT_FUNDS": 25,
+          "TOO_STEEP": 68,
+          "SHORE_RULE": 11
+        },
+        "daily": [
+          {
+            "day": 1,
+            "level": 4,
+            "cash": 14111,
+            "buildings": 26,
+            "fields": 0,
+            "rate": 6861.5
+          },
+          {
+            "day": 2,
+            "level": 5,
+            "cash": 196209,
+            "buildings": 42,
+            "fields": 0,
+            "rate": 16669
+          },
+          {
+            "day": 3,
+            "level": 7,
+            "cash": 583171,
+            "buildings": 57,
+            "fields": 0,
+            "rate": 23713
+          },
+          {
+            "day": 4,
+            "level": 8,
+            "cash": 1150786,
+            "buildings": 70,
+            "fields": 0,
+            "rate": 34788
+          },
+          {
+            "day": 5,
+            "level": 8,
+            "cash": 1995098,
+            "buildings": 76,
+            "fields": 0,
+            "rate": 45355
+          },
+          {
+            "day": 6,
+            "level": 9,
+            "cash": 3032437,
+            "buildings": 88,
+            "fields": 0,
+            "rate": 60549
+          },
+          {
+            "day": 7,
+            "level": 10,
+            "cash": 4362514,
+            "buildings": 100,
+            "fields": 0,
+            "rate": 69877.5
+          },
+          {
+            "day": 8,
+            "level": 10,
+            "cash": 6203989,
+            "buildings": 101,
+            "fields": 0,
+            "rate": 78997.5
+          },
+          {
+            "day": 9,
+            "level": 11,
+            "cash": 8140007,
+            "buildings": 113,
+            "fields": 0,
+            "rate": 94883.5
+          },
+          {
+            "day": 10,
+            "level": 11,
+            "cash": 10417211,
+            "buildings": 113,
+            "fields": 0,
+            "rate": 94883.5
+          },
+          {
+            "day": 11,
+            "level": 11,
+            "cash": 12694415,
+            "buildings": 113,
+            "fields": 0,
+            "rate": 94883.5
+          },
+          {
+            "day": 12,
+            "level": 12,
+            "cash": 14951952,
+            "buildings": 126,
+            "fields": 0,
+            "rate": 109990.5
+          },
+          {
+            "day": 13,
+            "level": 12,
+            "cash": 17816403,
+            "buildings": 126,
+            "fields": 0,
+            "rate": 120088.5
+          },
+          {
+            "day": 14,
+            "level": 12,
+            "cash": 20698527,
+            "buildings": 126,
+            "fields": 0,
+            "rate": 120088.5
+          },
+          {
+            "day": 15,
+            "level": 13,
+            "cash": 23599559,
+            "buildings": 139,
+            "fields": 0,
+            "rate": 135281.5
+          },
+          {
+            "day": 16,
+            "level": 13,
+            "cash": 26930632,
+            "buildings": 139,
+            "fields": 0,
+            "rate": 138869.5
+          },
+          {
+            "day": 17,
+            "level": 14,
+            "cash": 30262504,
+            "buildings": 143,
+            "fields": 0,
+            "rate": 139195
+          },
+          {
+            "day": 18,
+            "level": 14,
+            "cash": 33675100,
+            "buildings": 152,
+            "fields": 0,
+            "rate": 163009.5
+          },
+          {
+            "day": 19,
+            "level": 14,
+            "cash": 37587322,
+            "buildings": 152,
+            "fields": 0,
+            "rate": 163009.5
+          },
+          {
+            "day": 20,
+            "level": 14,
+            "cash": 41499550,
+            "buildings": 152,
+            "fields": 0,
+            "rate": 163009.5
+          },
+          {
+            "day": 21,
+            "level": 15,
+            "cash": 45345053,
+            "buildings": 165,
+            "fields": 0,
+            "rate": 177942.5
+          },
+          {
+            "day": 22,
+            "level": 15,
+            "cash": 49850897,
+            "buildings": 165,
+            "fields": 0,
+            "rate": 189558.5
+          },
+          {
+            "day": 23,
+            "level": 15,
+            "cash": 54400301,
+            "buildings": 165,
+            "fields": 0,
+            "rate": 189558.5
+          },
+          {
+            "day": 24,
+            "level": 15,
+            "cash": 58949705,
+            "buildings": 165,
+            "fields": 0,
+            "rate": 189558.5
+          },
+          {
+            "day": 25,
+            "level": 16,
+            "cash": 63501012,
+            "buildings": 177,
+            "fields": 0,
+            "rate": 198063.5
+          },
+          {
+            "day": 26,
+            "level": 16,
+            "cash": 68570330,
+            "buildings": 179,
+            "fields": 0,
+            "rate": 220760
+          },
+          {
+            "day": 27,
+            "level": 16,
+            "cash": 73868570,
+            "buildings": 179,
+            "fields": 0,
+            "rate": 220760
+          },
+          {
+            "day": 28,
+            "level": 16,
+            "cash": 79166810,
+            "buildings": 179,
+            "fields": 0,
+            "rate": 220760
+          },
+          {
+            "day": 29,
+            "level": 17,
+            "cash": 84406225,
+            "buildings": 192,
+            "fields": 0,
+            "rate": 236630.5
+          },
+          {
+            "day": 30,
+            "level": 17,
+            "cash": 90340182,
+            "buildings": 192,
+            "fields": 0,
+            "rate": 249214.5
+          },
+          {
+            "day": 31,
+            "level": 17,
+            "cash": 96321330,
+            "buildings": 192,
+            "fields": 0,
+            "rate": 249214.5
+          },
+          {
+            "day": 32,
+            "level": 17,
+            "cash": 102302478,
+            "buildings": 192,
+            "fields": 0,
+            "rate": 249214.5
+          },
+          {
+            "day": 33,
+            "level": 17,
+            "cash": 108283626,
+            "buildings": 192,
+            "fields": 0,
+            "rate": 249214.5
+          },
+          {
+            "day": 34,
+            "level": 18,
+            "cash": 114239574,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 264311
+          },
+          {
+            "day": 35,
+            "level": 18,
+            "cash": 120782754,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 273287
+          },
+          {
+            "day": 36,
+            "level": 18,
+            "cash": 127341642,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 273287
+          },
+          {
+            "day": 37,
+            "level": 18,
+            "cash": 133900530,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 273287
+          },
+          {
+            "day": 38,
+            "level": 18,
+            "cash": 140459418,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 273287
+          },
+          {
+            "day": 39,
+            "level": 18,
+            "cash": 147018306,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 273287
+          },
+          {
+            "day": 40,
+            "level": 19,
+            "cash": 153577584,
+            "buildings": 210,
+            "fields": 0,
+            "rate": 273523
+          },
+          {
+            "day": 41,
+            "level": 19,
+            "cash": 160597545,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 300112
+          },
+          {
+            "day": 42,
+            "level": 19,
+            "cash": 167800233,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 300112
+          },
+          {
+            "day": 43,
+            "level": 19,
+            "cash": 175002921,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 300112
+          },
+          {
+            "day": 44,
+            "level": 19,
+            "cash": 182205609,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 300112
+          },
+          {
+            "day": 45,
+            "level": 19,
+            "cash": 189408297,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 300112
+          },
+          {
+            "day": 46,
+            "level": 19,
+            "cash": 196610985,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 300112
+          },
+          {
+            "day": 47,
+            "level": 20,
+            "cash": 203813635,
+            "buildings": 226,
+            "fields": 0,
+            "rate": 303876.5
+          },
+          {
+            "day": 48,
+            "level": 20,
+            "cash": 211591134,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 49,
+            "level": 20,
+            "cash": 219338682,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 50,
+            "level": 20,
+            "cash": 227086230,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 51,
+            "level": 20,
+            "cash": 234833778,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 52,
+            "level": 20,
+            "cash": 242581326,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 53,
+            "level": 20,
+            "cash": 250328874,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 54,
+            "level": 20,
+            "cash": 258076422,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 55,
+            "level": 20,
+            "cash": 265823970,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 56,
+            "level": 20,
+            "cash": 273571518,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 57,
+            "level": 20,
+            "cash": 281319066,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 58,
+            "level": 20,
+            "cash": 289066614,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 59,
+            "level": 20,
+            "cash": 296814162,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          },
+          {
+            "day": 60,
+            "level": 20,
+            "cash": 304561710,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 322814.5
+          }
+        ],
+        "final": {
+          "level": 20,
+          "xp": 639842,
+          "cash": 304561710,
+          "netWorth": 305957025,
+          "buildings": 229,
+          "zones": 10,
+          "fields": 0,
+          "producers": 0,
+          "questIndex": 12,
+          "repeatClaims": 9,
+          "rate": 322814.5
+        },
+        "invariants": {
+          "snapshotValid": true,
+          "errors": [],
+          "walletSafe": true,
+          "occupancyValid": true
+        },
+        "limitations": [
+          "Bot strategy is an input, not proof of optimal player progression.",
+          "Production inputs must be grown; reference-model purchases at sell price are not permitted commands.",
+          "Infrastructure uses paid legal commands; failed bridge-site planning is reported, never replaced with virtual quest completion.",
+          "No geometry-free overhead payment, virtual construction XP, crop sales outside market access, or injected quest rewards."
+        ]
+      },
+      "pacing": [
+        {
+          "level": 8,
+          "expectedDays": 3.5,
+          "actualDays": 3.3819444444444446,
+          "deviation": -0.03373015873015867,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 12,
+          "expectedDays": 11,
+          "actualDays": 10.958333333333334,
+          "deviation": -0.003787878787878734,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 15,
+          "expectedDays": 21,
+          "actualDays": 19.958333333333332,
+          "deviation": -0.04960317460317466,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 20,
+          "expectedDays": 49,
+          "actualDays": 46.375,
+          "deviation": -0.05357142857142857,
+          "status": "NOT_APPLICABLE"
+        }
+      ],
+      "wallSeconds": 327.25920779999996
+    },
+    {
+      "result": {
+        "mapKind": "city",
+        "style": "thuong",
+        "days": 60,
+        "templateId": "city-coast-01",
+        "templateVersion": 2,
+        "firstMinute": 1200,
+        "levelAtDays": {
+          "2": 0.001388888888888889,
+          "3": 0.004166666666666667,
+          "4": 0.6875,
+          "5": 2.6875,
+          "6": 4.041666666666667,
+          "7": 5.041666666666667,
+          "8": 6.5,
+          "9": 8.041666666666666,
+          "10": 9.5,
+          "11": 11.5,
+          "12": 14.6875,
+          "13": 18.041666666666668,
+          "14": 21.041666666666668,
+          "15": 24.5,
+          "16": 29.041666666666668,
+          "17": 32.5,
+          "18": 37.5,
+          "19": 44.5,
+          "20": 51.5
+        },
+        "commands": 13619,
+        "rejected": {
+          "ZONE_LOCKED": 3695,
+          "AFFECTS_NEIGHBOR": 2753,
+          "TOO_STEEP": 4196,
+          "SHORE_RULE": 19,
+          "LEVEL_REQUIRED": 1041
+        },
+        "daily": [
+          {
+            "day": 1,
+            "level": 3,
+            "cash": 2303,
+            "buildings": 7,
+            "fields": 0,
+            "rate": 1201.5000000000002
+          },
+          {
+            "day": 2,
+            "level": 4,
+            "cash": 14490,
+            "buildings": 16,
+            "fields": 0,
+            "rate": 2605
+          },
+          {
+            "day": 3,
+            "level": 4,
+            "cash": 69602,
+            "buildings": 25,
+            "fields": 0,
+            "rate": 6632
+          },
+          {
+            "day": 4,
+            "level": 5,
+            "cash": 199266,
+            "buildings": 34,
+            "fields": 0,
+            "rate": 10248
+          },
+          {
+            "day": 5,
+            "level": 6,
+            "cash": 403715,
+            "buildings": 43,
+            "fields": 0,
+            "rate": 16341
+          },
+          {
+            "day": 6,
+            "level": 7,
+            "cash": 711032,
+            "buildings": 52,
+            "fields": 0,
+            "rate": 21295
+          },
+          {
+            "day": 7,
+            "level": 7,
+            "cash": 1173690,
+            "buildings": 61,
+            "fields": 0,
+            "rate": 29898
+          },
+          {
+            "day": 8,
+            "level": 8,
+            "cash": 1816107,
+            "buildings": 70,
+            "fields": 0,
+            "rate": 32888.5
+          },
+          {
+            "day": 9,
+            "level": 9,
+            "cash": 2590588,
+            "buildings": 79,
+            "fields": 0,
+            "rate": 44113.5
+          },
+          {
+            "day": 10,
+            "level": 9,
+            "cash": 3524834,
+            "buildings": 86,
+            "fields": 0,
+            "rate": 53809.5
+          },
+          {
+            "day": 11,
+            "level": 10,
+            "cash": 4763277,
+            "buildings": 95,
+            "fields": 0,
+            "rate": 63186.5
+          },
+          {
+            "day": 12,
+            "level": 10,
+            "cash": 6213870,
+            "buildings": 97,
+            "fields": 0,
+            "rate": 74913.5
+          },
+          {
+            "day": 13,
+            "level": 11,
+            "cash": 7938770,
+            "buildings": 106,
+            "fields": 0,
+            "rate": 77342.5
+          },
+          {
+            "day": 14,
+            "level": 11,
+            "cash": 9504280,
+            "buildings": 107,
+            "fields": 0,
+            "rate": 89796.5
+          },
+          {
+            "day": 15,
+            "level": 11,
+            "cash": 10758829,
+            "buildings": 107,
+            "fields": 0,
+            "rate": 89796.5
+          },
+          {
+            "day": 16,
+            "level": 12,
+            "cash": 12852672,
+            "buildings": 113,
+            "fields": 0,
+            "rate": 93362
+          },
+          {
+            "day": 17,
+            "level": 12,
+            "cash": 14608716,
+            "buildings": 118,
+            "fields": 0,
+            "rate": 115052
+          },
+          {
+            "day": 18,
+            "level": 12,
+            "cash": 17274055,
+            "buildings": 118,
+            "fields": 0,
+            "rate": 115052
+          },
+          {
+            "day": 19,
+            "level": 13,
+            "cash": 19938995,
+            "buildings": 121,
+            "fields": 0,
+            "rate": 115140
+          },
+          {
+            "day": 20,
+            "level": 13,
+            "cash": 22545374,
+            "buildings": 129,
+            "fields": 0,
+            "rate": 123225
+          },
+          {
+            "day": 21,
+            "level": 13,
+            "cash": 25418330,
+            "buildings": 129,
+            "fields": 0,
+            "rate": 132852
+          },
+          {
+            "day": 22,
+            "level": 14,
+            "cash": 28606489,
+            "buildings": 132,
+            "fields": 0,
+            "rate": 132990
+          },
+          {
+            "day": 23,
+            "level": 14,
+            "cash": 31577218,
+            "buildings": 140,
+            "fields": 0,
+            "rate": 143879
+          },
+          {
+            "day": 24,
+            "level": 14,
+            "cash": 34782641,
+            "buildings": 140,
+            "fields": 0,
+            "rate": 154395
+          },
+          {
+            "day": 25,
+            "level": 14,
+            "cash": 38488124,
+            "buildings": 140,
+            "fields": 0,
+            "rate": 154395
+          },
+          {
+            "day": 26,
+            "level": 15,
+            "cash": 42182063,
+            "buildings": 149,
+            "fields": 0,
+            "rate": 156623
+          },
+          {
+            "day": 27,
+            "level": 15,
+            "cash": 45320553,
+            "buildings": 151,
+            "fields": 0,
+            "rate": 178676
+          },
+          {
+            "day": 28,
+            "level": 15,
+            "cash": 49608777,
+            "buildings": 151,
+            "fields": 0,
+            "rate": 178676
+          },
+          {
+            "day": 29,
+            "level": 15,
+            "cash": 53897001,
+            "buildings": 151,
+            "fields": 0,
+            "rate": 178676
+          },
+          {
+            "day": 30,
+            "level": 16,
+            "cash": 58185341,
+            "buildings": 154,
+            "fields": 0,
+            "rate": 179503
+          },
+          {
+            "day": 31,
+            "level": 16,
+            "cash": 62460061,
+            "buildings": 163,
+            "fields": 0,
+            "rate": 187157.5
+          },
+          {
+            "day": 32,
+            "level": 16,
+            "cash": 66982054,
+            "buildings": 170,
+            "fields": 0,
+            "rate": 206711.5
+          },
+          {
+            "day": 33,
+            "level": 16,
+            "cash": 72286022,
+            "buildings": 179,
+            "fields": 0,
+            "rate": 211121.5
+          },
+          {
+            "day": 34,
+            "level": 17,
+            "cash": 77489617,
+            "buildings": 188,
+            "fields": 0,
+            "rate": 214560.5
+          },
+          {
+            "day": 35,
+            "level": 17,
+            "cash": 82903759,
+            "buildings": 192,
+            "fields": 0,
+            "rate": 239896.5
+          },
+          {
+            "day": 36,
+            "level": 17,
+            "cash": 88661275,
+            "buildings": 192,
+            "fields": 0,
+            "rate": 239896.5
+          },
+          {
+            "day": 37,
+            "level": 17,
+            "cash": 94418791,
+            "buildings": 192,
+            "fields": 0,
+            "rate": 239896.5
+          },
+          {
+            "day": 38,
+            "level": 17,
+            "cash": 100176307,
+            "buildings": 192,
+            "fields": 0,
+            "rate": 239896.5
+          },
+          {
+            "day": 39,
+            "level": 18,
+            "cash": 106065670,
+            "buildings": 201,
+            "fields": 0,
+            "rate": 242915
+          },
+          {
+            "day": 40,
+            "level": 18,
+            "cash": 112292287,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 264598
+          },
+          {
+            "day": 41,
+            "level": 18,
+            "cash": 118642639,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 264598
+          },
+          {
+            "day": 42,
+            "level": 18,
+            "cash": 124992991,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 264598
+          },
+          {
+            "day": 43,
+            "level": 18,
+            "cash": 131343343,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 264598
+          },
+          {
+            "day": 44,
+            "level": 18,
+            "cash": 137693695,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 264598
+          },
+          {
+            "day": 45,
+            "level": 18,
+            "cash": 144044047,
+            "buildings": 205,
+            "fields": 0,
+            "rate": 264598
+          },
+          {
+            "day": 46,
+            "level": 19,
+            "cash": 150477663,
+            "buildings": 214,
+            "fields": 0,
+            "rate": 267453.5
+          },
+          {
+            "day": 47,
+            "level": 19,
+            "cash": 157237824,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 288550.5
+          },
+          {
+            "day": 48,
+            "level": 19,
+            "cash": 164163036,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 288550.5
+          },
+          {
+            "day": 49,
+            "level": 19,
+            "cash": 171088248,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 288550.5
+          },
+          {
+            "day": 50,
+            "level": 19,
+            "cash": 178013460,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 288550.5
+          },
+          {
+            "day": 51,
+            "level": 19,
+            "cash": 184938672,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 288550.5
+          },
+          {
+            "day": 52,
+            "level": 19,
+            "cash": 191863884,
+            "buildings": 218,
+            "fields": 0,
+            "rate": 288550.5
+          },
+          {
+            "day": 53,
+            "level": 20,
+            "cash": 199073592,
+            "buildings": 227,
+            "fields": 0,
+            "rate": 293152
+          },
+          {
+            "day": 54,
+            "level": 20,
+            "cash": 206580753,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 309210
+          },
+          {
+            "day": 55,
+            "level": 20,
+            "cash": 214001793,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 309210
+          },
+          {
+            "day": 56,
+            "level": 20,
+            "cash": 221422833,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 309210
+          },
+          {
+            "day": 57,
+            "level": 20,
+            "cash": 228843873,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 309210
+          },
+          {
+            "day": 58,
+            "level": 20,
+            "cash": 236264913,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 309210
+          },
+          {
+            "day": 59,
+            "level": 20,
+            "cash": 243685953,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 309210
+          },
+          {
+            "day": 60,
+            "level": 20,
+            "cash": 251106993,
+            "buildings": 229,
+            "fields": 0,
+            "rate": 309210
+          }
+        ],
+        "final": {
+          "level": 20,
+          "xp": 551349,
+          "cash": 251106993,
+          "netWorth": 256991163,
+          "buildings": 229,
+          "zones": 48,
+          "fields": 0,
+          "producers": 0,
+          "questIndex": 12,
+          "repeatClaims": 35,
+          "rate": 309210
+        },
+        "invariants": {
+          "snapshotValid": true,
+          "errors": [],
+          "walletSafe": true,
+          "occupancyValid": true
+        },
+        "limitations": [
+          "Bot strategy is an input, not proof of optimal player progression.",
+          "Production inputs must be grown; reference-model purchases at sell price are not permitted commands.",
+          "Infrastructure uses paid legal commands; failed bridge-site planning is reported, never replaced with virtual quest completion.",
+          "No geometry-free overhead payment, virtual construction XP, crop sales outside market access, or injected quest rewards."
+        ]
+      },
+      "pacing": [
+        {
+          "level": 8,
+          "expectedDays": 3.5,
+          "actualDays": 6.5,
+          "deviation": 0.8571428571428571,
+          "status": "FAIL"
+        },
+        {
+          "level": 12,
+          "expectedDays": 11,
+          "actualDays": 14.6875,
+          "deviation": 0.3352272727272727,
+          "status": "FAIL"
+        },
+        {
+          "level": 15,
+          "expectedDays": 21,
+          "actualDays": 24.5,
+          "deviation": 0.16666666666666666,
+          "status": "PASS"
+        },
+        {
+          "level": 20,
+          "expectedDays": 49,
+          "actualDays": 51.5,
+          "deviation": 0.05102040816326531,
+          "status": "PASS"
+        }
+      ],
+      "wallSeconds": 266.9348044
+    },
+    {
+      "result": {
+        "mapKind": "city",
+        "style": "nhan",
+        "days": 60,
+        "templateId": "city-coast-01",
+        "templateVersion": 2,
+        "firstMinute": 1260,
+        "levelAtDays": {
+          "2": 0.001388888888888889,
+          "3": 0.004166666666666667,
+          "4": 2.0006944444444446,
+          "5": 8.005555555555556,
+          "6": 12.002083333333333,
+          "7": 15.005555555555556,
+          "8": 19,
+          "9": 23,
+          "10": 28,
+          "11": 33,
+          "12": 41,
+          "13": 49,
+          "14": 55
+        },
+        "commands": 2694,
+        "rejected": {
+          "ZONE_LOCKED": 61,
+          "AFFECTS_NEIGHBOR": 833,
+          "TOO_STEEP": 4,
+          "NOT_FLAT": 1
+        },
+        "daily": [
+          {
+            "day": 1,
+            "level": 3,
+            "cash": 2335,
+            "buildings": 5,
+            "fields": 0,
+            "rate": 1100
+          },
+          {
+            "day": 2,
+            "level": 3,
+            "cash": 9140,
+            "buildings": 8,
+            "fields": 0,
+            "rate": 1256.4999999999998
+          },
+          {
+            "day": 3,
+            "level": 4,
+            "cash": 17494,
+            "buildings": 11,
+            "fields": 0,
+            "rate": 1421.5
+          },
+          {
+            "day": 4,
+            "level": 4,
+            "cash": 15279,
+            "buildings": 14,
+            "fields": 0,
+            "rate": 1617
+          },
+          {
+            "day": 5,
+            "level": 4,
+            "cash": 26672,
+            "buildings": 17,
+            "fields": 0,
+            "rate": 2809
+          },
+          {
+            "day": 6,
+            "level": 4,
+            "cash": 39027,
+            "buildings": 20,
+            "fields": 0,
+            "rate": 3933.5
+          },
+          {
+            "day": 7,
+            "level": 4,
+            "cash": 60965,
+            "buildings": 23,
+            "fields": 0,
+            "rate": 5389
+          },
+          {
+            "day": 8,
+            "level": 4,
+            "cash": 98161,
+            "buildings": 26,
+            "fields": 0,
+            "rate": 6810.5
+          },
+          {
+            "day": 9,
+            "level": 5,
+            "cash": 144930,
+            "buildings": 29,
+            "fields": 0,
+            "rate": 8463
+          },
+          {
+            "day": 10,
+            "level": 5,
+            "cash": 195569,
+            "buildings": 32,
+            "fields": 0,
+            "rate": 9066
+          },
+          {
+            "day": 11,
+            "level": 5,
+            "cash": 254587,
+            "buildings": 35,
+            "fields": 0,
+            "rate": 10435
+          },
+          {
+            "day": 12,
+            "level": 5,
+            "cash": 309701,
+            "buildings": 38,
+            "fields": 0,
+            "rate": 11165.5
+          },
+          {
+            "day": 13,
+            "level": 6,
+            "cash": 401623,
+            "buildings": 41,
+            "fields": 0,
+            "rate": 15651.5
+          },
+          {
+            "day": 14,
+            "level": 6,
+            "cash": 493814,
+            "buildings": 44,
+            "fields": 0,
+            "rate": 16703
+          },
+          {
+            "day": 15,
+            "level": 6,
+            "cash": 597927,
+            "buildings": 47,
+            "fields": 0,
+            "rate": 18158.5
+          },
+          {
+            "day": 16,
+            "level": 7,
+            "cash": 719920,
+            "buildings": 50,
+            "fields": 0,
+            "rate": 21112.5
+          },
+          {
+            "day": 17,
+            "level": 7,
+            "cash": 834909,
+            "buildings": 53,
+            "fields": 0,
+            "rate": 21209
+          },
+          {
+            "day": 18,
+            "level": 7,
+            "cash": 1031276,
+            "buildings": 56,
+            "fields": 0,
+            "rate": 25924.5
+          },
+          {
+            "day": 19,
+            "level": 7,
+            "cash": 1238079,
+            "buildings": 59,
+            "fields": 0,
+            "rate": 26332.5
+          },
+          {
+            "day": 20,
+            "level": 8,
+            "cash": 1470485,
+            "buildings": 62,
+            "fields": 0,
+            "rate": 28621.5
+          },
+          {
+            "day": 21,
+            "level": 8,
+            "cash": 1708503,
+            "buildings": 65,
+            "fields": 0,
+            "rate": 30770.5
+          },
+          {
+            "day": 22,
+            "level": 8,
+            "cash": 1954993,
+            "buildings": 68,
+            "fields": 0,
+            "rate": 31161.5
+          },
+          {
+            "day": 23,
+            "level": 8,
+            "cash": 2227326,
+            "buildings": 71,
+            "fields": 0,
+            "rate": 34927.5
+          },
+          {
+            "day": 24,
+            "level": 9,
+            "cash": 2516169,
+            "buildings": 74,
+            "fields": 0,
+            "rate": 35741.5
+          },
+          {
+            "day": 25,
+            "level": 9,
+            "cash": 2811033,
+            "buildings": 77,
+            "fields": 0,
+            "rate": 38052.5
+          },
+          {
+            "day": 26,
+            "level": 9,
+            "cash": 3117052,
+            "buildings": 80,
+            "fields": 0,
+            "rate": 38452
+          },
+          {
+            "day": 27,
+            "level": 9,
+            "cash": 3445133,
+            "buildings": 83,
+            "fields": 0,
+            "rate": 41868
+          },
+          {
+            "day": 28,
+            "level": 9,
+            "cash": 3750620,
+            "buildings": 86,
+            "fields": 0,
+            "rate": 42946
+          },
+          {
+            "day": 29,
+            "level": 10,
+            "cash": 4171055,
+            "buildings": 89,
+            "fields": 0,
+            "rate": 51857.5
+          },
+          {
+            "day": 30,
+            "level": 10,
+            "cash": 4580528,
+            "buildings": 92,
+            "fields": 0,
+            "rate": 52424.5
+          },
+          {
+            "day": 31,
+            "level": 10,
+            "cash": 5156850,
+            "buildings": 95,
+            "fields": 0,
+            "rate": 57568.5
+          },
+          {
+            "day": 32,
+            "level": 10,
+            "cash": 5739055,
+            "buildings": 98,
+            "fields": 0,
+            "rate": 61117.5
+          },
+          {
+            "day": 33,
+            "level": 10,
+            "cash": 6372799,
+            "buildings": 101,
+            "fields": 0,
+            "rate": 67201.5
+          },
+          {
+            "day": 34,
+            "level": 11,
+            "cash": 7139268,
+            "buildings": 104,
+            "fields": 0,
+            "rate": 76004
+          },
+          {
+            "day": 35,
+            "level": 11,
+            "cash": 7909296,
+            "buildings": 107,
+            "fields": 0,
+            "rate": 77621
+          },
+          {
+            "day": 36,
+            "level": 11,
+            "cash": 8694254,
+            "buildings": 110,
+            "fields": 0,
+            "rate": 78046
+          },
+          {
+            "day": 37,
+            "level": 11,
+            "cash": 9475311,
+            "buildings": 113,
+            "fields": 0,
+            "rate": 81448
+          },
+          {
+            "day": 38,
+            "level": 11,
+            "cash": 10388545,
+            "buildings": 113,
+            "fields": 0,
+            "rate": 89830
+          },
+          {
+            "day": 39,
+            "level": 11,
+            "cash": 11301779,
+            "buildings": 113,
+            "fields": 0,
+            "rate": 89830
+          },
+          {
+            "day": 40,
+            "level": 11,
+            "cash": 12215013,
+            "buildings": 113,
+            "fields": 0,
+            "rate": 89830
+          },
+          {
+            "day": 41,
+            "level": 11,
+            "cash": 13128247,
+            "buildings": 113,
+            "fields": 0,
+            "rate": 89830
+          },
+          {
+            "day": 42,
+            "level": 12,
+            "cash": 14040779,
+            "buildings": 116,
+            "fields": 0,
+            "rate": 90125
+          },
+          {
+            "day": 43,
+            "level": 12,
+            "cash": 14955182,
+            "buildings": 119,
+            "fields": 0,
+            "rate": 91812
+          },
+          {
+            "day": 44,
+            "level": 12,
+            "cash": 15884280,
+            "buildings": 122,
+            "fields": 0,
+            "rate": 92237
+          },
+          {
+            "day": 45,
+            "level": 12,
+            "cash": 16809351,
+            "buildings": 125,
+            "fields": 0,
+            "rate": 95590
+          },
+          {
+            "day": 46,
+            "level": 12,
+            "cash": 17818845,
+            "buildings": 126,
+            "fields": 0,
+            "rate": 104434
+          },
+          {
+            "day": 47,
+            "level": 12,
+            "cash": 18956595,
+            "buildings": 126,
+            "fields": 0,
+            "rate": 111914
+          },
+          {
+            "day": 48,
+            "level": 12,
+            "cash": 20094345,
+            "buildings": 126,
+            "fields": 0,
+            "rate": 111914
+          },
+          {
+            "day": 49,
+            "level": 12,
+            "cash": 21232095,
+            "buildings": 126,
+            "fields": 0,
+            "rate": 111914
+          },
+          {
+            "day": 50,
+            "level": 13,
+            "cash": 22369361,
+            "buildings": 129,
+            "fields": 0,
+            "rate": 112872
+          },
+          {
+            "day": 51,
+            "level": 13,
+            "cash": 23530135,
+            "buildings": 132,
+            "fields": 0,
+            "rate": 116168
+          },
+          {
+            "day": 52,
+            "level": 13,
+            "cash": 24989359,
+            "buildings": 135,
+            "fields": 0,
+            "rate": 120772
+          },
+          {
+            "day": 53,
+            "level": 13,
+            "cash": 26458326,
+            "buildings": 138,
+            "fields": 0,
+            "rate": 123999
+          },
+          {
+            "day": 54,
+            "level": 13,
+            "cash": 28030560,
+            "buildings": 139,
+            "fields": 0,
+            "rate": 130590
+          },
+          {
+            "day": 55,
+            "level": 13,
+            "cash": 29663018,
+            "buildings": 139,
+            "fields": 0,
+            "rate": 134178
+          },
+          {
+            "day": 56,
+            "level": 14,
+            "cash": 31295055,
+            "buildings": 142,
+            "fields": 0,
+            "rate": 134178
+          },
+          {
+            "day": 57,
+            "level": 14,
+            "cash": 32930971,
+            "buildings": 145,
+            "fields": 0,
+            "rate": 136064
+          },
+          {
+            "day": 58,
+            "level": 14,
+            "cash": 34582179,
+            "buildings": 148,
+            "fields": 0,
+            "rate": 136438
+          },
+          {
+            "day": 59,
+            "level": 14,
+            "cash": 36231596,
+            "buildings": 151,
+            "fields": 0,
+            "rate": 139539
+          },
+          {
+            "day": 60,
+            "level": 14,
+            "cash": 37985261,
+            "buildings": 152,
+            "fields": 0,
+            "rate": 148428
+          }
+        ],
+        "final": {
+          "level": 14,
+          "xp": 90346,
+          "cash": 37985261,
+          "netWorth": 38576131,
+          "buildings": 152,
+          "zones": 9,
+          "fields": 0,
+          "producers": 0,
+          "questIndex": 10,
+          "repeatClaims": 0,
+          "rate": 148428
+        },
+        "invariants": {
+          "snapshotValid": true,
+          "errors": [],
+          "walletSafe": true,
+          "occupancyValid": true
+        },
+        "limitations": [
+          "Bot strategy is an input, not proof of optimal player progression.",
+          "Production inputs must be grown; reference-model purchases at sell price are not permitted commands.",
+          "Infrastructure uses paid legal commands; failed bridge-site planning is reported, never replaced with virtual quest completion.",
+          "No geometry-free overhead payment, virtual construction XP, crop sales outside market access, or injected quest rewards."
+        ]
+      },
+      "pacing": [
+        {
+          "level": 8,
+          "expectedDays": 3.5,
+          "actualDays": 19,
+          "deviation": 4.428571428571429,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 12,
+          "expectedDays": 11,
+          "actualDays": 41,
+          "deviation": 2.727272727272727,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 15,
+          "expectedDays": 21,
+          "actualDays": null,
+          "deviation": null,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 20,
+          "expectedDays": 49,
+          "actualDays": null,
+          "deviation": null,
+          "status": "NOT_APPLICABLE"
+        }
+      ],
+      "wallSeconds": 47.466827300000006
+    },
+    {
+      "result": {
+        "mapKind": "farm",
+        "style": "cham",
+        "days": 60,
+        "templateId": "farm-valley-01",
+        "templateVersion": 2,
+        "firstMinute": 480,
+        "levelAtDays": {
+          "2": 0.0006944444444444445,
+          "3": 0.0020833333333333333,
+          "4": 0.004861111111111111,
+          "5": 0.5451388888888888,
+          "6": 1.9590277777777778,
+          "7": 2.5416666666666665,
+          "8": 3.5493055555555557,
+          "9": 6.375,
+          "10": 8.958333333333334,
+          "11": 13.166666666666666,
+          "12": 18.166666666666668,
+          "13": 22.958333333333332,
+          "14": 27.958333333333332,
+          "15": 34.38125,
+          "16": 40.958333333333336,
+          "17": 49.166666666666664,
+          "18": 58.166666666666664
+        },
+        "commands": 36839,
+        "rejected": {
+          "AFFECTS_NEIGHBOR": 34,
+          "ZONE_LOCKED": 6,
+          "INSUFFICIENT_FUNDS": 96,
+          "FIELD_LIMIT": 142,
+          "STORAGE_FULL": 2030,
+          "TOO_STEEP": 2,
+          "NOT_FLAT": 1
+        },
+        "daily": [
+          {
+            "day": 1,
+            "level": 5,
+            "cash": 666,
+            "buildings": 6,
+            "fields": 48,
+            "rate": 0
+          },
+          {
+            "day": 2,
+            "level": 5,
+            "cash": 2343,
+            "buildings": 6,
+            "fields": 48,
+            "rate": 0
+          },
+          {
+            "day": 3,
+            "level": 7,
+            "cash": 1491,
+            "buildings": 11,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 4,
+            "level": 8,
+            "cash": 27762,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 5,
+            "level": 8,
+            "cash": 45725,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 6,
+            "level": 8,
+            "cash": 64031,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 7,
+            "level": 9,
+            "cash": 52507,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 8,
+            "level": 9,
+            "cash": 86438,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 9,
+            "level": 9,
+            "cash": 119232,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 10,
+            "level": 10,
+            "cash": 143923,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 11,
+            "level": 10,
+            "cash": 176939,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 12,
+            "level": 10,
+            "cash": 206524,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 13,
+            "level": 10,
+            "cash": 234126,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 14,
+            "level": 11,
+            "cash": 239472,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 15,
+            "level": 11,
+            "cash": 301021,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 16,
+            "level": 11,
+            "cash": 363339,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 17,
+            "level": 11,
+            "cash": 417290,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 18,
+            "level": 11,
+            "cash": 482104,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 19,
+            "level": 12,
+            "cash": 521893,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 20,
+            "level": 12,
+            "cash": 587075,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 21,
+            "level": 12,
+            "cash": 672658,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 22,
+            "level": 12,
+            "cash": 738944,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 23,
+            "level": 12,
+            "cash": 787237,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 24,
+            "level": 13,
+            "cash": 806564,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 25,
+            "level": 13,
+            "cash": 889681,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 26,
+            "level": 13,
+            "cash": 964392,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 27,
+            "level": 13,
+            "cash": 1038003,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 28,
+            "level": 13,
+            "cash": 1111614,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 29,
+            "level": 14,
+            "cash": 1189342,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 30,
+            "level": 14,
+            "cash": 1222525,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 31,
+            "level": 14,
+            "cash": 1322236,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 32,
+            "level": 14,
+            "cash": 1403803,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 33,
+            "level": 14,
+            "cash": 1442995,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 34,
+            "level": 14,
+            "cash": 1491992,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 35,
+            "level": 15,
+            "cash": 1492239,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 36,
+            "level": 15,
+            "cash": 1542916,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 37,
+            "level": 15,
+            "cash": 1639894,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 38,
+            "level": 15,
+            "cash": 1738406,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 39,
+            "level": 15,
+            "cash": 1866803,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 40,
+            "level": 15,
+            "cash": 1922699,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 41,
+            "level": 15,
+            "cash": 2020686,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 42,
+            "level": 16,
+            "cash": 2096247,
+            "buildings": 26,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 43,
+            "level": 16,
+            "cash": 2173230,
+            "buildings": 26,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 44,
+            "level": 16,
+            "cash": 2236198,
+            "buildings": 26,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 45,
+            "level": 16,
+            "cash": 2291031,
+            "buildings": 26,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 46,
+            "level": 16,
+            "cash": 2351423,
+            "buildings": 26,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 47,
+            "level": 16,
+            "cash": 2408187,
+            "buildings": 26,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 48,
+            "level": 16,
+            "cash": 2472957,
+            "buildings": 26,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 49,
+            "level": 16,
+            "cash": 2538752,
+            "buildings": 26,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 50,
+            "level": 17,
+            "cash": 2516914,
+            "buildings": 27,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 51,
+            "level": 17,
+            "cash": 2584547,
+            "buildings": 27,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 52,
+            "level": 17,
+            "cash": 2646251,
+            "buildings": 27,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 53,
+            "level": 17,
+            "cash": 2708206,
+            "buildings": 27,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 54,
+            "level": 17,
+            "cash": 2770166,
+            "buildings": 27,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 55,
+            "level": 17,
+            "cash": 2832106,
+            "buildings": 27,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 56,
+            "level": 17,
+            "cash": 2894041,
+            "buildings": 27,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 57,
+            "level": 17,
+            "cash": 2955981,
+            "buildings": 27,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 58,
+            "level": 17,
+            "cash": 3017921,
+            "buildings": 27,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 59,
+            "level": 18,
+            "cash": 3069534,
+            "buildings": 28,
+            "fields": 216,
+            "rate": 0
+          },
+          {
+            "day": 60,
+            "level": 18,
+            "cash": 3131474,
+            "buildings": 28,
+            "fields": 216,
+            "rate": 0
+          }
+        ],
+        "final": {
+          "level": 18,
+          "xp": 155682,
+          "cash": 3131474,
+          "netWorth": 3495190,
+          "buildings": 28,
+          "zones": 8,
+          "fields": 216,
+          "producers": 16,
+          "questIndex": 12,
+          "repeatClaims": 16,
+          "rate": 0
+        },
+        "invariants": {
+          "snapshotValid": true,
+          "errors": [],
+          "walletSafe": true,
+          "occupancyValid": true
+        },
+        "limitations": [
+          "Bot strategy is an input, not proof of optimal player progression.",
+          "Production inputs must be grown; reference-model purchases at sell price are not permitted commands.",
+          "Infrastructure uses paid legal commands; failed bridge-site planning is reported, never replaced with virtual quest completion.",
+          "No geometry-free overhead payment, virtual construction XP, crop sales outside market access, or injected quest rewards."
+        ]
+      },
+      "pacing": [
+        {
+          "level": 8,
+          "expectedDays": 4,
+          "actualDays": 3.5493055555555557,
+          "deviation": -0.11267361111111107,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 12,
+          "expectedDays": 12,
+          "actualDays": 18.166666666666668,
+          "deviation": 0.513888888888889,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 15,
+          "expectedDays": 22,
+          "actualDays": 34.38125,
+          "deviation": 0.562784090909091,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 20,
+          "expectedDays": 52,
+          "actualDays": null,
+          "deviation": null,
+          "status": "NOT_APPLICABLE"
+        }
+      ],
+      "wallSeconds": 145.46947039999998
+    },
+    {
+      "result": {
+        "mapKind": "farm",
+        "style": "thuong",
+        "days": 60,
+        "templateId": "farm-valley-01",
+        "templateVersion": 2,
+        "firstMinute": 1200,
+        "levelAtDays": {
+          "2": 0.0006944444444444445,
+          "3": 0.0020833333333333333,
+          "4": 0.004861111111111111,
+          "5": 2.0416666666666665,
+          "6": 4.6875,
+          "7": 5.690972222222222,
+          "8": 8.041666666666666,
+          "9": 12.042361111111111,
+          "10": 16.6875,
+          "11": 23.5,
+          "12": 30.6875,
+          "13": 37.68819444444444,
+          "14": 45.041666666666664,
+          "15": 53.6875
+        },
+        "commands": 16441,
+        "rejected": {
+          "AFFECTS_NEIGHBOR": 53,
+          "ZONE_LOCKED": 5,
+          "INSUFFICIENT_FUNDS": 75,
+          "STORAGE_FULL": 1255,
+          "TOO_STEEP": 2
+        },
+        "daily": [
+          {
+            "day": 1,
+            "level": 4,
+            "cash": 259,
+            "buildings": 5,
+            "fields": 24,
+            "rate": 0
+          },
+          {
+            "day": 2,
+            "level": 4,
+            "cash": 1289,
+            "buildings": 5,
+            "fields": 24,
+            "rate": 0
+          },
+          {
+            "day": 3,
+            "level": 5,
+            "cash": 1,
+            "buildings": 6,
+            "fields": 48,
+            "rate": 0
+          },
+          {
+            "day": 4,
+            "level": 5,
+            "cash": 2702,
+            "buildings": 6,
+            "fields": 48,
+            "rate": 0
+          },
+          {
+            "day": 5,
+            "level": 5,
+            "cash": 917,
+            "buildings": 7,
+            "fields": 72,
+            "rate": 0
+          },
+          {
+            "day": 6,
+            "level": 6,
+            "cash": 5366,
+            "buildings": 9,
+            "fields": 72,
+            "rate": 0
+          },
+          {
+            "day": 7,
+            "level": 7,
+            "cash": 14109,
+            "buildings": 11,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 8,
+            "level": 7,
+            "cash": 24929,
+            "buildings": 11,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 9,
+            "level": 8,
+            "cash": 33511,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 10,
+            "level": 8,
+            "cash": 44877,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 11,
+            "level": 8,
+            "cash": 56504,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 12,
+            "level": 8,
+            "cash": 68590,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 13,
+            "level": 9,
+            "cash": 50149,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 14,
+            "level": 9,
+            "cash": 70514,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 15,
+            "level": 9,
+            "cash": 90955,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 16,
+            "level": 9,
+            "cash": 111588,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 17,
+            "level": 9,
+            "cash": 133025,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 18,
+            "level": 10,
+            "cash": 150416,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 19,
+            "level": 10,
+            "cash": 168902,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 20,
+            "level": 10,
+            "cash": 187109,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 21,
+            "level": 10,
+            "cash": 205649,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 22,
+            "level": 10,
+            "cash": 223901,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 23,
+            "level": 10,
+            "cash": 242459,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 24,
+            "level": 10,
+            "cash": 260711,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 25,
+            "level": 11,
+            "cash": 257888,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 26,
+            "level": 11,
+            "cash": 300528,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 27,
+            "level": 11,
+            "cash": 349184,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 28,
+            "level": 11,
+            "cash": 397381,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 29,
+            "level": 11,
+            "cash": 444957,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 30,
+            "level": 11,
+            "cash": 493154,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 31,
+            "level": 11,
+            "cash": 540730,
+            "buildings": 18,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 32,
+            "level": 12,
+            "cash": 565179,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 33,
+            "level": 12,
+            "cash": 625955,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 34,
+            "level": 12,
+            "cash": 660096,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 35,
+            "level": 12,
+            "cash": 718599,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 36,
+            "level": 12,
+            "cash": 755976,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 37,
+            "level": 12,
+            "cash": 805537,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 38,
+            "level": 12,
+            "cash": 875129,
+            "buildings": 20,
+            "fields": 144,
+            "rate": 0
+          },
+          {
+            "day": 39,
+            "level": 13,
+            "cash": 890946,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 40,
+            "level": 13,
+            "cash": 930297,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 41,
+            "level": 13,
+            "cash": 961528,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 42,
+            "level": 13,
+            "cash": 995285,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 43,
+            "level": 13,
+            "cash": 1048237,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 44,
+            "level": 13,
+            "cash": 1097713,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 45,
+            "level": 13,
+            "cash": 1125272,
+            "buildings": 22,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 46,
+            "level": 14,
+            "cash": 1158127,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 47,
+            "level": 14,
+            "cash": 1226811,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 48,
+            "level": 14,
+            "cash": 1312503,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 49,
+            "level": 14,
+            "cash": 1346007,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 50,
+            "level": 14,
+            "cash": 1381172,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 51,
+            "level": 14,
+            "cash": 1415505,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 52,
+            "level": 14,
+            "cash": 1486037,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 53,
+            "level": 14,
+            "cash": 1536479,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 54,
+            "level": 14,
+            "cash": 1608363,
+            "buildings": 23,
+            "fields": 168,
+            "rate": 0
+          },
+          {
+            "day": 55,
+            "level": 15,
+            "cash": 1612249,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 56,
+            "level": 15,
+            "cash": 1661446,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 57,
+            "level": 15,
+            "cash": 1720748,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 58,
+            "level": 15,
+            "cash": 1814416,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 59,
+            "level": 15,
+            "cash": 1889842,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          },
+          {
+            "day": 60,
+            "level": 15,
+            "cash": 1961651,
+            "buildings": 25,
+            "fields": 192,
+            "rate": 0
+          }
+        ],
+        "final": {
+          "level": 15,
+          "xp": 87737,
+          "cash": 1961651,
+          "netWorth": 2215062,
+          "buildings": 25,
+          "zones": 8,
+          "fields": 192,
+          "producers": 14,
+          "questIndex": 12,
+          "repeatClaims": 21,
+          "rate": 0
+        },
+        "invariants": {
+          "snapshotValid": true,
+          "errors": [],
+          "walletSafe": true,
+          "occupancyValid": true
+        },
+        "limitations": [
+          "Bot strategy is an input, not proof of optimal player progression.",
+          "Production inputs must be grown; reference-model purchases at sell price are not permitted commands.",
+          "Infrastructure uses paid legal commands; failed bridge-site planning is reported, never replaced with virtual quest completion.",
+          "No geometry-free overhead payment, virtual construction XP, crop sales outside market access, or injected quest rewards."
+        ]
+      },
+      "pacing": [
+        {
+          "level": 8,
+          "expectedDays": 4,
+          "actualDays": 8.041666666666666,
+          "deviation": 1.0104166666666665,
+          "status": "FAIL"
+        },
+        {
+          "level": 12,
+          "expectedDays": 12,
+          "actualDays": 30.6875,
+          "deviation": 1.5572916666666667,
+          "status": "FAIL"
+        },
+        {
+          "level": 15,
+          "expectedDays": 22,
+          "actualDays": 53.6875,
+          "deviation": 1.4403409090909092,
+          "status": "FAIL"
+        },
+        {
+          "level": 20,
+          "expectedDays": 52,
+          "actualDays": null,
+          "deviation": null,
+          "status": "UNREACHED"
+        }
+      ],
+      "wallSeconds": 70.69882460000005
+    },
+    {
+      "result": {
+        "mapKind": "farm",
+        "style": "nhan",
+        "days": 60,
+        "templateId": "farm-valley-01",
+        "templateVersion": 2,
+        "firstMinute": 1260,
+        "levelAtDays": {
+          "2": 0.0006944444444444445,
+          "3": 0.0020833333333333333,
+          "4": 0.004861111111111111,
+          "5": 6.003472222222222,
+          "6": 10.005555555555556,
+          "7": 14,
+          "8": 19,
+          "9": 32.00069444444444,
+          "10": 45
+        },
+        "commands": 4254,
+        "rejected": {
+          "AFFECTS_NEIGHBOR": 37,
+          "ZONE_LOCKED": 2,
+          "INSUFFICIENT_FUNDS": 25,
+          "FIELD_LIMIT": 72,
+          "STORAGE_FULL": 234
+        },
+        "daily": [
+          {
+            "day": 1,
+            "level": 4,
+            "cash": 233,
+            "buildings": 5,
+            "fields": 24,
+            "rate": 0
+          },
+          {
+            "day": 2,
+            "level": 4,
+            "cash": 329,
+            "buildings": 5,
+            "fields": 24,
+            "rate": 0
+          },
+          {
+            "day": 3,
+            "level": 4,
+            "cash": 462,
+            "buildings": 5,
+            "fields": 24,
+            "rate": 0
+          },
+          {
+            "day": 4,
+            "level": 4,
+            "cash": 1189,
+            "buildings": 5,
+            "fields": 24,
+            "rate": 0
+          },
+          {
+            "day": 5,
+            "level": 4,
+            "cash": 19,
+            "buildings": 6,
+            "fields": 48,
+            "rate": 0
+          },
+          {
+            "day": 6,
+            "level": 4,
+            "cash": 2,
+            "buildings": 6,
+            "fields": 48,
+            "rate": 0
+          },
+          {
+            "day": 7,
+            "level": 5,
+            "cash": 513,
+            "buildings": 6,
+            "fields": 48,
+            "rate": 0
+          },
+          {
+            "day": 8,
+            "level": 5,
+            "cash": 236,
+            "buildings": 6,
+            "fields": 48,
+            "rate": 0
+          },
+          {
+            "day": 9,
+            "level": 5,
+            "cash": 2163,
+            "buildings": 6,
+            "fields": 48,
+            "rate": 0
+          },
+          {
+            "day": 10,
+            "level": 5,
+            "cash": 1690,
+            "buildings": 7,
+            "fields": 72,
+            "rate": 0
+          },
+          {
+            "day": 11,
+            "level": 6,
+            "cash": 1140,
+            "buildings": 9,
+            "fields": 72,
+            "rate": 0
+          },
+          {
+            "day": 12,
+            "level": 6,
+            "cash": 8535,
+            "buildings": 9,
+            "fields": 72,
+            "rate": 0
+          },
+          {
+            "day": 13,
+            "level": 6,
+            "cash": 10553,
+            "buildings": 9,
+            "fields": 72,
+            "rate": 0
+          },
+          {
+            "day": 14,
+            "level": 6,
+            "cash": 21005,
+            "buildings": 9,
+            "fields": 72,
+            "rate": 0
+          },
+          {
+            "day": 15,
+            "level": 7,
+            "cash": 8430,
+            "buildings": 11,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 16,
+            "level": 7,
+            "cash": 22329,
+            "buildings": 11,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 17,
+            "level": 7,
+            "cash": 27557,
+            "buildings": 11,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 18,
+            "level": 7,
+            "cash": 34296,
+            "buildings": 11,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 19,
+            "level": 7,
+            "cash": 36728,
+            "buildings": 11,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 20,
+            "level": 8,
+            "cash": 37985,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 21,
+            "level": 8,
+            "cash": 39767,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 22,
+            "level": 8,
+            "cash": 43952,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 23,
+            "level": 8,
+            "cash": 46454,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 24,
+            "level": 8,
+            "cash": 50639,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 25,
+            "level": 8,
+            "cash": 53141,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 26,
+            "level": 8,
+            "cash": 57326,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 27,
+            "level": 8,
+            "cash": 59828,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 28,
+            "level": 8,
+            "cash": 64013,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 29,
+            "level": 8,
+            "cash": 66515,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 30,
+            "level": 8,
+            "cash": 70700,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 31,
+            "level": 8,
+            "cash": 73202,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 32,
+            "level": 8,
+            "cash": 77387,
+            "buildings": 12,
+            "fields": 96,
+            "rate": 0
+          },
+          {
+            "day": 33,
+            "level": 9,
+            "cash": 50556,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 34,
+            "level": 9,
+            "cash": 57731,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 35,
+            "level": 9,
+            "cash": 63405,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 36,
+            "level": 9,
+            "cash": 71151,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 37,
+            "level": 9,
+            "cash": 78231,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 38,
+            "level": 9,
+            "cash": 85189,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 39,
+            "level": 9,
+            "cash": 91701,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 40,
+            "level": 9,
+            "cash": 98991,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 41,
+            "level": 9,
+            "cash": 105835,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 42,
+            "level": 9,
+            "cash": 113457,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 43,
+            "level": 9,
+            "cash": 120633,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 44,
+            "level": 9,
+            "cash": 128587,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 45,
+            "level": 9,
+            "cash": 136095,
+            "buildings": 15,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 46,
+            "level": 10,
+            "cash": 138594,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 47,
+            "level": 10,
+            "cash": 148459,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 48,
+            "level": 10,
+            "cash": 159323,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 49,
+            "level": 10,
+            "cash": 169575,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 50,
+            "level": 10,
+            "cash": 180439,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 51,
+            "level": 10,
+            "cash": 190691,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 52,
+            "level": 10,
+            "cash": 201489,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 53,
+            "level": 10,
+            "cash": 212000,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 54,
+            "level": 10,
+            "cash": 224168,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 55,
+            "level": 10,
+            "cash": 235325,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 56,
+            "level": 10,
+            "cash": 247419,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 57,
+            "level": 10,
+            "cash": 259292,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 58,
+            "level": 10,
+            "cash": 271777,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 59,
+            "level": 10,
+            "cash": 283650,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          },
+          {
+            "day": 60,
+            "level": 10,
+            "cash": 297634,
+            "buildings": 16,
+            "fields": 120,
+            "rate": 0
+          }
+        ],
+        "final": {
+          "level": 10,
+          "xp": 20047,
+          "cash": 297634,
+          "netWorth": 378260,
+          "buildings": 16,
+          "zones": 7,
+          "fields": 120,
+          "producers": 8,
+          "questIndex": 12,
+          "repeatClaims": 21,
+          "rate": 0
+        },
+        "invariants": {
+          "snapshotValid": true,
+          "errors": [],
+          "walletSafe": true,
+          "occupancyValid": true
+        },
+        "limitations": [
+          "Bot strategy is an input, not proof of optimal player progression.",
+          "Production inputs must be grown; reference-model purchases at sell price are not permitted commands.",
+          "Infrastructure uses paid legal commands; failed bridge-site planning is reported, never replaced with virtual quest completion.",
+          "No geometry-free overhead payment, virtual construction XP, crop sales outside market access, or injected quest rewards."
+        ]
+      },
+      "pacing": [
+        {
+          "level": 8,
+          "expectedDays": 4,
+          "actualDays": 19,
+          "deviation": 3.75,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 12,
+          "expectedDays": 12,
+          "actualDays": null,
+          "deviation": null,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 15,
+          "expectedDays": 22,
+          "actualDays": null,
+          "deviation": null,
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "level": 20,
+          "expectedDays": 52,
+          "actualDays": null,
+          "deviation": null,
+          "status": "NOT_APPLICABLE"
+        }
+      ],
+      "wallSeconds": 18.500181600000012
+    }
+  ]
+}

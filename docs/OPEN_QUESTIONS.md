@@ -63,3 +63,53 @@ characters without a producer or free field quota can have only `sell_item`/`har
 the degenerate case of a single eligible template, D024 reuses it (with a different subject/target where
 possible) rather than leave an empty slot. Please confirm, or choose "leave the slot empty until another
 template becomes eligible".
+
+## Q010 — Real-sim economy pacing versus docs/16 §12 — OPEN
+
+2026-10-10. Balance decision required; **no economic values were changed**.
+The current 60-day, six-scenario run uses `f5ab34a` (topology optimization over baseline `47fe17d`), contentVersion 1 and the real sim.
+All six scenarios finished, CLI exit 0, 876.329 s total. The 55-file source fingerprint stayed unchanged;
+all six snapshots, wallets and occupancy checks are valid. **Pacing gate FAIL** (five failing milestones,
+two passing milestones, one UNREACHED). CLI success does not imply pacing approval.
+
+| Map / ordinary player | Level | Target elapsed days | Actual elapsed days | Deviation | Status |
+|---|---|---:|---:|---:|---|
+| City | 8 | 3.5 | 6.5 | +85.7% | FAIL |
+| City | 12 | 11 | 14.6875 | +33.5% | FAIL |
+| City | 15 | 21 | 24.5 | +16.7% | PASS |
+| City | 20 | 49 | 51.5 | +5.1% | PASS |
+| Farm | 8 | 4 | 8.041667 | +101.0% | FAIL |
+| Farm | 12 | 12 | 30.6875 | +155.7% | FAIL |
+| Farm | 15 | 22 | 53.6875 | +144.0% | FAIL |
+| Farm | 20 | 52 | UNREACHED | — | UNREACHED |
+
+Evidence: `docs/reports/G3-economy-current.json`, `G3-economy-comparison.json` and `G3-report.md`.
+The earlier City L8 reading at 08:28 agrees exactly; all City/careful results are exactly equal before/after the optimization.
+The ordinary-player 60-calendar-day schedule observes 59.048611 elapsed days from the first session;
+Farm ends at L15. Its L20 date/deviation is unknown and is not extrapolated beyond that horizon.
+Farm/careful ends at L18. Relative speed is **PASS** at L8 = 2.266×, L12 = 1.689×, L15 = 1.562×;
+L20 comparison is unobservable because neither Farm style reaches it.
+
+### Cause: bot/model inputs versus implemented rules
+
+- Confirmed model mismatch: docs/16 §12.4 explicitly simplifies Farm inputs as always available, bought at sale price and sold immediately. Real sim has no crop/product purchase command; it requires growing inputs, storage, connected markets and production queues. Bot strategy can therefore change throughput without any incorrect catalog number.
+- Confirmed City bot observation: at simulated day 11.875, L10, 97 buildings, 16 zones, authored quest index 11 (far-bank income building) was still pending. Two passive debugger samples were inside `isFarBank` → `build` → `infrastructure`; the candidate loop repeatedly flood-fills the dry land. This explains wall-clock cost. It does not by itself prove the cause of slow simulated progression; the placement/expansion policy needs review.
+- The current bot places rotation 0, uses bounded site-planning attempts and clears/grades/pays real infrastructure. The reference model uses abstract per-cell overhead and usable-cell capacity. Thus a failed bot comparison alone does not establish a sim-rule bug or optimal human pacing.
+- All six final invariant sets pass; no source fingerprint mismatch was found. This establishes valid sim states, not optimal strategy or approved pacing.
+
+### Payback scope requiring a decision
+
+The supplemental audit finds all earning buildings **unlocked above L5** have maximum-rate payback
+≥ 1 h (minimum bank 2.686 h). If the criterion includes all earlier buildings still available after L5,
+Tạp hóa has a best-case bound **0.901 h**: value $575 / (base rate $380/h × tier-3 1.2 × bonuses 1.4).
+This excludes shared road/decor/embankment costs and is not a measured layout. Base payback is 1.513 h.
+Four stated transaction reversals pass finite real-sim checks; all adversarial repeat-quest combinations are NOT RUN.
+
+### Options for the product owner
+
+1. **Reconcile the model and bot first (recommended).** Make `docs/tools/economy/model.mjs` model real input acquisition, legal land/roads and realistic placement/session choices; have the bot owner review the strategy without changing sim rules. Rerun all six cases. If tuning is still needed, recalibrate `P.xpCumMap` using that verified strategy. This separates bot/model error from a balance change.
+2. **Approve recalibration against the current conservative bot.** Adjust `P.xpCumMap` and, only if the broad payback interpretation is required, rate/payback parameters in `model.mjs` to keep even bonus-enhanced early buildings above 1 h. Recalibrate both maps jointly; faster XP must not come from adding illegal input purchases or virtual rewards. No replacement numbers are proposed as already validated.
+
+Both options follow docs/16 §11 after approval: edit model parameters → `node model.mjs --tables`
+→ `node calibrate-xp.mjs city` / `farm` → `node model.mjs --sim` → update docs/16 and generated content,
+bump `contentVersion`, run real-sim six scenarios plus regression tests. Q010 remains open until that decision.

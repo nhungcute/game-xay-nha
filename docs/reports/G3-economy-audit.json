@@ -1,0 +1,147 @@
+{
+  "contentVersion": 1,
+  "payback": [
+    {
+      "id": "house_small",
+      "unlockLevel": 1,
+      "baseHours": 2.2058823529411766,
+      "bestCaseHours": 1.3130252100840336,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "shop_grocery",
+      "unlockLevel": 1,
+      "baseHours": 1.513157894736842,
+      "bestCaseHours": 0.900689223057644,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "house_town",
+      "unlockLevel": 3,
+      "baseHours": 2.9591836734693877,
+      "bestCaseHours": 1.761418853255588,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "shop_cafe",
+      "unlockLevel": 3,
+      "baseHours": 1.9886363636363635,
+      "bestCaseHours": 1.183712121212121,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "shop_restaurant",
+      "unlockLevel": 5,
+      "baseHours": 2.6285714285714286,
+      "bestCaseHours": 1.5646258503401358,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "bank",
+      "unlockLevel": 7,
+      "baseHours": 4.512195121951219,
+      "bestCaseHours": 2.6858304297328686,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "house_apartment",
+      "unlockLevel": 8,
+      "baseHours": 5.978260869565218,
+      "bestCaseHours": 3.5584886128364386,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "shop_supermarket",
+      "unlockLevel": 9,
+      "baseHours": 4.585798816568047,
+      "bestCaseHours": 2.7296421527190757,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "hotel",
+      "unlockLevel": 12,
+      "baseHours": 6.978609625668449,
+      "bestCaseHours": 3.8770053475935833,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "office_tower",
+      "unlockLevel": 15,
+      "baseHours": 10.609504132231406,
+      "bestCaseHours": 6.3151810310901215,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    },
+    {
+      "id": "chicken_coop",
+      "unlockLevel": 3,
+      "baseHours": 3.6398467432950192,
+      "bestCaseHours": 3.6398467432950192,
+      "assumption": "Full producer capacity; grown inputs valued at sale price; excludes supporting buildings."
+    },
+    {
+      "id": "rice_mill",
+      "unlockLevel": 5,
+      "baseHours": 5.2259887005649714,
+      "bestCaseHours": 5.2259887005649714,
+      "assumption": "Full producer capacity; grown inputs valued at sale price; excludes supporting buildings."
+    },
+    {
+      "id": "cow_barn",
+      "unlockLevel": 7,
+      "baseHours": 7.028112449799197,
+      "bestCaseHours": 7.028112449799197,
+      "assumption": "Full producer capacity; grown inputs valued at sale price; excludes supporting buildings."
+    },
+    {
+      "id": "bakery",
+      "unlockLevel": 9,
+      "baseHours": 9.097222222222221,
+      "bestCaseHours": 9.097222222222221,
+      "assumption": "Full producer capacity; grown inputs valued at sale price; excludes supporting buildings."
+    }
+  ],
+  "reversals": [
+    {
+      "cycle": "build-cancel",
+      "cycles": 10,
+      "worthDelta": 0,
+      "xpDelta": 0,
+      "status": "PASS"
+    },
+    {
+      "cycle": "build-demolish",
+      "cycles": 10,
+      "worthDelta": -3850,
+      "xpDelta": 550,
+      "status": "PASS"
+    },
+    {
+      "cycle": "buy-sell-material",
+      "worthDelta": 0,
+      "xpDelta": 0,
+      "saleCode": "NOT_FOUND",
+      "status": "PASS"
+    },
+    {
+      "cycle": "clear-same-environment-twice",
+      "secondCode": "NOT_FOUND",
+      "worthDeltaOnRetry": 0,
+      "status": "PASS"
+    }
+  ],
+  "newBuildingsAfterLevel5": [],
+  "anyAvailableBuildingAfterLevel5": [
+    {
+      "id": "shop_grocery",
+      "unlockLevel": 1,
+      "baseHours": 1.513157894736842,
+      "bestCaseHours": 0.900689223057644,
+      "assumption": "Full workforce, highest road tier, maximum decor and water bonus; excludes shared infrastructure cost."
+    }
+  ],
+  "limitations": [
+    "Finite reversal regression checks do not prove absence of every exploit.",
+    "Repeat quest rewards are excluded from reversal fixtures; quest-combined adversarial loops have not been exhaustively tested.",
+    "Best-case payback is an upper rate bound, not a measured player layout."
+  ]
+}

@@ -1,0 +1,11 @@
+
+ RUN  v3.2.4 D:/Core_LVB_BIDC/Project/Game_xay_nha
+
+ ✓ packages/worldgen/src/banks.test.ts (4 tests) 246ms
+ ✓ packages/sim/src/banks.test.ts (6 tests) 345ms
+ ✓ packages/sim/src/farm.test.ts (74 tests) 1910ms
+
+ Test Files  3 passed (3)
+      Tests  84 passed (84)
+   Start at  08:33:21
+   Duration  2.75s (transform 339ms, setup 0ms, collect 922ms, tests 2.50s, environment 1ms, prepare 595ms)
