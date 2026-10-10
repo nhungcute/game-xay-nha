@@ -3,7 +3,8 @@ import type { SimState } from '@xay-nha/sim';
 
 /**
  * Sound effects (docs/13 §4.8 "Hiệu ứng"), synthesized with WebAudio: no audio files, nothing to license or download.
- * Ambience (wind, running water near the camera, occasional birds) is synthesized too; music needs real recordings. The AudioContext is created lazily on the
+ * Ambience (wind, running water near the camera, occasional birds) and a quiet generative music loop per map are
+ * synthesized too. Music has its own on/off setting. The AudioContext is created lazily on the
  * first sound, which always follows a user gesture (a command), so browsers allow it. Mute is remembered per browser.
  */
 export type Sound = 'chop' | 'dig' | 'build' | 'complete' | 'coin' | 'harvest' | 'levelUp' | 'error';
@@ -42,7 +43,25 @@ export function waterNearby(surface: Uint8Array, x: number, z: number, radius = 
   return best === Infinity ? 0 : Math.max(0, 1 - best / radius);
 }
 
-const KEY = 'xay-nha.sound';
+const KEY = 'xay-nha.sound', MUSIC_KEY = 'xay-nha.music';
+
+/** Generative music (docs/13 §4.8 "Nhạc"): pentatonic, slow, deterministic per map; 16-step bars. */
+export interface MusicStyle { root: number; scale: number[]; bpm: number; wave: OscillatorType; seed: number }
+export const MUSIC: Record<'city' | 'farm', MusicStyle> = {
+  city: { root: 261.63, scale: [0, 2, 4, 7, 9, 12, 14, 16], bpm: 84, wave: 'triangle', seed: 7 },
+  farm: { root: 196.0, scale: [0, 2, 4, 7, 9, 12, 14, 16], bpm: 70, wave: 'sine', seed: 11 },
+};
+/** Melody for bar `bar`: 16 steps, each a scale index or -1 (rest). Pure and deterministic (unit-tested). */
+export function musicBar(style: MusicStyle, bar: number): number[] {
+  let h = (style.seed * 2654435761 + bar * 40503) >>> 0;
+  const rnd = () => { h = (Math.imul(h ^ (h >>> 15), 2246822507) + 0x9e3779b9) >>> 0; return h / 4294967296; };
+  let degree = Math.floor(rnd() * 4);
+  return Array.from({ length: 16 }, (_, step) => {
+    if (step % 2 || rnd() < .35) return -1;
+    degree = Math.max(0, Math.min(style.scale.length - 1, degree + Math.floor(rnd() * 5) - 2));
+    return degree;
+  });
+}
 type Voice = { wave: OscillatorType | 'noise'; from: number; to?: number; at: number; length: number; gain: number; filter?: number };
 const NOTES: Record<Sound, Voice[]> = {
   chop: [{ wave: 'noise', from: 1400, at: 0, length: .07, gain: .5, filter: 1400 }, { wave: 'noise', from: 900, at: .09, length: .08, gain: .4, filter: 900 }],
@@ -59,15 +78,50 @@ export class SoundEffects {
   private context?: AudioContext;
   private noise?: AudioBuffer;
   private ambience?: { master: GainNode; wind: GainNode; water: GainNode };
+  private music?: { gain: GainNode; style: MusicStyle; bar: number; nextAt: number };
+  musicOn: boolean;
   muted: boolean;
   constructor() {
     let stored: string | null = null;
     try { stored = localStorage.getItem(KEY); } catch { /* storage blocked */ }
     this.muted = stored === 'off';
+    let music: string | null = null;
+    try { music = localStorage.getItem(MUSIC_KEY); } catch { /* storage blocked */ }
+    this.musicOn = music !== 'off';
+  }
+  setMusic(on: boolean): void {
+    this.musicOn = on;
+    try { localStorage.setItem(MUSIC_KEY, on ? 'on' : 'off'); } catch { /* storage blocked */ }
+    if (this.music && this.context) this.music.gain.gain.setTargetAtTime(on && !this.muted ? 1 : 0, this.context.currentTime, .4);
+  }
+  /** Schedules the next bars ahead of time; call about once a second. */
+  playMusic(kind: 'city' | 'farm'): void {
+    const ctx = this.context;
+    if (!ctx || this.muted || !this.musicOn) return;
+    try {
+      if (!this.music || this.music.style !== MUSIC[kind]) {
+        const gain = ctx.createGain(); gain.gain.value = 1; gain.connect(ctx.destination);
+        this.music?.gain.disconnect();
+        this.music = { gain, style: MUSIC[kind], bar: 0, nextAt: ctx.currentTime + .5 };
+      }
+      const m = this.music, step = 60 / m.style.bpm / 4;
+      while (m.nextAt < ctx.currentTime + 2.5) {
+        const notes = musicBar(m.style, m.bar);
+        notes.forEach((degree, i) => {
+          if (degree < 0) return;
+          const f = m.style.root * 2 ** (m.style.scale[degree]! / 12);
+          this.voice(ctx, m.gain, { wave: m.style.wave, from: f, at: i * step, length: step * 3.5, gain: .05 }, m.nextAt);
+        });
+        // Soft bass on beats 1 and 3 of the bar.
+        for (const beat of [0, 8]) this.voice(ctx, m.gain, { wave: 'sine', from: m.style.root / 2 * 2 ** (m.style.scale[m.bar % 4 === 3 ? 3 : 0]! / 12), at: beat * step, length: step * 7, gain: .045 }, m.nextAt);
+        m.nextAt += step * 16; m.bar++;
+      }
+    } catch { /* audio unavailable */ }
   }
   setMuted(muted: boolean): void {
     this.muted = muted;
     if (this.ambience && this.context) this.ambience.master.gain.setTargetAtTime(muted ? 0 : 1, this.context.currentTime, .3);
+    if (this.music && this.context) this.music.gain.gain.setTargetAtTime(muted || !this.musicOn ? 0 : 1, this.context.currentTime, .3);
     try { localStorage.setItem(KEY, muted ? 'off' : 'on'); } catch { /* storage blocked */ }
   }
   /** Creates the AudioContext inside a user gesture (browsers block audio until then). */
@@ -135,5 +189,5 @@ export class SoundEffects {
     }
     env.connect(out); source.start(t); source.stop(t + v.length + .02);
   }
-  dispose(): void { void this.context?.close(); this.context = undefined; this.ambience = undefined; }
+  dispose(): void { void this.context?.close(); this.context = undefined; this.ambience = undefined; this.music = undefined; }
 }

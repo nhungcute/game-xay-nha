@@ -26,6 +26,12 @@ function SoundSettings({ muted, onChange }: { muted: boolean | undefined; onChan
       className={muted === off ? 'selected' : ''} onClick={() => onChange(off)}>{t(off ? 'soundOff' : 'soundOn')}</button>)}
   </div>;
 }
+function MusicSettings({ on, onChange }: { on: boolean | undefined; onChange: (on: boolean) => void }) {
+  return <div className="settings" role="group" aria-label={t('music')}><span>{t('music')}</span>
+    {([true, false] as const).map(value => <button type="button" key={String(value)} aria-pressed={on === value}
+      className={on === value ? 'selected' : ''} onClick={() => onChange(value)}>{t(value ? 'soundOn' : 'soundOff')}</button>)}
+  </div>;
+}
 function Profile({ state }: { state: NonNullable<ReturnType<typeof useWorld.getState>['state']> }) {
   const s = state.snapshot, mat = (w: number, st: number) => w * economy.materialPrices.wood + st * economy.materialPrices.stone;
   const buildings = s.buildings.reduce((v, b) => v + b.investedValue, 0), bridges = s.bridges.reduce((v, b) => v + b.investedValue, 0);
@@ -106,6 +112,7 @@ export function Game({loader,onSwitchMap}:GameProps){
   const openPanel=(next:GamePanel)=>{gameRef.current?.tools.choose('explore');setPanel(current=>current===next?null:next);};
   const setQuality=(quality:'high'|'low')=>{gameRef.current?.setQuality(quality);setStats(gameRef.current?.metrics()??null);};
   const setMuted=(muted:boolean)=>{gameRef.current?.sound.setMuted(muted);setStats(gameRef.current?.metrics()??null);};
+  const setMusic=(on:boolean)=>{gameRef.current?.sound.setMusic(on);setStats(gameRef.current?.metrics()??null);};
   const switchMap=async()=>{
     const world=gameRef.current?.world;if(!world||!onSwitchMap||switchingMap)return;
     setSwitchingMap(true);
@@ -127,8 +134,8 @@ export function Game({loader,onSwitchMap}:GameProps){
       <div className="camera-buttons"><button aria-label="Phóng to" onClick={()=>gameRef.current?.rig.zoom(-140)}><GameIcon name="zoomIn"/></button><button aria-label="Thu nhỏ" onClick={()=>gameRef.current?.rig.zoom(140)}><GameIcon name="zoomOut"/></button><button aria-label={t('resetCamera')} onClick={()=>gameRef.current?.rig.reset()}><GameIcon name="reset"/></button></div>
       {panel&&<aside className="side panel"><button className="close" aria-label="Đóng bảng" onClick={()=>setPanel(null)}><GameIcon name="close"/></button>
         <h2 className="panel-heading"><GameIcon name={panel==='materials'?'wood':panel}/>{panel==='settings'?'Cài đặt':t(panel)}</h2>
-        {panel==='profile'?<><Profile state={state}/><GraphicsSettings quality={stats?.quality} onChange={setQuality}/><SoundSettings muted={stats?.muted} onChange={setMuted}/></>
-          :panel==='settings'?<><p>Điều chỉnh đồ họa phù hợp với thiết bị của bạn.</p><GraphicsSettings quality={stats?.quality} onChange={setQuality}/><SoundSettings muted={stats?.muted} onChange={setMuted}/></>
+        {panel==='profile'?<><Profile state={state}/><GraphicsSettings quality={stats?.quality} onChange={setQuality}/><SoundSettings muted={stats?.muted} onChange={setMuted}/><MusicSettings on={stats?.musicOn} onChange={setMusic}/></>
+          :panel==='settings'?<><p>Điều chỉnh đồ họa phù hợp với thiết bị của bạn.</p><GraphicsSettings quality={stats?.quality} onChange={setQuality}/><SoundSettings muted={stats?.muted} onChange={setMuted}/><MusicSettings on={stats?.musicOn} onChange={setMusic}/></>
           :panel==='materials'?(['wood','stone'] as const).map(material=><div className="item" key={material}><GameIcon name={material}/><span>{t(material)}</span>{[1,10].map(count=><button key={count} onClick={()=>apply('BUY_MATERIAL',{[material]:count})}>{t('buy')} {count}</button>)}</div>)
           :Object.keys(state.snapshot.inventory).length?Object.entries(state.snapshot.inventory).map(([id,count])=><div className="item" key={id}><span>{t(catalog.items[id]?.nameKey??id)} × {count}</span><button disabled={!count} onClick={()=>apply('SELL',{items:{[id]:count}})}>{t('sell')} {money(count*(catalog.items[id]?.sellPrice??0))}</button></div>)
           :<p className="empty-inventory"><GameIcon name="inventory"/>Kho đang trống. Thu hoạch hoặc thu sản phẩm để thêm hàng vào kho.</p>}

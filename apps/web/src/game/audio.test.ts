@@ -53,3 +53,26 @@ describe('ambience water proximity', () => {
     expect(waterNearby(surface, 0, 0)).toBe(0);
   });
 });
+
+describe('generative music', () => {
+  afterEach(() => vi.unstubAllGlobals());
+  it('bars are deterministic, 16 steps of valid scale degrees or rests, and differ between maps and bars', async () => {
+    const { MUSIC, musicBar } = await import('./audio');
+    for (const style of [MUSIC.city, MUSIC.farm]) for (let bar = 0; bar < 8; bar++) {
+      const notes = musicBar(style, bar);
+      expect(notes).toHaveLength(16);
+      expect(notes.every(n => n === -1 || (Number.isInteger(n) && n >= 0 && n < style.scale.length))).toBe(true);
+      expect(notes.some(n => n >= 0)).toBe(true);
+      expect(musicBar(style, bar)).toEqual(notes);
+    }
+    expect(musicBar(MUSIC.city, 0)).not.toEqual(musicBar(MUSIC.farm, 0));
+    expect(musicBar(MUSIC.city, 0)).not.toEqual(musicBar(MUSIC.city, 1));
+  });
+  it('music has its own remembered on/off, default on', async () => {
+    const { SoundEffects } = await import('./audio');
+    const data = new Map<string, string>();
+    vi.stubGlobal('localStorage', { getItem: (k: string) => data.get(k) ?? null, setItem: (k: string, v: string) => void data.set(k, v) });
+    const sfx = new SoundEffects(); expect(sfx.musicOn).toBe(true);
+    sfx.setMusic(false); expect(new SoundEffects().musicOn).toBe(false); expect(new SoundEffects().muted).toBe(false);
+  });
+});
