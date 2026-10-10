@@ -1,0 +1,49 @@
+{
+  "contentVersion": 1,
+  "level": 8,
+  "commands": 9,
+  "snapshotValid": true,
+  "building": "shop_grocery",
+  "investedValue": 575,
+  "actualRatePerHour": 638.4,
+  "paybackHours": 0.9006892230576441,
+  "belowOneHour": true,
+  "layout": [
+    {
+      "defId": "house_small",
+      "anchor": [
+        50,
+        68
+      ]
+    },
+    {
+      "defId": "shop_grocery",
+      "anchor": [
+        56,
+        68
+      ]
+    },
+    {
+      "defId": "deco_park",
+      "anchor": [
+        50,
+        71
+      ]
+    },
+    {
+      "defId": "deco_park",
+      "anchor": [
+        54,
+        71
+      ]
+    },
+    {
+      "defId": "deco_park",
+      "anchor": [
+        50,
+        75
+      ]
+    }
+  ],
+  "scope": "Controlled City rule fixture at L8; supporting roads/decor/embankment costs excluded from single-building payback."
+}

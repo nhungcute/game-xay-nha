@@ -1,0 +1,179 @@
+
+> xay-nha@0.1.0 check D:\Core_LVB_BIDC\Project\Game_xay_nha
+> pnpm content:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build
+
+
+> xay-nha@0.1.0 content:check D:\Core_LVB_BIDC\Project\Game_xay_nha
+> node scripts/generate-content.mjs --check
+
+Verified 4 content files from docs/16 + economy model (D:\Core_LVB_BIDC\Project\Game_xay_nha\).
+
+> xay-nha@0.1.0 lint D:\Core_LVB_BIDC\Project\Game_xay_nha
+> eslint packages scripts apps --max-warnings 0
+
+
+> xay-nha@0.1.0 typecheck D:\Core_LVB_BIDC\Project\Game_xay_nha
+> tsc --noEmit
+
+
+> xay-nha@0.1.0 test D:\Core_LVB_BIDC\Project\Game_xay_nha
+> vitest run
+
+
+ RUN  v3.2.4 D:/Core_LVB_BIDC/Project/Game_xay_nha
+
+ ✓ apps/web/src/game/render/groundPalette.test.ts (4 tests) 2978ms
+   ✓ natural ground palette (G3 map art request) > city-coast-01: grass is broken into earthy, shore and rock patches, not one flat green  1305ms
+   ✓ natural ground palette (G3 map art request) > farm-valley-01: grass is broken into earthy, shore and rock patches, not one flat green  867ms
+   ✓ natural ground palette (G3 map art request) > only tints grass: tilled fields, roads and foundations keep their gameplay colours; rules data is untouched  530ms
+ ✓ packages/sim/src/construction.test.ts (49 tests) 4157ms
+ ✓ packages/tooling/src/authored-template.test.ts (3 tests) 4628ms
+   ✓ provisional G1 Farm authoring > builds real river/lakes/waterfall with untouched terrain and dry ENTRY path  1308ms
+   ✓ provisional G1 Farm authoring > builds deterministically and refuses water-crossing authored roads  2322ms
+   ✓ provisional G1 Farm authoring > rejects authored region water overlaps before exporting a map  979ms
+ ✓ packages/sim/src/economy.test.ts (49 tests) 6015ms
+   ✓ fake-clock settlement and ordered completion > settles before demolition changes decoration and preserves fractional collect remainder  374ms
+ ✓ packages/sim/src/engine.test.ts (38 tests) 6073ms
+   ✓ atomic command engine and previews > a valid maximum-length world ID does not overflow generated entity IDs  363ms
+   ✓ atomic command engine and previews > validate and preview cost match accepted apply without modifying input  1435ms
+   ✓ clear, materials and land purchase economy > clear A-0 uses content costs and resource rewards  346ms
+   ✓ quests and tutorial completion > Farm tutorial completes through real commands in under six minutes at level >=2  425ms
+   ✓ quests and tutorial completion > City tutorial completes through real commands in under six minutes at level >=2  436ms
+ ✓ packages/sim/src/quests.test.ts (15 tests) 6454ms
+   ✓ repeat quests (docs/16 §10.3, D017, D024) > start only after the 12 authored quests and always fill 3 slots with distinct quests  848ms
+   ✓ repeat quests (docs/16 §10.3, D017, D024) > validateSnapshot rejects forged repeat quests (reward, XP, id, subject, timing, map, progress)  2526ms
+   ✓ repeat quests (docs/16 §10.3, D017, D024) > locked subjects are rejected and the reference-income bound grows with level  450ms
+   ✓ repeat quests (docs/16 §10.3, D017, D024) > snapshots with repeat quests pass validate-then-swap  607ms
+   ✓ authored state quests count work done before the quest appeared (G3 sim-economy finding) > road quest counts connected player-built road cells regardless of when they were built  354ms
+ ✓ packages/content/src/content.test.ts (33 tests) 961ms
+   ✓ docs/16 generated economy content > regenerates deterministically and passes check mode  747ms
+ ✓ packages/tooling/src/economy-bot.test.ts (6 tests) 7421ms
+   ✓ real sim economy bot > city bot uses commands to progress from starting resources without violating state invariants  2959ms
+   ✓ real sim economy bot > farm bot uses commands to progress from starting resources without violating state invariants  3019ms
+   ✓ real sim economy bot > reports missing milestones as UNREACHED instead of passing them  1413ms
+ ✓ packages/worldgen/src/worldgen.test.ts (31 tests) 9318ms
+   ✓ deterministic environment generation > excludes water, roads and ENTRY across every blocking footprint  3393ms
+   ✓ deterministic environment generation > large rocks and trees never overlap or cross generating zone edges  1897ms
+   ✓ deterministic environment generation > rejects invalid zone IDs  660ms
+   ✓ template validation and water geometry > validates provisional city fixture  301ms
+ ✓ packages/sim/src/road-value.test.ts (7 tests) 2171ms
+   ✓ actual paid value of remaining roads > removed and rebuilt natural road counts its full new payment  388ms
+   ✓ actual paid value of remaining roads > removed road investment is deleted and repeated rebuilds never accumulate past remaining road value  525ms
+   ✓ actual paid value of remaining roads > rejects forged road value and orphaned payment metadata  646ms
+ ✓ packages/contracts/src/contracts.test.ts (80 tests) 2859ms
+   ✓ template and snapshot schemas > base64 codec round-trips every length and rejects noncanonical padding bits directly  2571ms
+ ✓ apps/web/src/game/render/renderers.test.ts (13 tests) 6056ms
+   ✓ shared terrain geometry > uses global neighboring heights for the same normal at a chunk boundary  1174ms
+   ✓ shared terrain geometry > reuses all chunk geometries and buffers during fifty terrain edits  2625ms
+   ✓ shared terrain geometry > interpolates visual heights to simulation targets in exactly 200 ms without modifying state  384ms
+   ✓ shared terrain geometry > only rebuilds changed chunks and their normal-sharing neighbors  514ms
+   ✓ pooled road, bank, bridge and overlay rendering > reuses road GPU attributes while tier/count changes and disposes only owned resources  452ms
+ ✓ apps/web/src/game/assets/assets.test.ts (8 tests) 8121ms
+   ✓ actual placeholder GLB artifacts > loads every model with valid triangles, bottom pivot, footprint bounds and explicit provenance  2951ms
+   ✓ actual placeholder GLB artifacts > does not dispose shared GLB resources while retained handles exist  557ms
+   ✓ actual placeholder GLB artifacts > clears env instances and renderer buffers without disposing shared GLB geometry  977ms
+   ✓ actual placeholder GLB artifacts > batches scenery per asset × map quadrant and keeps low plants out of the shadow pass (draw-call budget)  741ms
+   ✓ actual placeholder GLB artifacts > low graphics drops flowers/reeds, thins bushes and merges batches; switching back restores everything  1375ms
+   ✓ actual placeholder GLB artifacts > switches construction scaffolds to GLB buildings and removes demolished instances  516ms
+   ✓ actual placeholder GLB artifacts > renders all three crop stages from passed server time and clears harvested plants  527ms
+   ✓ actual placeholder GLB artifacts > pools one ghost per definition and exactly three materials across fifty full tool cycles  436ms
+ ✓ packages/worldgen/src/banks.test.ts (4 tests) 1293ms
+   ✓ authored bank regions > accepts valid authored dry regions and preserves optional backwards compatibility  444ms
+   ✓ authored bank regions > rejects water cells, out-of-bounds cells and missing ENTRY region  360ms
+ ✓ apps/web/src/game/quality.test.ts (4 tests) 16ms
+ ✓ packages/tooling/src/cli.test.ts (3 tests) 1336ms
+   ✓ template tooling > builds the authored fixture and rejects unsupported fields  313ms
+   ✓ template tooling > CLI builds and then validates a persisted fixture  461ms
+   ✓ template tooling > CLI fails missing input, bad JSON, bad layout, invalid template; never overwrites previous output  548ms
+ ✓ apps/api/src/metrics.test.ts (2 tests) 14ms
+ ✓ packages/sim/src/banks.test.ts (6 tests) 2096ms
+   ✓ far-bank topology lookup > matches the previous flood on home, far, mixed, empty, water and boundary queries  1040ms
+   ✓ far-bank topology lookup > keeps dry surface edits equivalent and never writes snapshot or surface data  368ms
+ ✓ packages/sim/src/farm.test.ts (74 tests) 11870ms
+   ✓ tilling and untilling > rejects tilling without a functioning farmhouse  467ms
+   ✓ tilling and untilling > rejects excessive slope without changing any selected cell  331ms
+   ✓ tilling and untilling > rejects tilling surface 5  378ms
+   ✓ tilling and untilling > protects locked and protected land  605ms
+   ✓ tilling and untilling > requires enough cash for the complete selected area  443ms
+   ✓ planting and harvesting > rejects locked crops and unknown seeds  338ms
+   ✓ production queues and selling > requires a completed connected market  318ms
+   ✓ production queues and selling > does not sell wood or stone as farm items  506ms
+ ✓ packages/sim/src/terrain.test.ts (53 tests) 13620ms
+   ✓ terrain commands through atomic engine > raises exactly four corners by 5dm for $12  1319ms
+   ✓ terrain commands through atomic engine > lowers all selected vertices and reverts a chunk with an effective base patch  693ms
+   ✓ terrain commands through atomic engine > rejects RAISE on water  1128ms
+   ✓ terrain commands through atomic engine > rejects LOWER on water  665ms
+   ✓ terrain commands through atomic engine > rejects FLATTEN on water  369ms
+   ✓ terrain commands through atomic engine > rejects terrain on the village road  485ms
+   ✓ terrain commands through atomic engine > requires clearing a blocking tree first  461ms
+   ✓ terrain commands through atomic engine > rejects a height shared with a protected neighboring cell  592ms
+   ✓ terrain commands through atomic engine > rejects a changed shared corner in a locked neighboring zone  444ms
+   ✓ terrain commands through atomic engine > rejects a boundary jump over 20dm  402ms
+   ✓ terrain commands through atomic engine > rejects a height over the map ceiling  514ms
+   ✓ terrain commands through atomic engine > rejects a 17x16 rectangle with AREA_TOO_LARGE before allocation  345ms
+   ✓ terrain commands through atomic engine > rejects deformation that makes an adjacent road too steep  697ms
+   ✓ terrain commands through atomic engine > refuses deformation of a bridge abutment even when the neighboring road stays within slope limits  411ms
+   ✓ terrain commands through atomic engine > rejects lowering an unembanked shoreline below water+5  354ms
+   ✓ terrain commands through atomic engine > keeps the minimum water+5 even after embanking per docs15  428ms
+   ✓ terrain commands through atomic engine > insufficient funds leaves terrain and dirty deltas unchanged  363ms
+   ✓ roads and embankment > rejects road through water  424ms
+   ✓ roads and embankment > rejects road through tilled ground  327ms
+   ✓ roads and embankment > rejects road across a tree  384ms
+   ✓ roads and embankment > allows ENTRY upgrades while refusing ENTRY removal  329ms
+ ✓ packages/sim/src/snapshot.test.ts (51 tests) 13887ms
+   ✓ validate everything then swap snapshot > loads a valid 3-building snapshot into a separate state with matching hash  1892ms
+   ✓ validate everything then swap snapshot > inherited catalog object keys are rejected safely  485ms
+   ✓ validate everything then swap snapshot > duplicate building IDs preserve current world  301ms
+   ✓ validate everything then swap snapshot > out-of-bounds footprint preserves current world  418ms
+   ✓ validate everything then swap snapshot > locked-zone building preserves current world  378ms
+   ✓ validate everything then swap snapshot > rejects account identity and content version changes  579ms
+   ✓ validate everything then swap snapshot > rejects negative/fractional money through schema  339ms
+   ✓ validate everything then swap snapshot > rejects level that disagrees with XP table  568ms
+   ✓ validate everything then swap snapshot > rejects creation/settlement time >5 minutes in future  618ms
+   ✓ validate everything then swap snapshot > rejects a constructor status and builder slot overbooking  342ms
+   ✓ validate everything then swap snapshot > rejects unknown surface and flag bits in validly encoded arrays  454ms
+   ✓ validate everything then swap snapshot > rejects terrain changes in locked zones  306ms
+ ✓ packages/tooling/src/browser-fixture.test.ts (2 tests) 37ms
+ ✓ packages/sim/src/footprint.test.ts (146 tests) 15355ms
+   ✓ real catalog placement and shared picking > 'hotel rotation 180°' reserves every inside cell and no outside edge cell  342ms
+   ✓ demolition regression from every actual non-square footprint cell > 'house_town rotation 0° from inside ce…' removes only the picked building and cleans its entire occupancy  389ms
+   ✓ demolition regression from every actual non-square footprint cell > 'house_town rotation 180° from inside …' removes only the picked building and cleans its entire occupancy  360ms
+   ✓ demolition regression from every actual non-square footprint cell > 'house_town rotation 270° from inside …' removes only the picked building and cleans its entire occupancy  402ms
+   ✓ demolition regression from every actual non-square footprint cell > 'hotel rotation 0° from inside cell 75…' removes only the picked building and cleans its entire occupancy  347ms
+stdout | packages/sim/src/invariants.test.ts > 1000 seeded random commands preserve occupancy, integer wallet, unique IDs and all shared edges
+1000 random commands: 217 accepted, 783 rejected; 23 command types; invariants checked after every command.
+
+ ✓ packages/sim/src/invariants.test.ts (1 test) 52969ms
+   ✓ 1000 seeded random commands preserve occupancy, integer wallet, unique IDs and all shared edges  52967ms
+
+ Test Files  24 passed (24)
+      Tests  682 passed (682)
+   Start at  08:54:57
+   Duration  56.34s (transform 10.71s, setup 0ms, collect 39.33s, tests 179.71s, environment 14ms, prepare 13.28s)
+
+
+> xay-nha@0.1.0 build D:\Core_LVB_BIDC\Project\Game_xay_nha
+> tsc -p tsconfig.build.json && pnpm build:web
+
+
+> xay-nha@0.1.0 build:web D:\Core_LVB_BIDC\Project\Game_xay_nha
+> pnpm --filter @xay-nha/web build
+
+
+> @xay-nha/web@0.1.0 build D:\Core_LVB_BIDC\Project\Game_xay_nha\apps\web
+> vite build
+
+vite v7.1.9 building for production...
+transforming...
+✓ 102 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.70 kB │ gzip:   0.48 kB
+dist/assets/index-BI0PFuPy.css    8.45 kB │ gzip:   2.65 kB
+dist/assets/index-D_zFoOxq.js   949.89 kB │ gzip: 265.22 kB │ map: 4,067.54 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.87s

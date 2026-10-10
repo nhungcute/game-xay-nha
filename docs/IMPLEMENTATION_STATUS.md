@@ -4,11 +4,14 @@ Updated: 2026-10-10 (Asia/Bangkok).
 
 Mode: auto-continue (approved 2026-10-10)
 
-## Current gate: MVP local closeout — G3 economy FAIL, final validation pending
+## Current gate: runnable local MVP ready — G3 economy FAIL, Q010 awaiting owner
 
 Six-scenario economy comparison completed: CLI exit 0, 876.329 s, all invariants PASS; pacing FAIL.
 G3 balance approval waits on Q010; the first-time human tutorial and G4 reference-device performance are NOT RUN.
-MVP closeout is authorized in auto-continue mode; balance changes still need the product owner's decision.
+Final closeout at `2303cb5`: `pnpm check` 682/682, `pnpm test:api` 22/22, local Docker deploy
+and production smoke all exit 0. Smoke covers four browser/map cases, 24 checks, zero errors.
+Production web is healthy on localhost:8090; Postgres publishes no host port. No tunnel was started.
+Balance changes still need the product owner's decision. See `docs/reports/MVP-summary.md`.
 The incomplete prior background run was preserved in its original scratch file and stopped by its verified
 process ID. The 08:16 run exposed repeated far-bank flood fills; its partial result was preserved in
 `docs/reports/G3-economy-pre-topology-cache.json`. `f5ab34a` caches immutable water topology in the sim,
@@ -23,10 +26,10 @@ and log at `docs/evidence/mvp-final/economy.log`. All 55 fingerprinted files sta
 - [x] Quests: 24 authored + repeat quests (D017/D024) in sim + UI; tutorial + Bác Tư hints; state-based authored progress (`f70cd03`); repeat-quest audit fixes (`103f652`).
 - [x] Codex follow-ups: codec perf (`6aeece0`), draw calls 819/978 → 182/200 (`0d1fae0`), natural ground colours requested by the user (`66dc010`).
 - [x] Real-sim economy: six 60-day scenarios at `f5ab34a`; compared docs/16 §12. Five milestone FAIL, two PASS, Farm L20 UNREACHED. Q010 recorded; no numbers changed. Farm careful speed 2.266× / 1.689× / 1.562× at L8/12/15; L20 comparison unobservable.
-- [x] Supplemental economy audit: `npx tsx scripts/mvp-economy-audit.ts` exit 0; ten build/cancel and ten build/demolish reversals, buy/sell-material rejection, duplicate-clear rejection. `docs/reports/G3-economy-audit.json`; full exploit absence is not proved. Best-case Tạp hóa payback bound 0.901 h; buildings unlocked after L5 all ≥ 1 h.
+- [x] Supplemental economy audit: `npx tsx scripts/mvp-economy-audit.ts` exit 0; ten build/cancel and ten build/demolish reversals, buy/sell-material rejection, duplicate-clear rejection. Full exploit absence is not proved. Separate valid L8 rule fixture confirms Tạp hóa payback 0.900689 h; buildings unlocked after L5 all ≥ 1 h. Broad payback scope FAIL, awaiting Q010.
 - [x] Far-bank topology performance fix (`f5ab34a`): repeated placement scans use cached component labels; bridge status stays live; no snapshot/content fields added. Focused suites 84/84, full check 682/682. `docs/reports/G3-economy-bot-observations.md`.
 - [x] E2E smoke on Chromium + WebKit mobile emulation: closeout rerun 26/26, 0 errors, automated tutorial 16 s; tracked visual evidence in `docs/evidence/g3/ground/` and map shots. Exact long-loop QA combinations are not all certified.
-- [x] Full check 682/682 exit 0; `docs/reports/G3-report.md` complete (economy FAIL is explicit), documentation ready for path-limited commit.
+- [x] Final full check 682/682 exit 0; `docs/reports/G3-report.md` complete (economy FAIL is explicit); G3 report and E2E evidence committed in `2303cb5`.
 - [ ] First-time human tutorial ≤ 6 minutes — NOT RUN.
 
 ## G4 task plan
@@ -35,10 +38,10 @@ and log at `docs/evidence/mvp-final/economy.log`. All 55 fingerprinted files sta
 - [x] API observability: per-command JSON log, periodic metrics (`f8c8d1c`).
 - [x] Postgres backup service (daily, keep 7) + `pnpm db:backup` / `pnpm db:restore`, round trip verified (`c5f0245`).
 - [x] Clean `git clone` → ensure-env → compose up → production smoke PASS on Chromium + WebKit (`e67307a`).
-- [x] 15-minute automated UI soak: retained `docs/evidence/g4/soak/soak.json`, 904 actions, 0 console/page/HTTP errors, GPU growth +0 (`3ebefea`). Human normal-play session: NOT RUN.
+- [x] 15-minute automated UI soak: retained `docs/evidence/g4/soak/soak.json`, 904 recorded steps (12 skipped, 892 action entries), 0 console/page/HTTP errors, GPU growth +0 (`3ebefea`). Human normal-play session: NOT RUN.
 - [ ] Performance on the 3 reference devices (docs/10 §6) — needs real hardware; report as NOT RUN unless measured.
 - [x] G4 retained-evidence report and complete 74-placeholder inventory prepared (`docs/reports/MVP-placeholder-assets.md`).
-- [ ] Final `pnpm check`, `pnpm test:api`, local deploy + production smoke, final MVP summary and documentation commit.
+- [x] Final `pnpm check` 682/682, `pnpm test:api` 22/22, local deploy + production smoke (four cases / 24 checks / zero errors); final MVP summary and closeout evidence complete.
 
 ## G2 task plan — DONE
 
@@ -91,7 +94,7 @@ The following records G0 only; current G1–G4 results and limitations are above
 
 ## Next steps
 
-Commit completed G3/G4 documentation and explicitly authorized G3 E2E evidence with owned paths only.
-Finalize the MVP summary, then run `pnpm check`, `pnpm test:api`, local `pnpm deploy:up` and production G4 smoke.
-Never start the tunnel or a public deployment. Q009 and Q010 remain open; Q010 contains all eight comparisons,
-model/bot differences and two approval options. Do not change economy numbers without approval.
+The runnable local MVP and requested validation are complete. Stop autonomous implementation here.
+The product owner starts any tunnel and decides Q010 (model/bot reconciliation or approved recalibration).
+Q009 also remains open. Real-device performance and first-time human timing remain NOT RUN.
+Do not change economy numbers without approval or publish to a public host.

@@ -1,0 +1,202 @@
+{
+  "verifiedAt": "2026-10-10T02:21:02.334Z",
+  "testedHead": "2303cb5",
+  "implementationRevision": "f5ab34a0099808cc8325fca451cf25f33b21dbea",
+  "contentVersion": 1,
+  "commands": [
+    {
+      "command": "pnpm check",
+      "exitCode": 0,
+      "cases": 682,
+      "log": "check.log"
+    },
+    {
+      "command": "pnpm test:api",
+      "exitCode": 0,
+      "cases": 22,
+      "log": "api.log"
+    },
+    {
+      "command": "pnpm deploy:up",
+      "exitCode": 0,
+      "log": "deploy.log"
+    },
+    {
+      "command": "BASE_URL=http://127.0.0.1:8090 node scripts/g4-smoke.mjs",
+      "exitCode": 0,
+      "log": "smoke.log"
+    }
+  ],
+  "exitCodeProvenance": "Observed tool process results; log/assertion contents rechecked by verify-evidence.mjs.",
+  "unitAndApiCases": 704,
+  "g3BrowserAssertions": 26,
+  "productionCases": [
+    {
+      "browser": "chromium-desktop",
+      "map": "city",
+      "checks": 6,
+      "metrics": {
+        "quality": "high",
+        "pending": 0,
+        "clockSkewMs": -98,
+        "fps": 58.88223552894212,
+        "drawCalls": 150,
+        "triangles": 173370,
+        "geometries": 82,
+        "textures": 1,
+        "programs": 14,
+        "terrain": {
+          "lastRebuildMs": 0.20000004768371582,
+          "maxRebuildMs": 1.1999999284744263,
+          "zonesRebuilt": 128
+        },
+        "revision": 1
+      }
+    },
+    {
+      "browser": "chromium-desktop",
+      "map": "farm",
+      "checks": 6,
+      "metrics": {
+        "quality": "high",
+        "pending": 0,
+        "clockSkewMs": -73,
+        "fps": 58.7356893977103,
+        "drawCalls": 168,
+        "triangles": 186062,
+        "geometries": 94,
+        "textures": 1,
+        "programs": 14,
+        "terrain": {
+          "lastRebuildMs": 0.10000002384185791,
+          "maxRebuildMs": 3.799999952316284,
+          "zonesRebuilt": 128
+        },
+        "revision": 1
+      }
+    },
+    {
+      "browser": "webkit-iphone13",
+      "map": "city",
+      "checks": 6,
+      "metrics": {
+        "quality": "low",
+        "pending": 0,
+        "clockSkewMs": -47,
+        "fps": 22.593320235756384,
+        "drawCalls": 57,
+        "triangles": 139052,
+        "geometries": 56,
+        "textures": 0,
+        "programs": 13,
+        "terrain": {
+          "lastRebuildMs": 0.9999999999997726,
+          "maxRebuildMs": 2,
+          "zonesRebuilt": 128
+        },
+        "revision": 1
+      }
+    },
+    {
+      "browser": "webkit-iphone13",
+      "map": "farm",
+      "checks": 6,
+      "metrics": {
+        "quality": "low",
+        "pending": 0,
+        "clockSkewMs": -64,
+        "fps": 22.794846382556987,
+        "drawCalls": 62,
+        "triangles": 150284,
+        "geometries": 61,
+        "textures": 0,
+        "programs": 13,
+        "terrain": {
+          "lastRebuildMs": 0,
+          "maxRebuildMs": 1.0000000000009095,
+          "zonesRebuilt": 128
+        },
+        "revision": 1
+      }
+    }
+  ],
+  "productionAssertions": 24,
+  "productionErrors": 0,
+  "services": [
+    {
+      "service": "api",
+      "state": "running",
+      "health": "healthy",
+      "publishers": [
+        {
+          "URL": "",
+          "TargetPort": 3000,
+          "PublishedPort": 0,
+          "Protocol": "tcp"
+        }
+      ]
+    },
+    {
+      "service": "backup",
+      "state": "running",
+      "health": "",
+      "publishers": [
+        {
+          "URL": "",
+          "TargetPort": 5432,
+          "PublishedPort": 0,
+          "Protocol": "tcp"
+        }
+      ]
+    },
+    {
+      "service": "postgres",
+      "state": "running",
+      "health": "healthy",
+      "publishers": [
+        {
+          "URL": "",
+          "TargetPort": 5432,
+          "PublishedPort": 0,
+          "Protocol": "tcp"
+        }
+      ]
+    },
+    {
+      "service": "web",
+      "state": "running",
+      "health": "healthy",
+      "publishers": [
+        {
+          "URL": "127.0.0.1",
+          "TargetPort": 80,
+          "PublishedPort": 8090,
+          "Protocol": "tcp"
+        }
+      ]
+    }
+  ],
+  "economy": {
+    "scenarios": 6,
+    "invariants": "PASS",
+    "pacing": "FAIL",
+    "unchangedSourceFiles": 55,
+    "broadPayback": "FAIL",
+    "newlyUnlockedPayback": "PASS",
+    "groceryPaybackHours": 0.9006892230576441
+  },
+  "notRun": [
+    "first-time human tutorial",
+    "human normal-play soak",
+    "three reference devices",
+    "full-world stress",
+    "all adversarial quest combinations",
+    "public tunnel"
+  ],
+  "openQuestions": [
+    "Q009",
+    "Q010"
+  ],
+  "tunnelStarted": false,
+  "publicDeployment": false
+}

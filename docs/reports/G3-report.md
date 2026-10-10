@@ -30,9 +30,10 @@ See [coordination](G3-coordination-claude.md), [decisions](../DECISIONS.md) D017
 |---|---|
 | `npx tsx packages/tooling/sim-economy.ts --days 60 --map all --style all --out docs/reports/G3-economy-current.json` | exit 0 at `f5ab34a`; 6/6 scenarios × 60 calendar days, 876.329 s; all invariant sets PASS; pacing gate FAIL |
 | `npx tsx scripts/mvp-economy-audit.ts` | exit 0; four transaction-reversal checks PASS; 14 directly earning building/producer definitions analyzed |
+| `npx tsx docs/evidence/mvp-final/payback-fixture.ts` | exit 0; nine accepted layout commands, valid L8 snapshot; grocery actual rate $638.4/h, single-building payback 0.900689 h |
 | `node docs/tools/economy/model.mjs --tables` | exit 0; reference tables retained in `../evidence/mvp-final/reference-tables.log`; no model parameters changed |
 | `node scripts/g3-e2e.mjs` | Closeout exit 0, **26/26**, 0 errors; Chromium desktop + Pixel 7 emulation + WebKit iPhone 13 emulation; 2026-10-10 08:51 (Asia/Bangkok) |
-| `pnpm check` | Baseline `47fe17d`: exit 0, 676/676 in 23 files. Topology fix `f5ab34a`: exit 0, 682/682 in 24 files; content/lint/typecheck/build PASS. Final rerun still PENDING |
+| `pnpm check` | Baseline `47fe17d`: exit 0, 676/676 in 23 files. Final closeout at `2303cb5`: exit 0, **682/682** in 24 files; content/lint/typecheck/build PASS; unit-suite duration 56.34 s |
 
 Pacing uses elapsed days from the player's first session, not the calendar day number in daily summaries.
 The ordinary-player target comes from docs/16 §12.1 separately for each map.
@@ -80,7 +81,7 @@ Supplemental audit: [G3-economy-audit.json](G3-economy-audit.json).
 - Buy wood/stone with a connected active market, then attempt to sell them: `NOT_FOUND`, no purchase net-worth or XP gain.
 - Clear an environmental object twice: second attempt `NOT_FOUND`, no gain on retry. Clearing is a finite template resource; there is no tree-regeneration command.
 - All earning buildings unlocked above L5 have a calculated best-case payback ≥ 1 hour; minimum is bank 2.686 h.
-- If “after L5” includes every earlier building still available at later levels, Tạp hóa has a best-case bound of **0.901 h** (base 1.513 h), with full workforce, tier-3 roads, maximum decor and water bonus. This bound excludes the shared supporting infrastructure cost and is not a measured layout.
+- If “after L5” includes every earlier building still available at later levels, Tạp hóa **FAILS**: a funded L8 City rule fixture accepted nine layout commands and passed snapshot validation, with actual rate $638.4/h and payback **0.900689 h** (base 1.513 h). [Fixture result](G3-payback-fixture.json). Shared supporting infrastructure costs are excluded; this is not an authored-map or human progression measurement.
 - The four finite reversal checks do not prove absence of all exploits, especially adversarial combinations with repeat-quest rewards. Those combinations are NOT RUN.
 
 No economic parameter, design document 00–16, or `contentVersion` was changed.
@@ -105,9 +106,9 @@ No economic parameter, design document 00–16, or `contentVersion` was changed.
 | E2E flows | PASS (smoke); NOT RUN (all exact QA combinations) | Closeout G3 26/26; prior G1 bridge/far-bank sequence and G2 online/offline/recovery flows documented separately |
 | Ordinary-player pacing ≤ 25% at L8/12/15/20, both maps | FAIL | Five failing, two passing, one UNREACHED milestone in the completed run |
 | Farm careful player ≥ 1.3× faster | PASS (L8/12/15); NOT RUN comparison (L20) | 2.266× / 1.689× / 1.562×; L20 not reached by either style |
-| No earning building payback < 1 h after L5 | PASS for newly unlocked buildings; possible FAIL for earlier Tạp hóa | Calculated maximum-rate bound above; scope needs to be explicit |
+| No earning building payback < 1 h after L5 | PASS for newly unlocked buildings; FAIL for earlier Tạp hóa available at L8 | Confirmed fixture above; Q010 requires a scope/balance decision |
 | No infinite profit in stated transaction reversals | PASS (four checked classes); NOT RUN (all quest combinations) | Real sim fixture commands and existing regression tests |
-| Full check | PASS | 682/682, exit 0 after `f5ab34a`; final closeout repeat PENDING |
+| Full check | PASS | Final closeout exit 0, 682/682; lint/typecheck/content/build green |
 
 ## 6. Deviations, open questions and NOT verified
 
@@ -121,5 +122,5 @@ No economic parameter, design document 00–16, or `contentVersion` was changed.
 
 ## 7. Next gate / closeout
 
-Q010 is recorded; do not change balance without its decision. Complete [G4 report](G4-report.md)
-and the MVP summary, run final checks and local production smoke. The product owner starts any tunnel.
+Final checks and local production smoke passed; see [G4 report](G4-report.md) and [MVP summary](MVP-summary.md).
+Q010 remains open; do not change balance without its decision. The product owner starts any tunnel.

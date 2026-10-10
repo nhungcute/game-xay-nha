@@ -1,0 +1,16 @@
+
+> xay-nha@0.1.0 test:api D:\Core_LVB_BIDC\Project\Game_xay_nha
+> node scripts/test-api.mjs
+
+
+ RUN  v3.2.4 D:/Core_LVB_BIDC/Project/Game_xay_nha
+
+ ✓ apps/api/src/api.int.test.ts (22 tests) 9720ms
+   ✓ accounts and characters > creates account + character without a token and returns token + recovery code once  2710ms
+   ✓ accounts and characters > commands on the city character never change the farm character  313ms
+   ✓ server state equals the shared sim (property test) > 100 random commands: every result and the final state hash match a local sim; reload is identical; net worth recomputes  4500ms
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  08:56:43
+   Duration  15.41s (transform 356ms, setup 0ms, collect 5.25s, tests 9.72s, environment 0ms, prepare 129ms)

@@ -1,0 +1,282 @@
+
+> xay-nha@0.1.0 deploy:up D:\Core_LVB_BIDC\Project\Game_xay_nha
+> node scripts/ensure-env.mjs && docker compose -f infra/compose.yml up -d --build
+
+infra/.env exists
+ Image xay-nha-api:local Building
+ Image xay-nha-web:local Building
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.04kB done
+#1 DONE 0.0s
+
+#2 [api internal] load build definition from api.Dockerfile
+#2 transferring dockerfile: 874B 0.0s done
+#2 DONE 0.1s
+
+#3 [web internal] load build definition from web.Dockerfile
+#3 transferring dockerfile: 798B done
+#3 DONE 0.1s
+
+#4 [web internal] load metadata for docker.io/library/node:22.20.0-alpine
+#4 ...
+
+#5 [auth] library/nginx:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#6 [auth] library/node:pull token for registry-1.docker.io
+#6 DONE 0.0s
+
+#7 [web internal] load metadata for docker.io/library/nginx:1.29.2-alpine
+#7 DONE 1.8s
+
+#4 [web internal] load metadata for docker.io/library/node:22.20.0-alpine
+#4 DONE 2.2s
+
+#8 [web internal] load .dockerignore
+#8 transferring context: 143B done
+#8 DONE 0.0s
+
+#9 [web build 1/9] FROM docker.io/library/node:22.20.0-alpine@sha256:dbcedd8aeab47fbc0f4dd4bffa55b7c3c729a707875968d467aaaea42d6225af
+#9 DONE 0.0s
+
+#10 [web stage-1 1/3] FROM docker.io/library/nginx:1.29.2-alpine@sha256:61e01287e546aac28a3f56839c136b31f590273f3b41187a36f46f6a03bbfe22
+#10 DONE 0.0s
+
+#11 [api internal] load build context
+#11 transferring context: 19.28kB 0.0s done
+#11 DONE 0.0s
+
+#12 [web internal] load build context
+#12 transferring context: 54.04kB 0.0s done
+#12 DONE 0.1s
+
+#13 [web build 2/9] WORKDIR /repo
+#13 CACHED
+
+#14 [web build 3/9] RUN corepack enable && corepack prepare pnpm@10.18.3 --activate
+#14 CACHED
+
+#15 [web build 4/9] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
+#15 CACHED
+
+#16 [api build 5/9] COPY packages ./packages
+#16 DONE 0.1s
+
+#17 [web build 4/9] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
+#17 CACHED
+
+#18 [web build 5/9] COPY packages ./packages
+#18 CACHED
+
+#19 [api build 6/9] COPY apps/api ./apps/api
+#19 DONE 0.1s
+
+#20 [web build 6/9] COPY apps/web ./apps/web
+#20 DONE 0.2s
+
+#21 [api build 7/9] COPY apps/web/package.json ./apps/web/package.json
+#21 DONE 0.1s
+
+#22 [web build 7/9] COPY apps/api/package.json ./apps/api/package.json
+#22 DONE 0.1s
+
+#23 [web build 8/9] RUN pnpm install --frozen-lockfile
+#23 1.385 Scope: all 8 workspace projects
+#23 1.541 Lockfile is up to date, resolution step is skipped
+#23 1.613 Progress: resolved 1, reused 0, downloaded 0, added 0
+#23 1.896 Packages: +302
+#23 1.896 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#23 2.635 Progress: resolved 302, reused 0, downloaded 10, added 8
+#23 3.036
+#23 3.036    ╭───────────────────────────────────────────────╮
+#23 3.036    │                                               │
+#23 3.036    │     Update available! 10.18.3 → 12.10.1.      │
+#23 3.036    │     Changelog: https://pnpm.io/v/12.10.1      │
+#23 3.036    │   To update, run: corepack use pnpm@12.10.1   │
+#23 3.036    │                                               │
+#23 3.036    ╰───────────────────────────────────────────────╯
+#23 3.036
+#23 3.644 Progress: resolved 302, reused 0, downloaded 61, added 60
+#23 4.638 Progress: resolved 302, reused 0, downloaded 87, added 86
+#23 5.638 Progress: resolved 302, reused 0, downloaded 177, added 175
+#23 6.640 Progress: resolved 302, reused 0, downloaded 236, added 236
+#23 7.640 Progress: resolved 302, reused 0, downloaded 291, added 291
+#23 8.640 Progress: resolved 302, reused 0, downloaded 299, added 299
+#23 9.344 Progress: resolved 302, reused 0, downloaded 302, added 302, done
+#23 ...
+
+#24 [api build 8/9] RUN pnpm install --frozen-lockfile
+#24 1.458 Scope: all 8 workspace projects
+#24 1.609 Lockfile is up to date, resolution step is skipped
+#24 1.679 Progress: resolved 1, reused 0, downloaded 0, added 0
+#24 1.931 Packages: +302
+#24 1.931 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#24 2.685 Progress: resolved 302, reused 0, downloaded 12, added 11
+#24 3.069
+#24 3.069    ╭───────────────────────────────────────────────╮
+#24 3.069    │                                               │
+#24 3.069    │     Update available! 10.18.3 → 12.10.1.      │
+#24 3.069    │     Changelog: https://pnpm.io/v/12.10.1      │
+#24 3.069    │   To update, run: corepack use pnpm@12.10.1   │
+#24 3.069    │                                               │
+#24 3.069    ╰───────────────────────────────────────────────╯
+#24 3.069
+#24 3.730 Progress: resolved 302, reused 0, downloaded 68, added 62
+#24 4.730 Progress: resolved 302, reused 0, downloaded 98, added 98
+#24 4.932  WARN  Tarball download average speed 45 KiB/s (size 47 KiB) is below 50 KiB/s: https://registry.npmjs.org/get-tsconfig/-/get-tsconfig-4.14.3.tgz (GET)
+#24 5.731 Progress: resolved 302, reused 0, downloaded 188, added 187
+#24 6.731 Progress: resolved 302, reused 0, downloaded 255, added 255
+#24 7.731 Progress: resolved 302, reused 0, downloaded 296, added 296
+#24 8.731 Progress: resolved 302, reused 0, downloaded 301, added 301
+#24 ...
+
+#23 [web build 8/9] RUN pnpm install --frozen-lockfile
+#23 10.03 .../esbuild@0.25.10/node_modules/esbuild postinstall$ node install.js
+#23 10.17 .../esbuild@0.25.10/node_modules/esbuild postinstall: Done
+#23 10.59
+#23 10.59 devDependencies:
+#23 10.59 + @eslint/js 9.37.0
+#23 10.59 + @playwright/test 1.55.1
+#23 10.59 + @types/node 22.18.10
+#23 10.59 + @types/react 18.3.26
+#23 10.59 + @types/react-dom 18.3.7
+#23 10.59 + @types/three 0.180.0
+#23 10.59 + @vitejs/plugin-react 5.0.4
+#23 10.59 + esbuild 0.25.10
+#23 10.59 + eslint 9.37.0
+#23 10.59 + react 18.3.1
+#23 10.59 + react-dom 18.3.1
+#23 10.59 + three 0.180.0
+#23 10.59 + tsx 4.20.6
+#23 10.59 + typescript 5.9.3
+#23 10.59 + typescript-eslint 8.46.1
+#23 10.59 + vite 7.1.9
+#23 10.59 + vitest 3.2.4
+#23 10.59 + zustand 5.0.8
+#23 10.59
+#23 10.91 Done in 10.2s using pnpm v10.18.3
+#23 DONE 11.9s
+
+#25 [web build 9/9] RUN pnpm --filter @xay-nha/web build
+#25 ...
+
+#24 [api build 8/9] RUN pnpm install --frozen-lockfile
+#24 10.98 Progress: resolved 302, reused 0, downloaded 302, added 301
+#24 11.09 Progress: resolved 302, reused 0, downloaded 302, added 302, done
+#24 11.90 .../esbuild@0.25.10/node_modules/esbuild postinstall$ node install.js
+#24 12.04 .../esbuild@0.25.10/node_modules/esbuild postinstall: Done
+#24 12.48
+#24 12.48 devDependencies:
+#24 12.48 + @eslint/js 9.37.0
+#24 12.48 + @playwright/test 1.55.1
+#24 12.48 + @types/node 22.18.10
+#24 12.48 + @types/react 18.3.26
+#24 12.48 + @types/react-dom 18.3.7
+#24 12.48 + @types/three 0.180.0
+#24 12.48 + @vitejs/plugin-react 5.0.4
+#24 12.48 + esbuild 0.25.10
+#24 12.48 + eslint 9.37.0
+#24 12.48 + react 18.3.1
+#24 12.48 + react-dom 18.3.1
+#24 12.48 + three 0.180.0
+#24 12.48 + tsx 4.20.6
+#24 12.48 + typescript 5.9.3
+#24 12.48 + typescript-eslint 8.46.1
+#24 12.48 + vite 7.1.9
+#24 12.48 + vitest 3.2.4
+#24 12.48 + zustand 5.0.8
+#24 12.48
+#24 12.75 Done in 12s using pnpm v10.18.3
+#24 DONE 13.0s
+
+#26 [api build 9/9] RUN pnpm --filter @xay-nha/api build
+#26 1.062
+#26 1.062 > @xay-nha/api@0.1.0 build /repo/apps/api
+#26 1.062 > node build.mjs
+#26 1.062
+#26 1.446 built dist/server.js
+#26 DONE 1.6s
+
+#25 [web build 9/9] RUN pnpm --filter @xay-nha/web build
+#25 1.175
+#25 1.175 > @xay-nha/web@0.1.0 build /repo/apps/web
+#25 1.175 > vite build
+#25 1.175
+#25 1.565 vite v7.1.9 building for production...
+#25 1.671 transforming...
+#25 ...
+
+#27 [api stage-1 2/5] WORKDIR /app
+#27 CACHED
+
+#28 [api stage-1 3/5] COPY --from=build /repo/apps/api/dist ./dist
+#28 DONE 0.2s
+
+#25 [web build 9/9] RUN pnpm --filter @xay-nha/web build
+#25 ...
+
+#29 [api stage-1 4/5] COPY apps/api/migrations ./migrations
+#29 DONE 0.2s
+
+#30 [api stage-1 5/5] COPY apps/web/public/worlds ./worlds
+#30 DONE 0.2s
+
+#25 [web build 9/9] RUN pnpm --filter @xay-nha/web build
+#25 ...
+
+#31 [api] exporting to image
+#31 exporting layers 0.2s done
+#31 writing image sha256:8d1e559a100f458d0b83fdbdfbae6af6f652e4b21dc52d26d83bbd3e5af6a776 done
+#31 naming to docker.io/library/xay-nha-api:local 0.0s done
+#31 DONE 0.3s
+
+#32 [api] resolving provenance for metadata file
+#32 DONE 0.0s
+
+#25 [web build 9/9] RUN pnpm --filter @xay-nha/web build
+#25 5.594 ✓ 102 modules transformed.
+#25 6.169 rendering chunks...
+#25 6.548 computing gzip size...
+#25 6.633 dist/index.html                   0.70 kB │ gzip:   0.48 kB
+#25 6.633 dist/assets/index-BI0PFuPy.css    8.45 kB │ gzip:   2.65 kB
+#25 6.633 dist/assets/index-D_zFoOxq.js   949.89 kB │ gzip: 265.22 kB │ map: 4,067.54 kB
+#25 6.634
+#25 6.634 (!) Some chunks are larger than 500 kB after minification. Consider:
+#25 6.634 - Using dynamic import() to code-split the application
+#25 6.634 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+#25 6.634 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#25 6.635 ✓ built in 5.03s
+#25 DONE 6.9s
+
+#33 [web stage-1 2/3] COPY infra/nginx.conf /etc/nginx/conf.d/default.conf
+#33 CACHED
+
+#34 [web stage-1 3/3] COPY --from=build /repo/apps/web/dist /usr/share/nginx/html
+#34 DONE 0.2s
+
+#35 [web] exporting to image
+#35 exporting layers 0.1s done
+#35 writing image sha256:14f9c5016e2740cf65061a773a247efc07b1438232e4564e1a64d34b81b89ce2 done
+#35 naming to docker.io/library/xay-nha-web:local 0.0s done
+#35 DONE 0.2s
+
+#36 [web] resolving provenance for metadata file
+#36 DONE 0.0s
+ Image xay-nha-api:local Built
+ Image xay-nha-web:local Built
+ Container xay-nha-postgres-1 Running
+ Container xay-nha-backup-1 Running
+ Container xay-nha-api-1 Recreate
+ Container xay-nha-api-1 Recreated
+ Container xay-nha-web-1 Recreate
+ Container xay-nha-web-1 Recreated
+ Container xay-nha-postgres-1 Waiting
+ Container xay-nha-postgres-1 Waiting
+ Container xay-nha-postgres-1 Healthy
+ Container xay-nha-postgres-1 Healthy
+ Container xay-nha-api-1 Starting
+ Container xay-nha-api-1 Started
+ Container xay-nha-api-1 Waiting
+ Container xay-nha-api-1 Healthy
+ Container xay-nha-web-1 Starting
+ Container xay-nha-web-1 Started

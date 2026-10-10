@@ -101,8 +101,11 @@ L20 comparison is unobservable because neither Farm style reaches it.
 
 The supplemental audit finds all earning buildings **unlocked above L5** have maximum-rate payback
 ≥ 1 h (minimum bank 2.686 h). If the criterion includes all earlier buildings still available after L5,
-Tạp hóa has a best-case bound **0.901 h**: value $575 / (base rate $380/h × tier-3 1.2 × bonuses 1.4).
-This excludes shared road/decor/embankment costs and is not a measured layout. Base payback is 1.513 h.
+Tạp hóa has confirmed single-building payback **0.901 h** at L8: value $575 / actual rate $638.4/h.
+A funded City rule fixture accepted all nine layout commands and passed snapshot validation;
+see `docs/reports/G3-payback-fixture.json` and `docs/evidence/mvp-final/payback-fixture.ts`.
+This excludes shared road/decor/embankment costs and does not measure human or authored-map progression.
+Base payback is 1.513 h. The broad interpretation therefore FAILS; the newly-unlocked interpretation passes.
 Four stated transaction reversals pass finite real-sim checks; all adversarial repeat-quest combinations are NOT RUN.
 
 ### Options for the product owner
