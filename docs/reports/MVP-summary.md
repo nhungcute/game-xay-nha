@@ -7,6 +7,10 @@ Post-MVP update: [entrance redesign](ENTRY-design-report.md) adds illustrated ma
 preview and recovery login. New validation: 131 layout checks, eight real dev recovery checks and local production
 smoke PASS; economy unchanged. Original closeout counts below retain their original provenance.
 
+Further UI update: [in-game HUD redesign](HUD-design-report.md) groups avatar/name/level/EXP, resources,
+functional menus and tool categories using Lucide icons. New review 141/141, real G3 flow 26/26,
+check 682/682, API 22/22 and local production smoke 24/24 PASS; localhost:8090 is updated.
+
 ## Run
 
 Requirements: Docker Desktop/Compose, Node 22.20.0 and pnpm 10.18.3.

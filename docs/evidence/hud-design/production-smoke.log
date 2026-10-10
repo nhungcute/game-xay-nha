@@ -1,0 +1,7 @@
+chromium-desktop city: hud=PASS recoveryCode=PASS noTestHooksInProduction=PASS reloadSameWorld=PASS graphicsDefault=PASS drawCallBudget=PASS calls=150 fps=55
+chromium-desktop farm: hud=PASS recoveryCode=PASS noTestHooksInProduction=PASS reloadSameWorld=PASS graphicsDefault=PASS drawCallBudget=PASS calls=168 fps=59
+chromium-desktop: 0 console/page/HTTP errors
+webkit-iphone13 city: hud=PASS recoveryCode=PASS noTestHooksInProduction=PASS reloadSameWorld=PASS graphicsDefault=PASS drawCallBudget=PASS calls=57 fps=11
+webkit-iphone13 farm: hud=PASS recoveryCode=PASS noTestHooksInProduction=PASS reloadSameWorld=PASS graphicsDefault=PASS drawCallBudget=PASS calls=62 fps=15
+webkit-iphone13: 0 console/page/HTTP errors
+G4 smoke: PASS

@@ -1,0 +1,21 @@
+
+> xay-nha@0.1.0 test:api D:\Core_LVB_BIDC\Project\Game_xay_nha
+> node scripts/test-api.mjs
+
+
+ RUN  v3.2.4 D:/Core_LVB_BIDC/Project/Game_xay_nha
+
+ ✓ apps/api/src/api.int.test.ts (22 tests) 16531ms
+   ✓ accounts and characters > creates account + character without a token and returns token + recovery code once  4459ms
+   ✓ accounts and characters > same display name gets different tags  331ms
+   ✓ accounts and characters > commands on the city character never change the farm character  519ms
+   ✓ world access and commands > the same commandId sent twice (also in parallel) applies once and returns identical results  513ms
+   ✓ world access and commands > two parallel commands with the same expectedRevision: one accepted, one REVISION_CONFLICT  375ms
+   ✓ world access and commands > a syntactically valid but illegal command (building on water) is rejected and the wallet is unchanged  312ms
+   ✓ world access and commands > rate limits commands with 429  513ms
+   ✓ server state equals the shared sim (property test) > 100 random commands: every result and the final state hash match a local sim; reload is identical; net worth recomputes  7907ms
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  10:46:59
+   Duration  22.70s (transform 387ms, setup 0ms, collect 5.68s, tests 16.53s, environment 0ms, prepare 140ms)

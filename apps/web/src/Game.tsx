@@ -1,16 +1,24 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
 import type { CommandType } from '@xay-nha/contracts';
-import { access, authoredQuestProgress, builderCapacity, buildingLimit, fieldQuota, inventoryCount, populationAndJobs, repeatQuestProgress, storageCapacity } from '@xay-nha/sim';
+import { access, authoredQuestProgress, buildingLimit, repeatQuestProgress } from '@xay-nha/sim';
 import type { RepeatQuest } from '@xay-nha/contracts';
 import { AssetManager } from './game/assets/AssetManager';
 import { GameLoop } from './game/GameLoop';
 import { WorldStore, useWorld } from './game/WorldStore';
 import { useTools, type Tool } from './game/ToolController';
 import { duration, errorText, money, t } from './i18n';
+import { GameHud, type GamePanel } from './ui/GameHud';
+import { GameIcon } from './ui/GameIcon';
+import { ToolDock } from './ui/ToolDock';
+import { useOverlayEdge } from './ui/useOverlayEdge';
 
-const toolIcons:Record<Tool,string>={explore:'◉',clear:'♠',terraform:'▱',till:'⚒',road:'━',embank:'▥',bridge:'⌒',build:'⌂',plant:'♧',harvest:'✂',demolish:'×',zone:'▦'};
-const FARM_ONLY:Tool[]=['till','plant','harvest'];
+function GraphicsSettings({ quality, onChange }: { quality: 'high' | 'low' | undefined; onChange: (quality: 'high' | 'low') => void }) {
+  return <div className="settings" role="group" aria-label={t('graphics')}><span>{t('graphics')}</span>
+    {(['high', 'low'] as const).map(level => <button type="button" key={level} aria-pressed={quality === level}
+      className={quality === level ? 'selected' : ''} onClick={() => onChange(level)}>{t(level === 'high' ? 'graphicsHigh' : 'graphicsLow')}</button>)}
+  </div>;
+}
 function Profile({ state }: { state: NonNullable<ReturnType<typeof useWorld.getState>['state']> }) {
   const s = state.snapshot, mat = (w: number, st: number) => w * economy.materialPrices.wood + st * economy.materialPrices.stone;
   const buildings = s.buildings.reduce((v, b) => v + b.investedValue, 0), bridges = s.bridges.reduce((v, b) => v + b.investedValue, 0);
@@ -60,22 +68,13 @@ const HINTS: Record<string, { tool: Tool; text: string }> = {
 };
 const SKIP_KEY = 'xay-nha.skipTutorial';
 const skipped = () => { try { return localStorage.getItem(SKIP_KEY) === '1'; } catch { return false; } };
-/** Panels sit below the HUD, whose height depends on screen width and wrapping: publish it as --hud-bottom. */
-function useHudBottom(): (element: HTMLElement | null) => void {
-  const observer = useRef<ResizeObserver | null>(null);
-  useEffect(() => () => observer.current?.disconnect(), []);
-  return useCallback((element: HTMLElement | null) => {
-    observer.current?.disconnect();
-    if (!element) return;
-    const publish = () => document.documentElement.style.setProperty('--hud-bottom', `${Math.ceil(element.getBoundingClientRect().bottom)}px`);
-    observer.current = new ResizeObserver(publish); observer.current.observe(element); publish();
-  }, []);
-}
-export interface GameProps { loader:()=>Promise<WorldStore>; onSwitchMap?:(world:WorldStore)=>void }
+export interface GameProps { loader:()=>Promise<WorldStore>; onSwitchMap?:(world:WorldStore)=>void|Promise<void> }
 export function Game({loader,onSwitchMap}:GameProps){
   const canvas=useRef<HTMLCanvasElement>(null),gameRef=useRef<GameLoop|null>(null);
-  const [ready,setReady]=useState(false),[hideHints,setHideHints]=useState(skipped()),[loadingError,setLoadingError]=useState(''),[attempt,setAttempt]=useState(0),[panel,setPanel]=useState<'inventory'|'materials'|'profile'|null>(null),[stats,setStats]=useState<ReturnType<GameLoop['metrics']>|null>(null);
-  const {state,message,error,cacheStatus,connection,pending}=useWorld(),ui=useTools(),hudRef=useHudBottom();
+  const [ready,setReady]=useState(false),[hideHints,setHideHints]=useState(skipped()),[loadingError,setLoadingError]=useState(''),[attempt,setAttempt]=useState(0),[panel,setPanel]=useState<GamePanel|null>(null),[stats,setStats]=useState<ReturnType<GameLoop['metrics']>|null>(null);
+  const [questsOpen,setQuestsOpen]=useState(true),[switchingMap,setSwitchingMap]=useState(false);
+  const {state,message,error,cacheStatus,connection,pending}=useWorld(),ui=useTools();
+  const hudRef=useOverlayEdge('--hud-bottom','bottom'),dockRef=useOverlayEdge('--dock-top','top');
   useEffect(()=>{
     let cancelled=false;let game:GameLoop|undefined;let world:WorldStore|undefined;const assets=new AssetManager();
     const start=async()=>{
@@ -87,42 +86,59 @@ export function Game({loader,onSwitchMap}:GameProps){
     return()=>{cancelled=true;game?.dispose();gameRef.current=null;};
   },[attempt]);
   useEffect(()=>{if(!ready)return;const id=window.setInterval(()=>setStats(gameRef.current?.metrics()??null),1000);return()=>window.clearInterval(id);},[ready]);
+  useEffect(()=>{if(ui.selection)setPanel(null);},[ui.selection]);
   const apply=(type:CommandType,payload:unknown)=>gameRef.current?.world.apply(type,payload);
-  const choose=(tool:Tool)=>gameRef.current?.tools.choose(tool);
+  const choose=(tool:Tool)=>{setPanel(null);gameRef.current?.tools.choose(tool);};
   const update=(patch:Partial<typeof ui>)=>{useTools.setState(patch);gameRef.current?.tools.refresh();};
   const selected=state?.snapshot.buildings.find(b=>b.id===ui.selection),bridge=state?.snapshot.bridges.find(b=>b.id===ui.selection),object=selected??bridge;
   const busy=state?[...state.snapshot.buildings,...state.snapshot.bridges].filter(b=>b.status==='CONSTRUCTING').length:0;
-  const kind=state?.template.mapKind??'farm',kindLabel=kind==='city'?'THÀNH PHỐ':'QUÊ';
+  const kind=state?.template.mapKind??'farm';
   const q=state?catalog.quests[kind][state.snapshot.progress.questIndex]:undefined;
   const hint=q&&!hideHints?HINTS[q.action]:undefined;
   const hasBank=!!state&&kind==='city'&&state.snapshot.buildings.some(b=>b.status==='ACTIVE'&&catalog.buildings[b.defId]?.bankCapHours&&access(state,b));
-  const toolList=(Object.keys(toolIcons) as Tool[]).filter(tool=>kind==='farm'||!FARM_ONLY.includes(tool));
-  const people=state&&kind==='city'?populationAndJobs(state):null;
+  const openPanel=(next:GamePanel)=>{gameRef.current?.tools.choose('explore');setPanel(current=>current===next?null:next);};
+  const setQuality=(quality:'high'|'low')=>{gameRef.current?.setQuality(quality);setStats(gameRef.current?.metrics()??null);};
+  const switchMap=async()=>{
+    const world=gameRef.current?.world;if(!world||!onSwitchMap||switchingMap)return;
+    setSwitchingMap(true);
+    try{await onSwitchMap(world);}catch(cause){world.message(`Không đổi được bản đồ. ${cause instanceof Error?cause.message:'Hãy thử lại.'}`,true);}
+    finally{setSwitchingMap(false);}
+  };
   const status=connection==='local'?t('offline'):connection==='online'?t('connected'):connection==='syncing'?`${t('syncing')} (${pending})`:`${t('disconnected')} (${pending})`;
   const preview=ui.preview;
-  return <main>
+  return <main className={`game-shell game-${kind}`}>
     <canvas ref={canvas} aria-label="Bản đồ 3D"/>
     {!ready&&<div className="loading"><h1>Xây Nhà</h1><p>{loadingError||t('loading')}</p>{loadingError&&<button onClick={()=>{setLoadingError('');setAttempt(attempt+1);}}>{t('retry')}</button>}</div>}
     {ready&&state&&<>
-      <header className="hud" ref={hudRef}><div className="brand" role="button" tabIndex={0} title={t('profile')} onClick={()=>setPanel(panel==='profile'?null:'profile')}><span className="brand-icon">⌂</span><div><strong>XÂY NHÀ <small>{kindLabel}</small></strong><span>{state.snapshot.character.displayName}#{state.snapshot.character.tag} · {t('level')} {state.snapshot.progress.level} · {state.snapshot.progress.xp} XP</span></div></div><div className="resources"><strong className="cash">{money(state.snapshot.wallet.cash)}</strong><button onClick={()=>setPanel(panel==='materials'?null:'materials')}>🪵 {state.snapshot.wallet.wood} &nbsp; ◇ {state.snapshot.wallet.stone}</button><span>{t('builders')} {busy}/{builderCapacity(state)}</span>{kind==='farm'?<button onClick={()=>setPanel(panel==='inventory'?null:'inventory')}>{t('storage')} {inventoryCount(state)}/{storageCapacity(state)}</button>:<span>{t('people')} {people?.population??0}/{people?.jobs??0}</span>}{hasBank&&<button onClick={()=>apply('COLLECT',{buildingIds:[]})}>{t('collectAll')}</button>}{onSwitchMap&&<button aria-label={t('switchMap')} title={t('switchMap')} onClick={()=>{const w=gameRef.current?.world;if(w)onSwitchMap(w);}}>🗺</button>}</div><div className="sub-hud"><span>{t('worth')} {money(state.snapshot.character.netWorth)}</span>{kind==='farm'&&<span>{t('fields')} {state.snapshot.crops.length}/{fieldQuota(state)}</span>}<span className={connection==='offline'?'error':''} role="status">{status}</span></div></header>
-      {q&&<aside className="quest panel">{hint&&<div className="tutor" role="note"><b>Bác Tư:</b> {hint.text}<button className="link" onClick={()=>{try{localStorage.setItem(SKIP_KEY,'1');}catch{/* storage blocked */}setHideHints(true);}}>{t('skipTutorial')}</button></div>}<small>{t('quests')} {state.snapshot.progress.questIndex+1}/{catalog.quests[kind].length}</small><strong>{t(q.nameKey)}</strong><span>{Math.min(q.target,authoredQuestProgress(state))}/{q.target} · {money(q.reward.cash)} · {q.xp} XP</span><button disabled={authoredQuestProgress(state)<q.target} onClick={()=>apply('CLAIM_QUEST',{questId:q.id})}>{t('claim')}</button></aside>}
-      {!q&&state.snapshot.progress.repeat&&<aside className="quest panel repeat"><small>{t('repeatQuests')}</small>{state.snapshot.progress.repeat.active.map(rq=>{const done=repeatQuestProgress(state,rq)>=rq.target,rerollReady=state.snapshot.serverTime>=state.snapshot.progress.repeat!.rerollAt;return <div key={rq.id} className="repeat-quest"><strong>{repeatTitle(rq)}</strong><span>{Math.min(rq.target,repeatQuestProgress(state,rq))}/{rq.target} · {money(rq.reward.cash)} · {rq.xp} XP</span><div className="row"><button disabled={!done} onClick={()=>apply('CLAIM_QUEST',{questId:rq.id})}>{t('claim')}</button><button disabled={!rerollReady} title={rerollReady?'':`${t('rerollIn')} ${duration(state.snapshot.progress.repeat!.rerollAt-state.snapshot.serverTime)}`} onClick={()=>apply('REROLL_QUEST',{questId:rq.id})}>{t('reroll')}</button></div></div>;})}</aside>}
-      <div className="camera-buttons"><button aria-label="Phóng to" onClick={()=>gameRef.current?.rig.zoom(-140)}>＋</button><button aria-label="Thu nhỏ" onClick={()=>gameRef.current?.rig.zoom(140)}>−</button><button aria-label={t('resetCamera')} onClick={()=>gameRef.current?.rig.reset()}>⟲</button></div>
-      {panel&&<aside className="side panel"><button className="close" onClick={()=>setPanel(null)}>×</button><h2>{t(panel)}</h2>{panel==='profile'?<><Profile state={state}/><div className="settings" role="group" aria-label={t('graphics')}><span>{t('graphics')}</span>{(['high','low'] as const).map(level=><button key={level} aria-pressed={stats?.quality===level} className={stats?.quality===level?'selected':''} onClick={()=>{gameRef.current?.setQuality(level);setStats(gameRef.current?.metrics()??null);}}>{t(level==='high'?'graphicsHigh':'graphicsLow')}</button>)}</div></>:panel==='materials'?(['wood','stone'] as const).map(material=><div className="item" key={material}><span>{t(material)}</span>{[1,10].map(count=><button key={count} onClick={()=>apply('BUY_MATERIAL',{[material]:count})}>{t('buy')} {count}</button>)}</div>):Object.entries(state.snapshot.inventory).map(([id,count])=><div className="item" key={id}><span>{t(catalog.items[id]?.nameKey??id)} × {count}</span><button disabled={!count} onClick={()=>apply('SELL',{items:{[id]:count}})}>{t('sell')} {money(count*(catalog.items[id]?.sellPrice??0))}</button></div>)}</aside>}
-      {object&&<aside className="side panel"><button className="close" onClick={()=>update({selection:null})}>×</button><h2>{selected?t(catalog.buildings[selected.defId]!.nameKey):'Cầu'}</h2><p>{object.status==='CONSTRUCTING'?`${t('progress')} ${duration(object.buildEndsAt-state.snapshot.serverTime)}`:t('active')}</p>{object.status==='CONSTRUCTING'?<><button onClick={()=>apply('SPEED_UP',selected?{buildingId:object.id}:{bridgeId:object.id})}>{t('speed')}</button><button onClick={()=>apply('CANCEL_CONSTRUCTION',selected?{buildingId:object.id}:{bridgeId:object.id})}>{t('cancel')} · 100%</button></>:selected?<><p>{access(state,selected)?t('active'):t('noRoad')}</p>{catalog.buildings[selected.defId]?.baseRatePerHour?<><p>{t('income')} {money(state.rates[selected.id]??0)}/h · {t('waiting')} {money(selected.accrued??0)}</p><button disabled={(selected.accrued??0)<1} onClick={()=>apply('COLLECT',{buildingIds:[selected.id]})}>{t('collectMoney')}</button></>:null}{catalog.buildings[selected.defId]?.production?.recipes.map(id=><button key={id} onClick={()=>apply('START_PRODUCTION',{buildingId:selected.id,recipeId:id,count:1})}>{t('produce')} · {t(catalog.items[catalog.recipes[id]!.output]!.nameKey)}</button>)}{selected.slots&&<><button onClick={()=>apply('COLLECT_PRODUCTION',{buildingId:selected.id})}>{t('collect')}</button>{selected.slots.flat().map((job,index)=><p key={index}>{t(catalog.items[catalog.recipes[job.recipeId]!.output]!.nameKey)} · {duration(job.readyAt-state.snapshot.serverTime)}</p>)}</>}<button onClick={()=>apply('DEMOLISH',{buildingId:selected.id})}>{t('demolish')}</button></>:<button onClick={()=>apply('REMOVE_BRIDGE',{bridgeId:object.id})}>{t('remove')}</button>}</aside>}
-      {ui.tool==='build'&&<aside className="catalog panel"><h2>{t('build')}</h2>{Object.values(catalog.buildings).filter(d=>d.mapKinds.includes(kind)).map(def=>{const count=state.snapshot.buildings.filter(b=>b.defId===def.id).length,limit=buildingLimit(state,def);return <button className={ui.buildingId===def.id?'selected':''} key={def.id} onClick={()=>update({buildingId:def.id})}><strong>{t(def.nameKey)}</strong><span>{def.size.join(' × ')} · {money(def.cost.cash)} · 🪵{def.cost.wood} ◇{def.cost.stone}</span><span>{t('level')} {def.unlockLevel} · {duration(def.buildSeconds*1000)} · {count}/{Number.isFinite(limit)?limit:'∞'}</span></button>;})}</aside>}
-      <footer>
+      <GameHud state={state} busy={busy} status={status} connected={connection==='online'||connection==='local'} panel={panel}
+        hasBank={hasBank} questsOpen={questsOpen} switchingMap={switchingMap} onMeasure={hudRef} onPanel={openPanel}
+        onQuests={()=>setQuestsOpen(!questsOpen)} onCollect={()=>apply('COLLECT',{buildingIds:[]})}
+        onSwitchMap={onSwitchMap?()=>{void switchMap();}:undefined}/>
+      {questsOpen&&q&&<aside className="quest panel">{hint&&<div className="tutor" role="note"><b>Bác Tư:</b> {hint.text}<button className="link" onClick={()=>{try{localStorage.setItem(SKIP_KEY,'1');}catch{/* storage blocked */}setHideHints(true);}}>{t('skipTutorial')}</button></div>}<small className="quest-heading"><GameIcon name="quests"/>{t('quests')} {state.snapshot.progress.questIndex+1}/{catalog.quests[kind].length}</small><strong>{t(q.nameKey)}</strong><span>{Math.min(q.target,authoredQuestProgress(state))}/{q.target} · {money(q.reward.cash)} · {q.xp} XP</span><button disabled={authoredQuestProgress(state)<q.target} onClick={()=>apply('CLAIM_QUEST',{questId:q.id})}>{t('claim')}</button></aside>}
+      {questsOpen&&!q&&state.snapshot.progress.repeat&&<aside className="quest panel repeat"><small>{t('repeatQuests')}</small>{state.snapshot.progress.repeat.active.map(rq=>{const done=repeatQuestProgress(state,rq)>=rq.target,rerollReady=state.snapshot.serverTime>=state.snapshot.progress.repeat!.rerollAt;return <div key={rq.id} className="repeat-quest"><strong>{repeatTitle(rq)}</strong><span>{Math.min(rq.target,repeatQuestProgress(state,rq))}/{rq.target} · {money(rq.reward.cash)} · {rq.xp} XP</span><div className="row"><button disabled={!done} onClick={()=>apply('CLAIM_QUEST',{questId:rq.id})}>{t('claim')}</button><button disabled={!rerollReady} title={rerollReady?'':`${t('rerollIn')} ${duration(state.snapshot.progress.repeat!.rerollAt-state.snapshot.serverTime)}`} onClick={()=>apply('REROLL_QUEST',{questId:rq.id})}>{t('reroll')}</button></div></div>;})}</aside>}
+      <div className="camera-buttons"><button aria-label="Phóng to" onClick={()=>gameRef.current?.rig.zoom(-140)}><GameIcon name="zoomIn"/></button><button aria-label="Thu nhỏ" onClick={()=>gameRef.current?.rig.zoom(140)}><GameIcon name="zoomOut"/></button><button aria-label={t('resetCamera')} onClick={()=>gameRef.current?.rig.reset()}><GameIcon name="reset"/></button></div>
+      {panel&&<aside className="side panel"><button className="close" aria-label="Đóng bảng" onClick={()=>setPanel(null)}><GameIcon name="close"/></button>
+        <h2 className="panel-heading"><GameIcon name={panel==='materials'?'wood':panel}/>{panel==='settings'?'Cài đặt':t(panel)}</h2>
+        {panel==='profile'?<><Profile state={state}/><GraphicsSettings quality={stats?.quality} onChange={setQuality}/></>
+          :panel==='settings'?<><p>Điều chỉnh đồ họa phù hợp với thiết bị của bạn.</p><GraphicsSettings quality={stats?.quality} onChange={setQuality}/></>
+          :panel==='materials'?(['wood','stone'] as const).map(material=><div className="item" key={material}><GameIcon name={material}/><span>{t(material)}</span>{[1,10].map(count=><button key={count} onClick={()=>apply('BUY_MATERIAL',{[material]:count})}>{t('buy')} {count}</button>)}</div>)
+          :Object.keys(state.snapshot.inventory).length?Object.entries(state.snapshot.inventory).map(([id,count])=><div className="item" key={id}><span>{t(catalog.items[id]?.nameKey??id)} × {count}</span><button disabled={!count} onClick={()=>apply('SELL',{items:{[id]:count}})}>{t('sell')} {money(count*(catalog.items[id]?.sellPrice??0))}</button></div>)
+          :<p className="empty-inventory"><GameIcon name="inventory"/>Kho đang trống. Thu hoạch hoặc thu sản phẩm để thêm hàng vào kho.</p>}
+      </aside>}
+      {object&&!panel&&<aside className="side panel"><button className="close" aria-label="Đóng bảng" onClick={()=>update({selection:null})}><GameIcon name="close"/></button><h2>{selected?t(catalog.buildings[selected.defId]!.nameKey):'Cầu'}</h2><p>{object.status==='CONSTRUCTING'?`${t('progress')} ${duration(object.buildEndsAt-state.snapshot.serverTime)}`:t('active')}</p>{object.status==='CONSTRUCTING'?<><button onClick={()=>apply('SPEED_UP',selected?{buildingId:object.id}:{bridgeId:object.id})}>{t('speed')}</button><button onClick={()=>apply('CANCEL_CONSTRUCTION',selected?{buildingId:object.id}:{bridgeId:object.id})}>{t('cancel')} · 100%</button></>:selected?<><p>{access(state,selected)?t('active'):t('noRoad')}</p>{catalog.buildings[selected.defId]?.baseRatePerHour?<><p>{t('income')} {money(state.rates[selected.id]??0)}/h · {t('waiting')} {money(selected.accrued??0)}</p><button disabled={(selected.accrued??0)<1} onClick={()=>apply('COLLECT',{buildingIds:[selected.id]})}>{t('collectMoney')}</button></>:null}{catalog.buildings[selected.defId]?.production?.recipes.map(id=><button key={id} onClick={()=>apply('START_PRODUCTION',{buildingId:selected.id,recipeId:id,count:1})}>{t('produce')} · {t(catalog.items[catalog.recipes[id]!.output]!.nameKey)}</button>)}{selected.slots&&<><button onClick={()=>apply('COLLECT_PRODUCTION',{buildingId:selected.id})}>{t('collect')}</button>{selected.slots.flat().map((job,index)=><p key={index}>{t(catalog.items[catalog.recipes[job.recipeId]!.output]!.nameKey)} · {duration(job.readyAt-state.snapshot.serverTime)}</p>)}</>}<button onClick={()=>apply('DEMOLISH',{buildingId:selected.id})}>{t('demolish')}</button></>:<button onClick={()=>apply('REMOVE_BRIDGE',{bridgeId:object.id})}>{t('remove')}</button>}</aside>}
+      {ui.tool==='build'&&!panel&&!object&&<aside className="catalog panel"><h2>{t('build')}</h2>{Object.values(catalog.buildings).filter(d=>d.mapKinds.includes(kind)).map(def=>{const count=state.snapshot.buildings.filter(b=>b.defId===def.id).length,limit=buildingLimit(state,def);return <button className={ui.buildingId===def.id?'selected':''} key={def.id} onClick={()=>update({buildingId:def.id})}><strong>{t(def.nameKey)}</strong><span className="catalog-cost">{def.size.join(' × ')} · {money(def.cost.cash)} <GameIcon name="wood"/>{def.cost.wood} <GameIcon name="stone"/>{def.cost.stone}</span><span>{t('level')} {def.unlockLevel} · {duration(def.buildSeconds*1000)} · {count}/{Number.isFinite(limit)?limit:'∞'}</span></button>;})}</aside>}
+      <footer className="game-dock" ref={dockRef}>
         <div className="feedback"><span className={error?'error':''} role="status">{message||t('select')}</span><small>{cacheStatus}</small></div>
         {ui.tool!=='explore'&&<div className="tool-options panel"><strong>{t(ui.tool)}</strong>
           {ui.tool==='terraform'&&(['RAISE','LOWER','FLATTEN'] as const).map(mode=><button className={ui.mode===mode?'selected':''} key={mode} onClick={()=>update({mode})}>{t(mode.toLowerCase())}</button>)}
           {ui.tool==='road'&&([1,2,3] as const).map(tier=><button className={ui.tier===tier?'selected':''} key={tier} onClick={()=>update({tier})}>{['Đường đất','Lát đá','Nhựa'][tier-1]}</button>)}
           {ui.tool==='bridge'&&<select value={ui.bridgeId} onChange={e=>update({bridgeId:e.target.value})}>{Object.values(catalog.bridges).map(def=><option key={def.id} value={def.id}>{def.id==='bridge_wood'?'Cầu gỗ':def.id==='bridge_stone'?'Cầu đá':'Cầu bê tông'} · {t('level')} {def.unlockLevel}</option>)}</select>}
           {['road','embank','bridge','till'].includes(ui.tool)&&<label><input type="checkbox" checked={ui.remove} onChange={e=>update({remove:e.target.checked})}/>{t('remove')}</label>}
-          {ui.tool==='build'&&<><button onClick={()=>gameRef.current?.tools.rotate()}>{t('rotate')} {ui.rotation*90}°</button><label><input type="checkbox" checked={ui.autoFlatten} onChange={e=>update({autoFlatten:e.target.checked})}/>San tự động</label></>}
+          {ui.tool==='build'&&<><button onClick={()=>gameRef.current?.tools.rotate()}><GameIcon name="rotate"/>{t('rotate')} {ui.rotation*90}°</button><label><input type="checkbox" checked={ui.autoFlatten} onChange={e=>update({autoFlatten:e.target.checked})}/>San tự động</label></>}
           {ui.tool==='plant'&&<select value={ui.cropId} onChange={e=>update({cropId:e.target.value})}>{Object.values(catalog.crops).map(crop=><option key={crop.id} value={crop.id}>{t(crop.nameKey)} · {money(crop.seedCost)} · {t('level')} {crop.unlockLevel}</option>)}</select>}
-          <span className={`preview-cost ${preview?.valid?(preview.warning?'warning':'valid'):'error'}`}>{preview?.cost?`${money(preview.cost.cash)} · 🪵${preview.cost.wood} ◇${preview.cost.stone}`:preview?.code?errorText(preview.code):t('select')}</span><button className="primary" disabled={!preview?.valid} onClick={()=>gameRef.current?.tools.confirm()}>✓ {t('confirm')}</button><button onClick={()=>gameRef.current?.tools.cancel()}>× {t('cancel')}</button>
+          <span className={`preview-cost ${preview?.valid?(preview.warning?'warning':'valid'):'error'}`}>{preview?.cost?<>{money(preview.cost.cash)} <GameIcon name="wood"/>{preview.cost.wood} <GameIcon name="stone"/>{preview.cost.stone}</>:preview?.code?errorText(preview.code):t('select')}</span><button className="primary" disabled={!preview?.valid} onClick={()=>gameRef.current?.tools.confirm()}><GameIcon name="confirm"/>{t('confirm')}</button><button onClick={()=>gameRef.current?.tools.cancel()}><GameIcon name="close"/>{t('cancel')}</button>
         </div>}
-        <nav className="tools panel" aria-label="Công cụ">{toolList.map(tool=><button aria-pressed={ui.tool===tool} className={`${ui.tool===tool?'selected':''} ${hint?.tool===tool&&ui.tool!==tool?'hint':''}`} key={tool} onClick={()=>choose(tool)}><b>{toolIcons[tool]}</b><span>{t(tool)}</span></button>)}</nav><p className="controls">{matchMedia('(pointer:coarse)').matches?t('touchControls'):t('controls')}</p>
+        <ToolDock kind={kind} selected={ui.tool} hint={hint?.tool} onChoose={choose}/><p className="controls">{matchMedia('(pointer:coarse)').matches?t('touchControls'):t('controls')}</p>
       </footer>
       {new URLSearchParams(location.search).get('debug')==='1'&&<pre className="debug">{stats?`${stats.fps.toFixed(1)} FPS · ${stats.drawCalls} calls · ${stats.triangles} triangles\nGPU objects ${stats.geometries} geometries / ${stats.textures} textures / ${stats.programs} programs\nZone ${stats.terrain.lastRebuildMs.toFixed(2)} ms · max ${stats.terrain.maxRebuildMs.toFixed(2)} ms · ${stats.terrain.zonesRebuilt} rebuilds · revision ${stats.revision}\nQueue ${stats.pending} · clock skew ${Math.round(stats.clockSkewMs)} ms · graphics ${stats.quality}\nCell ${ui.cell?.join(',')??'—'}`:''}</pre>}
     </>}

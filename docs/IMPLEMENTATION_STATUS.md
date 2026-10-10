@@ -2,6 +2,11 @@
 
 Updated: 2026-10-10 (Asia/Bangkok).
 
+Post-MVP in-game HUD redesign: [report](reports/HUD-design-report.md). Character avatar/name/level/relative XP
+are grouped; resources and functional menus are organized; tools use four groups and Lucide icons.
+Responsive review 141/141, G3 flow 26/26, `pnpm check` 682/682, API 22/22 and local production smoke
+24/24 PASS (all exit 0). Docker localhost:8090 is updated. Economy/Q009/Q010 unchanged.
+
 Post-MVP entrance redesign: [report](reports/ENTRY-design-report.md). Login/recovery, character creation and
 map selection now use illustrated responsive layouts. Lint/typecheck/build PASS; 131 fixture browser checks,
 8 real dev recovery checks and local production smoke (four cases / 24 checks) PASS. Economy remains unchanged.

@@ -31,7 +31,11 @@ for (const run of runs) {
   for (const kind of ['city', 'farm']) {
     const started = Date.now();
     if (kind === 'city') await page.goto(`${BASE}/?debug=1`);
-    else await page.locator('button[aria-label="Đổi bản đồ"]').click();
+    else {
+      const switchMap = page.locator('button[aria-label="Đổi bản đồ"]');
+      if (!await switchMap.isVisible()) await page.getByRole('button', { name: 'Menu chức năng' }).click();
+      await switchMap.click();
+    }
     const create = page.locator(`.map-card.${kind} button`, { hasText: 'Tạo nhân vật' });
     await create.waitFor({ timeout: 30000 });
     const mapScreenMs = Date.now() - started;

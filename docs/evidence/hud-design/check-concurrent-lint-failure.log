@@ -1,0 +1,23 @@
+
+> xay-nha@0.1.0 check D:\Core_LVB_BIDC\Project\Game_xay_nha
+> pnpm content:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build
+
+
+> xay-nha@0.1.0 content:check D:\Core_LVB_BIDC\Project\Game_xay_nha
+> node scripts/generate-content.mjs --check
+
+Verified 4 content files from docs/16 + economy model (D:\Core_LVB_BIDC\Project\Game_xay_nha\).
+
+> xay-nha@0.1.0 lint D:\Core_LVB_BIDC\Project\Game_xay_nha
+> eslint packages scripts apps --max-warnings 0
+
+
+D:\Core_LVB_BIDC\Project\Game_xay_nha\scripts\g4-full-world.mjs
+  32:81   error  'performance' is not defined            no-undef
+  33:63   error  'requestAnimationFrame' is not defined  no-undef
+  33:100  error  'performance' is not defined            no-undef
+
+✖ 3 problems (3 errors, 0 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.
+ ELIFECYCLE  Command failed with exit code 1.
