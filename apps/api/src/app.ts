@@ -5,6 +5,7 @@ import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { MapKindSchema } from '@xay-nha/contracts';
 import * as schema from './db/schema';
 import { hashRecovery, newRecoveryCode, newToken, normalizeRecoveryCode, recoveryPrefixHash, tokenHash, validateDisplayName, verifyRecovery } from './auth';
+import { CommandMetrics } from './metrics';
 import { RateLimiter } from './rateLimit';
 import type { TemplateRegistry } from './templates';
 import { ApiError, MAX_BATCH, WorldService } from './worlds';
@@ -12,8 +13,12 @@ import { ApiError, MAX_BATCH, WorldService } from './worlds';
 export interface AppDeps {
   db: NodePgDatabase<typeof schema>; templates: TemplateRegistry; tokenPepper: string;
   clock?: () => number; logLevel?: string; trustProxy?: boolean;
+  /** Interval for the periodic `metrics` log line (docs/11 §10); 0 disables it. Default 60 s. */
+  metricsIntervalMs?: number;
   limits?: { accountsPerHour?: number; recoverPerHour?: number; commandsPerSecond?: number; commandsPerMinute?: number };
 }
+
+declare module 'fastify' { interface FastifyInstance { commandMetrics: CommandMetrics } }
 
 export function buildApp(deps: AppDeps): FastifyInstance {
   const clock = deps.clock ?? Date.now;
@@ -24,6 +29,14 @@ export function buildApp(deps: AppDeps): FastifyInstance {
   const perSecond = new RateLimiter(deps.limits?.commandsPerSecond ?? 20, 1000, clock);
   const perMinute = new RateLimiter(deps.limits?.commandsPerMinute ?? 300, 60_000, clock);
   const lastSeen = new Map<string, number>();
+  const metrics = new CommandMetrics(300_000, clock);
+  app.decorate('commandMetrics', metrics);
+  const interval = deps.metricsIntervalMs ?? 60_000;
+  if (interval > 0) {
+    const timer = setInterval(() => { const report = metrics.report(); if (report.commands) app.log.info({ metrics: report }, 'metrics'); }, interval);
+    timer.unref();
+    app.addHook('onClose', async () => clearInterval(timer));
+  }
 
   app.setErrorHandler((error, request, reply) => {
     if (error instanceof ApiError) return reply.status(error.status).send({ error: error.code, message: error.message, detail: error.detail, serverTime: clock() });
@@ -104,7 +117,18 @@ export function buildApp(deps: AppDeps): FastifyInstance {
     const commands = (request.body as { commands?: unknown } | null)?.commands;
     const count = Array.isArray(commands) ? Math.min(commands.length, MAX_BATCH) : 1;
     if (!perSecond.take(`w:${request.params.id}`, count) || !perMinute.take(`a:${accountId}`, count)) throw new ApiError(429, 'RATE_LIMITED');
-    return worlds.commands(accountId, request.params.id, commands);
+    const started = performance.now();
+    const response = await worlds.commands(accountId, request.params.id, commands);
+    const durationMs = Math.round((performance.now() - started) * 100) / 100, worldId = request.params.id;
+    // docs/11 §10: one JSON log line per command (requestId is attached by the request logger).
+    response.results.forEach((result, i) => {
+      const code = result.accepted ? undefined : result.code;
+      const commandType = (Array.isArray(commands) ? (commands[i] as { type?: unknown } | undefined)?.type : undefined);
+      metrics.record(worldId, result.accepted, code, durationMs / response.results.length);
+      request.log.info({ accountId, worldId, commandId: result.commandId, commandType: typeof commandType === 'string' ? commandType : 'INVALID',
+        accepted: result.accepted, code, durationMs, revision: result.revision }, 'command');
+    });
+    return response;
   });
 
   app.delete<{ Params: { id: string } }>('/api/worlds/:id', async (request, reply) => {
