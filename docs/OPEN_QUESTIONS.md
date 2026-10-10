@@ -154,3 +154,28 @@ twice the model's time although it reaches the same 192 fields, so the remaining
 (e.g. instant input purchase/sale, harvest timing between sessions), not storage or build order. Conclusion: Option 1
 alone will not close Farm pacing; after reconciling the model, a Farm XP recalibration (Option 2 scope) is still
 likely needed. City was not re-run (its L15/L20 already pass).
+
+### Proposed Farm XP table — NOT applied, awaiting approval (Claude, 2026-10-10)
+
+`scripts/q010-farm-xp-calibrate.ts` fits the Farm cumulative-XP table to the docs/16 reference-model level times using
+the real sim and FarmBotV3, patching the table **in memory only** (`docs/reports/Q010-farm-xp-proposal.json`).
+L2–L4 keep the current 40/120/220 (reached in the first session through tutorial quests).
+
+| Level | 5 | 8 | 10 | 12 | 15 | 18 | 20 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Current cumulative XP | 960 | 5 700 | 14 000 | 33 000 | 75 000 | 150 000 | 240 000 |
+| Proposed | 780 | 3 450 | 8 270 | 17 530 | 37 370 | 70 150 | 107 100 |
+
+Verification (60 days, FarmBotV3, proposed table):
+
+| Style | L8 | L12 | L15 | L20 | docs/16 §12.1 model |
+|---|---|---|---|---|---|
+| Ordinary (gate) | d4.0 (+1%) PASS | d13.0 (+9%) PASS | d23.5 (+7%) PASS | d54.7 (+5%) PASS | 4 / 12 / 22 / 52 |
+| Careful | d1.4 | d7.2 | d14.5 | d36 | 2 / 8 / 15 / 35 |
+| Casual | d9 | d30 | d59 | — | 12 / 35 / 59 / — |
+
+Careful vs ordinary: 2.9× / 1.8× / 1.6× faster (≥ 1.3× required). All snapshots valid.
+Caveats: fitted to one bot strategy (V3), City unchanged (its L15/L20 pass; L8/L12 remain +86%/+34% with the current
+City bot and were not recalibrated); quest XP and rewards unchanged. If approved, apply through docs/16 §11
+(update `P.xpCumMap.farm` in `docs/tools/economy/model.mjs`, regenerate content, bump `contentVersion`, rerun all six
+real-sim scenarios and the test suite). Existing Farm characters would level up on load (XP is kept, thresholds drop).
