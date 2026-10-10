@@ -12,6 +12,7 @@ import { GameHud, type GamePanel } from './ui/GameHud';
 import { GameIcon } from './ui/GameIcon';
 import { ToolDock } from './ui/ToolDock';
 import { useOverlayEdge } from './ui/useOverlayEdge';
+import { report } from './net/telemetry';
 
 function GraphicsSettings({ quality, onChange }: { quality: 'high' | 'low' | undefined; onChange: (quality: 'high' | 'low') => void }) {
   return <div className="settings" role="group" aria-label={t('graphics')}><span>{t('graphics')}</span>
@@ -82,7 +83,7 @@ export function Game({loader,onSwitchMap}:GameProps){
       if(cancelled){assets.dispose();world.dispose();return;}
       game=new GameLoop(canvas.current!,world,assets);gameRef.current=game;setReady(true);
     };
-    void start().catch(cause=>{assets.dispose();world?.dispose();if(!cancelled)setLoadingError(`${t('loadError')} ${cause instanceof Error?cause.message:String(cause)}`);});
+    void start().catch(cause=>{const message=cause instanceof Error?cause.message:String(cause);report('load',message,{mapId:world?.state?.template.mapId});assets.dispose();world?.dispose();if(!cancelled)setLoadingError(`${t('loadError')} ${message}`);});
     return()=>{cancelled=true;game?.dispose();gameRef.current=null;};
   },[attempt]);
   useEffect(()=>{if(!ready)return;const id=window.setInterval(()=>setStats(gameRef.current?.metrics()??null),1000);return()=>window.clearInterval(id);},[ready]);

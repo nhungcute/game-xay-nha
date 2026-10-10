@@ -45,6 +45,7 @@ pnpm tunnel:url         # đợi ~10 giây nếu chưa có link
 
 - `pnpm deploy:logs` là log JSON của API. Mỗi lệnh có một dòng `"msg":"command"` gồm `reqId`, `accountId`, `worldId`, `commandType`, `accepted`, `code`, `durationMs`.
 - Mỗi 60 giây (nếu có lệnh) có thêm một dòng `"msg":"metrics"`: số lệnh/giây, tỉ lệ bị từ chối theo mã lỗi, p95 thời gian xử lý, số world đang hoạt động (cửa sổ 5 phút).
+- Lỗi phía người chơi (lỗi JS, promise bị bỏ dở, không tải được world/asset) được trình duyệt gửi về `/api/telemetry` và hiện trong log với `"msg":"client-error"` (tối đa 20 lỗi khác nhau mỗi lần tải trang, 30 báo cáo/phút/IP, không lưu DB). Xem nhanh: `docker compose -f infra/compose.yml logs api | grep client-error`.
 - Trong trình duyệt, thêm `?debug=1` vào URL để mở bảng debug: FPS, draw call, tam giác, bộ nhớ GPU, số lần dựng lại khu, revision, hàng đợi lệnh, độ lệch đồng hồ, mức đồ họa.
 - Đồ họa: mặc định **Thấp** trên điện thoại/máy cảm ứng, **Cao** trên máy tính. Đổi trong bảng Hồ sơ (bấm vào tên nhân vật).
 

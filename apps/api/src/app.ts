@@ -7,6 +7,7 @@ import * as schema from './db/schema';
 import { hashRecovery, newRecoveryCode, newToken, normalizeRecoveryCode, recoveryPrefixHash, tokenHash, validateDisplayName, verifyRecovery } from './auth';
 import { CommandMetrics } from './metrics';
 import { RateLimiter } from './rateLimit';
+import { parseTelemetry } from './telemetry';
 import type { TemplateRegistry } from './templates';
 import { ApiError, MAX_BATCH, WorldService } from './worlds';
 
@@ -15,7 +16,7 @@ export interface AppDeps {
   clock?: () => number; logLevel?: string; trustProxy?: boolean;
   /** Interval for the periodic `metrics` log line (docs/11 §10); 0 disables it. Default 60 s. */
   metricsIntervalMs?: number;
-  limits?: { accountsPerHour?: number; recoverPerHour?: number; commandsPerSecond?: number; commandsPerMinute?: number };
+  limits?: { accountsPerHour?: number; recoverPerHour?: number; commandsPerSecond?: number; commandsPerMinute?: number; telemetryPerMinute?: number };
 }
 
 declare module 'fastify' { interface FastifyInstance { commandMetrics: CommandMetrics } }
@@ -29,6 +30,7 @@ export function buildApp(deps: AppDeps): FastifyInstance {
   const perSecond = new RateLimiter(deps.limits?.commandsPerSecond ?? 20, 1000, clock);
   const perMinute = new RateLimiter(deps.limits?.commandsPerMinute ?? 300, 60_000, clock);
   const lastSeen = new Map<string, number>();
+  const telemetryLimit = new RateLimiter(deps.limits?.telemetryPerMinute ?? 30, 60_000, clock);
   const metrics = new CommandMetrics(300_000, clock);
   app.decorate('commandMetrics', metrics);
   const interval = deps.metricsIntervalMs ?? 60_000;
@@ -62,6 +64,14 @@ export function buildApp(deps: AppDeps): FastifyInstance {
   }
 
   app.get('/health', async () => { await deps.db.execute(sql`SELECT 1`); return { ok: true, serverTime: clock() }; });
+  // docs/11 §10: browser error reports (no auth; per-IP limit; small body; log only). Over-limit reports are dropped silently.
+  app.post('/api/telemetry', { bodyLimit: 8 * 1024 }, async (request, reply) => {
+    if (!telemetryLimit.take(request.ip)) return reply.status(204).send();
+    const report = parseTelemetry(request.body);
+    if (!report) throw new ApiError(400, 'INVALID_TELEMETRY');
+    request.log.warn({ telemetry: report, userAgent: String(request.headers['user-agent'] ?? '').slice(0, 200) }, 'client-error');
+    return reply.status(204).send();
+  });
   app.get('/api/maps', async () => ({ maps: deps.templates.maps(), serverTime: clock() }));
 
   // Creates a character for a map; also creates the (invisible) account when no token is sent.

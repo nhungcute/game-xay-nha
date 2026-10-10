@@ -68,7 +68,7 @@ Measurements are browser/host-specific; emulation FPS is not real-phone performa
 - Human playtest: tutorial time for a real first-time player is NOT RUN (historical bot 15 s, closeout 16 s); the 15-minute session was automated only.
 - Tunnel: never started by the agent (rule). `pnpm tunnel:up` / `tunnel:url` are unchanged from G2 and untested in G4.
 - Audio: optional, not implemented.
-- Client telemetry `/api/telemetry` is P1 (docs/11 §10), not implemented.
+- Client telemetry `/api/telemetry` (docs/11 §10): implemented after the gate (`apps/api/src/telemetry.ts`, `apps/web/src/net/telemetry.ts`); verified end to end on the Docker stack (JS error + unhandled rejection appear as `client-error` log lines). Log only, no dashboard.
 - Metrics are in-process and log-only (single API instance); no dashboard.
 - Backups stay on the same machine unless copied elsewhere.
 - G3 economy pacing FAIL: all six scenarios finished; five milestones fail, two pass and Farm L20 is UNREACHED. The valid L8 grocery fixture also confirms 0.901 h single-building payback under the broad after-L5 interpretation. See `G3-report.md` and Q010 in `OPEN_QUESTIONS.md`. Runnable local release readiness does not certify the economy gate.

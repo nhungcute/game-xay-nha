@@ -202,6 +202,16 @@ describe('world access and commands', () => {
     const [row] = (await db.execute(sql`SELECT snapshot->>'contentVersion' AS v, level FROM worlds WHERE id = ${p.worldId}`)).rows as { v: string; level: number }[];
     expect(row).toMatchObject({ v: '2', level: 9 });
   });
+  it('telemetry: valid report 204 without auth, malformed 400, over the per-IP limit dropped with 204', async () => {
+    const limited = makeApp({ telemetryPerMinute: 2 });
+    const post = (body: unknown) => limited.inject({ method: 'POST', url: '/api/telemetry', payload: body as object });
+    expect((await post({ kind: 'error', message: 'TypeError: boom', path: '/' })).statusCode).toBe(204);
+    expect((await post({ kind: 'nope', message: 'x' })).statusCode).toBe(400);
+    expect((await post({ kind: 'load', message: 'second' })).statusCode).toBe(204);
+    expect((await post({ kind: 'load', message: 'third, dropped' })).statusCode).toBe(204);
+    expect((await limited.inject({ method: 'POST', url: '/api/telemetry', payload: { kind: 'error', message: 'x'.repeat(9000) } })).statusCode).toBe(413);
+    await limited.close();
+  });
   it('delete requires the exact character name', async () => {
     const p = await newPlayer('farm', 'Xóa Đi');
     expect((await call('DELETE', `/api/worlds/${p.worldId}`, { confirmName: 'Sai' }, p.token)).body.error).toBe('CONFIRM_NAME_MISMATCH');
