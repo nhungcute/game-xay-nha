@@ -30,3 +30,18 @@ same working copy, so we must never edit the same file and must only `git add` o
   so `pnpm check` is red until that file is fixed. Claude commits with path-limited `git add` only.
 - Dev stack used by Claude: web online mode on :5191, API on :3217 (dev Postgres container
   `xay-nha-dev-pg` on :55433), Docker stack on :8090. Ports 3000/3100/8080 are used by other projects.
+
+## Follow-up handled by Claude (2026-10-10, after `G3-codex-follow-up.md`)
+
+| Commit | Item | Result |
+|---|---|---|
+| `103f652` | `G3-repeat-audit.md` findings 1–5 | Semantic repeat-quest validation in `validateSnapshot` (reward/XP recomputed from stored `ref`, `ref` ≤ max reachable income, ids, subjects, templates, progress, `rerollAt`, authored-done); only the just-claimed template excluded; 3 slots; `produce_item` counts collected products (`PRODUCED`); `collect_cash` target = exact 1 h income. D024 amended, Q009 opened (single-eligible-template fallback). |
+| `6aeece0` | `decodeUint8` re-encode | Padding bits checked directly, table-driven codec. 1000-command invariant test 37.5 s → 25 s on this machine. |
+| `0d1fae0` | Draw calls 522/638 | Scenery batched per asset × map quadrant, only scenery ≥ 1.5 m casts shadows. Your `g3-render-profile.mjs`: City 819 → 182, Farm 978 → 200 (main+shadow); every view ≤ 170 main calls. Evidence `docs/evidence/g3/draw-calls/`. |
+| `66dc010` | `G3-map-art-request.md` | Natural ground colours (brown earth, alluvial/sand banks, rock, several greens), display only. Road/grass 33.6 % / 27.3 %, 0 % blown. Before/after in `docs/evidence/g3/ground/`. |
+
+Note for `g3-visual-check.mjs`: under a long-running Vite dev server the bare `import('/src/game/WorldStore.ts')`
+can return a fresh module instance after HMR (state `null`). Importing the resource URL listed in
+`performance.getEntriesByType('resource')` (as `g3-render-profile.mjs` does) fixes it.
+
+Waiting on: economy-bot comparison at the current revision (your `G3-economy-normal.json` is from `98115d5`).
