@@ -20,6 +20,7 @@ import { CameraRig } from './CameraRig';
 import { PointerRouter } from './PointerRouter';
 import { loadQuality, pixelRatio, saveQuality, type Quality } from './quality';
 import { commandSounds, SoundEffects, tickSounds, waterNearby } from './audio';
+import { commandEffects, EffectsRenderer, progressEffects } from './render/EffectsRenderer';
 
 export class GameLoop {
   readonly scene=new Scene();
@@ -38,6 +39,7 @@ export class GameLoop {
   private readonly env:EnvRenderer;
   quality:Quality=loadQuality();
   readonly sound=new SoundEffects();
+  private readonly effects:EffectsRenderer;
   private readonly renderers:{update: (state:WorldStore['state'])=>void;dispose:()=>void}[];
   private readonly sun=new DirectionalLight('#fff0d5',2.1);
   private readonly subscriptions:(()=>void)[]=[];
@@ -60,7 +62,9 @@ export class GameLoop {
     this.buildings=new BuildingRenderer(this.scene,assets);this.crops=new CropRenderer(this.scene,assets);this.ghost=new GhostRenderer(this.scene,assets);this.coins=new CoinRenderer(this.scene);
     this.renderers=[new RoadRenderer(this.scene),new EmbankRenderer(this.scene),new BridgeRenderer(this.scene),this.env=new EnvRenderer(this.scene,assets),this.buildings,this.crops,this.coins];
     this.applyQuality(this.quality);
-    world.onCommand=(type,accepted,before,after)=>this.sound.play(commandSounds(type,accepted,before,after));world.onTick=(before,after)=>this.sound.play(tickSounds(before,after));
+    this.effects=new EffectsRenderer(this.scene,canvas.parentElement,()=>this.world.state,()=>[this.rig.target.x,this.rig.target.z]);const project=(x:number,z:number)=>this.project(x,z);
+    world.onCommand=(command,accepted,before,after)=>{this.sound.play(commandSounds(command.type,accepted,before,after));if(accepted)this.effects.show(commandEffects(command.type,command.payload,before,after),project);};
+    world.onTick=(before,after)=>{this.sound.play(tickSounds(before,after));this.effects.show(progressEffects(before,after),project);};
     for(const renderer of this.renderers)renderer.update(world.state);
     this.rig=new CameraRig(world.state,(x,z)=>this.terrain.sampleHeight(x,z));this.tools=new ToolController(world);
     this.pointer=new PointerRouter(canvas,this.rig,this.tools,this.terrain.meshes);
@@ -81,7 +85,7 @@ export class GameLoop {
   private unlockAudio=():void=>this.sound.unlock();
   private resize():void {const rect=this.canvas.getBoundingClientRect();this.renderer.setSize(rect.width,rect.height,false);this.rig.resize(rect.width,rect.height);}
   private frame=(now:number):void=>{
-    const dt=Math.min((now-this.last)/1000,.1);this.last=now;this.pointer.update(dt);this.terrain.animate(dt);this.water.animate(dt);this.coins.animate(dt);
+    const dt=Math.min((now-this.last)/1000,.1);this.last=now;this.pointer.update(dt);this.terrain.animate(dt);this.water.animate(dt);this.coins.animate(dt);this.effects.animate(dt);
     this.sun.target.position.copy(this.rig.target);this.sun.position.copy(this.rig.target).add(new Vector3(-50,90,40));
     this.renderer.render(this.scene,this.rig.camera);this.frameCount++;
     if(now-this.second>=1000){this.fps=this.frameCount*1000/(now-this.second);this.second=now;this.frameCount=0;this.world.tick();this.updateAmbience();}
@@ -104,5 +108,5 @@ export class GameLoop {
     });
     return {objects,meshes,instanced,sprites,texturedPlanes,largestPlaneM,textures:textures.size};
   }
-  dispose():void {cancelAnimationFrame(this.frameId);this.resizeObserver.disconnect();for(const unsubscribe of this.subscriptions)unsubscribe();this.canvas.removeEventListener('pointerdown',this.unlockAudio);this.pointer.dispose();this.overlay.dispose();this.ghost.dispose();for(const renderer of this.renderers)renderer.dispose();this.terrain.dispose();this.water.dispose();this.assets.dispose();this.renderer.dispose();this.world.onCommand=undefined;this.world.onTick=undefined;this.sound.dispose();this.world.dispose();Reflect.deleteProperty(window,'__debug');}
+  dispose():void {cancelAnimationFrame(this.frameId);this.resizeObserver.disconnect();for(const unsubscribe of this.subscriptions)unsubscribe();this.canvas.removeEventListener('pointerdown',this.unlockAudio);this.pointer.dispose();this.overlay.dispose();this.ghost.dispose();for(const renderer of this.renderers)renderer.dispose();this.terrain.dispose();this.water.dispose();this.assets.dispose();this.renderer.dispose();this.world.onCommand=undefined;this.world.onTick=undefined;this.sound.dispose();this.effects.dispose();this.world.dispose();Reflect.deleteProperty(window,'__debug');}
 }

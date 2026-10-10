@@ -74,7 +74,7 @@ export class WorldStore {
   /** Debug panel (docs/11 §10): server clock minus local clock, as last measured. */
   clockSkewMs(): number { return this.timeOffset; }
   /** Presentation hooks (sound effects): local command results and time ticks, with the state before and after. */
-  onCommand?: (type: CommandType, accepted: boolean, before: SimState, after: SimState) => void;
+  onCommand?: (command: Command, accepted: boolean, before: SimState, after: SimState) => void;
   onTick?: (before: SimState, after: SimState) => void;
   pendingCount(): number { return this.pending.length; }
   get online(): boolean { return this.transport !== null; }
@@ -103,7 +103,7 @@ export class WorldStore {
       return { state: this.state, cost: { cash: 0, wood: 0, stone: 0 }, dirtyZones: [], result: { commandId: command.commandId, accepted: false, code: 'REVISION_CONFLICT', revision: this.state.snapshot.revision, serverTime: this.now() } };
     }
     const before = this.state, execution = execute(this.state, command, this.now()); this.results.set(command.commandId, execution);
-    this.onCommand?.(command.type, execution.result.accepted, before, execution.state);
+    this.onCommand?.(command, execution.result.accepted, before, execution.state);
     if (execution.result.accepted) {
       this.state = execution.state; this.publish(execution.dirtyZones, true); this.message(t('valid'));
       if (this.transport) { this.pending.push(command); this.updateSync(); void this.flush(); } else this.save();
