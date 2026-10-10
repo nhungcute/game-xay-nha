@@ -1,7 +1,9 @@
-import { CellFlag, GRID, Surface, cellIndex, type Cell, type Cost, type ErrorCode, type Rect, type PlacedBuilding, type PlacedBridge } from '@xay-nha/contracts';
+import { CellFlag, cellIndex, type Cell, type Cost, type ErrorCode, type Rect, type PlacedBuilding, type PlacedBridge } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
-import { inBounds, isUnlocked, neighbors, type SimState } from './state';
+import { inBounds, isUnlocked, type SimState } from './state';
 import { footprintCells } from './footprint';
+import { isFarBank } from './banks';
+export { isFarBank } from './banks';
 
 export class RuleError extends Error {
   constructor(public readonly code: ErrorCode, message: string = code) { super(message); }
@@ -66,32 +68,6 @@ const REPEAT_ACTIONS: Record<string, [string, string?]> = {
   collect_cash: ['COLLECT', 'cash'], build_type: ['BUILD'], road_cells: ['ROAD', 'cells'], embank_cells: ['EMBANK', 'cells'], population: ['POPULATION'],
   harvest_crop: ['HARVEST'], sell_item: ['SELL'], produce_item: ['PRODUCED'], till_cells: ['TILL', 'cells'],
 };
-
-export function isFarBank(s: SimState, cells: Cell[]): boolean {
-  if (!cells.length) return false;
-  if (s.template.bankRegions) {
-    const regionAt = new Map<number, string>();
-    for (const region of s.template.bankRegions) for (const cell of region.cells) regionAt.set(cellIndex(...cell), region.id);
-    const home = new Set(s.template.entryCells.map(cell => regionAt.get(cellIndex(...cell))).filter((id): id is string => id !== undefined));
-    const target = regionAt.get(cellIndex(...cells[0]!));
-    return target !== undefined && !home.has(target) && cells.every(cell => regionAt.get(cellIndex(...cell)) === target)
-      && s.snapshot.bridges.some(bridge => bridge.status === 'ACTIVE'
-        && ((home.has(regionAt.get(cellIndex(...bridge.a)) ?? '') && regionAt.get(cellIndex(...bridge.b)) === target)
-          || (home.has(regionAt.get(cellIndex(...bridge.b)) ?? '') && regionAt.get(cellIndex(...bridge.a)) === target)));
-  }
-  const flood = (starts: Cell[]): Uint8Array => {
-    const visited = new Uint8Array(GRID * GRID), queue = [...starts];
-    for (const c of starts) visited[cellIndex(...c)] = 1;
-    for (let head = 0; head < queue.length; head++) for (const n of neighbors(queue[head]!)) {
-      const i = cellIndex(...n);
-      if (!visited[i] && s.surface[i] !== Surface.WATER) { visited[i] = 1; queue.push(n); }
-    }
-    return visited;
-  };
-  const home = flood(s.template.entryCells), target = flood(cells);
-  return cells.every(c => !home[cellIndex(...c)]) && s.snapshot.bridges.some(b => b.status === 'ACTIVE'
-    && ((home[cellIndex(...b.a)] && target[cellIndex(...b.b)]) || (home[cellIndex(...b.b)] && target[cellIndex(...b.a)])));
-}
 
 export function constructionCompleted(s: SimState, object: PlacedBuilding | PlacedBridge): void {
   addXp(s, Math.round(economy.xp.buildMultiplier * Math.sqrt(object.investedValue)));
