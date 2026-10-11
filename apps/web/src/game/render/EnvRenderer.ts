@@ -102,7 +102,7 @@ export class EnvRenderer {
   }
   private decorate(mesh: InstancedMesh, assetId: string): void {
     const material = Array.isArray(mesh.material) ? mesh.material[0]! : mesh.material;
-    applyWind(material);
+    applyWind(material, undefined, assetId.endsWith('_far'));
     if (assetId.startsWith('tree_') && !assetId.endsWith('_far')) {
       // Alpha-cutout shadows must follow the leaf silhouette and the sway — custom depth material per tree asset.
       const map = (material as Material & { map?: Texture | null }).map ?? null;

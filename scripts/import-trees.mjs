@@ -878,14 +878,19 @@ async function buildAll() {
       const farAtlas = packFarAtlas(farFrames);
       // The capture fits the model into a square of this side length, so the billboard plane matches it 1:1.
       const farSide = Math.max(built.measured.canopyWidthM * built.measured.sxz, built.measured.sourceHeightM * built.measured.sy) * PARAMETERS.capture.margin;
-      if (tree.family === 'bush') for (let i = 0; i < farAtlas.rgba.length; i += 4) {
-        farAtlas.rgba[i] = Math.round(farAtlas.rgba[i] / 32) * 32;
-        farAtlas.rgba[i + 1] = Math.round(farAtlas.rgba[i + 1] / 32) * 32;
-        farAtlas.rgba[i + 2] = Math.round(farAtlas.rgba[i + 2] / 32) * 32;
+      for (let i = 0; i < farAtlas.rgba.length; i += 4) {
+        farAtlas.rgba[i] = Math.round(farAtlas.rgba[i] * 0.62);
+        farAtlas.rgba[i + 1] = Math.round(farAtlas.rgba[i + 1] * 0.62);
+        farAtlas.rgba[i + 2] = Math.round(farAtlas.rgba[i + 2] * 0.62);
+        if (tree.family === 'bush') {
+          farAtlas.rgba[i] = Math.round(farAtlas.rgba[i] / 32) * 32;
+          farAtlas.rgba[i + 1] = Math.round(farAtlas.rgba[i + 1] / 32) * 32;
+          farAtlas.rgba[i + 2] = Math.round(farAtlas.rgba[i + 2] / 32) * 32;
+        }
       }
       const farPng = encodePng(farAtlas.rgba, farAtlas.width, farAtlas.height, true);
       validateFarPng(tree.id, farPng);
-      const far = writeGlb({ ...farGeometry(farSide, built.measured.canopyWidthM * built.measured.sxz, farFrames[0].width), png: farPng, alphaCutoff: PARAMETERS.alphaCutoff.far, generator: built.near.generator, unlit: tree.family === 'bush' });
+      const far = writeGlb({ ...farGeometry(farSide, built.measured.canopyWidthM * built.measured.sxz, farFrames[0].width), png: farPng, alphaCutoff: PARAMETERS.alphaCutoff.far, generator: built.near.generator, unlit: true });
       const caps = PARAMETERS.triangleCaps[tree.family];
       if (built.near.triangles > caps.near) throw new Error(`${tree.id}: ${built.near.triangles} near triangles exceed the ${caps.near} cap`);
       if (far.triangles > caps.far) throw new Error(`${tree.id}: ${far.triangles} far triangles exceed the ${caps.far} cap`);

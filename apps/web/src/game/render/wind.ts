@@ -11,7 +11,7 @@ export const WIND_AMPLITUDE = 0.02;
 
 const windTime = { value: 0 };
 const windStrength = { value: 1 };
-const patched = new WeakSet<Material>();
+const patched = new WeakMap<Material, string>();
 
 const WIND_UNIFORMS = 'uniform float uWindTime;\nuniform float uWindStrength;\nuniform float uWindAmplitude;\n';
 const WIND_CHUNK = `
@@ -32,16 +32,26 @@ export function tickWind(dt: number, strength: number): void {
   windStrength.value = strength;
 }
 
-export function applyWind(material: Material, amplitude = WIND_AMPLITUDE): void {
-  if (patched.has(material)) return;
-  patched.add(material);
+export function applyWind(material: Material, amplitude = WIND_AMPLITUDE, fadeTopQuad = false): void {
+  const key = `${amplitude}:${fadeTopQuad}`;
+  if (patched.get(material) === key) return;
+  patched.set(material, key);
   material.onBeforeCompile = shader => {
     shader.uniforms.uWindTime = windTime;
     shader.uniforms.uWindStrength = windStrength;
     shader.uniforms.uWindAmplitude = { value: amplitude };
-    shader.vertexShader = WIND_UNIFORMS + shader.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>\n${WIND_CHUNK}`);
+    const farFade = fadeTopQuad ? `
+      if (normal.y > 0.9) {
+        vec3 instanceOrigin = (modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
+        vec3 viewDirection = normalize(cameraPosition - instanceOrigin);
+        float viewElevation = degrees(asin(clamp(abs(viewDirection.y), 0.0, 1.0)));
+        float canopyScale = smoothstep(40.0, 60.0, viewElevation);
+        transformed.xz *= canopyScale;
+      }
+    ` : '';
+    shader.vertexShader = WIND_UNIFORMS + shader.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>\n${WIND_CHUNK}${farFade}`);
   };
-  material.customProgramCacheKey = () => `wind-${amplitude}`;
+  material.customProgramCacheKey = () => `wind-${key}`;
 }
 
 /** Shadow-pass material with the same alpha cutout and sway as the visible foliage. */
