@@ -138,23 +138,95 @@ Kiểm tra bằng mắt (mỗi kết luận kèm ảnh trong `docs/evidence/g4/t
   + nhãn trong game). Nếu thương mại hóa cần rà soát thêm về share-alike cho asset nhúng trong build game.
 - **Ngân sách city cao**: 241 calls / 534,874 tris — còn dư 59 calls / ~965k tris; nếu thêm nội dung môi trường
   cần giữ N=160/60 m hoặc hạ tam giác mức gần.
-- **Billboard từ trên cao** (pitch 75) mỏng — tradeoff của kỹ thuật 3 mặt phẳng đứng; nếu cần cải thiện: thêm 1
+- ~~**Billboard từ trên cao** (pitch 75) mỏng~~ — đã xử lý ở fix 2–3 (tấm ngang chụp từ trên, ẩn dần theo góc nhìn; mục 10). Ghi chú cũ: tradeoff của kỹ thuật 3 mặt phẳng đứng; nếu cần cải thiện: thêm 1
   mặt phẳng ngang với ảnh chụp từ trên (+2 tam giác).
 - **Đơn định**: capture billboard dùng Chrome + SwiftShader — nếu nâng Chrome lớn có thể lệch pixel → `--check`
   sẽ bắt và chỉ cần chạy lại import để làm mới.
 
+
+## 10. Sửa lỗi mức xa (fix 1 → fix 3)
+
+> Mục này được người review viết lại ngày 2026-10-11 sau khi bản fix 3 ghi đè mất nội dung fix 1–2, để trống mục 11
+> và còn sót ký tự hỏng. Mọi số liệu dưới đây đã được kiểm chứng lại trên máy (xem 10.4).
+
+### 10.1 Fix 1 — atlas mức xa trống (`c7c5194`, `1f81008`, `fc1a820`, `6f05d66`)
+
+- **Lỗi**: ngoài khoảng 160 cây mức gần quanh camera, rừng trên toàn map biến mất; ở đồ họa thấp (chỉ dùng mức xa)
+  mất gần hết cây. Báo cáo gốc (mục 1–5) đã ghi PASS sai cho phần này.
+- **Nguyên nhân gốc**: `captureBillboards` trong `scripts/import-trees.mjs` chỉ truyền `{ margin }` vào trang chụp,
+  trong khi trang dùng `light.elevationDeg`, nên góc ngẩng thành `NaN`, camera thành `NaN` và mọi ảnh chụp trống.
+  12 file `*_far.glb` chỉ nặng khoảng 2.872 byte. `--check` vẫn PASS vì script đơn định tái tạo đúng ảnh trống đó.
+- **Sửa**: truyền nguyên `PARAMETERS.capture`, `throw` khi tham số không hợp lệ; thêm cổng QC: mỗi tile độ phủ alpha
+  10–80%, ít nhất 2 màu, PNG ≥ 8 KB; thêm `scripts/tree-lod-qa.mjs` (chỉ số phủ cây far/near ≥ 0,6) và hook debug
+  `__debug.treeLod`, `__debug.envVisible`.
+- **Còn sót sau fix 1** (phát hiện khi review): farm `overview-75` far/near = **0,543 < 0,6 (FAIL)** nhưng không được
+  báo; bản sửa **chưa được deploy** (Docker và tunnel vẫn trả file 2.872 byte) dù báo cáo ghi đã deploy.
+
+### 10.2 Fix 2 — tấm ngang nhìn từ trên, atlas bụi nhỏ (`b0c4746`, `e8b3c81`, `44593f1`, `b6358ae`, `9b42243`, `b1a0807`, `baea1b1`)
+
+- Tile 3 của atlas (trước đây chép tile 0) dùng cho ảnh chụp từ trên xuống; mức xa thêm 1 tấm ngang ở 62% chiều cao
+  (6 → 8 tam giác, vẫn 1 draw call mỗi lô). Bụi mức xa dùng tile 128 px: khoảng 300 KB → 23 KB.
+- Chỉ số phủ far/near: city 0,944 / 1,153; farm 0,854 / 1,108 (4/4 PASS). Deploy đã xác minh theo byte.
+- **Còn sót sau fix 2** (phát hiện khi review): tấm ngang lộ thành hình "cái ô" hoặc "cây nấm" khi nhìn nghiêng; tán xa tối hơn hẳn
+  tán gần; mục 10 của báo cáo bị mất dấu tiếng Việt (ký tự thành `?`).
+
+### 10.3 Fix 3 — bỏ hiệu ứng "cái ô", khớp màu (`d2e74cd`, `34c07de`, `ed87070`, `53d9231`)
+
+- Tấm ngang ẩn hoặc hiện theo góc nhìn tới **từng instance** (`smoothstep` 40°–60°): nhìn nghiêng thì ẩn, nhìn từ trên thì hiện.
+- Nguyên nhân tán tối: billboard mức xa vẫn nhận ánh sáng của game trong khi texture đã chụp unlit, nên bị chiếu sáng hai lần.
+  Sửa: material mức xa chuyển sang unlit, RGB atlas nhân 0,62 để khớp độ sáng mức gần.
+- Thêm cổng QC độ sáng (chênh ≤ 15%) và sắc màu (chênh ≤ 20°) vào `tree-lod-qa.mjs`.
+
+| Bản đồ / góc | Phủ far/near (fix 1 → fix 2 → fix 3) | Độ sáng far / near | Chênh sáng | Chênh hue | Kết quả |
+|---|---|---:|---:|---:|---|
+| City oblique-45 | 0,728 → 0,944 → 0,787 | 63,3 / 70,6 | −10,3% | 1,9° | PASS |
+| City overview-75 | 0,614 → 1,153 → 1,087 | 73,2 / 82,1 | −10,9% | 0,0° | PASS |
+| Farm oblique-45 | 0,657 → 0,854 → 0,710 | 63,2 / 69,1 | −8,5% | 3,0° | PASS |
+| Farm overview-75 | **0,543 (FAIL)** → 1,108 → 1,057 | 69,1 / 75,9 | −9,0% | 0,9° | PASS |
+
+Ảnh bằng chứng: `docs/evidence/g4/trees/lod-zoom-40/110/220.jpg` (không còn hình "cái ô", ranh giới gần/xa khó nhận ra),
+`docs/evidence/g4/trees/lod-qa/{city,farm}-{oblique-45,overview-75}-{far,near}.png` (tán tròn, màu gần với mức gần).
+So sánh cùng góc trước D030: `git show e41bea2:docs/evidence/g4/full-world/farm-high-overview.jpg`.
+
+### 10.4 QA sau fix 3 (người review chạy lại trên máy)
+
+| # | Kiểm tra | Kết quả |
+|---|---|---|
+| 1 | `node scripts/import-trees.mjs --check` / `node scripts/import-model-pack.mjs --check` | PASS / PASS |
+| 2 | `pnpm check` | PASS — 725/725 test |
+| 3 | `pnpm test:api` / `g2-e2e` / `g3-e2e` | 33/33, 13/13, 26/26 PASS (E2E không được chạy lại trong các lượt fix; người review đã chạy lại sau fix 3) |
+| 4 | `tree-lod-qa.mjs` | 4/4 PASS (bảng 10.3) |
+| 5 | `g4-full-world.mjs` | mọi `checks` = true (bảng dưới) |
+| 6 | Mã hóa báo cáo | đọc bằng Node UTF-8, không còn ký tự hỏng |
+
+| Bản đồ × đồ họa (overview-75) | Draw call | Tam giác | FPS | p95 (ms) |
+|---|---:|---:|---:|---:|
+| City cao | 241 | 538.058 | 41 | 27,6 |
+| City thấp | 108 | 413.708 | 56 | 18,6 |
+| Farm cao | 251 | 271.914 | 57 | 19,3 |
+| Farm thấp | 104 | 137.478 | 55 | 29,9 |
+
+Ngân sách: desktop ≤ 300 draw call / 1,5M tam giác; đồ họa thấp ≤ 150 / 500k — đều đạt.
+
 ## 11. Commit và deploy nội bộ
 
+**Deploy fix 3** (smoke lúc 2026-10-11 14:29Z: G4 smoke PASS). Người review xác minh theo byte:
 
-## 10. D030-fix3 ? loại bỏ ?cái ô? và khớp màu
+| File | Local | Docker :8090 | Tunnel |
+|---|---:|---:|---:|
+| `env/tree_deciduous_01_far.glb` | 159.210 | 159.210 | 159.210 |
+| `env-by-sa/tree_conifer_01_far.glb` | 191.584 | 191.584 | 191.584 |
+| `env/bush_01_far.glb` | 21.739 | 21.739 | 21.739 |
+| Bundle JS | `index-CAy8ge0Q.js` | cùng | cùng |
 
-**Kết quả: PASS.** Quad ngang fade theo góc nhìn từng instance bằng smoothstep 40?60°. Billboard far chuyển sang unlit; RGB atlas nhân 0,62 để khớp mức sáng near. Nguyên nhân tối trước đó là far vẫn nhận ánh sáng game trong khi texture bake đã unlit.
+Tunnel trả 404 cho `/_glb-viewer.html`.
 
-| Map/góc | Coverage far/near | Sáng far/near | Chênh sáng | Chênh hue | Kết quả |
-|---|---:|---:|---:|---:|---|
-| City oblique-45 | 0,787 | 63,38 / 70,63 | -10,3% | 1,7° | PASS |
-| City overview-75 | 1,084 | 73,34 / 82,21 | -10,8% | 0,2° | PASS |
-| Farm oblique-45 | 0,710 | 63,15 / 69,05 | -8,5% | 3,0° | PASS |
-| Farm overview-75 | 1,057 | 69,09 / 75,94 | -9,0% | 0,9° | PASS |
+**Danh sách commit D030**
 
-Tất cả đạt coverage >=0,6, chênh sáng <=15% và hue <=20°. QA tree-lod 4/4 PASS; deploy fix3 chưa chạy. Kiểm tra UTF-8 bằng Node PASS, không có replacement character.
+| Đợt | Commit |
+|---|---|
+| Gốc | `8e702ef` tree import script, config · `5a0c873` tree/bush GLBs, manifest and credits · `a27a0fd` near/far tree LOD, wind, credits panel + tests · `2aff8c6` evidence, decision and report · `f941436` block the debug GLB viewer in nginx · `0b32e0d` final smoke evidence |
+| Fix 1 | `c7c5194` pass capture elevation; alpha-coverage QC gate · `1f81008` rebuild far billboards · `fc1a820` far-LOD coverage QA script and debug hook · `6f05d66` corrected report |
+| Fix 2 | `b0c4746` top-down canopy quad; smaller bush atlas · `e8b3c81` rebuild far billboards with top view · `44593f1` far-LOD size and top-tile checks · `b6358ae`, `9b42243`, `b1a0807`, `baea1b1` report, deploy and smoke evidence |
+| Fix 3 | `d2e74cd` fade the far canopy quad by view angle; match far/near tone · `34c07de` far/near brightness gate · `ed87070` fix 3 report, evidence and deploy verification · `53d9231` record tone-matched far asset sizes |
+| Review | commit sửa báo cáo này (mục 10–11, ảnh E2E sau fix 3) |

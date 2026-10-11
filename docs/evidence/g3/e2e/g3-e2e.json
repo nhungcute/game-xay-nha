@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:5191",
-  "at": "2026-10-11T11:32:07.037Z",
+  "at": "2026-10-11T14:44:36.620Z",
   "timings": {
     "cityTutorialSeconds": 18
   },
@@ -8,7 +8,7 @@
     {
       "name": "city character created with username + PIN",
       "ok": true,
-      "detail": "Thị Trưởng 38557"
+      "detail": "Thị Trưởng 87328"
     },
     {
       "name": "tutorial hint from \"Bác Tư\" is visible with the Clear tool highlighted",
@@ -133,8 +133,8 @@
       "name": "10 map switches: JS heap grows < 30 %",
       "ok": true,
       "detail": {
-        "beforeMB": 21.9,
-        "afterMB": 22.8
+        "beforeMB": 21.6,
+        "afterMB": 22.7
       }
     },
     {
@@ -153,7 +153,7 @@
       "name": "chromium-pixel7: WebGL renders (draw calls > 0)",
       "ok": true,
       "detail": {
-        "fps": 26.9,
+        "fps": 31.8,
         "drawCalls": 55
       }
     },
@@ -169,7 +169,7 @@
       "name": "webkit-iphone13: WebGL renders (draw calls > 0)",
       "ok": true,
       "detail": {
-        "fps": 18.4,
+        "fps": 17.5,
         "drawCalls": 62
       }
     },
