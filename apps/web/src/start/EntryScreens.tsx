@@ -5,14 +5,21 @@ import { money } from '../i18n';
 import { EntryIcon } from './EntryIcon';
 import { EntryHeading } from './StartShell';
 
-const NAME_ERRORS: Record<string, string> = {
+const ERRORS: Record<string, string> = {
   NAME_LENGTH: 'Tên cần từ 3 đến 20 ký tự.', NAME_CHARACTERS: 'Chỉ dùng chữ cái (có dấu), số và một khoảng trắng giữa các từ.',
   NAME_BLOCKED: 'Tên này không phù hợp, hãy chọn tên khác.', CHARACTER_EXISTS: 'Bạn đã có nhân vật ở bản đồ này.',
+  USERNAME_TAKEN: 'Tên này đã có người dùng. Nếu đó là bạn, hãy đăng nhập bằng mã PIN.', INVALID_PIN: 'Mã PIN gồm 4 đến 6 chữ số.',
+  INVALID_LOGIN: 'Sai tên hoặc mã PIN.', LOGIN_LOCKED: 'Nhập sai PIN quá nhiều lần. Tên này tạm khóa 15 phút.',
   RATE_LIMITED: 'Bạn thao tác quá nhiều lần, hãy thử lại sau.', MAP_UNAVAILABLE: 'Bản đồ này chưa mở.', NETWORK: 'Không kết nối được máy chủ.',
-  INVALID_RECOVERY_CODE: 'Mã khôi phục không đúng.',
+  UNAUTHORIZED: 'Phiên đăng nhập đã hết, hãy đăng nhập lại.',
 };
-export const errorMessage = (error: unknown): string => error instanceof ApiError
-  ? NAME_ERRORS[error.code] ?? `Lỗi: ${error.code}` : error instanceof Error ? error.message : String(error);
+export const errorMessage = (error: unknown): string => {
+  if (!(error instanceof ApiError)) return error instanceof Error ? error.message : String(error);
+  const detail = error.detail as { attemptsLeft?: number; retryAfterSeconds?: number } | undefined;
+  if (error.code === 'INVALID_LOGIN' && detail?.attemptsLeft !== undefined) return `Sai mã PIN. Còn ${detail.attemptsLeft} lần thử trước khi tạm khóa.`;
+  if (error.code === 'LOGIN_LOCKED' && detail?.retryAfterSeconds) return `Nhập sai PIN quá nhiều lần. Thử lại sau ${Math.ceil(detail.retryAfterSeconds / 60)} phút.`;
+  return ERRORS[error.code] ?? `Lỗi: ${error.code}`;
+};
 
 const MAPS = {
   city: { title: 'Thành phố', label: 'Phố biển', text: 'Từ ngôi nhà đầu tiên đến một khu phố nhộn nhịp. Xây dựng, kinh doanh và ngắm thành phố lớn lên.',
@@ -22,14 +29,15 @@ const MAPS = {
 };
 const MAP_KINDS = ['city', 'farm'] as const;
 const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map(word => [...word][0] ?? '').join('').toLocaleUpperCase('vi');
+const PIN = /^\d{4,6}$/;
 
 function MapArtwork({ kind, className = '' }: { kind: MapKind; className?: string }) {
   return <div className={`entry-art ${kind} ${className}`} aria-hidden="true"/>;
 }
 
-export function MapSelect({ maps, characters, onPlay, onCreate, onRecover }: {
-  maps: MapInfo[]; characters: CharacterSummary[]; onPlay: (character: CharacterSummary) => void;
-  onCreate: (kind: MapKind) => void; onRecover: () => void;
+export function MapSelect({ maps, characters, signedIn, busyKind, onPlay, onCreate, onLogin }: {
+  maps: MapInfo[]; characters: CharacterSummary[]; signedIn: string | null; busyKind: MapKind | null;
+  onPlay: (character: CharacterSummary) => void; onCreate: (kind: MapKind) => void; onLogin: () => void;
 }) {
   return <>
     <section className="entry-hero" aria-labelledby="welcome-title">
@@ -38,7 +46,7 @@ export function MapSelect({ maps, characters, onPlay, onCreate, onRecover }: {
         <h1 id="welcome-title">Một nơi nhỏ.<br/><em>Ước mơ lớn.</em></h1>
         <p>Xây một ngôi nhà, vun một khu vườn.<br/>Bắt đầu câu chuyện của bạn, từ hôm nay.</p>
         <div className="entry-hero-detail"><span className="entry-leaf-stamp"><EntryIcon name="leaf"/></span>
-          <span>Không cần vội vàng.<br/><strong>Vùng đất của bạn luôn chờ bạn trở về.</strong></span>
+          <span>{signedIn ? <>Chào mừng trở lại,<br/><strong>{signedIn}.</strong></> : <>Chỉ cần một cái tên và mã PIN.<br/><strong>Vào lại từ bất kỳ máy nào.</strong></>}</span>
         </div>
       </div>
       <div className="entry-hero-scene" role="img" aria-label="Minh họa phố biển và nông trại bên dòng sông">
@@ -65,12 +73,12 @@ export function MapSelect({ maps, characters, onPlay, onCreate, onRecover }: {
               <p className="map-description">{map.text}</p>
               <div className="map-features">{map.features.map(feature => <span key={feature}>{feature}</span>)}</div>
               {character && <div className="map-character"><span className="character-avatar">{initials(character.displayName)}</span>
-                <div><p className="who">{character.displayName}<small>#{character.tag}</small></p>
+                <div><p className="who">{character.displayName}</p>
                   <p>Cấp {character.level} <span>·</span> Tài sản {money(character.netWorth)}</p></div>
               </div>}
               {character ? <button type="button" className="primary map-play" onClick={() => onPlay(character)}>Chơi tiếp<EntryIcon name="arrow"/></button>
-                : <button type="button" className="primary map-play" disabled={!available} onClick={() => onCreate(kind)}>
-                  {available ? 'Tạo nhân vật' : 'Sắp mở'}<EntryIcon name={available ? 'arrow' : 'lock'}/>
+                : <button type="button" className="primary map-play" disabled={!available || busyKind !== null} onClick={() => onCreate(kind)}>
+                  {!available ? 'Sắp mở' : busyKind === kind ? 'Đang tạo…' : 'Tạo nhân vật'}<EntryIcon name={available ? 'arrow' : 'lock'}/>
                 </button>}
             </div>
           </article>;
@@ -80,31 +88,42 @@ export function MapSelect({ maps, characters, onPlay, onCreate, onRecover }: {
         <div><h3>Sinh thái <span>Hẹn một ngày không xa</span></h3><p>Hồ, đầm và rừng. Một vùng đất mới đang được ươm mầm.</p></div>
         <span className="eco-lock"><EntryIcon name="lock"/> Sắp ra mắt</span>
       </article>
-      <div className="entry-recover-invitation"><EntryIcon name="key"/><span>Đã có một vùng đất của riêng mình?</span>
-        <button type="button" className="link" onClick={onRecover}>Tôi có mã khôi phục<EntryIcon name="arrow"/></button>
-      </div>
+      {!signedIn && <div className="entry-recover-invitation"><EntryIcon name="key"/><span>Đã có nhân vật?</span>
+        <button type="button" className="link" onClick={onLogin}>Đăng nhập bằng tên và mã PIN<EntryIcon name="arrow"/></button>
+      </div>}
     </section>
   </>;
 }
 
-export function CreateCharacter({ kind, suggestion, hasOther, onBack, onCreated }: {
-  kind: MapKind; suggestion: string; hasOther: boolean; onBack: () => void;
-  onCreated: (character: CharacterSummary, code?: string) => void;
+function PinField({ id, label, value, onChange, disabled, autoComplete, describedBy }: {
+  id: string; label: string; value: string; onChange: (value: string) => void; disabled: boolean; autoComplete: string; describedBy?: string;
 }) {
-  const [name, setName] = useState(suggestion), [busy, setBusy] = useState(false), [error, setError] = useState('');
+  return <div className="field"><label htmlFor={id}>{label}</label><span className="field-input-wrap"><input id={id} type="password"
+    inputMode="numeric" pattern="[0-9]*" maxLength={6} autoComplete={autoComplete} required value={value} disabled={disabled}
+    placeholder="4–6 chữ số" aria-describedby={describedBy} onChange={event => onChange(event.target.value.replace(/\D/g, '').slice(0, 6))}/></span></div>;
+}
+
+/** D027 flow 2 — new player: username + PIN (twice) + the chosen map. */
+export function RegisterForm({ kind, onBack, onLogin, onRegistered }: {
+  kind: MapKind; onBack: () => void; onLogin: () => void; onRegistered: (username: string, character: CharacterSummary) => void;
+}) {
+  const [name, setName] = useState(''), [pin, setPin] = useState(''), [pin2, setPin2] = useState('');
+  const [busy, setBusy] = useState(false), [error, setError] = useState(''), [taken, setTaken] = useState(false);
   const map = MAPS[kind];
+  const mismatch = pin2.length > 0 && pin !== pin2;
+  const ready = [...name.trim()].length >= 3 && PIN.test(pin) && pin === pin2;
   const submit = async () => {
-    if (busy) return;
-    setBusy(true); setError('');
+    if (busy || !ready) return;
+    setBusy(true); setError(''); setTaken(false);
     try {
-      const result = await api.createCharacter(kind, name);
-      if (result.token) storage.setToken(result.token);
-      onCreated(result.character, result.recoveryCode);
-    } catch (cause) { setError(errorMessage(cause)); } finally { setBusy(false); }
+      const result = await api.register(name, pin, kind);
+      storage.setToken(result.token);
+      onRegistered(result.username, result.character);
+    } catch (cause) { setError(errorMessage(cause)); setTaken(cause instanceof ApiError && cause.code === 'USERNAME_TAKEN'); } finally { setBusy(false); }
   };
   return <>
     <EntryHeading eyebrow="02 / LÀM QUEN MỘT CHÚT" title={<>Vùng đất mới,<br/><em>mang tên bạn.</em></>}
-      description="Một cái tên thân quen. Một khởi đầu thật đẹp."/>
+      description="Chọn một cái tên và mã PIN để lần sau vào lại từ bất kỳ máy nào."/>
     <div className={`entry-form-layout create-layout ${kind}`}>
       <aside className="character-preview" aria-label="Xem trước nhân vật">
         <div className="character-preview-art"><MapArtwork kind={kind}/><span className="preview-map"><EntryIcon name={map.icon}/>{map.title}</span></div>
@@ -116,83 +135,58 @@ export function CreateCharacter({ kind, suggestion, hasOther, onBack, onCreated 
       </aside>
       <form className="entry-form" onSubmit={event => { event.preventDefault(); void submit(); }} aria-busy={busy}>
         <span className="form-top-icon"><EntryIcon name={map.icon}/></span>
-        <h2>Tạo nhân vật</h2><p className="form-description">Bạn muốn mọi người gọi mình là gì?</p>
-        <div className="field"><label htmlFor="character-name">Tên nhân vật</label><span className="field-input-wrap"><input id="character-name"
-          name="displayName" autoComplete="nickname" autoFocus required maxLength={20} value={name} disabled={busy}
-          placeholder="Ví dụ: An Nhiên" onChange={event => setName(event.target.value)}
-          aria-invalid={!!error} aria-describedby={`character-hint${error ? ' character-error' : ''}`}/>
+        <h2>Tạo nhân vật mới</h2><p className="form-description">Tên này là tên đăng nhập của bạn.</p>
+        <div className="field"><label htmlFor="reg-username">Tên người chơi</label><span className="field-input-wrap"><input id="reg-username"
+          name="username" autoComplete="username" autoFocus required maxLength={20} value={name} disabled={busy}
+          placeholder="Ví dụ: An Nhiên" onChange={event => setName(event.target.value)} aria-invalid={taken} aria-describedby="reg-hint"/>
           <span className="name-counter" aria-hidden="true">{[...name].length}/20</span></span></div>
-        <p className="field-hint" id="character-hint">3–20 ký tự. Dùng chữ có dấu, số và khoảng trắng.</p>
-        {error && <p className="error entry-error" id="character-error" role="alert">{error}</p>}
-        <div className="entry-note"><EntryIcon name="leaf"/><p>{hasOther
-          ? 'Đây là một khởi đầu riêng: cấp, tiền và tài sản từ bản đồ khác không chuyển sang.'
-          : 'Bắt đầu từ cấp 1. Bác Tư sẽ hướng dẫn bạn xây nhà và làm quen với vùng đất.'}</p></div>
-        <button className="primary wide entry-submit" disabled={busy || [...name.trim()].length < 3}>
-          {busy ? 'Đang tạo…' : 'Vào chơi'}<EntryIcon name="arrow"/></button>
+        <p className="field-hint" id="reg-hint">3–20 ký tự, chữ có dấu, số và khoảng trắng. Không trùng với người khác.</p>
+        <PinField id="reg-pin" label="Mã PIN" value={pin} onChange={setPin} disabled={busy} autoComplete="new-password" describedBy="pin-hint"/>
+        <PinField id="reg-pin2" label="Nhập lại mã PIN" value={pin2} onChange={setPin2} disabled={busy} autoComplete="new-password"/>
+        <p className={`field-hint ${mismatch ? 'error' : ''}`} id="pin-hint">{mismatch ? 'Hai mã PIN chưa khớp.' : '4–6 chữ số. Ghi nhớ mã này để đăng nhập trên máy khác.'}</p>
+        {error && <p className="error entry-error" role="alert">{error}{taken && <> <button type="button" className="link" onClick={onLogin}>Đăng nhập</button></>}</p>}
+        <button className="primary wide entry-submit" disabled={busy || !ready}>{busy ? 'Đang tạo…' : 'Tạo nhân vật & vào chơi'}<EntryIcon name="arrow"/></button>
         <button type="button" className="entry-back" onClick={onBack} disabled={busy}><EntryIcon name="back"/>Chọn vùng đất khác</button>
       </form>
     </div>
   </>;
 }
 
-function RecoveryStory() {
+function ReturnStory() {
   return <aside className="recovery-story">
     <div className="recovery-story-art" aria-hidden="true"/>
     <div className="recovery-story-copy"><span className="story-icon"><EntryIcon name="home"/></span>
-      <h2>Nhà vẫn ở đây.<br/><em>Chỉ chờ bạn trở về.</em></h2><p>Một mã khôi phục để trở lại với tất cả nhân vật và vùng đất của bạn.</p>
+      <h2>Nhà vẫn ở đây.<br/><em>Chỉ chờ bạn trở về.</em></h2><p>Tên người chơi và mã PIN đưa bạn về với tất cả nhân vật và vùng đất của mình, trên bất kỳ máy nào.</p>
       <span className="story-signature">Hẹn gặp lại, người hàng xóm.</span>
     </div>
   </aside>;
 }
 
-export function RecoveryCode({ code, onContinue }: { code: string; onContinue: () => void }) {
-  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'unavailable'>('idle'), [saved, setSaved] = useState(false);
-  const copy = async () => {
-    try {
-      if (!navigator.clipboard) throw new Error('Clipboard unavailable');
-      await navigator.clipboard.writeText(code); setCopyState('copied');
-    } catch { setCopyState('unavailable'); }
-  };
-  return <>
-    <EntryHeading eyebrow="03 / GIỮ CHÌA KHÓA NGÔI NHÀ" title={<>Một mã nhỏ.<br/><em>Giữ cả vùng đất.</em></>}
-      description="Lưu lại trước khi bắt đầu hành trình nhé."/>
-    <div className="entry-form-layout"><RecoveryStory/><section className="entry-form recovery-code-panel">
-      <span className="form-top-icon"><EntryIcon name="key"/></span><h2>Mã khôi phục của bạn</h2>
-      <p className="form-description">Mã chỉ hiện <strong>một lần</strong>. Dùng khi đổi máy hoặc xóa dữ liệu trình duyệt.</p>
-      <p className="code" aria-label="Mã khôi phục" tabIndex={0}>{code}</p>
-      <button type="button" className="entry-copy" onClick={() => { void copy(); }}><EntryIcon name={copyState === 'copied' ? 'check' : 'key'}/>
-        {copyState === 'copied' ? 'Đã sao chép' : 'Sao chép'}</button>
-      <p className="copy-feedback" role="status">{copyState === 'unavailable' ? 'Không sao chép tự động được. Hãy chọn mã và lưu thủ công.' : copyState === 'copied' ? 'Đã sao chép mã. Hãy cất ở nơi riêng tư.' : 'Lưu mã ở nơi riêng tư, không chia sẻ với người khác.'}</p>
-      <label className="check entry-saved"><input type="checkbox" checked={saved} onChange={event => setSaved(event.target.checked)}/>Tôi đã lưu mã</label>
-      <button type="button" className="primary wide entry-submit" onClick={onContinue}>Tiếp tục<EntryIcon name="arrow"/></button>
-    </section></div>
-  </>;
-}
-
-export function Recover({ onBack, onRecovered }: { onBack: () => void; onRecovered: (characters: CharacterSummary[]) => void }) {
-  const [code, setCode] = useState(''), [busy, setBusy] = useState(false), [error, setError] = useState('');
+/** D027 flow 1 — returning player: username + PIN. */
+export function LoginForm({ onBack, onLoggedIn }: { onBack: () => void; onLoggedIn: (username: string, characters: CharacterSummary[]) => void }) {
+  const [name, setName] = useState(''), [pin, setPin] = useState(''), [busy, setBusy] = useState(false), [error, setError] = useState('');
   const submit = async () => {
     if (busy) return;
     setBusy(true); setError('');
-    try { const result = await api.recover(code); storage.setToken(result.token); onRecovered(result.characters); }
-    catch (cause) { setError(errorMessage(cause)); } finally { setBusy(false); }
+    try { const result = await api.login(name, pin); storage.setToken(result.token); onLoggedIn(result.username, result.characters); }
+    catch (cause) { setError(errorMessage(cause)); setPin(''); } finally { setBusy(false); }
   };
   return <>
     <EntryHeading eyebrow="CHÀO MỪNG NGƯỜI QUEN" title={<>Về nhà thôi,<br/><em>người hàng xóm.</em></>}
-      description="Nhập mã đã lưu để tiếp tục câu chuyện của bạn."/>
-    <div className="entry-form-layout"><RecoveryStory/>
+      description="Nhập tên người chơi và mã PIN để tiếp tục câu chuyện của bạn."/>
+    <div className="entry-form-layout"><ReturnStory/>
       <form className="entry-form" onSubmit={event => { event.preventDefault(); void submit(); }} aria-busy={busy}>
         <span className="form-top-icon"><EntryIcon name="key"/></span><h2>Đăng nhập</h2>
-        <p className="form-description">Khôi phục nhân vật bằng mã của bạn.</p>
-        <label className="field" htmlFor="recovery-code">Mã khôi phục<input id="recovery-code" name="recoveryCode" autoFocus
-          autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder="XXXX-XXXX-XXXX" value={code} disabled={busy}
-          onChange={event => setCode(event.target.value)} aria-invalid={!!error} aria-describedby={`recovery-hint${error ? ' recovery-error' : ''}`}/></label>
-        <p className="field-hint" id="recovery-hint">Mã gồm 12 chữ cái và số, được cấp khi tạo nhân vật đầu tiên.</p>
-        {error && <p className="error entry-error" id="recovery-error" role="alert">{error}</p>}
-        <div className="entry-note"><EntryIcon name="lock"/><p>Chỉ cần mã khôi phục. Không cần mật khẩu hay email.</p></div>
-        <button className="primary wide entry-submit" disabled={busy || code.replace(/[\s-]/g, '').length < 12}>
-          {busy ? 'Đang khôi phục…' : 'Khôi phục'}<EntryIcon name="arrow"/></button>
-        <button type="button" className="entry-back" onClick={onBack} disabled={busy}><EntryIcon name="back"/>Bắt đầu một vùng đất mới</button>
+        <p className="form-description">Dùng tên và mã PIN bạn đã đặt khi tạo nhân vật.</p>
+        <div className="field"><label htmlFor="login-username">Tên người chơi</label><span className="field-input-wrap"><input id="login-username"
+          name="username" autoComplete="username" autoFocus required maxLength={20} value={name} disabled={busy}
+          onChange={event => setName(event.target.value)} aria-invalid={!!error}/></span></div>
+        <PinField id="login-pin" label="Mã PIN" value={pin} onChange={setPin} disabled={busy} autoComplete="current-password"/>
+        {error && <p className="error entry-error" role="alert">{error}</p>}
+        <div className="entry-note"><EntryIcon name="lock"/><p>Nhập sai PIN 5 lần, tên sẽ bị tạm khóa 15 phút để bảo vệ nhân vật của bạn.</p></div>
+        <button className="primary wide entry-submit" disabled={busy || [...name.trim()].length < 3 || !PIN.test(pin)}>
+          {busy ? 'Đang đăng nhập…' : 'Đăng nhập'}<EntryIcon name="arrow"/></button>
+        <button type="button" className="entry-back" onClick={onBack} disabled={busy}><EntryIcon name="back"/>Tạo nhân vật mới</button>
       </form>
     </div>
   </>;

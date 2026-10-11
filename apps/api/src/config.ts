@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 export interface Config {
   databaseUrl: string; port: number; host: string; tokenPepper: string; logLevel: string;
-  worldsDir: string; migrationsDir: string; trustProxy: boolean; accountsPerHour: number;
+  worldsDir: string; migrationsDir: string; trustProxy: boolean; accountsPerHour: number; loginsPerHour: number;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
@@ -19,5 +19,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     trustProxy: env.TRUST_PROXY !== '0',
     // docs/11 §4.2: 5 new accounts per hour per IP; raise only for local testing (ACCOUNTS_PER_HOUR).
     accountsPerHour: Number(env.ACCOUNTS_PER_HOUR ?? 5),
+    // D027: username + PIN login attempts per hour per IP (per-username lockout is separate).
+    loginsPerHour: Number(env.LOGINS_PER_HOUR ?? 30),
   };
 }

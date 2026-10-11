@@ -25,16 +25,19 @@ let app: FastifyInstance;
 
 function makeApp(limits?: AppDeps['limits']): FastifyInstance {
   return buildApp({ db, templates, tokenPepper: 'integration-test-pepper', clock, logLevel: 'silent',
-    limits: limits ?? { accountsPerHour: 10_000, recoverPerHour: 10_000, commandsPerSecond: 10_000, commandsPerMinute: 100_000 } });
+    limits: limits ?? { accountsPerHour: 10_000, loginsPerHour: 10_000, commandsPerSecond: 10_000, commandsPerMinute: 100_000 } });
 }
 async function call(method: 'GET' | 'POST' | 'DELETE', url: string, body?: unknown, token?: string) {
   const res = await app.inject({ method, url, payload: body as object | undefined, headers: token ? { authorization: `Bearer ${token}` } : {} });
   return { status: res.statusCode, body: res.body ? JSON.parse(res.body) : undefined };
 }
-async function newPlayer(mapKind: 'farm' | 'city' = 'farm', displayName = 'Nông Dân') {
-  const r = await call('POST', '/api/characters', { mapKind, displayName });
+let serial = 0;
+/** D027: a new player registers a unique username + PIN with the first map (usernames get a counter suffix). */
+async function newPlayer(mapKind: 'farm' | 'city' = 'farm', base = 'Nông Dân', pin = '2468') {
+  const username = `${base} ${++serial}`;
+  const r = await call('POST', '/api/auth/register', { username, pin, mapKind });
   expect(r.status).toBe(201);
-  return { token: r.body.token as string, recoveryCode: r.body.recoveryCode as string, worldId: r.body.character.id as string, accountId: r.body.accountId as string };
+  return { token: r.body.token as string, username, pin, worldId: r.body.character.id as string, accountId: r.body.accountId as string };
 }
 async function snapshotOf(token: string, worldId: string): Promise<{ snapshot: WorldSnapshot; stateHash: string }> {
   const r = await call('GET', `/api/worlds/${worldId}`, undefined, token);
@@ -57,47 +60,91 @@ beforeAll(async () => {
 beforeEach(() => { app = makeApp(); now += 3_600_000; });
 afterAll(async () => { await pool.end(); });
 
-describe('accounts and characters', () => {
-  it('creates account + character without a token and returns token + recovery code once', async () => {
-    const r = await call('POST', '/api/characters', { mapKind: 'farm', displayName: '  Trần   Văn  An ' });
+describe('accounts: username + PIN (D027)', () => {
+  it('register creates account + session + first character; the name is the username', async () => {
+    const r = await call('POST', '/api/auth/register', { username: '  Trần   Văn  An ', pin: '482913', mapKind: 'farm' });
     expect(r.status).toBe(201);
     expect(r.body.token).toMatch(/^[A-Za-z0-9_-]{43}$/);
-    expect(r.body.recoveryCode).toMatch(/^[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$/);
+    expect(r.body.recoveryCode).toBeUndefined();
+    expect(r.body.username).toBe('Trần Văn An');
     expect(r.body.character).toMatchObject({ mapKind: 'farm', displayName: 'Trần Văn An', level: 1, cash: 2000, netWorth: 2500 });
-    expect(r.body.character.tag).toMatch(/^\d{4}$/);
     const me = await call('GET', '/api/me', undefined, r.body.token);
-    expect(me.body.characters).toHaveLength(1);
+    expect(me.body).toMatchObject({ username: 'Trần Văn An' }); expect(me.body.characters).toHaveLength(1);
+  });
+  it('usernames are unique ignoring case and repeated spaces (diacritics still count)', async () => {
+    expect((await call('POST', '/api/auth/register', { username: 'Trùng Tên', pin: '1111', mapKind: 'farm' })).status).toBe(201);
+    const again = await call('POST', '/api/auth/register', { username: '  trùng   TÊN ', pin: '2222', mapKind: 'city' });
+    expect(again.status).toBe(409); expect(again.body.error).toBe('USERNAME_TAKEN');
+    expect((await call('POST', '/api/auth/register', { username: 'Trung Ten', pin: '3333', mapKind: 'farm' })).status).toBe(201);
   });
   it.each([['ab', 'NAME_LENGTH'], ['x'.repeat(21), 'NAME_LENGTH'], ['tên<script>', 'NAME_CHARACTERS'], ['a  b@', 'NAME_CHARACTERS'], ['admin', 'NAME_BLOCKED'], [42, 'NAME_CHARACTERS']])(
-    'rejects invalid name %j with %s', async (displayName, code) => {
-      const r = await call('POST', '/api/characters', { mapKind: 'farm', displayName });
+    'rejects invalid username %j with %s', async (username, code) => {
+      const r = await call('POST', '/api/auth/register', { username, pin: '1234', mapKind: 'farm' });
       expect(r.status).toBe(400); expect(r.body.error).toBe(code);
     });
+  it.each([['123'], ['1234567'], ['12a4'], [1234], [undefined]])('rejects PIN %j', async pin => {
+    const r = await call('POST', '/api/auth/register', { username: `Pin Sai ${++serial}`, pin, mapKind: 'farm' });
+    expect(r.status).toBe(400); expect(r.body.error).toBe('INVALID_PIN');
+  });
   it('rejects unknown maps', async () => {
-    expect((await call('POST', '/api/characters', { mapKind: 'eco', displayName: 'Người Chơi' })).body.error).toBe('INVALID_MAP');
+    expect((await call('POST', '/api/auth/register', { username: 'Người Chơi', pin: '1234', mapKind: 'eco' })).body.error).toBe('INVALID_MAP');
   });
-  it('same display name gets different tags', async () => {
-    const tags = new Set<string>();
-    for (let i = 0; i < 5; i++) tags.add((await call('POST', '/api/characters', { mapKind: 'farm', displayName: 'Trùng Tên' })).body.character.tag);
-    expect(tags.size).toBe(5);
+  it('login on another device: same account and characters, both sessions stay valid; wrong PIN is generic', async () => {
+    const p = await newPlayer('farm', 'Hai Máy', '975310');
+    const r = await call('POST', '/api/auth/login', { username: p.username.toUpperCase(), pin: '975310' });
+    expect(r.status).toBe(200);
+    expect(r.body).toMatchObject({ accountId: p.accountId, username: p.username });
+    expect(r.body.characters.map((c: { id: string }) => c.id)).toEqual([p.worldId]);
+    expect(r.body.token).not.toBe(p.token);
+    expect((await call('GET', '/api/me', undefined, p.token)).status).toBe(200);
+    expect((await call('GET', '/api/me', undefined, r.body.token)).status).toBe(200);
+    const wrong = await call('POST', '/api/auth/login', { username: p.username, pin: '000000' });
+    expect(wrong.status).toBe(401); expect(wrong.body.error).toBe('INVALID_LOGIN'); expect(wrong.body.detail.attemptsLeft).toBe(4);
+    const unknown = await call('POST', '/api/auth/login', { username: 'Không Có Ai', pin: '1234' });
+    expect(unknown.status).toBe(401); expect(unknown.body.error).toBe('INVALID_LOGIN'); expect(unknown.body.detail).toBeUndefined();
   });
-  it('with a token on a new map creates only a new character (level 1, $2 000, net worth $2 500)', async () => {
+  it('5 wrong PINs lock the username for 15 minutes (even the right PIN), then it unlocks', async () => {
+    const p = await newPlayer('farm', 'Khóa Tạm', '1357');
+    for (let i = 0; i < 4; i++) expect((await call('POST', '/api/auth/login', { username: p.username, pin: '0000' })).status).toBe(401);
+    const fifth = await call('POST', '/api/auth/login', { username: p.username, pin: '0000' });
+    expect(fifth.status).toBe(429); expect(fifth.body.error).toBe('LOGIN_LOCKED');
+    expect((await call('POST', '/api/auth/login', { username: p.username, pin: '1357' })).body.error).toBe('LOGIN_LOCKED');
+    now += 15 * 60_000 + 1000;
+    expect((await call('POST', '/api/auth/login', { username: p.username, pin: '1357' })).status).toBe(200);
+  });
+  it('login attempts are rate limited per IP', async () => {
+    app = makeApp({ accountsPerHour: 10_000, loginsPerHour: 2, commandsPerSecond: 10_000, commandsPerMinute: 100_000 });
+    for (let i = 0; i < 2; i++) await call('POST', '/api/auth/login', { username: 'Ai Đó', pin: '1234' });
+    expect((await call('POST', '/api/auth/login', { username: 'Ai Đó', pin: '1234' })).body.error).toBe('RATE_LIMITED');
+  });
+  it('logout ends only that session', async () => {
+    const p = await newPlayer('farm', 'Đăng Xuất', '8642');
+    const second = (await call('POST', '/api/auth/login', { username: p.username, pin: '8642' })).body.token as string;
+    expect((await call('POST', '/api/auth/logout', undefined, p.token)).status).toBe(204);
+    expect((await call('GET', '/api/me', undefined, p.token)).status).toBe(401);
+    expect((await call('GET', '/api/me', undefined, second)).status).toBe(200);
+  });
+  it('the recovery-code endpoint is gone; creating a character now needs a session', async () => {
+    expect((await call('POST', '/api/auth/recover', { recoveryCode: 'ZZZZ-ZZZZ-ZZZZ' })).status).toBe(404);
+    expect((await call('POST', '/api/characters', { mapKind: 'farm', displayName: 'Không Token' })).status).toBe(401);
+  });
+  it('a signed-in player opens the other map with the same name (level 1, $2 000, net worth $2 500)', async () => {
     const p = await newPlayer('farm', 'Hai Nhân Vật');
-    const r = await call('POST', '/api/characters', { mapKind: 'city', displayName: 'Phố Thị' }, p.token);
+    const r = await call('POST', '/api/characters', { mapKind: 'city', displayName: 'Bị Bỏ Qua' }, p.token);
     expect(r.status).toBe(201);
-    expect(r.body.token).toBeUndefined(); expect(r.body.recoveryCode).toBeUndefined();
+    expect(r.body.token).toBeUndefined();
     expect(r.body.accountId).toBe(p.accountId);
-    expect(r.body.character).toMatchObject({ mapKind: 'city', level: 1, cash: 2000, netWorth: 2500 });
+    expect(r.body.character).toMatchObject({ mapKind: 'city', displayName: p.username, level: 1, cash: 2000, netWorth: 2500 });
     expect((await call('GET', '/api/me', undefined, p.token)).body.characters).toHaveLength(2);
   });
   it('a second character on the same map is rejected with CHARACTER_EXISTS', async () => {
     const p = await newPlayer();
-    const r = await call('POST', '/api/characters', { mapKind: 'farm', displayName: 'Lần Hai' }, p.token);
+    const r = await call('POST', '/api/characters', { mapKind: 'farm' }, p.token);
     expect(r.status).toBe(409); expect(r.body.error).toBe('CHARACTER_EXISTS'); expect(r.body.detail.characterId).toBe(p.worldId);
   });
   it('commands on the city character never change the farm character', async () => {
     const p = await newPlayer('farm', 'Độc Lập');
-    const city = (await call('POST', '/api/characters', { mapKind: 'city', displayName: 'Độc Lập' }, p.token)).body.character.id as string;
+    const city = (await call('POST', '/api/characters', { mapKind: 'city' }, p.token)).body.character.id as string;
     const farmBefore = await snapshotOf(p.token, p.worldId);
     const citySnap = (await snapshotOf(p.token, city)).snapshot;
     const r = await send(p.token, city, [command(citySnap, 'BUY_MATERIAL', { wood: 10, stone: 5 })]);
@@ -107,16 +154,6 @@ describe('accounts and characters', () => {
     expect(farmAfter.snapshot.progress).toEqual(farmBefore.snapshot.progress);
     expect(farmAfter.snapshot.character.netWorth).toBe(farmBefore.snapshot.character.netWorth);
     expect((await snapshotOf(p.token, city)).snapshot.wallet.wood).toBe(30);
-  });
-  it('recovery code issues a new token and revokes the old one', async () => {
-    const p = await newPlayer('farm', 'Khôi Phục');
-    const r = await call('POST', '/api/auth/recover', { recoveryCode: p.recoveryCode.toLowerCase().replace(/-/g, '') });
-    expect(r.status).toBe(200);
-    expect(r.body.accountId).toBe(p.accountId);
-    expect(r.body.characters.map((c: { id: string }) => c.id)).toEqual([p.worldId]);
-    expect((await call('GET', '/api/me', undefined, p.token)).status).toBe(401);
-    expect((await call('GET', '/api/me', undefined, r.body.token)).status).toBe(200);
-    expect((await call('POST', '/api/auth/recover', { recoveryCode: 'ZZZZ-ZZZZ-ZZZZ' })).status).toBe(404);
   });
 });
 
@@ -215,9 +252,9 @@ describe('world access and commands', () => {
   it('delete requires the exact character name', async () => {
     const p = await newPlayer('farm', 'Xóa Đi');
     expect((await call('DELETE', `/api/worlds/${p.worldId}`, { confirmName: 'Sai' }, p.token)).body.error).toBe('CONFIRM_NAME_MISMATCH');
-    expect((await call('DELETE', `/api/worlds/${p.worldId}`, { confirmName: 'Xóa Đi' }, p.token)).status).toBe(204);
+    expect((await call('DELETE', `/api/worlds/${p.worldId}`, { confirmName: p.username }, p.token)).status).toBe(204);
     expect((await call('GET', `/api/worlds/${p.worldId}`, undefined, p.token)).status).toBe(404);
-    expect((await call('POST', '/api/characters', { mapKind: 'farm', displayName: 'Làm Lại' }, p.token)).status).toBe(201);
+    expect((await call('POST', '/api/characters', { mapKind: 'farm' }, p.token)).status).toBe(201);
   });
 });
 

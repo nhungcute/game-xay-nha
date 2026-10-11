@@ -15,6 +15,8 @@ Hiện khi chọn một map chưa có nhân vật.
 - Tiêu đề theo map: "Nhân vật Thành phố mới" / "Nhân vật Quê mới".
 - Nền: ảnh render 3D tĩnh của game (không phải ảnh concept), logo.
 - Ô nhập "Tên nhân vật", nút **Vào chơi** (to, dễ bấm), link nhỏ "Tôi có mã khôi phục".
+
+> **Đã thay bằng D027 (2026-10-11):** đăng nhập bằng **tên người chơi + mã PIN** (4–6 số); bỏ mã khôi phục. Xem `DECISIONS.md` D027.
 - Lỗi tên hiển thị ngay dưới ô (quá ngắn, ký tự không hợp lệ, từ cấm).
 - Nếu đã có nhân vật ở map khác: ô tên gợi ý sẵn tên đó (sửa được) và dòng chú thích **"Nhân vật mới bắt đầu từ cấp 1 với $2 000. Tiền, cấp và tài sản của nhân vật {tên map kia} không chuyển sang."**
 - Lần đầu tạo (chưa có tài khoản), sau khi tạo: hộp thoại **"Mã khôi phục của bạn"** + nút Sao chép + checkbox "Tôi đã lưu mã" (không bắt buộc tick để tiếp tục, nhưng sẽ nhắc lại — `11 §4.2`).

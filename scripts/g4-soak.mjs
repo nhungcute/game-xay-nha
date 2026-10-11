@@ -5,7 +5,7 @@
 // Usage: BASE_URL=http://127.0.0.1:8090 MINUTES=15 node scripts/g4-soak.mjs
 import { chromium } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { cameraButtons, claimButton, materialsButton, openSettings, openSwitchMap, pickTool, profileButton } from './lib/hud.mjs';
+import { cameraButtons, claimButton, createOtherMapUI, materialsButton, openSettings, openSwitchMap, pickTool, profileButton, registerUI, uniqueName } from './lib/hud.mjs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8090', OUT = process.env.OUT ?? 'docs/evidence/g4/soak';
 const MINUTES = Number(process.env.MINUTES ?? 15), END = Date.now() + MINUTES * 60_000;
@@ -23,12 +23,9 @@ const count = name => { actions[name] = (actions[name] ?? 0) + 1; };
 const metrics = () => page.evaluate(() => window.__debug.metrics());
 const inGame = async () => { await page.waitForFunction(() => !!window.__debug?.snapshot, null, { timeout: 60000 }); await page.waitForTimeout(2500); };
 async function create(kind, name) {
-  await page.locator(`.map-card.${kind} button`, { hasText: /Tạo nhân vật|Chơi tiếp/ }).click();
-  if (await page.locator('.field input').count()) {
-    await page.locator('.field input').fill(name);
-    await page.locator('button.primary', { hasText: 'Vào chơi' }).click();
-    if (await page.locator('p.code').waitFor({ timeout: 8000 }).then(() => true, () => false)) await page.locator('button', { hasText: 'Tiếp tục' }).click();
-  }
+  // First map: register username + PIN; second map on the same account: no form.
+  if (await page.locator('.entry-header-action', { hasText: 'Đăng xuất' }).count()) await createOtherMapUI(page, kind);
+  else await registerUI(page, kind, uniqueName(name), '246813');
   await inGame();
 }
 // A cell near the camera target, projected to the screen (production keeps __debug.project/camera with ?debug=1).

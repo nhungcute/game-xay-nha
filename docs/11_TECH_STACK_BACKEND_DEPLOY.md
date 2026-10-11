@@ -79,6 +79,8 @@ export function previewCost(s: SimState, cmd: Command): Cost;
 
 ## 4. Xác thực: chỉ nhập tên
 
+> **Đã thay bằng D027 (2026-10-11):** đăng nhập bằng **tên người chơi + mã PIN** (4–6 số); bỏ mã khôi phục. Xem `DECISIONS.md` D027.
+
 ### 4.1 Luồng
 
 ```text

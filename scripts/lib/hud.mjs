@@ -52,3 +52,29 @@ export async function openSwitchMap(page) {
   await page.locator('button[aria-label="Đổi bản đồ"]').click();
 }
 export async function openSettings(page) { await page.locator('.hud3-status button[aria-label="Cài đặt"]').click(); }
+
+// ---------- D027 entry: username + PIN ----------
+/** Usernames are unique and the dev DB persists between runs: base (≤ 14 chars) + 5 digits. */
+export const uniqueName = base => `${base.slice(0, 14)} ${String(Date.now() % 100000).padStart(5, '0')}`;
+const act = (locator, tap) => (tap ? locator.tap() : locator.click());
+/** New player: map card → username + PIN twice → submit. Resolves when the game has loaded. */
+export async function registerUI(page, kind, name, pin = '2468', { tap = false } = {}) {
+  await act(page.locator(`.map-card.${kind} button`, { hasText: 'Tạo nhân vật' }), tap);
+  await page.locator('#reg-username').fill(name);
+  await page.locator('#reg-pin').fill(pin);
+  await page.locator('#reg-pin2').fill(pin);
+  await act(page.locator('.entry-submit'), tap);
+  await page.waitForFunction(() => !!window.__debug?.snapshot, null, { timeout: 60000 });
+}
+/** Signed-in player opens the other map (no form: the account's name is used). */
+export async function createOtherMapUI(page, kind) {
+  await page.locator(`.map-card.${kind} button`, { hasText: 'Tạo nhân vật' }).click();
+  await page.waitForFunction(k => window.__debug?.snapshot?.().mapKind === k, kind, { timeout: 60000 });
+}
+/** Returning player on any device: username + PIN. Resolves on the map screen or in the game. */
+export async function loginUI(page, name, pin) {
+  await page.locator('.entry-header-action', { hasText: 'Đăng nhập' }).click();
+  await page.locator('#login-username').fill(name);
+  await page.locator('#login-pin').fill(pin);
+  await page.locator('.entry-submit').click();
+}

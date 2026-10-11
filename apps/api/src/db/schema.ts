@@ -4,9 +4,22 @@ const bytea = customType<{ data: Buffer; driverData: Buffer }>({ dataType: () =>
 
 export const accounts = pgTable('accounts', {
   id: uuid('id').primaryKey(),
-  tokenHash: bytea('token_hash').notNull(),
-  recoveryHash: text('recovery_hash').notNull(),
-  recoveryPrefixHash: bytea('recovery_prefix_hash').notNull(),
+  /** Legacy single-token column (pre-D027); live sessions are in `sessions`. */
+  tokenHash: bytea('token_hash'),
+  recoveryHash: text('recovery_hash'),
+  recoveryPrefixHash: bytea('recovery_prefix_hash'),
+  username: text('username'),
+  usernameKey: text('username_key'),
+  pinHash: text('pin_hash'),
+  failedLogins: integer('failed_logins').notNull().default(0),
+  lockedUntil: timestamp('locked_until', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const sessions = pgTable('sessions', {
+  tokenHash: bytea('token_hash').primaryKey(),
+  accountId: uuid('account_id').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
 });

@@ -1,5 +1,6 @@
 // docs/10 §5: five camera angles per map from the real client (online mode), plus a scene audit.
 import { chromium } from '@playwright/test';
+import { registerUI, uniqueName } from './lib/hud.mjs';
 import { mkdir, writeFile } from 'node:fs/promises';
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5191', OUT = process.env.OUT ?? 'docs/evidence/g3';
 await mkdir(OUT, { recursive: true });
@@ -15,10 +16,7 @@ for (const kind of ['city', 'farm']) {
   const errors = [];
   page.on('pageerror', e => errors.push(e.message)); page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
   await page.goto(`${BASE}/?debug=1`);
-  await page.locator(`.map-card.${kind} button`, { hasText: 'Tạo nhân vật' }).click();
-  await page.locator('.field input').fill(kind === 'city' ? 'Thị Trưởng' : 'Lão Nông');
-  await page.locator('button.primary', { hasText: 'Vào chơi' }).click();
-  await page.locator('button', { hasText: 'Tiếp tục' }).click();
+  await registerUI(page, kind, uniqueName(kind === 'city' ? 'Thị Trưởng' : 'Lão Nông'));
   await page.waitForFunction(() => !!window.__debug?.snapshot, null, { timeout: 30000 });
   await page.waitForTimeout(2500);
   for (const [name, cam] of shots[kind]) {

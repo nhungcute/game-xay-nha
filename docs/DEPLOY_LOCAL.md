@@ -2,7 +2,9 @@
 
 Triển khai tạm thời (D021). Stack gồm **web** (nginx: client + proxy `/api`), **api** (Node 22, Fastify), **postgres** (16, volume `pgdata`, **không mở cổng ra ngoài**) và **backup** (`pg_dump` hằng ngày vào thư mục `backups/`). Người chơi nhập tên → tài khoản + nhân vật lưu trên server; mã khôi phục dùng để vào lại trên máy khác.
 
-Lần chạy đầu, `pnpm deploy:up` tự tạo `infra/.env` với mật khẩu Postgres và `TOKEN_PEPPER` ngẫu nhiên. **Giữ file này**: mất `TOKEN_PEPPER` thì mọi người chơi phải dùng mã khôi phục để vào lại; mất mật khẩu thì không mở được dữ liệu cũ. File đã nằm trong `.gitignore`.
+Lần chạy đầu, `pnpm deploy:up` tự tạo `infra/.env` với mật khẩu Postgres và `TOKEN_PEPPER` ngẫu nhiên. **Giữ file này**: mất `TOKEN_PEPPER` thì mọi phiên đăng nhập trên các máy hết hiệu lực (người chơi chỉ cần đăng nhập lại bằng **tên + mã PIN**); mất mật khẩu thì không mở được dữ liệu cũ. File đã nằm trong `.gitignore`.
+
+Người chơi vào game theo hai cách (D027): **Đăng nhập** bằng tên người chơi + mã PIN (4–6 số), hoặc **Tạo nhân vật mới** (đặt tên không trùng + PIN). Nhập sai PIN 5 lần thì tên đó bị khóa 15 phút; mỗi IP tối đa 30 lần đăng nhập/giờ (`LOGINS_PER_HOUR`) và 5 tài khoản mới/giờ (`ACCOUNTS_PER_HOUR`).
 
 ## Yêu cầu
 
@@ -38,7 +40,7 @@ pnpm tunnel:url         # đợi ~10 giây nếu chưa có link
 - Service `backup` tạo một bản ngay khi stack khởi động, sau đó mỗi 24 giờ; chỉ giữ **7 bản mới nhất** (đổi bằng `BACKUP_KEEP`, `BACKUP_INTERVAL_SECONDS` trong `infra/.env`).
 - File nằm trong `backups/` ở thư mục dự án (đã gitignore, không vào image). Muốn an toàn hơn, chép thư mục này sang ổ/máy khác.
 - Khôi phục: `pnpm db:restore backups/xaynha-20261010-001222.dump --yes`. Script dừng `api`, chạy `pg_restore --clean`, bật lại `api` và chờ healthcheck. Người chơi tạo sau thời điểm sao lưu sẽ mất tài khoản.
-- Bản sao lưu chỉ dùng được với **cùng `infra/.env`**: thiếu `TOKEN_PEPPER` cũ thì token đăng nhập cũ không còn hợp lệ (người chơi vẫn vào lại được bằng mã khôi phục).
+- Bản sao lưu chỉ dùng được với **cùng `infra/.env`**: thiếu `TOKEN_PEPPER` cũ thì các phiên đăng nhập cũ không còn hợp lệ (người chơi đăng nhập lại bằng tên + PIN).
 - Đã kiểm 2026-10-10: tạo A → sao lưu → tạo B → khôi phục ⇒ A còn (200), B mất (401); chạy 9 lần sao lưu ⇒ còn đúng 7 file.
 
 ## Quan sát (docs/11 §10)

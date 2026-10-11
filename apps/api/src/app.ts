@@ -4,7 +4,7 @@ import { eq, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { MapKindSchema } from '@xay-nha/contracts';
 import * as schema from './db/schema';
-import { hashRecovery, newRecoveryCode, newToken, normalizeRecoveryCode, recoveryPrefixHash, tokenHash, validateDisplayName, verifyRecovery } from './auth';
+import { hashSecret, newToken, tokenHash, usernameKey, validPin, validateDisplayName, verifyNothing, verifySecret } from './auth';
 import { CommandMetrics } from './metrics';
 import { RateLimiter } from './rateLimit';
 import { parseTelemetry } from './telemetry';
@@ -16,7 +16,7 @@ export interface AppDeps {
   clock?: () => number; logLevel?: string; trustProxy?: boolean;
   /** Interval for the periodic `metrics` log line (docs/11 §10); 0 disables it. Default 60 s. */
   metricsIntervalMs?: number;
-  limits?: { accountsPerHour?: number; recoverPerHour?: number; commandsPerSecond?: number; commandsPerMinute?: number; telemetryPerMinute?: number };
+  limits?: { accountsPerHour?: number; loginsPerHour?: number; commandsPerSecond?: number; commandsPerMinute?: number; telemetryPerMinute?: number };
 }
 
 declare module 'fastify' { interface FastifyInstance { commandMetrics: CommandMetrics } }
@@ -26,7 +26,7 @@ export function buildApp(deps: AppDeps): FastifyInstance {
   const app = Fastify({ logger: { level: deps.logLevel ?? 'info' }, bodyLimit: 64 * 1024, trustProxy: deps.trustProxy ?? true, genReqId: () => randomUUID() });
   const worlds = new WorldService(deps.db, deps.templates, clock);
   const accountsLimit = new RateLimiter(deps.limits?.accountsPerHour ?? 5, 3_600_000, clock);
-  const recoverLimit = new RateLimiter(deps.limits?.recoverPerHour ?? 10, 3_600_000, clock);
+  const loginLimit = new RateLimiter(deps.limits?.loginsPerHour ?? 30, 3_600_000, clock);
   const perSecond = new RateLimiter(deps.limits?.commandsPerSecond ?? 20, 1000, clock);
   const perMinute = new RateLimiter(deps.limits?.commandsPerMinute ?? 300, 60_000, clock);
   const lastSeen = new Map<string, number>();
@@ -49,19 +49,35 @@ export function buildApp(deps: AppDeps): FastifyInstance {
     return reply.status(500).send({ error: 'INTERNAL', requestId: request.id });
   });
 
-  async function account(request: FastifyRequest): Promise<string> {
+  const bearer = (request: FastifyRequest): Buffer | null => {
     const header = request.headers.authorization;
-    if (!header?.startsWith('Bearer ')) throw new ApiError(401, 'UNAUTHORIZED');
-    const [row] = await deps.db.select({ id: schema.accounts.id }).from(schema.accounts)
-      .where(eq(schema.accounts.tokenHash, tokenHash(header.slice(7).trim(), deps.tokenPepper)));
+    return header?.startsWith('Bearer ') ? tokenHash(header.slice(7).trim(), deps.tokenPepper) : null;
+  };
+  async function account(request: FastifyRequest): Promise<string> {
+    const hash = bearer(request);
+    if (!hash) throw new ApiError(401, 'UNAUTHORIZED');
+    const [row] = await deps.db.select({ id: schema.sessions.accountId }).from(schema.sessions).where(eq(schema.sessions.tokenHash, hash));
     if (!row) throw new ApiError(401, 'UNAUTHORIZED');
     const now = clock();
     if ((lastSeen.get(row.id) ?? 0) < now - 60_000) {
       lastSeen.set(row.id, now);
       await deps.db.update(schema.accounts).set({ lastSeenAt: sql`now()` }).where(eq(schema.accounts.id, row.id));
+      await deps.db.update(schema.sessions).set({ lastSeenAt: sql`now()` }).where(eq(schema.sessions.tokenHash, hash));
     }
     return row.id;
   }
+  /** A new device session for the account; the raw token is returned once and only its hash is stored. */
+  async function openSession(accountId: string): Promise<string> {
+    const token = newToken();
+    await deps.db.insert(schema.sessions).values({ tokenHash: tokenHash(token, deps.tokenPepper), accountId });
+    return token;
+  }
+  const usernameOf = async (accountId: string): Promise<string | null> =>
+    (await deps.db.select({ username: schema.accounts.username }).from(schema.accounts).where(eq(schema.accounts.id, accountId)))[0]?.username ?? null;
+  const isUniqueViolation = (error: unknown): boolean => {
+    const e = error as { code?: string; cause?: { code?: string } };
+    return e.code === '23505' || e.cause?.code === '23505';
+  };
 
   app.get('/health', async () => { await deps.db.execute(sql`SELECT 1`); return { ok: true, serverTime: clock() }; });
   // docs/11 §10: browser error reports (no auth; per-IP limit; small body; log only). Over-limit reports are dropped silently.
@@ -74,47 +90,74 @@ export function buildApp(deps: AppDeps): FastifyInstance {
   });
   app.get('/api/maps', async () => ({ maps: deps.templates.maps(), serverTime: clock() }));
 
-  // Creates a character for a map; also creates the (invisible) account when no token is sent.
-  app.post('/api/characters', async (request, reply) => {
-    const body = (request.body ?? {}) as { mapKind?: unknown; displayName?: unknown };
+  // D027 — new player: unique username + PIN + first map. Creates the account, a session and the first character.
+  app.post('/api/auth/register', async (request, reply) => {
+    const body = (request.body ?? {}) as { username?: unknown; pin?: unknown; mapKind?: unknown };
     const kind = MapKindSchema.safeParse(body.mapKind);
     if (!kind.success) throw new ApiError(400, 'INVALID_MAP');
-    const name = validateDisplayName(body.displayName);
+    const name = validateDisplayName(body.username);
     if (!name.ok) throw new ApiError(400, `NAME_${name.reason}`);
-    let accountId = request.headers.authorization ? await account(request) : null;
-    let token: string | undefined, recoveryCode: string | undefined;
-    if (!accountId) {
-      if (!accountsLimit.take(request.ip)) throw new ApiError(429, 'RATE_LIMITED');
-      token = newToken(); recoveryCode = newRecoveryCode(); accountId = randomUUID();
-      await deps.db.insert(schema.accounts).values({ id: accountId, tokenHash: tokenHash(token, deps.tokenPepper),
-        recoveryHash: await hashRecovery(recoveryCode), recoveryPrefixHash: recoveryPrefixHash(recoveryCode, deps.tokenPepper) });
-    }
+    if (!validPin(body.pin)) throw new ApiError(400, 'INVALID_PIN');
+    const key = usernameKey(name.name);
+    const [taken] = await deps.db.select({ id: schema.accounts.id }).from(schema.accounts).where(eq(schema.accounts.usernameKey, key));
+    if (taken) throw new ApiError(409, 'USERNAME_TAKEN');
+    if (!accountsLimit.take(request.ip)) throw new ApiError(429, 'RATE_LIMITED');
+    const accountId = randomUUID();
+    try {
+      await deps.db.insert(schema.accounts).values({ id: accountId, username: name.name, usernameKey: key, pinHash: await hashSecret(body.pin) });
+    } catch (error) { if (isUniqueViolation(error)) throw new ApiError(409, 'USERNAME_TAKEN'); throw error; }
     try {
       const character = await worlds.createCharacter(accountId, kind.data, name.name);
-      return reply.status(201).send({ accountId, character, ...(token ? { token, recoveryCode } : {}), serverTime: clock() });
+      const token = await openSession(accountId);
+      return reply.status(201).send({ accountId, username: name.name, character, token, serverTime: clock() });
     } catch (error) {
-      if (token) await deps.db.delete(schema.accounts).where(eq(schema.accounts.id, accountId)); // never leave orphan accounts
+      await deps.db.delete(schema.accounts).where(eq(schema.accounts.id, accountId)); // never leave orphan accounts
       throw error;
     }
   });
 
-  app.post('/api/auth/recover', async request => {
-    if (!recoverLimit.take(request.ip)) throw new ApiError(429, 'RATE_LIMITED');
-    const code = normalizeRecoveryCode(String((request.body as { recoveryCode?: unknown } | null)?.recoveryCode ?? ''));
-    if (!code) throw new ApiError(400, 'INVALID_RECOVERY_CODE');
-    const candidates = await deps.db.select().from(schema.accounts).where(eq(schema.accounts.recoveryPrefixHash, recoveryPrefixHash(code, deps.tokenPepper)));
-    for (const candidate of candidates) {
-      if (!(await verifyRecovery(code, candidate.recoveryHash))) continue;
-      const token = newToken(); // replacing the hash revokes every previous token (one token per account in MVP)
-      await deps.db.update(schema.accounts).set({ tokenHash: tokenHash(token, deps.tokenPepper), lastSeenAt: sql`now()` }).where(eq(schema.accounts.id, candidate.id));
-      return { accountId: candidate.id, token, characters: await worlds.list(candidate.id), serverTime: clock() };
+  // D027 — returning player on any device: username + PIN. 5 wrong PINs lock that username for 15 minutes.
+  const MAX_FAILURES = 5, LOCK_MS = 15 * 60_000;
+  app.post('/api/auth/login', async request => {
+    if (!loginLimit.take(request.ip)) throw new ApiError(429, 'RATE_LIMITED');
+    const body = (request.body ?? {}) as { username?: unknown; pin?: unknown };
+    if (typeof body.username !== 'string' || !validPin(body.pin)) throw new ApiError(401, 'INVALID_LOGIN');
+    const [row] = await deps.db.select().from(schema.accounts).where(eq(schema.accounts.usernameKey, usernameKey(body.username)));
+    if (!row?.pinHash) { await verifyNothing(body.pin); throw new ApiError(401, 'INVALID_LOGIN'); }
+    const now = clock();
+    if (row.lockedUntil && row.lockedUntil.getTime() > now) throw new ApiError(429, 'LOGIN_LOCKED', 'Too many wrong PINs', { retryAfterSeconds: Math.ceil((row.lockedUntil.getTime() - now) / 1000) });
+    if (!(await verifySecret(body.pin, row.pinHash))) {
+      const failures = row.failedLogins + 1, lock = failures >= MAX_FAILURES;
+      await deps.db.update(schema.accounts).set({ failedLogins: lock ? 0 : failures, lockedUntil: lock ? new Date(now + LOCK_MS) : null }).where(eq(schema.accounts.id, row.id));
+      if (lock) throw new ApiError(429, 'LOGIN_LOCKED', 'Too many wrong PINs', { retryAfterSeconds: LOCK_MS / 1000 });
+      throw new ApiError(401, 'INVALID_LOGIN', 'Wrong username or PIN', { attemptsLeft: MAX_FAILURES - failures });
     }
-    throw new ApiError(404, 'INVALID_RECOVERY_CODE');
+    await deps.db.update(schema.accounts).set({ failedLogins: 0, lockedUntil: null, lastSeenAt: sql`now()` }).where(eq(schema.accounts.id, row.id));
+    const token = await openSession(row.id);
+    return { accountId: row.id, username: row.username, token, characters: await worlds.list(row.id), serverTime: clock() };
+  });
+
+  app.post('/api/auth/logout', async (request, reply) => {
+    const hash = bearer(request);
+    if (hash) await deps.db.delete(schema.sessions).where(eq(schema.sessions.tokenHash, hash));
+    return reply.status(204).send();
+  });
+
+  // A signed-in player opens a character on another map; the character name is the account's username.
+  app.post('/api/characters', async (request, reply) => {
+    const accountId = await account(request);
+    const body = (request.body ?? {}) as { mapKind?: unknown; displayName?: unknown };
+    const kind = MapKindSchema.safeParse(body.mapKind);
+    if (!kind.success) throw new ApiError(400, 'INVALID_MAP');
+    const name = validateDisplayName((await usernameOf(accountId)) ?? body.displayName);
+    if (!name.ok) throw new ApiError(400, `NAME_${name.reason}`);
+    const character = await worlds.createCharacter(accountId, kind.data, name.name);
+    return reply.status(201).send({ accountId, character, serverTime: clock() });
   });
 
   app.get('/api/me', async request => {
     const accountId = await account(request);
-    return { accountId, characters: await worlds.list(accountId), serverTime: clock() };
+    return { accountId, username: await usernameOf(accountId), characters: await worlds.list(accountId), serverTime: clock() };
   });
 
   app.get<{ Params: { id: string } }>('/api/worlds/:id', async request => {

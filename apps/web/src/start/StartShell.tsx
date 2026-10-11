@@ -1,11 +1,15 @@
 import type { ReactNode } from 'react';
 import { EntryIcon } from './EntryIcon';
 
-export type EntryStage = 'boot' | 'maps' | 'create' | 'recover' | 'code';
+export type EntryStage = 'boot' | 'maps' | 'register' | 'login';
 
-export function StartShell({ stage, onHome, onRecover, children }: {
-  stage: EntryStage; onHome: () => void; onRecover: () => void; children: ReactNode;
+export function StartShell({ stage, signedIn, onHome, onLogin, onLogout, children }: {
+  stage: EntryStage; signedIn: string | null; onHome: () => void; onLogin: () => void; onLogout: () => void; children: ReactNode;
 }) {
+  const action = stage === 'boot' ? null
+    : stage !== 'maps' ? { icon: 'back' as const, label: 'Chọn vùng đất', run: onHome }
+      : signedIn ? { icon: 'back' as const, label: `Đăng xuất · ${signedIn}`, run: onLogout }
+        : { icon: 'key' as const, label: 'Đăng nhập', run: onLogin };
   return <main className={`start entry-${stage}`}>
     <div className="entry-container">
       <header className="entry-header">
@@ -13,11 +17,7 @@ export function StartShell({ stage, onHome, onRecover, children }: {
           <span className="entry-brand-mark"><EntryIcon name="home"/></span>
           <span><strong>AI FARM<span className="brand-dot">.</span></strong><small>Một nơi để trở về</small></span>
         </div>
-        {stage !== 'boot' && stage !== 'code' && <button type="button" className="entry-header-action"
-          onClick={stage === 'recover' ? onHome : onRecover}>
-          <EntryIcon name={stage === 'recover' ? 'back' : 'key'}/>
-          {stage === 'recover' ? 'Chọn vùng đất' : 'Đăng nhập'}
-        </button>}
+        {action && <button type="button" className="entry-header-action" onClick={action.run}><EntryIcon name={action.icon}/>{action.label}</button>}
       </header>
       <div className="entry-content">{children}</div>
       <div className="entry-footer" role="contentinfo">

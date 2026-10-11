@@ -1,12 +1,13 @@
 // G4 production smoke (docs/10 §8): against the Docker stack, on Chromium desktop and WebKit (iPhone 13).
-// One account per browser (production limit: 5 new accounts/hour/IP): create a City character through the real
-// UI, buy 1 wood, reload; then "Đổi bản đồ" → create the Farm character on the same account, buy, reload.
-// Checks HUD, recovery code, no test hooks in production, reload restores the same world, graphics default per
-// device, draw-call budget, no console/page errors or HTTP ≥ 400.
+// One account per browser (production limit: 5 new accounts/hour/IP): register username + PIN with a City character
+// through the real UI, buy 1 wood, reload; then "Đổi bản đồ" → open the Farm character on the same account, buy,
+// reload; finally log in with username + PIN in a fresh browser context (another device) and see both characters.
+// Checks HUD, no test hooks in production, reload restores the same world, graphics default per device, draw-call
+// budget, no console/page errors or HTTP ≥ 400.
 // Usage: BASE_URL=http://127.0.0.1:8090 node scripts/g4-smoke.mjs
 import { chromium, devices, webkit } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { SYNC, hudBar, materialsButton, openSwitchMap } from './lib/hud.mjs';
+import { SYNC, createOtherMapUI, hudBar, loginUI, materialsButton, openSwitchMap, registerUI, uniqueName } from './lib/hud.mjs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8090', OUT = process.env.OUT ?? 'docs/evidence/g4/smoke';
 await mkdir(OUT, { recursive: true });
@@ -29,19 +30,14 @@ for (const run of runs) {
   page.on('console', m => { if (m.type() === 'error') errors.push(`console ${m.text()}`); });
   page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
   const result = report.runs[run.name] = { maps: {}, errors };
+  const name = uniqueName('Kiểm Thử'), pin = '305917';
   for (const kind of ['city', 'farm']) {
     const started = Date.now();
     if (kind === 'city') await page.goto(`${BASE}/?debug=1`);
     else await openSwitchMap(page);
-    const create = page.locator(`.map-card.${kind} button`, { hasText: 'Tạo nhân vật' });
-    await create.waitFor({ timeout: 30000 });
+    await page.locator(`.map-card.${kind} button`, { hasText: 'Tạo nhân vật' }).waitFor({ timeout: 30000 });
     const mapScreenMs = Date.now() - started;
-    await create.click();
-    const name = kind === 'city' ? 'Kiểm Thử Phố' : 'Kiểm Thử Quê';
-    await page.locator('.field input').fill(name);
-    await page.locator('button.primary', { hasText: 'Vào chơi' }).click();
-    let recovery = '';
-    if (kind === 'city') { recovery = await page.locator('p.code').innerText({ timeout: 30000 }); await page.locator('button', { hasText: 'Tiếp tục' }).click(); }
+    if (kind === 'city') await registerUI(page, kind, name, pin, { tap: false }); else await createOtherMapUI(page, kind);
     await inGame(page);
     // One real UI command (buy 1 wood), confirmed by the server, so the reload check covers persistence.
     await materialsButton(page).click();
@@ -57,8 +53,7 @@ for (const run of runs) {
     await inGame(page);
     const after = await essence(page);
     const checks = {
-      hud: hud.includes(name.split(' ')[0]),
-      recoveryCode: kind === 'farm' || recovery.trim().length >= 8,
+      hud: hud.includes(name),
       noTestHooksInProduction: hooks === 'undefined',
       reloadSameWorld: after === before && JSON.parse(before).revision >= 1 && JSON.parse(before).mapId.startsWith(kind),
       graphicsDefault: metrics.quality === run.quality,
@@ -68,6 +63,16 @@ for (const run of runs) {
     if (Object.values(checks).some(v => !v)) failed = true;
     console.log(`${run.name} ${kind}: ${Object.entries(checks).map(([k, v]) => `${k}=${v ? 'PASS' : 'FAIL'}`).join(' ')} calls=${metrics.drawCalls} fps=${Math.round(metrics.fps)}`);
   }
+  // Another device: username + PIN lists both characters of this account.
+  const other = await browser.newContext(run.context), pageB = await other.newPage();
+  await pageB.goto(`${BASE}/?debug=1`);
+  await pageB.locator('.map-card.city').waitFor({ timeout: 30000 });
+  await loginUI(pageB, name, pin);
+  await pageB.locator('.map-card.farm .who').waitFor({ timeout: 30000 });
+  const loginBoth = (await pageB.locator('.map-card.city .who').innerText()).includes(name) && (await pageB.locator('.map-card.farm .who').innerText()).includes(name);
+  result.loginOnAnotherDevice = loginBoth; if (!loginBoth) failed = true;
+  console.log(`${run.name} login on another device (username + PIN): ${loginBoth ? 'PASS' : 'FAIL'}`);
+  await other.close();
   console.log(`${run.name}: ${errors.length} console/page/HTTP errors${errors.length ? `: ${errors.join(' | ')}` : ''}`);
   if (errors.length) failed = true;
   await context.close(); await browser.close();

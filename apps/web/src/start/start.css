@@ -246,3 +246,5 @@
 @media (prefers-reduced-motion: reduce) {
   .start *, .start *::before, .start *::after { animation: none !important; transition: none !important; }
 }
+/* D027: username + PIN forms stack several fields; keep labels clear of the focused field above. */
+.entry-form .field+.field,.entry-form .field-hint+.field{margin-top:16px}

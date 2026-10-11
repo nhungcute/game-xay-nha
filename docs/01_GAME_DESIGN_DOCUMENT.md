@@ -133,6 +133,8 @@ Map Quê: chợ → nhà nông → cuốc 6 ô → gieo rau cải (5 phút, tuto
 
 ```text
 Tài khoản khách (vô hình với người chơi: token trong trình duyệt + mã khôi phục)
+
+> **Đã thay bằng D027 (2026-10-11):** đăng nhập bằng **tên người chơi + mã PIN** (4–6 số); bỏ mã khôi phục. Xem `DECISIONS.md` D027.
   ├── Nhân vật Thành phố: tên, cấp, XP, $, tài sản, vùng đất Thành phố
   └── Nhân vật Quê:       tên, cấp, XP, $, tài sản, vùng đất Quê
 ```

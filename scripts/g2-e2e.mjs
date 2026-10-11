@@ -4,7 +4,7 @@
  * Writes docs/evidence/g2/*.jpg and g2-e2e.json; exit code 1 on any failed check.
  */
 import { chromium } from '@playwright/test';
-import { SYNC, claimButton, hudBar, materialsButton, pickBuilding, pickTool, syncText, waitSynced as hudSynced } from './lib/hud.mjs';
+import { SYNC, claimButton, hudBar, loginUI, materialsButton, pickBuilding, pickTool, syncText, uniqueName, waitSynced as hudSynced } from './lib/hud.mjs';
 import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5191';
@@ -47,24 +47,21 @@ async function frame(page, cells, distance = 70) {
 async function drag(page, a, b) { await frame(page, [a, b]); const p = await at(page, a), q = await at(page, b); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.mouse.move(q.x, q.y, { steps: 4 }); await page.mouse.up(); await page.waitForTimeout(300); }
 async function click(page, cell) { await frame(page, [cell]); const p = await at(page, cell); await page.mouse.move(p.x, p.y); await page.mouse.down(); await page.mouse.up(); await page.waitForTimeout(300); }
 
-// ---- 1. New player: map choice → name → recovery code → game ----
+// ---- 1. New player: map choice → username + PIN → game (D027) ----
 const ctxA = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const page = await newPage(ctxA);
 await page.goto(`${BASE}/?debug=1`);
 await page.getByText('Chọn vùng đất').waitFor({ timeout: 20000 });
 await shot(page, 'map-select');
 await page.locator('.map-card.farm button', { hasText: 'Tạo nhân vật' }).click();
-const name = `Thử Nghiệm ${String(Date.now()).slice(-4)}`;
-await page.locator('.field input').fill('ab');
-check('name shorter than 3 characters keeps "Vào chơi" disabled', await page.locator('button.primary', { hasText: 'Vào chơi' }).isDisabled());
-await page.locator('.field input').fill(name);
+const name = uniqueName('Thử Nghiệm'), PIN = '470215';
+await page.locator('#reg-username').fill('ab'); await page.locator('#reg-pin').fill(PIN); await page.locator('#reg-pin2').fill(PIN);
+check('name shorter than 3 characters keeps the submit button disabled', await page.locator('.entry-submit').isDisabled());
+await page.locator('#reg-username').fill(name); await page.locator('#reg-pin2').fill('470216');
+check('mismatched PINs keep the submit button disabled and say so', await page.locator('.entry-submit').isDisabled() && /chưa khớp/.test(await page.locator('#pin-hint').innerText()));
+await page.locator('#reg-pin2').fill(PIN);
 await shot(page, 'create-character');
-await page.locator('button.primary', { hasText: 'Vào chơi' }).click();
-await page.locator('.code').waitFor({ timeout: 15000 });
-const recoveryCode = (await page.locator('.code').innerText()).trim();
-check('recovery code shown once in XXXX-XXXX-XXXX format', /^[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}$/.test(recoveryCode), recoveryCode);
-await shot(page, 'recovery-code');
-await page.locator('button', { hasText: 'Tiếp tục' }).click();
+await page.locator('.entry-submit').click();
 await page.waitForFunction(() => !!window.__debug?.snapshot, null, { timeout: 30000 });
 await waitSynced(page);
 const hud = await hudBar(page).innerText(), levelBadge = await page.locator('.hud3-level').innerText();
@@ -124,20 +121,20 @@ check('crafted illegal command (market on the river) rejected; wallet unchanged'
 const ctxB = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const pageB = await newPage(ctxB);
 await pageB.goto(`${BASE}/?debug=1`);
-await pageB.getByText('Tôi có mã khôi phục').click();
-await pageB.locator('.field input').fill(recoveryCode.toLowerCase());
-await pageB.locator('button.primary', { hasText: 'Khôi phục' }).click();
-await pageB.locator('.map-card.farm .who').waitFor({ timeout: 15000 });
-check('recovery lists the character on the new device', (await pageB.locator('.map-card.farm .who').innerText()).includes(name));
-await shot(pageB, 'recovered');
-await pageB.locator('.map-card.farm button', { hasText: 'Chơi tiếp' }).click();
+await pageB.getByText('Chọn vùng đất').waitFor({ timeout: 20000 });
+const errorsBeforeWrongPin = errors.length;
+await loginUI(pageB, name, '000000');
+await pageB.locator('.entry-error').waitFor({ timeout: 10000 });
+check('a wrong PIN is refused with the attempts left', /Còn 4 lần thử/.test(await pageB.locator('.entry-error').innerText()), await pageB.locator('.entry-error').innerText());
+errors.splice(errorsBeforeWrongPin); // the 401 of the wrong PIN is the expected result
+await pageB.locator('#login-pin').fill(PIN);
+await shot(pageB, 'login');
+await pageB.locator('.entry-submit').click();
 await pageB.waitForFunction(() => !!window.__debug?.snapshot, null, { timeout: 30000 });
 const onB = await debug(pageB, 'snapshot');
-check('recovered device loads the same world', onB.worldId === snap.worldId && onB.revision === afterCrafted.body.snapshot.revision);
-const errorsBeforeRevokedCall = errors.length;
+check('username + PIN on another device loads the same world (only character opens directly)', onB.worldId === snap.worldId && onB.revision === afterCrafted.body.snapshot.revision);
 const oldTokenMe = await apiCall(page, 'GET', '/api/me');
-errors.splice(errorsBeforeRevokedCall); // the 401 below is the expected result of using a revoked token
-check('the old device token is revoked after recovery', oldTokenMe.status === 401, oldTokenMe.status);
+check('the first device stays signed in (one session per device)', oldTokenMe.status === 200, oldTokenMe.status);
 
 check('no page/console errors', errors.length === 0, errors);
 await writeFile(`${OUT}/g2-e2e.json`, JSON.stringify({ base: BASE, at: new Date().toISOString(), checks, errors }, null, 2));

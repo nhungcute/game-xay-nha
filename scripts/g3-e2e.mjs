@@ -5,11 +5,11 @@
  *  4. Farm loop: market → farmhouse → till → plant greens → (tutorial 20 s) harvest → sell
  *  5. map switching City ↔ Farm 10× without JS-heap growth beyond 30 %
  *  7. mobile emulation on Chromium (Pixel 7) and WebKit (iPhone 13): create character, touch tools
- *  8. recovery code on a fresh context
+ *  8. username + PIN login on a fresh context (D027)
  * Writes docs/evidence/g3/e2e/*.jpg and g3-e2e.json. Exit code 1 on any failed check.
  */
 import { chromium, webkit, devices } from '@playwright/test';
-import { claimButton, inventoryButton, openSwitchMap, pickBuilding, pickTool, waitSynced as hudSynced } from './lib/hud.mjs';
+import { claimButton, createOtherMapUI, inventoryButton, loginUI, openSwitchMap, pickBuilding, pickTool, registerUI, uniqueName, waitSynced as hudSynced } from './lib/hud.mjs';
 import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5191';
@@ -50,18 +50,7 @@ async function claim(page, label) {
   const after = (await snap(page)).progress.questIndex;
   check(`quest claimed: ${label}`, after === before + 1, { before, after });
 }
-async function createCharacter(page, kind, name) {
-  await page.locator(`.map-card.${kind} button`, { hasText: 'Tạo nhân vật' }).click();
-  await page.locator('.field input').fill(name);
-  await page.locator('button.primary', { hasText: 'Vào chơi' }).click();
-  const code = page.locator('.code');
-  const hasCode = await code.waitFor({ timeout: 8000 }).then(() => true).catch(() => false);
-  const recovery = hasCode ? (await code.innerText()).trim() : null;
-  if (hasCode) await page.locator('button', { hasText: 'Tiếp tục' }).click();
-  await page.waitForFunction(() => !!window.__debug?.snapshot, null, { timeout: 30000 });
-  await waitSynced(page);
-  return recovery;
-}
+const NAME = uniqueName('Thị Trưởng'), PIN = '864213';
 const free = (envs, cell) => !envs.some(e => e.blocking && cell[0] >= e.cell[0] && cell[0] < e.cell[0] + e.footprint && cell[1] >= e.cell[1] && cell[1] < e.cell[1] + e.footprint);
 
 // ---------- 1. City tutorial ----------
@@ -70,8 +59,8 @@ const page = watch(await ctx.newPage(), 'city');
 const t0 = Date.now();
 await page.goto(`${BASE}/?debug=1`);
 await page.getByText('Chọn vùng đất').waitFor({ timeout: 20000 });
-const recovery = await createCharacter(page, 'city', 'Thị Trưởng E2E');
-check('city character created with a recovery code', /^[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{4}$/.test(recovery ?? ''), recovery);
+await registerUI(page, 'city', NAME, PIN); await waitSynced(page);
+check('city character created with username + PIN', (await snap(page)).character.displayName === NAME, NAME);
 check('tutorial hint from "Bác Tư" is visible with the Clear tool highlighted', await page.locator('.hud3-mission-desc').isVisible() && await page.locator('.hud3-cat[data-cat=nature] .hud3-dot').isVisible());
 await shot(page, 'city-tutorial-start');
 const env = await debug(page, 'env');
@@ -127,7 +116,7 @@ check('reload returns to the same City world with identical progress and buildin
 await openSwitchMap(page);
 await page.getByText('Chọn vùng đất').waitFor({ timeout: 15000 });
 await shot(page, 'map-select-with-city');
-await createCharacter(page, 'farm', 'Lão Nông E2E');
+await createOtherMapUI(page, 'farm'); await waitSynced(page);
 const farmStart = await snap(page);
 check('farm character is independent (level 1, $2,000)', farmStart.mapKind === 'farm' && farmStart.progress.level === 1 && farmStart.wallet.cash === 2000);
 const fEntry = [72, 79];
@@ -177,16 +166,15 @@ for (let i = 0; i < 5; i++) { await switchTo('city'); await switchTo('farm'); }
 const heapAfter = await heap();
 check('10 map switches: JS heap grows < 30 %', heapAfter < heapBefore * 1.3, { beforeMB: +(heapBefore / 1e6).toFixed(1), afterMB: +(heapAfter / 1e6).toFixed(1) });
 
-// ---------- 8. recovery on a fresh context ----------
+// ---------- 8. username + PIN on a fresh context (another device) ----------
 const ctxB = await chrome.newContext({ viewport: { width: 1280, height: 800 } });
-const pageB = watch(await ctxB.newPage(), 'recover');
+const pageB = watch(await ctxB.newPage(), 'login');
 await pageB.goto(`${BASE}/?debug=1`);
-await pageB.getByText('Tôi có mã khôi phục').click();
-await pageB.locator('.field input').fill(recovery);
-await pageB.locator('button.primary', { hasText: 'Khôi phục' }).click();
+await pageB.getByText('Chọn vùng đất').waitFor({ timeout: 20000 });
+await loginUI(pageB, NAME.toUpperCase(), PIN);
 await pageB.locator('.map-card.city .who').waitFor({ timeout: 15000 });
-check('recovery restores both characters', /Thị Trưởng E2E/.test(await pageB.locator('.map-card.city .who').innerText()) && /Lão Nông E2E/.test(await pageB.locator('.map-card.farm .who').innerText()));
-await shot(pageB, 'recovered-both');
+check('username + PIN on another device lists both characters', (await pageB.locator('.map-card.city .who').innerText()).includes(NAME) && (await pageB.locator('.map-card.farm .who').innerText()).includes(NAME));
+await shot(pageB, 'login-both');
 await ctxB.close();
 await ctx.close();
 
@@ -197,11 +185,7 @@ for (const [label, browser, device] of [['chromium-pixel7', chrome, devices['Pix
   const mp = watch(await mctx.newPage(), label);
   await mp.goto(`${BASE}/?debug=1`);
   await mp.getByText('Chọn vùng đất').waitFor({ timeout: 30000 });
-  await mp.locator('.map-card.farm button', { hasText: 'Tạo nhân vật' }).tap();
-  await mp.locator('.field input').fill(`Di Động ${label.slice(0, 6)}`);
-  await mp.locator('button.primary', { hasText: 'Vào chơi' }).tap();
-  await mp.locator('button', { hasText: 'Tiếp tục' }).tap();
-  const loaded = await mp.waitForFunction(() => !!window.__debug?.snapshot, null, { timeout: 60000 }).then(() => true).catch(() => false);
+  const loaded = await registerUI(mp, 'farm', uniqueName(`Di Động ${label.slice(0, 4)}`), '1357', { tap: true }).then(() => true).catch(() => false);
   check(`${label}: game loads after creating a character`, loaded);
   if (!loaded) { await mctx.close(); continue; }
   await mp.waitForTimeout(1500);

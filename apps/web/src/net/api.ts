@@ -37,10 +37,16 @@ async function request<T>(method: 'GET' | 'POST' | 'DELETE', path: string, body?
 
 export const api = {
   maps: () => request<{ maps: MapInfo[]; serverTime: number }>('GET', '/api/maps'),
-  me: () => request<{ accountId: string; characters: CharacterSummary[]; serverTime: number }>('GET', '/api/me'),
-  createCharacter: (mapKind: MapKind, displayName: string) =>
-    request<{ accountId: string; character: CharacterSummary; token?: string; recoveryCode?: string; serverTime: number }>('POST', '/api/characters', { mapKind, displayName }),
-  recover: (recoveryCode: string) => request<{ accountId: string; token: string; characters: CharacterSummary[] }>('POST', '/api/auth/recover', { recoveryCode }),
+  me: () => request<{ accountId: string; username: string | null; characters: CharacterSummary[]; serverTime: number }>('GET', '/api/me'),
+  /** D027: new player — unique username + PIN + first map. */
+  register: (username: string, pin: string, mapKind: MapKind) =>
+    request<{ accountId: string; username: string; character: CharacterSummary; token: string; serverTime: number }>('POST', '/api/auth/register', { username, pin, mapKind }),
+  /** D027: returning player on any device. */
+  login: (username: string, pin: string) =>
+    request<{ accountId: string; username: string; token: string; characters: CharacterSummary[]; serverTime: number }>('POST', '/api/auth/login', { username, pin }),
+  logout: () => request<void>('POST', '/api/auth/logout'),
+  /** Signed-in player opens the other map; the name is the account's username. */
+  createCharacter: (mapKind: MapKind) => request<{ accountId: string; character: CharacterSummary; serverTime: number }>('POST', '/api/characters', { mapKind }),
   snapshot: (worldId: string) => request<SnapshotResponse>('GET', `/api/worlds/${worldId}`),
   commands: (worldId: string, commands: Command[]) => request<CommandBatchResponse>('POST', `/api/worlds/${worldId}/commands`, { commands }),
   deleteWorld: (worldId: string, confirmName: string) => request<void>('DELETE', `/api/worlds/${worldId}`, { confirmName }),

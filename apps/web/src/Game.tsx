@@ -73,8 +73,8 @@ const SKIP_KEY = 'xay-nha.skipTutorial';
 const skipped = () => { try { return localStorage.getItem(SKIP_KEY) === '1'; } catch { return false; } };
 const PANEL_TITLE: Record<GamePanel, string> = { profile: 'Thành tích', materials: 'Vật liệu', inventory: 'Kho nông sản', settings: 'Cài đặt', people: 'Cư dân', notifications: 'Thông báo' };
 const PANEL_ICON = { profile: 'trophy', materials: 'wood', inventory: 'inventory', settings: 'settings', people: 'people', notifications: 'mail' } as const;
-export interface GameProps { loader:()=>Promise<WorldStore>; onSwitchMap?:(world:WorldStore)=>void|Promise<void> }
-export function Game({loader,onSwitchMap}:GameProps){
+export interface GameProps { loader:()=>Promise<WorldStore>; onSwitchMap?:(world:WorldStore)=>void|Promise<void>; onLogout?:(world:WorldStore)=>void|Promise<void> }
+export function Game({loader,onSwitchMap,onLogout}:GameProps){
   const canvas=useRef<HTMLCanvasElement>(null),gameRef=useRef<GameLoop|null>(null);
   const [ready,setReady]=useState(false),[hideHints,setHideHints]=useState(skipped()),[loadingError,setLoadingError]=useState(''),[attempt,setAttempt]=useState(0),[panel,setPanel]=useState<GamePanel|null>(null),[stats,setStats]=useState<ReturnType<GameLoop['metrics']>|null>(null);
   const [missionsOpen,setMissionsOpen]=useState(()=>!matchMedia('(max-width:700px)').matches),[switchingMap,setSwitchingMap]=useState(false),[category,setCategory]=useState<Category|null>(null),[seen,setSeen]=useState(''),[zones,setZones]=useState(true);
@@ -161,6 +161,7 @@ export function Game({loader,onSwitchMap}:GameProps){
         {panel==='profile'?<Profile state={state}/>
           :panel==='settings'?<>{onSwitchMap&&<button type="button" className="hud3-switch" aria-label={t('switchMap')} disabled={switchingMap} onClick={()=>{void switchMap();}}><GameIcon name="maps"/>{switchingMap?'Đang đổi…':t('switchMap')}</button>}
             <GraphicsSettings quality={stats?.quality} onChange={setQuality}/><SoundSettings muted={stats?.muted} onChange={setMuted}/><MusicSettings on={stats?.musicOn} onChange={setMusic}/>
+            {onLogout&&<button type="button" className="hud3-switch hud3-logout" onClick={()=>{const w=gameRef.current?.world;if(w)void onLogout(w);}}><GameIcon name="close"/>Đăng xuất · {state.snapshot.character.displayName}</button>}
             <p className="hud3-panel-note">{status} · {cacheStatus||'—'}</p></>
           :panel==='notifications'?(alerts.length?<ul className="hud3-notes">{alerts.map(text=><li key={text}>{text}</li>)}</ul>:<p className="empty-inventory"><GameIcon name="mail"/>Chưa có thông báo mới.</p>)
           :panel==='people'?<div className="population-summary"><GameIcon name="people"/>{kind==='city'?<><strong>{populationAndJobs(state).population} cư dân</strong><p>{populationAndJobs(state).jobs} việc làm từ các công trình hiện có.</p><p>Xây thêm nhà để tăng dân số và đáp ứng nhân lực kinh doanh.</p></>:<><strong>{state.snapshot.crops.length}/{fieldQuota(state)} ô ruộng</strong><p>Nhà nông giúp mở rộng diện tích canh tác.</p></>}</div>

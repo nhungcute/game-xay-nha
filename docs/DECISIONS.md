@@ -233,3 +233,22 @@ template again (a different subject/target where possible) instead of being left
 quests. Already implemented and tested (D024 amendment, `packages/sim/src/quests.ts`); no code change. Reversible:
 returning `null` from `next()` when only `repeat.last` is eligible would leave the slot empty.
 
+## D027 — 2026-10-11 — Login with username + PIN; the recovery code flow is removed (user request)
+
+The entry screen has two flows: **Đăng nhập** (username + PIN) and **Tạo nhân vật mới** (username + PIN twice + map).
+- The username is the character name, unique across all players ignoring case and repeated spaces (diacritics count:
+  "Trùng Tên" ≠ "Trung Ten"). Same rules as before: 3–20 chars, Unicode letters/digits/single spaces, small blocklist.
+- PIN: 4–6 digits, stored as scrypt with a per-account salt (not peppered, so it survives a TOKEN_PEPPER change).
+- Abuse limits: 5 wrong PINs lock that username for 15 min; 30 login attempts per hour per IP (`LOGINS_PER_HOUR`);
+  unknown usernames cost the same scrypt time and return the same generic `INVALID_LOGIN`.
+- Sessions live in a `sessions` table: logging in on a second device does not sign out the first; "Đăng xuất" (start
+  screen header and in-game Settings) ends only that device's session (`POST /api/auth/logout`).
+- A signed-in player opens the other map's character with one click; its name is the account's username.
+- API: `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`; `POST /api/characters` now requires a
+  session; `POST /api/auth/recover` and the one-time recovery code are removed (migration `0002_username_pin.sql`).
+- Accounts created before D027 have no username/PIN; they keep working on the device that holds their token (existing
+  tokens were copied into `sessions`) but cannot log in elsewhere. All of them were test accounts.
+- Known trade-off: a 4–6 digit PIN is weak against a targeted guesser (≈ 480 guesses/day per username under the
+  lockout); players are told to keep their PIN private. Supersedes the recovery-code parts of docs/01 §8, docs/09 §2
+  and docs/11 §4.
+

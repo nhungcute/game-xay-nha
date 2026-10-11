@@ -1,14 +1,14 @@
 {
   "base": "http://127.0.0.1:5191",
-  "at": "2026-10-10T06:42:15.820Z",
+  "at": "2026-10-11T00:00:25.514Z",
   "timings": {
-    "cityTutorialSeconds": 18
+    "cityTutorialSeconds": 17
   },
   "checks": [
     {
-      "name": "city character created with a recovery code",
+      "name": "city character created with username + PIN",
       "ok": true,
-      "detail": "Z3KV-EDR9-13NK"
+      "detail": "Thị Trưởng 41402"
     },
     {
       "name": "tutorial hint from \"Bác Tư\" is visible with the Clear tool highlighted",
@@ -68,7 +68,7 @@
       "detail": {
         "questIndex": 6,
         "level": 2,
-        "seconds": 18
+        "seconds": 17
       }
     },
     {
@@ -133,12 +133,12 @@
       "name": "10 map switches: JS heap grows < 30 %",
       "ok": true,
       "detail": {
-        "beforeMB": 20.6,
+        "beforeMB": 20.4,
         "afterMB": 21.3
       }
     },
     {
-      "name": "recovery restores both characters",
+      "name": "username + PIN on another device lists both characters",
       "ok": true
     },
     {
@@ -153,7 +153,7 @@
       "name": "chromium-pixel7: WebGL renders (draw calls > 0)",
       "ok": true,
       "detail": {
-        "fps": 21.7,
+        "fps": 31.5,
         "drawCalls": 55
       }
     },
@@ -169,7 +169,7 @@
       "name": "webkit-iphone13: WebGL renders (draw calls > 0)",
       "ok": true,
       "detail": {
-        "fps": 11.2,
+        "fps": 14,
         "drawCalls": 62
       }
     },
