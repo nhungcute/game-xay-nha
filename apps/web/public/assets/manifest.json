@@ -720,7 +720,7 @@
         1,
         1
       ],
-      "triangles": 558
+      "triangles": 792
     },
     {
       "id": "house_town",
@@ -736,7 +736,7 @@
         2,
         3
       ],
-      "triangles": 1034
+      "triangles": 1766
     },
     {
       "id": "shop_cafe",
@@ -784,7 +784,7 @@
         3,
         3
       ],
-      "triangles": 1730
+      "triangles": 2472
     },
     {
       "id": "bank",
@@ -912,7 +912,7 @@
         1,
         1
       ],
-      "triangles": 556
+      "triangles": 1078
     },
     {
       "id": "silo",
@@ -972,7 +972,7 @@
         3,
         3
       ],
-      "triangles": 1734
+      "triangles": 2324
     },
     {
       "id": "cow_barn",
@@ -1020,7 +1020,7 @@
         1,
         1
       ],
-      "triangles": 560
+      "triangles": 798
     },
     {
       "id": "veg_greens_seed",

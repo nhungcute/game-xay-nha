@@ -6,6 +6,90 @@
   "simplifyRatio": 0.7,
   "generatedBy": "scripts/import-model-pack.mjs",
   "models": {
+    "well": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_well.glb",
+      "world": "rural",
+      "droppedGroups": [
+        "GARDEN_OPTIONAL",
+        "LANDSCAPE_OPTIONAL"
+      ],
+      "triangleCap": 1200,
+      "triangles": 1078,
+      "sourceTriangles": 17904,
+      "rotationYDeg": 180,
+      "scale": 0.386706,
+      "centerOffsetM": [
+        0,
+        -0.063806,
+        0
+      ],
+      "sizeAfterM": [
+        1.84,
+        1.903851,
+        1.430812
+      ],
+      "footprintCells": [
+        1,
+        1
+      ],
+      "bytes": 88350,
+      "floatingComponents": 0,
+      "floatingBaseline": 0,
+      "groups": {
+        "BUCKET_OPTIONAL": {
+          "action": "preserve",
+          "triangles": 176,
+          "reason": "tiny and part of the pulley cluster"
+        },
+        "CANOPY": {
+          "action": "preserve",
+          "triangles": 36,
+          "reason": "36 triangles; the canopy beam ties the posts together"
+        },
+        "DETAILS": {
+          "action": "simplify",
+          "triangles": 10,
+          "error": 0.02,
+          "budgetShare": 11
+        },
+        "GARDEN_OPTIONAL": {
+          "action": "drop",
+          "triangles": 11816,
+          "reason": "decorative bushes eat the 1200-triangle budget and hide the well (review: roof supports must connect)"
+        },
+        "LANDSCAPE_OPTIONAL": {
+          "action": "drop",
+          "triangles": 1680,
+          "reason": "spilling ground group (always dropped)"
+        },
+        "PULLEY_ANIMATED": {
+          "action": "preserve",
+          "triangles": 172,
+          "reason": "signature pulley hangs under the beam; animation pivot kept for later"
+        },
+        "ROOF": {
+          "action": "simplify",
+          "triangles": 230,
+          "error": 0.08,
+          "requestedError": 0.01,
+          "reason": "the roof carries the support posts — a light error keeps them connected to the ring (review: no floating roof)",
+          "budgetShare": 247
+        },
+        "ROPE": {
+          "action": "preserve",
+          "triangles": 28,
+          "reason": "28 triangles connecting pulley and bucket"
+        },
+        "WELL": {
+          "action": "simplify",
+          "triangles": 426,
+          "error": 0.25,
+          "requestedError": 0.25,
+          "reason": "stone ring is grounded; it tolerates a coarse error and frees budget for the roof posts",
+          "budgetShare": 456
+        }
+      }
+    },
     "house_small": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_small_house.glb",
       "world": "city",
@@ -15,9 +99,7 @@
       ],
       "triangleCap": 1800,
       "triangles": 1186,
-      "sourceTriangles": 20144,
-      "simplifyError": 0.04,
-      "simplifySkipped": false,
+      "sourceTriangles": 20420,
       "rotationYDeg": 180,
       "scale": 0.505854,
       "centerOffsetM": [
@@ -34,7 +116,16 @@
         2,
         2
       ],
-      "bytes": 97098
+      "bytes": 97098,
+      "floatingComponents": 0,
+      "floatingBaseline": 0,
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1186,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "shop_grocery": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_convenience_store.glb",
@@ -46,9 +137,7 @@
       ],
       "triangleCap": 1800,
       "triangles": 1260,
-      "sourceTriangles": 6504,
-      "simplifyError": 0.01,
-      "simplifySkipped": false,
+      "sourceTriangles": 6840,
       "rotationYDeg": 180,
       "scale": 0.340907,
       "centerOffsetM": [
@@ -65,37 +154,164 @@
         2,
         2
       ],
-      "bytes": 103092
+      "bytes": 103092,
+      "floatingComponents": 2,
+      "floatingBaseline": 2,
+      "floatingDetails": [
+        {
+          "size": [
+            0.187,
+            0.562,
+            0.177
+          ],
+          "base": 0.07
+        },
+        {
+          "size": [
+            0.187,
+            0.562,
+            0.177
+          ],
+          "base": 0.07
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1260,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "house_town": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_townhouse.glb",
       "world": "city",
       "droppedGroups": [
+        "GARDEN_OPTIONAL",
         "LANDSCAPE_OPTIONAL",
         "PATH_OPTIONAL"
       ],
       "triangleCap": 1800,
-      "triangles": 1034,
-      "sourceTriangles": 6604,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "triangles": 1766,
+      "sourceTriangles": 10608,
       "rotationYDeg": 180,
-      "scale": 0.625142,
+      "scale": 0.616071,
       "centerOffsetM": [
         0,
         0,
-        0.378211
+        0.332679
       ],
       "sizeAfterM": [
-        3.450781,
-        7.120363,
+        3.597857,
+        7.031223,
         5.52
       ],
       "footprintCells": [
         2,
         3
       ],
-      "bytes": 84786
+      "bytes": 144078,
+      "floatingComponents": 5,
+      "floatingBaseline": 5,
+      "floatingDetails": [
+        {
+          "size": [
+            0.394,
+            0.355,
+            0.273
+          ],
+          "base": 6.137
+        },
+        {
+          "size": [
+            0.394,
+            0.355,
+            0.273
+          ],
+          "base": 6.137
+        },
+        {
+          "size": [
+            0.394,
+            0.355,
+            0.273
+          ],
+          "base": 6.137
+        },
+        {
+          "size": [
+            0.394,
+            0.355,
+            0.273
+          ],
+          "base": 6.137
+        },
+        {
+          "size": [
+            0.394,
+            0.355,
+            0.273
+          ],
+          "base": 6.137
+        }
+      ],
+      "groups": {
+        "BALCONY_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 354,
+          "error": 0.4,
+          "requestedError": 0.4,
+          "reason": "balcony slabs tolerate a coarse error",
+          "budgetShare": 354
+        },
+        "DETAILS": {
+          "action": "simplify",
+          "triangles": 58,
+          "error": 0.4,
+          "requestedError": 0.4,
+          "reason": "small trims — coarse error",
+          "budgetShare": 59
+        },
+        "DOORS_WINDOWS": {
+          "action": "simplify",
+          "triangles": 742,
+          "error": 1,
+          "requestedError": 0.35,
+          "reason": "window frames read at a coarse error; budget belongs to the flat walls",
+          "budgetShare": 742
+        },
+        "GARDEN_OPTIONAL": {
+          "action": "drop",
+          "triangles": 344,
+          "reason": "review: yard bushes — dropped to keep the flat walls inside the 1800 cap"
+        },
+        "LANDSCAPE_OPTIONAL": {
+          "action": "drop",
+          "triangles": 3824,
+          "reason": "review: flat yard ground — dropped to keep the flat walls inside the 1800 cap"
+        },
+        "PATH_OPTIONAL": {
+          "action": "drop",
+          "triangles": 180,
+          "reason": "review: flat path ground — dropped to keep the flat walls inside the 1800 cap"
+        },
+        "ROOF": {
+          "action": "simplify",
+          "triangles": 214,
+          "error": 1,
+          "requestedError": 0.2,
+          "reason": "the mansard shell reads at a moderate error",
+          "budgetShare": 214
+        },
+        "STRUCTURE": {
+          "action": "simplify",
+          "triangles": 398,
+          "error": 0.04,
+          "requestedError": 0.02,
+          "reason": "review: Regularize keeps wall triangles even — flat walls without a near-lossless budget",
+          "budgetShare": 431
+        }
+      }
     },
     "shop_cafe": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_coffee_shop.glb",
@@ -106,9 +322,7 @@
       ],
       "triangleCap": 1800,
       "triangles": 1256,
-      "sourceTriangles": 9716,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "sourceTriangles": 9956,
       "rotationYDeg": 180,
       "scale": 0.342804,
       "centerOffsetM": [
@@ -125,7 +339,58 @@
         2,
         2
       ],
-      "bytes": 102768
+      "bytes": 102768,
+      "floatingComponents": 5,
+      "floatingBaseline": 5,
+      "floatingDetails": [
+        {
+          "size": [
+            0.309,
+            0.11,
+            0.12
+          ],
+          "base": 0.082
+        },
+        {
+          "size": [
+            0.377,
+            0.027,
+            0.223
+          ],
+          "base": 0.322
+        },
+        {
+          "size": [
+            0.377,
+            0.027,
+            0.223
+          ],
+          "base": 0.322
+        },
+        {
+          "size": [
+            0.377,
+            0.027,
+            0.223
+          ],
+          "base": 0.322
+        },
+        {
+          "size": [
+            0.377,
+            0.027,
+            0.223
+          ],
+          "base": 0.322
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1256,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "shop_restaurant": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_restaurant.glb",
@@ -136,9 +401,7 @@
       ],
       "triangleCap": 2500,
       "triangles": 1406,
-      "sourceTriangles": 14576,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "sourceTriangles": 14888,
       "rotationYDeg": 180,
       "scale": 0.376985,
       "centerOffsetM": [
@@ -155,7 +418,58 @@
         3,
         3
       ],
-      "bytes": 114922
+      "bytes": 114922,
+      "floatingComponents": 5,
+      "floatingBaseline": 5,
+      "floatingDetails": [
+        {
+          "size": [
+            3.185,
+            0.199,
+            0.475
+          ],
+          "base": 0.956
+        },
+        {
+          "size": [
+            0.415,
+            0.03,
+            0.245
+          ],
+          "base": 0.354
+        },
+        {
+          "size": [
+            0.415,
+            0.03,
+            0.245
+          ],
+          "base": 0.354
+        },
+        {
+          "size": [
+            0.415,
+            0.03,
+            0.245
+          ],
+          "base": 0.354
+        },
+        {
+          "size": [
+            0.415,
+            0.03,
+            0.245
+          ],
+          "base": 0.354
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1406,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "bank": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_bank.glb",
@@ -166,9 +480,7 @@
       ],
       "triangleCap": 2500,
       "triangles": 1750,
-      "sourceTriangles": 7356,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "sourceTriangles": 8760,
       "rotationYDeg": 180,
       "scale": 0.598698,
       "centerOffsetM": [
@@ -185,7 +497,16 @@
         3,
         3
       ],
-      "bytes": 142786
+      "bytes": 142786,
+      "floatingComponents": 0,
+      "floatingBaseline": 0,
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1750,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "house_apartment": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_apartment.glb",
@@ -196,9 +517,7 @@
       ],
       "triangleCap": 3500,
       "triangles": 1814,
-      "sourceTriangles": 26992,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "sourceTriangles": 32432,
       "rotationYDeg": 180,
       "scale": 0.669395,
       "centerOffsetM": [
@@ -215,7 +534,16 @@
         4,
         4
       ],
-      "bytes": 147970
+      "bytes": 147970,
+      "floatingComponents": 0,
+      "floatingBaseline": 0,
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1814,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "office_tower": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_office_tower.glb",
@@ -226,9 +554,7 @@
       ],
       "triangleCap": 4500,
       "triangles": 2986,
-      "sourceTriangles": 22764,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "sourceTriangles": 26204,
       "rotationYDeg": 180,
       "scale": 0.520509,
       "centerOffsetM": [
@@ -245,7 +571,82 @@
         4,
         4
       ],
-      "bytes": 242902
+      "bytes": 242902,
+      "floatingComponents": 8,
+      "floatingBaseline": 8,
+      "floatingDetails": [
+        {
+          "size": [
+            6.845,
+            0.068,
+            6.741
+          ],
+          "base": 0.284
+        },
+        {
+          "size": [
+            6.845,
+            0.068,
+            6.741
+          ],
+          "base": 1.949
+        },
+        {
+          "size": [
+            6.845,
+            0.068,
+            6.741
+          ],
+          "base": 3.615
+        },
+        {
+          "size": [
+            6.845,
+            0.068,
+            6.741
+          ],
+          "base": 5.281
+        },
+        {
+          "size": [
+            6.845,
+            0.068,
+            6.741
+          ],
+          "base": 6.946
+        },
+        {
+          "size": [
+            6.845,
+            0.068,
+            6.741
+          ],
+          "base": 8.612
+        },
+        {
+          "size": [
+            6.845,
+            0.068,
+            6.741
+          ],
+          "base": 10.277
+        },
+        {
+          "size": [
+            6.845,
+            0.068,
+            6.741
+          ],
+          "base": 11.943
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 2986,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "hotel": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_hotel.glb",
@@ -256,9 +657,7 @@
       ],
       "triangleCap": 3500,
       "triangles": 1598,
-      "sourceTriangles": 13900,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "sourceTriangles": 17340,
       "rotationYDeg": 180,
       "scale": 0.681481,
       "centerOffsetM": [
@@ -275,7 +674,82 @@
         4,
         5
       ],
-      "bytes": 130466
+      "bytes": 130466,
+      "floatingComponents": 8,
+      "floatingBaseline": 8,
+      "floatingDetails": [
+        {
+          "size": [
+            1.636,
+            0.36,
+            1.029
+          ],
+          "base": 1.49
+        },
+        {
+          "size": [
+            0.436,
+            0.393,
+            0.301
+          ],
+          "base": 8.629
+        },
+        {
+          "size": [
+            0.436,
+            0.393,
+            0.301
+          ],
+          "base": 8.629
+        },
+        {
+          "size": [
+            0.436,
+            0.393,
+            0.301
+          ],
+          "base": 8.629
+        },
+        {
+          "size": [
+            0.436,
+            0.393,
+            0.301
+          ],
+          "base": 8.629
+        },
+        {
+          "size": [
+            0.436,
+            0.393,
+            0.301
+          ],
+          "base": 8.629
+        },
+        {
+          "size": [
+            0.436,
+            0.393,
+            0.301
+          ],
+          "base": 8.629
+        },
+        {
+          "size": [
+            0.259,
+            0.477,
+            0.044
+          ],
+          "base": 1.942
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1598,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "shop_supermarket": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_supermarket.glb",
@@ -287,9 +761,7 @@
       ],
       "triangleCap": 3500,
       "triangles": 2450,
-      "sourceTriangles": 7284,
-      "simplifyError": 0.01,
-      "simplifySkipped": false,
+      "sourceTriangles": 7816,
       "rotationYDeg": 180,
       "scale": 0.387884,
       "centerOffsetM": [
@@ -306,68 +778,222 @@
         4,
         4
       ],
-      "bytes": 199482
+      "bytes": 199482,
+      "floatingComponents": 3,
+      "floatingBaseline": 3,
+      "floatingDetails": [
+        {
+          "size": [
+            0.679,
+            0.035,
+            0.504
+          ],
+          "base": 0.785
+        },
+        {
+          "size": [
+            0.4,
+            0.016,
+            0.621
+          ],
+          "base": 2.036
+        },
+        {
+          "size": [
+            0.4,
+            0.016,
+            0.621
+          ],
+          "base": 2.036
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 2450,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "deco_garden": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_flower_garden.glb",
       "world": "city",
-      "droppedGroups": [
-        "LANDSCAPE_OPTIONAL",
-        "PATH_OPTIONAL"
-      ],
+      "droppedGroups": [],
       "triangleCap": 800,
-      "triangles": 558,
-      "sourceTriangles": 27728,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "triangles": 792,
+      "sourceTriangles": 30008,
       "rotationYDeg": 180,
-      "scale": 0.180204,
+      "scale": 0.153333,
       "centerOffsetM": [
-        -0.17822,
-        -0.028833,
-        -0.102408
+        0,
+        0,
+        0
       ],
       "sizeAfterM": [
-        1.520561,
-        0.977875,
+        1.84,
+        0.842857,
         1.84
       ],
       "footprintCells": [
         1,
         1
       ],
-      "bytes": 46230,
+      "bytes": 65184,
+      "floatingComponents": 0,
+      "floatingBaseline": 0,
+      "groups": {
+        "FENCE_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 90,
+          "error": 0.02,
+          "budgetShare": 91
+        },
+        "FOUNTAIN": {
+          "action": "simplify",
+          "triangles": 22,
+          "error": 0.2,
+          "requestedError": 0.05,
+          "reason": "the fountain basin is the centrepiece inside the arch (preserve alone would exceed the 800 cap)",
+          "budgetShare": 26
+        },
+        "GARDEN_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 584,
+          "error": 0.02,
+          "budgetShare": 585
+        },
+        "LANDSCAPE_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 58,
+          "error": 0.5,
+          "requestedError": 0.5,
+          "reason": "flat bed ground — the coarsest error frees budget for the arch and fountain",
+          "budgetShare": 58
+        },
+        "PATH_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 2,
+          "error": 0.3,
+          "requestedError": 0.3,
+          "reason": "flat path ground",
+          "budgetShare": 3
+        },
+        "PROPS_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 12,
+          "error": 1,
+          "requestedError": 0.1,
+          "reason": "small planters — moderate error",
+          "budgetShare": 12
+        },
+        "TRELLIS_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 24,
+          "error": 0.05,
+          "requestedError": 0.05,
+          "reason": "thin arch slats need a light error to stay connected",
+          "budgetShare": 26
+        }
+      },
       "note": "decor/market: optional groups are the visible content; only spilling ground groups are dropped"
     },
     "deco_park": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_park.glb",
       "world": "city",
-      "droppedGroups": [
-        "LANDSCAPE_OPTIONAL",
-        "PATH_OPTIONAL"
-      ],
+      "droppedGroups": [],
       "triangleCap": 2500,
-      "triangles": 1730,
-      "sourceTriangles": 27804,
-      "simplifyError": 0.01,
-      "simplifySkipped": false,
+      "triangles": 2472,
+      "sourceTriangles": 38716,
       "rotationYDeg": 180,
-      "scale": 0.357555,
+      "scale": 0.345,
       "centerOffsetM": [
         0,
-        -0.057209,
+        0,
         0
       ],
       "sizeAfterM": [
         5.52,
-        1.040485,
+        1.276205,
         5.52
       ],
       "footprintCells": [
         3,
         3
       ],
-      "bytes": 141162,
+      "bytes": 201264,
+      "floatingComponents": 3,
+      "floatingBaseline": 3,
+      "floatingDetails": [
+        {
+          "size": [
+            0.328,
+            0.131,
+            0.024
+          ],
+          "base": 0.224
+        },
+        {
+          "size": [
+            0.328,
+            0.131,
+            0.024
+          ],
+          "base": 0.224
+        },
+        {
+          "size": [
+            0.328,
+            0.131,
+            0.024
+          ],
+          "base": 0.224
+        }
+      ],
+      "groups": {
+        "FENCE_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 244,
+          "error": 0.02,
+          "budgetShare": 245
+        },
+        "GARDEN_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 1186,
+          "error": 0.05,
+          "requestedError": 0.05,
+          "reason": "review: trees and rose bushes are the point of the park; a light error keeps trunks attached to canopies",
+          "budgetShare": 1187
+        },
+        "LANDSCAPE_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 412,
+          "error": 0.35,
+          "requestedError": 0.35,
+          "reason": "review: keep the lawn — the footprint fit scales it into the 3×3 cells",
+          "budgetShare": 413
+        },
+        "PATH_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 170,
+          "error": 0.3,
+          "requestedError": 0.3,
+          "reason": "review: keep the paths while they fit the budget",
+          "budgetShare": 171
+        },
+        "PERGOLA_OPTIONAL": {
+          "action": "preserve",
+          "triangles": 428,
+          "reason": "thin slats collapse into splinters; only 428 triangles"
+        },
+        "PROPS_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 32,
+          "error": 0.15,
+          "requestedError": 0.15,
+          "reason": "benches and lamps read well at a moderate error",
+          "budgetShare": 33
+        }
+      },
       "note": "decor/market: optional groups are the visible content; only spilling ground groups are dropped"
     },
     "farmhouse": {
@@ -379,9 +1005,7 @@
       ],
       "triangleCap": 2500,
       "triangles": 1652,
-      "sourceTriangles": 29900,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "sourceTriangles": 30320,
       "rotationYDeg": 180,
       "scale": 0.593395,
       "centerOffsetM": [
@@ -398,7 +1022,16 @@
         3,
         3
       ],
-      "bytes": 134844
+      "bytes": 134844,
+      "floatingComponents": 0,
+      "floatingBaseline": 0,
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1652,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "market": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_market.glb",
@@ -408,9 +1041,7 @@
       ],
       "triangleCap": 2500,
       "triangles": 1750,
-      "sourceTriangles": 4140,
-      "simplifyError": 0.01,
-      "simplifySkipped": false,
+      "sourceTriangles": 5340,
       "rotationYDeg": 180,
       "scale": 0.486951,
       "centerOffsetM": [
@@ -428,36 +1059,26 @@
         3
       ],
       "bytes": 142786,
+      "floatingComponents": 1,
+      "floatingBaseline": 1,
+      "floatingDetails": [
+        {
+          "size": [
+            0.317,
+            0.73,
+            0.039
+          ],
+          "base": 0.093
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1750,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      },
       "note": "stalls/canopy/produce optional groups are the market itself; only spilling ground groups are dropped"
-    },
-    "well": {
-      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_well.glb",
-      "world": "rural",
-      "droppedGroups": [
-        "LANDSCAPE_OPTIONAL"
-      ],
-      "triangleCap": 800,
-      "triangles": 556,
-      "sourceTriangles": 16224,
-      "simplifyError": 0.04,
-      "simplifySkipped": false,
-      "rotationYDeg": 180,
-      "scale": 0.278945,
-      "centerOffsetM": [
-        -0.005592,
-        -0.046026,
-        0.16108
-      ],
-      "sizeAfterM": [
-        1.84,
-        1.351111,
-        1.354259
-      ],
-      "footprintCells": [
-        1,
-        1
-      ],
-      "bytes": 46068
     },
     "chicken_coop": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_chicken_coop.glb",
@@ -467,9 +1088,7 @@
       ],
       "triangleCap": 2500,
       "triangles": 1656,
-      "sourceTriangles": 15500,
-      "simplifyError": 0.01,
-      "simplifySkipped": false,
+      "sourceTriangles": 15524,
       "rotationYDeg": 180,
       "scale": 0.482594,
       "centerOffsetM": [
@@ -486,36 +1105,103 @@
         3,
         3
       ],
-      "bytes": 135168
+      "bytes": 135168,
+      "floatingComponents": 1,
+      "floatingBaseline": 1,
+      "floatingDetails": [
+        {
+          "size": [
+            0.483,
+            0.116,
+            0.265
+          ],
+          "base": 0.055
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1656,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "rice_mill": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_windmill.glb",
       "world": "rural",
       "droppedGroups": [
+        "FENCE_OPTIONAL",
         "LANDSCAPE_OPTIONAL"
       ],
       "triangleCap": 2500,
-      "triangles": 1734,
-      "sourceTriangles": 16584,
-      "simplifyError": 0.01,
-      "simplifySkipped": false,
+      "triangles": 2324,
+      "sourceTriangles": 17608,
       "rotationYDeg": 180,
-      "scale": 0.482594,
+      "scale": 0.600221,
       "centerOffsetM": [
-        0,
-        -0.08928,
-        0
+        -0.302459,
+        -0.106644,
+        0.248167
       ],
       "sizeAfterM": [
-        5.52,
-        5.61045,
+        4.963252,
+        6.982335,
         5.52
       ],
       "footprintCells": [
         3,
         3
       ],
-      "bytes": 141486
+      "bytes": 189276,
+      "floatingComponents": 0,
+      "floatingBaseline": 1,
+      "groups": {
+        "CONICAL_ROOF": {
+          "action": "simplify",
+          "triangles": 84,
+          "error": 0.02,
+          "budgetShare": 170
+        },
+        "DOORS_WINDOWS": {
+          "action": "simplify",
+          "triangles": 8,
+          "error": 1,
+          "budgetShare": 8
+        },
+        "FENCE_OPTIONAL": {
+          "action": "drop",
+          "triangles": 2016,
+          "reason": "review: fence rails collapse into loose standing posts — the brief allows dropping the fence outright"
+        },
+        "FIELD_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 38,
+          "error": 1,
+          "budgetShare": 38
+        },
+        "LANDSCAPE_OPTIONAL": {
+          "action": "drop",
+          "triangles": 1024,
+          "reason": "spilling ground group (always dropped)"
+        },
+        "SAILS_ANIMATED": {
+          "action": "preserve",
+          "triangles": 1768,
+          "reason": "the sails are the identity of the windmill and the animation pivot lives in the hub"
+        },
+        "STONEWORK_MICRO": {
+          "action": "simplify",
+          "triangles": 422,
+          "error": 0.02,
+          "budgetShare": 422
+        },
+        "STONE_TOWER": {
+          "action": "simplify",
+          "triangles": 4,
+          "error": 0.32,
+          "budgetShare": 5
+        }
+      }
     },
     "cow_barn": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_cowshed.glb",
@@ -525,9 +1211,7 @@
       ],
       "triangleCap": 3500,
       "triangles": 2424,
-      "sourceTriangles": 21424,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "sourceTriangles": 21448,
       "rotationYDeg": 180,
       "scale": 0.552828,
       "centerOffsetM": [
@@ -544,7 +1228,74 @@
         4,
         4
       ],
-      "bytes": 197376
+      "bytes": 197376,
+      "floatingComponents": 7,
+      "floatingBaseline": 7,
+      "floatingDetails": [
+        {
+          "size": [
+            0.47,
+            0.359,
+            0.343
+          ],
+          "base": 0.122
+        },
+        {
+          "size": [
+            0.47,
+            0.359,
+            0.343
+          ],
+          "base": 0.122
+        },
+        {
+          "size": [
+            0.47,
+            0.359,
+            0.343
+          ],
+          "base": 0.122
+        },
+        {
+          "size": [
+            0.47,
+            0.359,
+            0.343
+          ],
+          "base": 0.122
+        },
+        {
+          "size": [
+            0.044,
+            0.73,
+            3.378
+          ],
+          "base": 0.053
+        },
+        {
+          "size": [
+            0.044,
+            0.73,
+            3.378
+          ],
+          "base": 0.053
+        },
+        {
+          "size": [
+            0.044,
+            0.73,
+            3.378
+          ],
+          "base": 0.053
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 2424,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "bakery": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_bakery_oven.glb",
@@ -555,9 +1306,7 @@
       ],
       "triangleCap": 2500,
       "triangles": 1622,
-      "sourceTriangles": 21592,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "sourceTriangles": 21832,
       "rotationYDeg": 180,
       "scale": 0.551373,
       "centerOffsetM": [
@@ -574,7 +1323,26 @@
         3,
         3
       ],
-      "bytes": 132418
+      "bytes": 132418,
+      "floatingComponents": 1,
+      "floatingBaseline": 1,
+      "floatingDetails": [
+        {
+          "size": [
+            3.318,
+            0.291,
+            0.613
+          ],
+          "base": 1.217
+        }
+      ],
+      "groups": {
+        "__global": {
+          "action": "global",
+          "triangles": 1622,
+          "reason": "no per-group policies; proven D029 path"
+        }
+      }
     },
     "deco_flowerbed": {
       "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_flower_bed.glb",
@@ -583,27 +1351,60 @@
         "LANDSCAPE_OPTIONAL"
       ],
       "triangleCap": 800,
-      "triangles": 560,
-      "sourceTriangles": 21964,
-      "simplifyError": 0.02,
-      "simplifySkipped": false,
+      "triangles": 798,
+      "sourceTriangles": 23452,
       "rotationYDeg": 180,
-      "scale": 0.295576,
+      "scale": 0.294636,
       "centerOffsetM": [
-        0.030318,
-        -0.036947,
-        0
+        0.033147,
+        -0.036829,
+        0.025044
       ],
       "sizeAfterM": [
         1.84,
-        1.041904,
-        1.341913
+        0.950513,
+        1.299343
       ],
       "footprintCells": [
         1,
         1
       ],
-      "bytes": 46392,
+      "bytes": 65670,
+      "floatingComponents": 0,
+      "floatingBaseline": 0,
+      "groups": {
+        "GARDEN_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 754,
+          "error": 0.01,
+          "requestedError": 0.01,
+          "reason": "review: the vine leaves detach when their thin stems collapse — near-lossless plants",
+          "budgetShare": 755
+        },
+        "LANDSCAPE_OPTIONAL": {
+          "action": "drop",
+          "triangles": 1488,
+          "reason": "spilling ground group (always dropped)"
+        },
+        "PLANTER": {
+          "action": "simplify",
+          "triangles": 8,
+          "error": 0.16,
+          "budgetShare": 8
+        },
+        "PROPS_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 2,
+          "error": 0.32,
+          "budgetShare": 3
+        },
+        "TRELLIS_OPTIONAL": {
+          "action": "simplify",
+          "triangles": 34,
+          "error": 1,
+          "budgetShare": 34
+        }
+      },
       "note": "decor/market: optional groups are the visible content; only spilling ground groups are dropped"
     }
   },
