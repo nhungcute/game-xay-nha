@@ -320,6 +320,8 @@ mesh/material GLB with POSITION+NORMAL+COLOR_0 — one draw call per building.
 
 ## D030 — 2026-10-11 — All trees and bushes replaced from the map/tree pack, with near/far LODs
 
+Far billboard assets require alpha coverage of 10–80% per captured tile (alpha ≥128, at least two distinct colors) and PNG atlas size ≥8 KB. Full-world far/near tree coverage ≥0.6 is a mandatory QC gate for every billboard asset.
+
 From the user's D030 brief. Source: `map/tree/` (owner-supplied, NOT committed): `stylized_tree.glb` (CC-BY-4.0,
 Aki), `fur_tree.glb` (CC-BY-SA-4.0, Harri Jones), `small_bush.glb` (CC-BY-4.0, yanix); `tree_animate.glb` NOT used.
 `scripts/import-trees.mjs` (deterministic, `--check` byte-compares outputs, skips when the pack is absent) bakes

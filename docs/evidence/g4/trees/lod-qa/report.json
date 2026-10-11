@@ -1,0 +1,43 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-11T11:56:59.884Z",
+  "threshold": 0.6,
+  "maps": {
+    "city": {
+      "oblique-45": {
+        "coverage": {
+          "far": 0.07110570987654322,
+          "near": 0.09767978395061729
+        },
+        "farNearRatio": 0.7279470428854676,
+        "pass": true
+      },
+      "overview-75": {
+        "coverage": {
+          "far": 0.04209259259259259,
+          "near": 0.06851543209876543
+        },
+        "farNearRatio": 0.6143519978377404,
+        "pass": true
+      }
+    },
+    "farm": {
+      "oblique-45": {
+        "coverage": {
+          "far": 0.08434413580246913,
+          "near": 0.12845524691358023
+        },
+        "farNearRatio": 0.656603274907195,
+        "pass": true
+      },
+      "overview-75": {
+        "coverage": {
+          "far": 0.05347145061728395,
+          "near": 0.09846759259259259
+        },
+        "farNearRatio": 0.5430360305295657,
+        "pass": false
+      }
+    }
+  }
+}

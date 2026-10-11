@@ -143,7 +143,21 @@ Kiểm tra bằng mắt (mỗi kết luận kèm ảnh trong `docs/evidence/g4/t
 - **Đơn định**: capture billboard dùng Chrome + SwiftShader — nếu nâng Chrome lớn có thể lệch pixel → `--check`
   sẽ bắt và chỉ cần chạy lại import để làm mới.
 
-## 10. Commit và deploy nội bộ
+## 11. Commit và deploy nội bộ
+
+## 10. Sửa lỗi mức xa
+
+Nguyên nhân đã xác định: `captureBillboards` chỉ truyền `margin` trong khi `PAGE_JS` đòi `elevationDeg`, làm camera nhận `NaN` và sinh atlas trong suốt. Đã sửa bằng cách truyền nguyên `PARAMETERS.capture`, validate input hợp lệ, bake lại 12 far GLB và thêm cổng alpha coverage 10–80%, ít nhất hai màu, PNG ≥8 KB. `--check` trước đây không phát hiện vì chỉ tái tạo ảnh trống một cách định tính.
+
+| Nhóm | Far trước | Far sau | Alpha tile (min–max) |
+|---|---:|---:|---:|
+| deciduous (4) | ~2,9 KB | 81–101 KB | 14,8–22,2% |
+| conifer (4) | ~2,9 KB | 86–99 KB | 10,5–12,8% |
+| bush (4) | ~2,9 KB | 279–316 KB | 32,2–41,1% |
+
+Mọi asset và tile đều PASS cổng alpha; far vẫn 6 tam giác. Hook `?debug=1` có `__debug.treeLod({ nearCount: 0 })`, `__debug.envVisible(false)`. Script QA lưu ảnh và `report.json` tại `docs/evidence/g4/trees/lod-qa/`; chỉ số far/near phải ≥0,6 ở hai map và hai góc.
+
+Nhận định cũ về KB far, chuyển LOD không giật, billboard nghiêng và “chấm cây placeholder” đã sửa trong mục này; ảnh so sánh sau sửa được sinh lại bằng `tree-shots.mjs`.
 
 1. `8e702ef` `feat(d030): tree import script, config`
 2. `5a0c873` `feat(d030): tree/bush GLBs, manifest and credits`
