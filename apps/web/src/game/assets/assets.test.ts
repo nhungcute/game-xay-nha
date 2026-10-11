@@ -93,7 +93,7 @@ async function farTextureCoverage(manifestFile: string): Promise<number[]> {
     raw[y * stride + x] = (value + (f === 1 ? left : f === 2 ? up : f === 3 ? Math.floor((left + up) / 2) : f === 4 ? paeth(left, up, ul) : 0)) & 255;
   }
   const tile = width / 2;
-  return [0, 1, 2].map(index => {
+  return [0, 1, 2, 3].map(index => {
     let covered = 0; const colors = new Set<string>();
     for (let y = 0; y < tile; y++) for (let x = 0; x < tile; x++) {
       const at = (Math.floor(index / 2) * tile + y) * stride + (index % 2 * tile + x) * 4;
@@ -168,7 +168,8 @@ describe('actual placeholder GLB artifacts', () => {
       expect(entry.url).toContain('sketchfab.com'); expect(entry.license).toMatch(/^CC-/);
       expect(entry.modified).toBe(true); expect(entry.lod).toEqual({ far: `${id}_far` });
       expect(model.farBytes).toBeGreaterThanOrEqual(8 * 1024);
-      expect(await farTextureCoverage(model.farFile.replace(/^apps\/web\/public\/assets\//, ''))).toHaveLength(3);
+      if (model.family === 'bush') expect(model.farBytes).toBeLessThanOrEqual(60 * 1024);
+      expect(await farTextureCoverage(model.farFile.replace(/^apps\/web\/public\/assets\//, ''))).toHaveLength(4);
       // Conifer derivatives are CC-BY-SA: they must live in their own directory beside LICENSE.md.
       if (model.family === 'conifer') {
         expect(entry.license).toBe('CC-BY-SA-4.0');
