@@ -1,0 +1,1795 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-11T05:58:42.143Z",
+  "shots": [
+    {
+      "kind": "city",
+      "id": "house_small",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-house_small-front-high.jpg",
+      "drawCalls": 130,
+      "triangles": 450864,
+      "cam": [
+        100,
+        5,
+        136
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_small",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-house_small-side-high.jpg",
+      "drawCalls": 96,
+      "triangles": 403740,
+      "cam": [
+        100,
+        5,
+        136
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_small",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-house_small-back-high.jpg",
+      "drawCalls": 103,
+      "triangles": 404742,
+      "cam": [
+        100,
+        5,
+        136
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_small",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-house_small-front-low.jpg",
+      "drawCalls": 67,
+      "triangles": 434734,
+      "cam": [
+        100,
+        5,
+        136
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_small",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-house_small-side-low.jpg",
+      "drawCalls": 61,
+      "triangles": 423216,
+      "cam": [
+        100,
+        5,
+        136
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_small",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-house_small-back-low.jpg",
+      "drawCalls": 64,
+      "triangles": 424752,
+      "cam": [
+        100,
+        5,
+        136
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_grocery",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_grocery-front-high.jpg",
+      "drawCalls": 125,
+      "triangles": 440988,
+      "cam": [
+        98,
+        5,
+        128
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_grocery",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_grocery-side-high.jpg",
+      "drawCalls": 104,
+      "triangles": 423806,
+      "cam": [
+        98,
+        5,
+        128
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_grocery",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_grocery-back-high.jpg",
+      "drawCalls": 108,
+      "triangles": 407038,
+      "cam": [
+        98,
+        5,
+        128
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_grocery",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_grocery-front-low.jpg",
+      "drawCalls": 67,
+      "triangles": 434734,
+      "cam": [
+        98,
+        5,
+        128
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_grocery",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_grocery-side-low.jpg",
+      "drawCalls": 63,
+      "triangles": 432686,
+      "cam": [
+        98,
+        5,
+        128
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_grocery",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_grocery-back-low.jpg",
+      "drawCalls": 66,
+      "triangles": 425776,
+      "cam": [
+        98,
+        5,
+        128
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_town",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-house_town-front-high.jpg",
+      "drawCalls": 133,
+      "triangles": 452560,
+      "cam": [
+        106,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_town",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-house_town-side-high.jpg",
+      "drawCalls": 86,
+      "triangles": 368334,
+      "cam": [
+        106,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_town",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-house_town-back-high.jpg",
+      "drawCalls": 101,
+      "triangles": 403310,
+      "cam": [
+        106,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_town",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-house_town-front-low.jpg",
+      "drawCalls": 69,
+      "triangles": 435758,
+      "cam": [
+        106,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_town",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-house_town-side-low.jpg",
+      "drawCalls": 62,
+      "triangles": 423728,
+      "cam": [
+        106,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_town",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-house_town-back-low.jpg",
+      "drawCalls": 63,
+      "triangles": 424240,
+      "cam": [
+        106,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_cafe",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_cafe-front-high.jpg",
+      "drawCalls": 128,
+      "triangles": 449840,
+      "cam": [
+        108,
+        5,
+        126
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_cafe",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_cafe-side-high.jpg",
+      "drawCalls": 110,
+      "triangles": 437954,
+      "cam": [
+        108,
+        5,
+        126
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_cafe",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_cafe-back-high.jpg",
+      "drawCalls": 109,
+      "triangles": 422374,
+      "cam": [
+        108,
+        5,
+        126
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_cafe",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_cafe-front-low.jpg",
+      "drawCalls": 65,
+      "triangles": 433710,
+      "cam": [
+        108,
+        5,
+        126
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_cafe",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_cafe-side-low.jpg",
+      "drawCalls": 63,
+      "triangles": 432686,
+      "cam": [
+        108,
+        5,
+        126
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_cafe",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_cafe-back-low.jpg",
+      "drawCalls": 67,
+      "triangles": 434734,
+      "cam": [
+        108,
+        5,
+        126
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_restaurant",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_restaurant-front-high.jpg",
+      "drawCalls": 130,
+      "triangles": 451024,
+      "cam": [
+        99,
+        5,
+        161
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_restaurant",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_restaurant-side-high.jpg",
+      "drawCalls": 83,
+      "triangles": 363216,
+      "cam": [
+        99,
+        5,
+        161
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_restaurant",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_restaurant-back-high.jpg",
+      "drawCalls": 95,
+      "triangles": 400046,
+      "cam": [
+        99,
+        5,
+        161
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_restaurant",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_restaurant-front-low.jpg",
+      "drawCalls": 66,
+      "triangles": 434222,
+      "cam": [
+        99,
+        5,
+        161
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_restaurant",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_restaurant-side-low.jpg",
+      "drawCalls": 59,
+      "triangles": 422192,
+      "cam": [
+        99,
+        5,
+        161
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_restaurant",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_restaurant-back-low.jpg",
+      "drawCalls": 59,
+      "triangles": 422192,
+      "cam": [
+        99,
+        5,
+        161
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "bank",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-bank-front-high.jpg",
+      "drawCalls": 135,
+      "triangles": 454760,
+      "cam": [
+        129,
+        5,
+        141
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "bank",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-bank-side-high.jpg",
+      "drawCalls": 99,
+      "triangles": 401098,
+      "cam": [
+        129,
+        5,
+        141
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "bank",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-bank-back-high.jpg",
+      "drawCalls": 107,
+      "triangles": 405684,
+      "cam": [
+        129,
+        5,
+        141
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "bank",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-bank-front-low.jpg",
+      "drawCalls": 68,
+      "triangles": 435246,
+      "cam": [
+        129,
+        5,
+        141
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "bank",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-bank-side-low.jpg",
+      "drawCalls": 65,
+      "triangles": 433710,
+      "cam": [
+        129,
+        5,
+        141
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "bank",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-bank-back-low.jpg",
+      "drawCalls": 67,
+      "triangles": 433234,
+      "cam": [
+        129,
+        5,
+        141
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_apartment",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-house_apartment-front-high.jpg",
+      "drawCalls": 138,
+      "triangles": 454800,
+      "cam": [
+        100,
+        5,
+        178
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_apartment",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-house_apartment-side-high.jpg",
+      "drawCalls": 82,
+      "triangles": 362458,
+      "cam": [
+        100,
+        5,
+        178
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_apartment",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-house_apartment-back-high.jpg",
+      "drawCalls": 80,
+      "triangles": 361248,
+      "cam": [
+        100,
+        5,
+        178
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_apartment",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-house_apartment-front-low.jpg",
+      "drawCalls": 70,
+      "triangles": 436270,
+      "cam": [
+        100,
+        5,
+        178
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_apartment",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-house_apartment-side-low.jpg",
+      "drawCalls": 58,
+      "triangles": 421680,
+      "cam": [
+        100,
+        5,
+        178
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_apartment",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-house_apartment-back-low.jpg",
+      "drawCalls": 56,
+      "triangles": 420656,
+      "cam": [
+        100,
+        5,
+        178
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "office_tower",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-office_tower-front-high.jpg",
+      "drawCalls": 108,
+      "triangles": 434744,
+      "cam": [
+        132,
+        5,
+        98
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "office_tower",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-office_tower-side-high.jpg",
+      "drawCalls": 129,
+      "triangles": 451112,
+      "cam": [
+        132,
+        5,
+        98
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "office_tower",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-office_tower-back-high.jpg",
+      "drawCalls": 126,
+      "triangles": 448172,
+      "cam": [
+        132,
+        5,
+        98
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "office_tower",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-office_tower-front-low.jpg",
+      "drawCalls": 56,
+      "triangles": 420882,
+      "cam": [
+        132,
+        5,
+        98
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "office_tower",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-office_tower-side-low.jpg",
+      "drawCalls": 68,
+      "triangles": 435246,
+      "cam": [
+        132,
+        5,
+        98
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "office_tower",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-office_tower-back-low.jpg",
+      "drawCalls": 69,
+      "triangles": 434258,
+      "cam": [
+        132,
+        5,
+        98
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "hotel",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-hotel-front-high.jpg",
+      "drawCalls": 129,
+      "triangles": 448952,
+      "cam": [
+        78,
+        5,
+        173
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "hotel",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-hotel-side-high.jpg",
+      "drawCalls": 73,
+      "triangles": 351196,
+      "cam": [
+        78,
+        5,
+        173
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "hotel",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-hotel-back-high.jpg",
+      "drawCalls": 81,
+      "triangles": 366470,
+      "cam": [
+        78,
+        5,
+        173
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "hotel",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-hotel-front-low.jpg",
+      "drawCalls": 68,
+      "triangles": 435246,
+      "cam": [
+        78,
+        5,
+        173
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "hotel",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-hotel-side-low.jpg",
+      "drawCalls": 56,
+      "triangles": 420656,
+      "cam": [
+        78,
+        5,
+        173
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "hotel",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-hotel-back-low.jpg",
+      "drawCalls": 57,
+      "triangles": 421168,
+      "cam": [
+        78,
+        5,
+        173
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_supermarket",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_supermarket-front-high.jpg",
+      "drawCalls": 137,
+      "triangles": 455104,
+      "cam": [
+        110,
+        5,
+        172
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_supermarket",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_supermarket-side-high.jpg",
+      "drawCalls": 83,
+      "triangles": 362970,
+      "cam": [
+        110,
+        5,
+        172
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_supermarket",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-shop_supermarket-back-high.jpg",
+      "drawCalls": 85,
+      "triangles": 368278,
+      "cam": [
+        110,
+        5,
+        172
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_supermarket",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_supermarket-front-low.jpg",
+      "drawCalls": 69,
+      "triangles": 435758,
+      "cam": [
+        110,
+        5,
+        172
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_supermarket",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_supermarket-side-low.jpg",
+      "drawCalls": 59,
+      "triangles": 422192,
+      "cam": [
+        110,
+        5,
+        172
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "shop_supermarket",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-shop_supermarket-back-low.jpg",
+      "drawCalls": 58,
+      "triangles": 421680,
+      "cam": [
+        110,
+        5,
+        172
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_garden",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-deco_garden-front-high.jpg",
+      "drawCalls": 129,
+      "triangles": 449352,
+      "cam": [
+        99,
+        5,
+        131
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_garden",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-deco_garden-side-high.jpg",
+      "drawCalls": 101,
+      "triangles": 409218,
+      "cam": [
+        99,
+        5,
+        131
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_garden",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-deco_garden-back-high.jpg",
+      "drawCalls": 104,
+      "triangles": 405336,
+      "cam": [
+        99,
+        5,
+        131
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_garden",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-deco_garden-front-low.jpg",
+      "drawCalls": 67,
+      "triangles": 434734,
+      "cam": [
+        99,
+        5,
+        131
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_garden",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-deco_garden-side-low.jpg",
+      "drawCalls": 62,
+      "triangles": 423728,
+      "cam": [
+        99,
+        5,
+        131
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_garden",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-deco_garden-back-low.jpg",
+      "drawCalls": 64,
+      "triangles": 424752,
+      "cam": [
+        99,
+        5,
+        131
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_park",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-deco_park-front-high.jpg",
+      "drawCalls": 130,
+      "triangles": 451024,
+      "cam": [
+        111,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_park",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-deco_park-side-high.jpg",
+      "drawCalls": 87,
+      "triangles": 368574,
+      "cam": [
+        111,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_park",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-deco_park-back-high.jpg",
+      "drawCalls": 97,
+      "triangles": 400726,
+      "cam": [
+        111,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_park",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-deco_park-front-low.jpg",
+      "drawCalls": 66,
+      "triangles": 434222,
+      "cam": [
+        111,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_park",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-deco_park-side-low.jpg",
+      "drawCalls": 62,
+      "triangles": 423728,
+      "cam": [
+        111,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "deco_park",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-deco_park-back-low.jpg",
+      "drawCalls": 61,
+      "triangles": 423216,
+      "cam": [
+        111,
+        4,
+        147
+      ]
+    },
+    {
+      "kind": "city",
+      "id": "house_small-rotations",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-rotations-0-90-180-270-high.jpg"
+    },
+    {
+      "kind": "city",
+      "id": "house_small-rotations",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-rotations-0-90-180-270-low.jpg"
+    },
+    {
+      "kind": "city",
+      "id": "construction",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-construction-scaffold-high.jpg"
+    },
+    {
+      "kind": "city",
+      "id": "construction",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-construction-scaffold-low.jpg"
+    },
+    {
+      "kind": "city",
+      "id": "upgrade",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-upgrade-ring-high.jpg"
+    },
+    {
+      "kind": "city",
+      "id": "upgrade",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-upgrade-ring-low.jpg"
+    },
+    {
+      "kind": "city",
+      "id": "overview",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/city-overview-high.jpg",
+      "drawCalls": 164,
+      "triangles": 389756
+    },
+    {
+      "kind": "city",
+      "id": "overview",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/city-overview-low.jpg",
+      "drawCalls": 91,
+      "triangles": 369814
+    },
+    {
+      "kind": "farm",
+      "id": "farmhouse",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-farmhouse-front-high.jpg",
+      "drawCalls": 125,
+      "triangles": 220438,
+      "cam": [
+        147,
+        5,
+        149
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "farmhouse",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-farmhouse-side-high.jpg",
+      "drawCalls": 107,
+      "triangles": 177768,
+      "cam": [
+        147,
+        5,
+        149
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "farmhouse",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-farmhouse-back-high.jpg",
+      "drawCalls": 111,
+      "triangles": 177140,
+      "cam": [
+        147,
+        5,
+        149
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "farmhouse",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-farmhouse-front-low.jpg",
+      "drawCalls": 58,
+      "triangles": 199218,
+      "cam": [
+        147,
+        5,
+        149
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "farmhouse",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-farmhouse-side-low.jpg",
+      "drawCalls": 64,
+      "triangles": 208974,
+      "cam": [
+        147,
+        5,
+        149
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "farmhouse",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-farmhouse-back-low.jpg",
+      "drawCalls": 65,
+      "triangles": 207666,
+      "cam": [
+        147,
+        5,
+        149
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "market",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-market-front-high.jpg",
+      "drawCalls": 127,
+      "triangles": 221150,
+      "cam": [
+        147,
+        5,
+        155
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "market",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-market-side-high.jpg",
+      "drawCalls": 103,
+      "triangles": 176144,
+      "cam": [
+        147,
+        5,
+        155
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "market",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-market-back-high.jpg",
+      "drawCalls": 107,
+      "triangles": 174892,
+      "cam": [
+        147,
+        5,
+        155
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "market",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-market-front-low.jpg",
+      "drawCalls": 59,
+      "triangles": 199730,
+      "cam": [
+        147,
+        5,
+        155
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "market",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-market-side-low.jpg",
+      "drawCalls": 62,
+      "triangles": 207950,
+      "cam": [
+        147,
+        5,
+        155
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "market",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-market-back-low.jpg",
+      "drawCalls": 64,
+      "triangles": 207154,
+      "cam": [
+        147,
+        5,
+        155
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "well",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-well-front-high.jpg",
+      "drawCalls": 127,
+      "triangles": 219254,
+      "cam": [
+        137,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "well",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-well-side-high.jpg",
+      "drawCalls": 100,
+      "triangles": 170832,
+      "cam": [
+        137,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "well",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-well-back-high.jpg",
+      "drawCalls": 102,
+      "triangles": 175680,
+      "cam": [
+        137,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "well",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-well-front-low.jpg",
+      "drawCalls": 59,
+      "triangles": 199730,
+      "cam": [
+        137,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "well",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-well-side-low.jpg",
+      "drawCalls": 61,
+      "triangles": 207438,
+      "cam": [
+        137,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "well",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-well-back-low.jpg",
+      "drawCalls": 62,
+      "triangles": 206130,
+      "cam": [
+        137,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "chicken_coop",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-chicken_coop-front-high.jpg",
+      "drawCalls": 127,
+      "triangles": 219254,
+      "cam": [
+        133,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "chicken_coop",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-chicken_coop-side-high.jpg",
+      "drawCalls": 98,
+      "triangles": 166886,
+      "cam": [
+        133,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "chicken_coop",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-chicken_coop-back-high.jpg",
+      "drawCalls": 97,
+      "triangles": 174582,
+      "cam": [
+        133,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "chicken_coop",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-chicken_coop-front-low.jpg",
+      "drawCalls": 59,
+      "triangles": 199730,
+      "cam": [
+        133,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "chicken_coop",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-chicken_coop-side-low.jpg",
+      "drawCalls": 62,
+      "triangles": 208402,
+      "cam": [
+        133,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "chicken_coop",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-chicken_coop-back-low.jpg",
+      "drawCalls": 58,
+      "triangles": 206130,
+      "cam": [
+        133,
+        6,
+        157
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "rice_mill",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-rice_mill-front-high.jpg",
+      "drawCalls": 123,
+      "triangles": 216420,
+      "cam": [
+        129,
+        5,
+        147
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "rice_mill",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-rice_mill-side-high.jpg",
+      "drawCalls": 102,
+      "triangles": 177058,
+      "cam": [
+        129,
+        5,
+        147
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "rice_mill",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-rice_mill-back-high.jpg",
+      "drawCalls": 109,
+      "triangles": 199330,
+      "cam": [
+        129,
+        5,
+        147
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "rice_mill",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-rice_mill-front-low.jpg",
+      "drawCalls": 55,
+      "triangles": 196896,
+      "cam": [
+        129,
+        5,
+        147
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "rice_mill",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-rice_mill-side-low.jpg",
+      "drawCalls": 60,
+      "triangles": 206140,
+      "cam": [
+        129,
+        5,
+        147
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "rice_mill",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-rice_mill-back-low.jpg",
+      "drawCalls": 61,
+      "triangles": 207666,
+      "cam": [
+        129,
+        5,
+        147
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "cow_barn",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-cow_barn-front-high.jpg",
+      "drawCalls": 117,
+      "triangles": 216380,
+      "cam": [
+        154,
+        5,
+        132
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "cow_barn",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-cow_barn-side-high.jpg",
+      "drawCalls": 118,
+      "triangles": 202210,
+      "cam": [
+        154,
+        5,
+        132
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "cow_barn",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-cow_barn-back-high.jpg",
+      "drawCalls": 117,
+      "triangles": 180542,
+      "cam": [
+        154,
+        5,
+        132
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "cow_barn",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-cow_barn-front-low.jpg",
+      "drawCalls": 55,
+      "triangles": 196852,
+      "cam": [
+        154,
+        5,
+        132
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "cow_barn",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-cow_barn-side-low.jpg",
+      "drawCalls": 65,
+      "triangles": 209486,
+      "cam": [
+        154,
+        5,
+        132
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "cow_barn",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-cow_barn-back-low.jpg",
+      "drawCalls": 68,
+      "triangles": 209202,
+      "cam": [
+        154,
+        5,
+        132
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "bakery",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-bakery-front-high.jpg",
+      "drawCalls": 127,
+      "triangles": 218424,
+      "cam": [
+        129,
+        5,
+        137
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "bakery",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-bakery-side-high.jpg",
+      "drawCalls": 110,
+      "triangles": 199572,
+      "cam": [
+        129,
+        5,
+        137
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "bakery",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-bakery-back-high.jpg",
+      "drawCalls": 121,
+      "triangles": 207744,
+      "cam": [
+        129,
+        5,
+        137
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "bakery",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-bakery-front-low.jpg",
+      "drawCalls": 59,
+      "triangles": 198900,
+      "cam": [
+        129,
+        5,
+        137
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "bakery",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-bakery-side-low.jpg",
+      "drawCalls": 61,
+      "triangles": 206652,
+      "cam": [
+        129,
+        5,
+        137
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "bakery",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-bakery-back-low.jpg",
+      "drawCalls": 66,
+      "triangles": 208178,
+      "cam": [
+        129,
+        5,
+        137
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "deco_flowerbed",
+      "label": "front",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-deco_flowerbed-front-high.jpg",
+      "drawCalls": 80,
+      "triangles": 120008,
+      "cam": [
+        101,
+        6,
+        69
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "deco_flowerbed",
+      "label": "side",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-deco_flowerbed-side-high.jpg",
+      "drawCalls": 113,
+      "triangles": 169778,
+      "cam": [
+        101,
+        6,
+        69
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "deco_flowerbed",
+      "label": "back",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-deco_flowerbed-back-high.jpg",
+      "drawCalls": 131,
+      "triangles": 225298,
+      "cam": [
+        101,
+        6,
+        69
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "deco_flowerbed",
+      "label": "front",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-deco_flowerbed-front-low.jpg",
+      "drawCalls": 41,
+      "triangles": 139064,
+      "cam": [
+        101,
+        6,
+        69
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "deco_flowerbed",
+      "label": "side",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-deco_flowerbed-side-low.jpg",
+      "drawCalls": 58,
+      "triangles": 177008,
+      "cam": [
+        101,
+        6,
+        69
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "deco_flowerbed",
+      "label": "back",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-deco_flowerbed-back-low.jpg",
+      "drawCalls": 64,
+      "triangles": 207552,
+      "cam": [
+        101,
+        6,
+        69
+      ]
+    },
+    {
+      "kind": "farm",
+      "id": "house_small-rotations",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-rotations-0-90-180-270-high.jpg"
+    },
+    {
+      "kind": "farm",
+      "id": "house_small-rotations",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-rotations-0-90-180-270-low.jpg"
+    },
+    {
+      "kind": "farm",
+      "id": "construction",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-construction-scaffold-high.jpg"
+    },
+    {
+      "kind": "farm",
+      "id": "construction",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-construction-scaffold-low.jpg"
+    },
+    {
+      "kind": "farm",
+      "id": "upgrade",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-upgrade-ring-high.jpg"
+    },
+    {
+      "kind": "farm",
+      "id": "upgrade",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-upgrade-ring-low.jpg"
+    },
+    {
+      "kind": "farm",
+      "id": "overview",
+      "quality": "high",
+      "file": "docs/evidence/g4/model-pack/farm-overview-high.jpg",
+      "drawCalls": 165,
+      "triangles": 236842
+    },
+    {
+      "kind": "farm",
+      "id": "overview",
+      "quality": "low",
+      "file": "docs/evidence/g4/model-pack/farm-overview-low.jpg",
+      "drawCalls": 90,
+      "triangles": 214702
+    }
+  ],
+  "errors": [],
+  "upgrade": {
+    "accepted": true,
+    "defId": "chicken_coop"
+  }
+}

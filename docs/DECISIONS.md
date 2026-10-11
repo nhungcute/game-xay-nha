@@ -279,3 +279,32 @@ reads them into `economy.upgrades`, `economy.relief` and `economy.farm.baseStora
   is optional and every rule change only loosens). Reversible by reverting the docs/16 rows and regenerating, but v3
   saves with tiers would then fail validation.
 
+
+## D029 — 2026-10-11 — Full 21-model pack imported: 20 buildings replaced, silo keeps its placeholder
+
+From the user's D029 brief. Source: `map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/` (owner-supplied, 283 MB, NOT committed).
+`scripts/import-model-pack.mjs` (deterministic, `--check` skips when the pack is absent) bakes world matrices,
+drops the spilling ground groups (`LANDSCAPE_OPTIONAL`, `PATH_OPTIONAL`, `PARKING_OPTIONAL` — decor and the market
+keep their content groups), converts every material to an opaque vertex colour (BLEND glass → solid dark blue-grey,
+sRGB factors → linear), welds by position+colour, simplifies with `meshoptimizer` (`simplifyWithAttributes`,
+`LockBorder`, error ≤ 0.02, colour weight 0.5, target 70 % of the per-size triangle cap), flat-shades, rotates 180°
+(pack declares +Z fronts; the game wants −Z), uniform-scales into the 2 m footprint at 0.92 and writes one
+mesh/material GLB with POSITION+NORMAL+COLOR_0 — one draw call per building.
+- **LOD0 as source, not LOD1** (deviation from the brief): the pack's own LOD1 is destructive — `city_bank` loses its
+  columned portico entirely; verified by rendering both LODs side by side (`docs/evidence/g4/model-pack/glb-standalone/`).
+  LOD0 + our simplifier keeps the shapes and still fits every cap.
+- **SILO stays placeholder** (per brief): `rural_warehouse` is a 4×3 barn, the wrong silhouette for a 2×2 silo.
+- **DECOR_1_CELL = try → PASS**: `deco_garden` (pergola + fountain + bushes) and `deco_flowerbed` (planter with vines)
+  read clearly at the default angle, so both keep their imported models.
+- `fit.ts` and the load-time fit branch are deleted: nothing fits at runtime any more; every authored entry is
+  pre-fitted (`placeholder: false`, no `fit`). `assets.test.ts` now asserts provenance, exactly one part, vertex
+  normals + colours, bottom pivot, bounds inside the footprint and the per-model triangle cap from
+  `scripts/model-pack.config.json`; a second test runs `import-model-pack.mjs --check`.
+- Budgets (docs/11 §8) still pass with room: city desktop 183 calls / 472k triangles worst view (was 185 / 390k),
+  city low 451k (limit 500k — the first import at 80 % targets hit 520k, so targets moved to 70 %). Farm unchanged.
+- Runtime material: one shared `MeshStandardMaterial` (vertexColors, roughness 0.85, metalness 0, doubleSided).
+- Reversible: delete the 20 authored entries from the generator's `AUTHORED` list, regenerate, and restore `fit.ts`
+  from git history (`62d1eea^..ed728b9`); gameplay/catalog/contracts/sim untouched, `contentVersion` stays 3.
+- Windmill sails and well pulley stay static (animations deferred, per brief §3.3).
+- Evidence: `docs/evidence/g4/model-pack/` (136 in-game shots incl. 4-rotation row, construction + upgrade states,
+  overviews; `glb-standalone/` renders of all 20 fronts), `docs/reports/D029-model-pack-import.md`.
