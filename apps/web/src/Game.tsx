@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
-import { cellIndex, type Cell, type CommandType } from '@xay-nha/contracts';
+import type { Cell, CommandType } from '@xay-nha/contracts';
 import { builderCapacity, fieldQuota, populationAndJobs } from '@xay-nha/sim';
 import { AssetManager, type AssetManifestEntry } from './game/assets/AssetManager';
 import { GameLoop } from './game/GameLoop';
@@ -15,7 +15,6 @@ import { MiniMap } from './ui/MiniMap';
 import { TopBar, notifications } from './ui/TopBar';
 import { MissionPanel } from './ui/MissionPanel';
 import { CategoryBar, CategoryTray, categoryOf, type Category } from './ui/CategoryBar';
-import { RadialMenu, type RadialAction } from './ui/RadialMenu';
 import type { GamePanel } from './ui/panels';
 import { BuildingPanel } from './ui/BuildingPanel';
 import { LevelUpCard } from './ui/LevelUp';
@@ -120,8 +119,8 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
   },[attempt]);
   useEffect(()=>{if(!ready)return;const id=window.setInterval(()=>setStats(gameRef.current?.metrics()??null),1000);return()=>window.clearInterval(id);},[ready]);
   useEffect(()=>{if(ui.selection)setPanel(null);},[ui.selection]);
-  useEffect(()=>{const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){setPanel(null);useTools.setState({selection:null,radial:null});setCategory(null);}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape);},[]);
-  // Keep the bar's highlighted category in step with tools chosen elsewhere (hints, radial menu, keyboard).
+  useEffect(()=>{const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){setPanel(null);useTools.setState({selection:null});setCategory(null);}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape);},[]);
+  // Keep the bar's highlighted category in step with tools chosen elsewhere (hints, keyboard).
   useEffect(()=>{if(ui.tool!=='explore'){const next=categoryOf(ui.tool,ui.buildingId);if(next)setCategory(next);}},[ui.tool,ui.buildingId]);
   const apply=(type:CommandType,payload:unknown)=>gameRef.current?.world.apply(type,payload);
   const choose=(tool:Tool)=>{setPanel(null);gameRef.current?.tools.choose(tool);};
@@ -145,26 +144,11 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
     finally{setSwitchingMap(false);}
   };
   const pickCategory=(next:Category)=>{
-    setPanel(null);useTools.setState({selection:null,radial:null});
+    setPanel(null);useTools.setState({selection:null});
     if(next===category){setCategory(null);gameRef.current?.tools.choose('explore');return;}
     setCategory(next);if(categoryOf(ui.tool,ui.buildingId)!==next)gameRef.current?.tools.choose('explore');
   };
   const pickBuilding=(defId:string,cell?:Cell)=>{gameRef.current?.tools.choose('build');useTools.setState({buildingId:defId,...(cell?{cell}:{})});gameRef.current?.tools.refresh();};
-  const radialAction=(action:RadialAction,cell:Cell)=>{
-    const game=gameRef.current,s=game?.world.state;if(!game||!s)return;
-    useTools.setState({radial:null});
-    const focusTool=(tool:Tool)=>{game.tools.choose(tool);useTools.setState({cell});game.tools.refresh();};
-    switch(action){
-      case 'house':pickBuilding(kind==='city'?'house_small':'farmhouse',cell);break;
-      case 'road':focusTool('road');break;
-      case 'terraform':focusTool('terraform');break;
-      case 'nature':setCategory('nature');break;
-      case 'farm':apply('TILL',{rect:[cell[0],cell[1],cell[0],cell[1]]});break;
-      case 'remove':{const id=s.occupancy.get(cellIndex(...cell));if(id&&s.env.some(e=>e.id===id))apply('CLEAR_ENV',{envIds:[id]});else focusTool('clear');break;}
-    }
-  };
-  const project=useCallback((x:number,z:number)=>gameRef.current?.project(x,z)??{x:-9999,y:-9999},[]);
-  const closeRadial=useCallback(()=>useTools.setState({radial:null}),[]);
   const status=connection==='local'?t('offline'):connection==='online'?t('connected'):connection==='syncing'?`${t('syncing')} (${pending})`:`${t('disconnected')} (${pending})`;
   const preview=ui.preview;
   return <main className={`game-shell hud3-shell game-${kind}`}>
@@ -184,7 +168,6 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
         <button type="button" aria-label={t('resetCamera')} onClick={()=>gameRef.current?.rig.reset()}><GameIcon name="reset"/></button></div>
         <button className="hud3-layers" type="button" aria-label="Lưới khu đất" aria-pressed={zones} title="Bật/tắt lưới khu đất" onClick={()=>{const next=!zones;gameRef.current?.overlay.setZonesVisible(next);setZones(next);}}><GameIcon name="layers"/></button>
       </div>
-      {ui.radial&&ui.tool==='explore'&&!object&&<RadialMenu cell={ui.radial} kind={kind} project={project} onAction={radialAction} onClose={closeRadial}/>}
       {panel&&<aside className="side panel"><button className="close" aria-label="Đóng bảng" onClick={()=>setPanel(null)}><GameIcon name="close"/></button>
         <h2 className="panel-heading"><GameIcon name={PANEL_ICON[panel]}/>{PANEL_TITLE[panel]}</h2>
         {panel==='profile'?<Profile state={state}/>

@@ -7,8 +7,8 @@ import { WorldStore, type ToolPreview } from './WorldStore';
 import { errorText, t } from '../i18n';
 
 export type Tool='explore'|'clear'|'terraform'|'till'|'road'|'embank'|'bridge'|'build'|'plant'|'harvest'|'demolish'|'zone';
-interface ToolState {tool:Tool;mode:'RAISE'|'LOWER'|'FLATTEN';remove:boolean;tier:1|2|3;bridgeId:string;buildingId:string;cropId:string;rotation:Rotation;selection:string|null;preview:ToolPreview|null;cell:Cell|null;autoFlatten:boolean;radial:Cell|null}
-export const useTools=create<ToolState>(()=>({tool:'explore',mode:'FLATTEN',remove:false,tier:1,bridgeId:'bridge_wood',buildingId:'farmhouse',cropId:'veg_greens',rotation:0,selection:null,preview:null,cell:null,autoFlatten:false,radial:null}));
+interface ToolState {tool:Tool;mode:'RAISE'|'LOWER'|'FLATTEN';remove:boolean;tier:1|2|3;bridgeId:string;buildingId:string;cropId:string;rotation:Rotation;selection:string|null;preview:ToolPreview|null;cell:Cell|null;autoFlatten:boolean}
+export const useTools=create<ToolState>(()=>({tool:'explore',mode:'FLATTEN',remove:false,tier:1,bridgeId:'bridge_wood',buildingId:'farmhouse',cropId:'veg_greens',rotation:0,selection:null,preview:null,cell:null,autoFlatten:false}));
 
 /**
  * Auto-flatten target for a footprint: flush with an adjacent road when there is one (so flattening
@@ -25,16 +25,13 @@ export class ToolController {
   private bridgeStart:Cell|null=null;
   private path:Cell[]=[];
   constructor(readonly world:WorldStore){}
-  choose(tool:Tool):void {this.cancel();useTools.setState({tool,remove:false,selection:null,radial:null});}
-  /** A click/tap without drag in explore mode: empty ground opens the radial action menu (buildings select instead). */
-  tap(cell:Cell):void {if(useTools.getState().tool!=='explore'||!inBounds(cell))return;const s=useTools.getState();useTools.setState({radial:s.selection?null:cell});}
+  choose(tool:Tool):void {this.cancel();useTools.setState({tool,remove:false,selection:null});}
   rotate(direction=1):void {const rotation=((useTools.getState().rotation+direction+4)%4) as Rotation;useTools.setState({rotation});this.refresh();}
   cancel():void {this.start=null;this.bridgeStart=null;this.path=[];useTools.setState({preview:null});}
   /** Escape: first abandons a drag/bridge in progress, otherwise leaves the tool for explore mode. */
   escape():void {if(this.start||this.bridgeStart){this.cancel();return;}this.choose('explore');}
   down(cell:Cell):void {
     if(!inBounds(cell))return;
-    useTools.setState({radial:null});
     if(useTools.getState().tool==='explore') {const id=buildingAtCell(this.world.state,...cell)??this.world.state.snapshot.bridges.find(b=>b.a.toString()===cell.toString()||b.b.toString()===cell.toString())?.id;useTools.setState({selection:id??null,cell});return;}
     this.start=cell;this.path=[cell];this.move(cell,true);
   }

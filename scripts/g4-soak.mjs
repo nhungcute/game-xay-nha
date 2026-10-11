@@ -63,7 +63,7 @@ const steps = [
   async () => { await page.mouse.move(700, 450); await page.mouse.down({ button: 'right' }); await page.mouse.move(700 + rnd(300) - 150, 450 + rnd(120) - 60, { steps: 8 }); await page.mouse.up({ button: 'right' }); count('orbit'); },
   async () => { await page.mouse.move(400 + rnd(600), 250 + rnd(400)); await page.mouse.wheel(0, rnd(2) ? 300 : -300); count('wheel'); },
   async () => { await cameraButtons(page).nth(rnd(4)).click(); count('camera-button'); },
-  async () => { const p = await screenCell(rnd(7) - 3, rnd(7) - 3); if (!p) return; await pickTool(page, 'Khám phá'); await page.mouse.click(p.x, p.y); const items = page.locator('.hud3-radial-item'); if (await items.count()) { await items.nth(rnd(5)).click(); count('radial'); } },
+  async () => { const p = await screenCell(rnd(7) - 3, rnd(7) - 3); if (!p) return; await pickTool(page, 'Khám phá'); await page.mouse.click(p.x, p.y); await page.keyboard.press('Escape'); count('explore-tap'); },
   async () => { const key = ['w', 'a', 's', 'd'][rnd(4)]; await page.keyboard.down(key); await page.waitForTimeout(400); await page.keyboard.up(key); await page.keyboard.press('Escape'); count('keys'); },
   async () => useTool(['Dọn', 'San nền', 'Đường', 'Kè', 'Cầu', 'Xây', 'Phá', 'Khu đất', 'Cuốc', 'Gieo', 'Thu hoạch'][rnd(11)]),
   async () => useTool('Dọn'),

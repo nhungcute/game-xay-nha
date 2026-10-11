@@ -2,7 +2,7 @@
 .hud3-shell{--h3-paper:#fffdf7;--h3-ink:#22382e;--h3-muted:#7b8a7f;--h3-line:#e7eadf;--h3-chip:#f1f3eb;--h3-green:#7ab55a;--h3-select:#e8eedd;
   --h3-shadow:0 6px 22px #1c3a2a1f,0 1px 3px #1c3a2a14;color:var(--h3-ink)}
 .hud3-shell .hud3-pill{background:var(--h3-paper);border:0;border-radius:30px;box-shadow:var(--h3-shadow)}
-.hud3-shell .hud3-pill button,.hud3-shell .hud3-controls button,.hud3-shell .hud3-radial button,.hud3-shell .hud3-minimap button{min-height:0;padding:0;border:0;background:none;color:inherit;font:inherit;border-radius:0}
+.hud3-shell .hud3-pill button,.hud3-shell .hud3-controls button,.hud3-shell .hud3-minimap button{min-height:0;padding:0;border:0;background:none;color:inherit;font:inherit;border-radius:0}
 .hud3-shell button:focus-visible{outline:3px solid #e2b24c;outline-offset:2px}
 .hud3-shell .game-icon{flex:none}
 
@@ -115,16 +115,7 @@
 .hud3-card-cost{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600}.hud3-card-cost .game-icon{width:14px;height:14px}
 .hud3-card small{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--h3-muted)}.hud3-card small .game-icon{width:12px;height:12px}
 
-/* ---------- radial action menu ---------- */
-.hud3-radial{position:absolute;z-index:14;left:-9999px;top:-9999px;width:0;height:0}
-.hud3-radial-tile{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
-.hud3-radial-tile polygon{fill:#ffffff24;stroke:#fff;stroke-width:3;stroke-linejoin:round;filter:drop-shadow(0 1px 3px #0005)}
-.hud3-shell .hud3-radial-item{position:absolute;left:0;top:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:78px;height:78px;border-radius:50% !important;
-  background:var(--h3-paper) !important;box-shadow:0 5px 16px #1c3a2a33;font-size:11.5px;font-weight:600;line-height:1.1;text-align:center;color:#25392f;cursor:pointer;
-  transform:translate(calc(var(--rx) - 50%),calc(var(--ry) - 50%));animation:hud3-pop .18s ease-out both}
-.hud3-shell .hud3-radial-item:hover{background:#fff8e3 !important}
-.hud3-radial-item .game-icon{width:28px;height:28px;color:#2e4a3c}
-.hud3-radial-item[data-action=farm] .game-icon{color:#d49a2a}
+/* ---------- shared pop-in (level-up card) ---------- */
 @keyframes hud3-pop{from{opacity:0}to{opacity:1}}
 
 /* ---------- side panels & misc in the new skin ---------- */
@@ -166,7 +157,6 @@
  .hud3-shell .hud3-cat{flex:1 0 64px;width:auto;height:66px;font-size:10px;gap:4px;border-radius:14px !important}.hud3-cat-icon{width:36px;height:36px}.hud3-cat-icon .game-icon{width:21px;height:21px}
  .hud3-shell .hud3-cat+.hud3-cat::before{top:12px;bottom:12px}
  .hud3-shell .hud3-tray{max-width:none;padding:7px;gap:6px;border-radius:18px}.hud3-shell .hud3-tool{width:70px;height:62px;font-size:10px}.hud3-shell .hud3-card{width:136px;min-height:62px;padding:7px 9px !important}
- .hud3-shell .hud3-radial-item{width:60px;height:60px;font-size:10px}.hud3-radial-item .game-icon{width:22px;height:22px}
  .hud3-shell .side{right:8px;top:calc(var(--hud-bottom,130px) + 12px)}
  .hud3-shell .debug{left:8px;top:auto;bottom:calc(100dvh - var(--dock-top,80dvh) + 120px)}
 }
@@ -176,7 +166,7 @@
  .hud3-shell .hud3-cat{height:58px;width:76px;font-size:10px;gap:3px}.hud3-cat-icon{width:30px;height:30px}.hud3-shell .hud3-bar{padding:4px 6px}
  .hud3-shell .hud3-missions{max-height:calc(100dvh - var(--hud-bottom,60px) - 90px)}
 }
-@media(prefers-reduced-motion:reduce){.hud3-shell .hud3-radial-item{animation:none}.hud3-xpbar>span{transition:none}.hud3-shell .hud3-tool.is-hint{animation:none}}
+@media(prefers-reduced-motion:reduce){.hud3-xpbar>span{transition:none}.hud3-shell .hud3-tool.is-hint{animation:none}}
 
 /* ---------- G4 review fixes: consequences, confirmations, level-up ---------- */
 .hud3-shell .preview-note{display:block;flex-basis:100%;padding:6px 10px;border-radius:10px;background:#fff2d6;color:#8a5a12;font-size:12px;font-weight:600}

@@ -3,7 +3,6 @@ import { catalog, economy } from '@xay-nha/content';
 import { createTestTemplate } from '@xay-nha/worldgen';
 import { createState, recompute } from '@xay-nha/sim';
 import { CATEGORIES, buildingCategory, categoryOf, categoryTools } from './CategoryBar';
-import { radialItems } from './RadialMenu';
 import { notifications, playerTitle } from './TopBar';
 
 describe('reference HUD logic', () => {
@@ -29,12 +28,6 @@ describe('reference HUD logic', () => {
     expect(categoryOf('build', 'market')).toBe('buildings');
     expect(categoryOf('build', 'deco_flowerbed')).toBe('decorations');
     expect(categoryOf('explore', 'x')).toBeNull();
-  });
-  it('radial menu has five actions laid out like the reference (house on top)', () => {
-    const items = radialItems('farm');
-    expect(items.map(i => i.action)).toEqual(['house', 'road', 'remove', 'farm', 'nature']);
-    expect(items[0]!.y).toBeLessThan(Math.min(...items.slice(1).map(i => i.y)));
-    expect(radialItems('city').map(i => i.action)).toContain('terraform');
   });
   it('notifications: ripe crops and finished constructions are reported, nothing when idle', () => {
     const s = createState(createTestTemplate('farm'), 1_000_000); recompute(s);

@@ -15,7 +15,7 @@ export class PointerRouter {
     const options={signal:this.abort.signal};
     canvas.addEventListener('contextmenu',event=>event.preventDefault(),options);
     canvas.addEventListener('pointerdown',this.down,options);canvas.addEventListener('pointermove',this.move,options);canvas.addEventListener('pointerup',this.up,options);canvas.addEventListener('pointercancel',this.cancel,options);
-    canvas.addEventListener('wheel',event=>{event.preventDefault();rig.zoom(event.deltaY);useTools.setState({radial:null});},{...options,passive:false});
+    canvas.addEventListener('wheel',event=>{event.preventDefault();rig.zoom(event.deltaY);},{...options,passive:false});
     window.addEventListener('keydown',event=>{if((event.target as HTMLElement).matches('input,select,textarea'))return;this.keys.add(event.key.toLowerCase());if(event.key==='Escape')tools.escape();if(['r','e'].includes(event.key.toLowerCase()))tools.rotate();if(event.key.toLowerCase()==='q')tools.rotate(-1);},options);
     window.addEventListener('keyup',event=>this.keys.delete(event.key.toLowerCase()),options);window.addEventListener('blur',()=>{this.keys.clear();this.points.clear();this.origin=null;},options);
   }
@@ -47,7 +47,7 @@ export class PointerRouter {
     if(old)this.points.set(event.pointerId,{x:event.clientX,y:event.clientY});
   };
   private up=(event:PointerEvent):void=>{
-    if(this.points.size===1&&this.origin){const cell=this.pick(event.clientX,event.clientY);if(cell&&this.origin.button===0){this.tools.up(cell,event.pointerType==='touch');if(!this.dragging)this.tools.tap(cell);}if(this.origin.button===2&&!this.dragging)this.tools.cancel();}
+    if(this.points.size===1&&this.origin){const cell=this.pick(event.clientX,event.clientY);if(cell&&this.origin.button===0){this.tools.up(cell,event.pointerType==='touch');}if(this.origin.button===2&&!this.dragging)this.tools.cancel();}
     this.points.delete(event.pointerId);this.origin=null;if(this.canvas.hasPointerCapture(event.pointerId))this.canvas.releasePointerCapture(event.pointerId);
   };
   private cancel=():void=>{this.points.clear();this.origin=null;this.tools.cancel();};
