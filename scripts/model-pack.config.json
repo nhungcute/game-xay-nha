@@ -16,6 +16,7 @@
       "triangleCap": 1200,
       "triangles": 1078,
       "sourceTriangles": 17904,
+      "windowCount": 0,
       "rotationYDeg": 180,
       "scale": 0.386706,
       "centerOffsetM": [
@@ -32,7 +33,7 @@
         1,
         1
       ],
-      "bytes": 88350,
+      "bytes": 101432,
       "floatingComponents": 0,
       "floatingBaseline": 0,
       "groups": {
@@ -100,6 +101,7 @@
       "triangleCap": 1800,
       "triangles": 1186,
       "sourceTriangles": 20420,
+      "windowCount": 8,
       "rotationYDeg": 180,
       "scale": 0.505854,
       "centerOffsetM": [
@@ -116,7 +118,7 @@
         2,
         2
       ],
-      "bytes": 97098,
+      "bytes": 111476,
       "floatingComponents": 0,
       "floatingBaseline": 0,
       "groups": {
@@ -138,6 +140,7 @@
       "triangleCap": 1800,
       "triangles": 1260,
       "sourceTriangles": 6840,
+      "windowCount": 14,
       "rotationYDeg": 180,
       "scale": 0.340907,
       "centerOffsetM": [
@@ -154,7 +157,7 @@
         2,
         2
       ],
-      "bytes": 103092,
+      "bytes": 118360,
       "floatingComponents": 2,
       "floatingBaseline": 2,
       "floatingDetails": [
@@ -194,6 +197,7 @@
       "triangleCap": 1800,
       "triangles": 1766,
       "sourceTriangles": 10608,
+      "windowCount": 36,
       "rotationYDeg": 180,
       "scale": 0.616071,
       "centerOffsetM": [
@@ -210,7 +214,7 @@
         2,
         3
       ],
-      "bytes": 144078,
+      "bytes": 165420,
       "floatingComponents": 5,
       "floatingBaseline": 5,
       "floatingDetails": [
@@ -323,6 +327,7 @@
       "triangleCap": 1800,
       "triangles": 1256,
       "sourceTriangles": 9956,
+      "windowCount": 24,
       "rotationYDeg": 180,
       "scale": 0.342804,
       "centerOffsetM": [
@@ -339,7 +344,7 @@
         2,
         2
       ],
-      "bytes": 102768,
+      "bytes": 117988,
       "floatingComponents": 5,
       "floatingBaseline": 5,
       "floatingDetails": [
@@ -402,6 +407,7 @@
       "triangleCap": 2500,
       "triangles": 1406,
       "sourceTriangles": 14888,
+      "windowCount": 24,
       "rotationYDeg": 180,
       "scale": 0.376985,
       "centerOffsetM": [
@@ -418,7 +424,7 @@
         3,
         3
       ],
-      "bytes": 114922,
+      "bytes": 131940,
       "floatingComponents": 5,
       "floatingBaseline": 5,
       "floatingDetails": [
@@ -481,6 +487,7 @@
       "triangleCap": 2500,
       "triangles": 1750,
       "sourceTriangles": 8760,
+      "windowCount": 32,
       "rotationYDeg": 180,
       "scale": 0.598698,
       "centerOffsetM": [
@@ -497,7 +504,7 @@
         3,
         3
       ],
-      "bytes": 142786,
+      "bytes": 163932,
       "floatingComponents": 0,
       "floatingBaseline": 0,
       "groups": {
@@ -518,6 +525,7 @@
       "triangleCap": 3500,
       "triangles": 1814,
       "sourceTriangles": 32432,
+      "windowCount": 83,
       "rotationYDeg": 180,
       "scale": 0.669395,
       "centerOffsetM": [
@@ -534,7 +542,7 @@
         4,
         4
       ],
-      "bytes": 147970,
+      "bytes": 169884,
       "floatingComponents": 0,
       "floatingBaseline": 0,
       "groups": {
@@ -555,6 +563,7 @@
       "triangleCap": 4500,
       "triangles": 2986,
       "sourceTriangles": 26204,
+      "windowCount": 163,
       "rotationYDeg": 180,
       "scale": 0.520509,
       "centerOffsetM": [
@@ -571,7 +580,7 @@
         4,
         4
       ],
-      "bytes": 242902,
+      "bytes": 278884,
       "floatingComponents": 8,
       "floatingBaseline": 8,
       "floatingDetails": [
@@ -658,6 +667,7 @@
       "triangleCap": 3500,
       "triangles": 1598,
       "sourceTriangles": 17340,
+      "windowCount": 70,
       "rotationYDeg": 180,
       "scale": 0.681481,
       "centerOffsetM": [
@@ -674,7 +684,7 @@
         4,
         5
       ],
-      "bytes": 130466,
+      "bytes": 149792,
       "floatingComponents": 8,
       "floatingBaseline": 8,
       "floatingDetails": [
@@ -762,6 +772,7 @@
       "triangleCap": 3500,
       "triangles": 2450,
       "sourceTriangles": 7816,
+      "windowCount": 19,
       "rotationYDeg": 180,
       "scale": 0.387884,
       "centerOffsetM": [
@@ -778,7 +789,7 @@
         4,
         4
       ],
-      "bytes": 199482,
+      "bytes": 229032,
       "floatingComponents": 3,
       "floatingBaseline": 3,
       "floatingDetails": [
@@ -822,6 +833,7 @@
       "triangleCap": 800,
       "triangles": 792,
       "sourceTriangles": 30008,
+      "windowCount": 0,
       "rotationYDeg": 180,
       "scale": 0.153333,
       "centerOffsetM": [
@@ -838,7 +850,7 @@
         1,
         1
       ],
-      "bytes": 65184,
+      "bytes": 74832,
       "floatingComponents": 0,
       "floatingBaseline": 0,
       "groups": {
@@ -904,6 +916,7 @@
       "triangleCap": 2500,
       "triangles": 2472,
       "sourceTriangles": 38716,
+      "windowCount": 0,
       "rotationYDeg": 180,
       "scale": 0.345,
       "centerOffsetM": [
@@ -920,7 +933,7 @@
         3,
         3
       ],
-      "bytes": 201264,
+      "bytes": 231076,
       "floatingComponents": 3,
       "floatingBaseline": 3,
       "floatingDetails": [
@@ -1006,6 +1019,7 @@
       "triangleCap": 2500,
       "triangles": 1652,
       "sourceTriangles": 30320,
+      "windowCount": 8,
       "rotationYDeg": 180,
       "scale": 0.593395,
       "centerOffsetM": [
@@ -1022,7 +1036,7 @@
         3,
         3
       ],
-      "bytes": 134844,
+      "bytes": 154812,
       "floatingComponents": 0,
       "floatingBaseline": 0,
       "groups": {
@@ -1042,6 +1056,7 @@
       "triangleCap": 2500,
       "triangles": 1750,
       "sourceTriangles": 5340,
+      "windowCount": 0,
       "rotationYDeg": 180,
       "scale": 0.486951,
       "centerOffsetM": [
@@ -1058,7 +1073,7 @@
         3,
         3
       ],
-      "bytes": 142786,
+      "bytes": 163932,
       "floatingComponents": 1,
       "floatingBaseline": 1,
       "floatingDetails": [
@@ -1089,6 +1104,7 @@
       "triangleCap": 2500,
       "triangles": 1656,
       "sourceTriangles": 15524,
+      "windowCount": 0,
       "rotationYDeg": 180,
       "scale": 0.482594,
       "centerOffsetM": [
@@ -1105,7 +1121,7 @@
         3,
         3
       ],
-      "bytes": 135168,
+      "bytes": 155188,
       "floatingComponents": 1,
       "floatingBaseline": 1,
       "floatingDetails": [
@@ -1136,6 +1152,7 @@
       "triangleCap": 2500,
       "triangles": 2324,
       "sourceTriangles": 17608,
+      "windowCount": 2,
       "rotationYDeg": 180,
       "scale": 0.600221,
       "centerOffsetM": [
@@ -1152,7 +1169,7 @@
         3,
         3
       ],
-      "bytes": 189276,
+      "bytes": 217308,
       "floatingComponents": 0,
       "floatingBaseline": 1,
       "groups": {
@@ -1212,6 +1229,7 @@
       "triangleCap": 3500,
       "triangles": 2424,
       "sourceTriangles": 21448,
+      "windowCount": 0,
       "rotationYDeg": 180,
       "scale": 0.552828,
       "centerOffsetM": [
@@ -1228,7 +1246,7 @@
         4,
         4
       ],
-      "bytes": 197376,
+      "bytes": 226608,
       "floatingComponents": 7,
       "floatingBaseline": 7,
       "floatingDetails": [
@@ -1307,6 +1325,7 @@
       "triangleCap": 2500,
       "triangles": 1622,
       "sourceTriangles": 21832,
+      "windowCount": 10,
       "rotationYDeg": 180,
       "scale": 0.551373,
       "centerOffsetM": [
@@ -1323,7 +1342,7 @@
         3,
         3
       ],
-      "bytes": 132418,
+      "bytes": 152028,
       "floatingComponents": 1,
       "floatingBaseline": 1,
       "floatingDetails": [
@@ -1353,6 +1372,7 @@
       "triangleCap": 800,
       "triangles": 798,
       "sourceTriangles": 23452,
+      "windowCount": 0,
       "rotationYDeg": 180,
       "scale": 0.294636,
       "centerOffsetM": [
@@ -1369,7 +1389,7 @@
         1,
         1
       ],
-      "bytes": 65670,
+      "bytes": 75392,
       "floatingComponents": 0,
       "floatingBaseline": 0,
       "groups": {

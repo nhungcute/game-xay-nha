@@ -254,24 +254,53 @@ function materialColor(json, materialIndex) {
   };
 }
 
-/** Weld by position+colour: colour seams stay duplicated, so the simplifier never smears across them. */
-function weld(primitives, materials) {
-  const map = new Map(), positions = [], colors = [], indices = [];
+/**
+ * Mark every connected pane of source BLEND glass before welding. The original pack puts many panes in a
+ * single primitive, so material identity alone is not enough to make the lights look inhabited.
+ */
+function tagWindows(primitives, materials) {
+  let next = 1;
+  for (const primitive of primitives) {
+    if (!materialColor(materials, primitive.material).glass) continue;
+    const vertices = primitive.positions.length / 3, parent = new Int32Array(vertices);
+    for (let i = 0; i < vertices; i++) parent[i] = i;
+    const find = index => { while (parent[index] !== index) { parent[index] = parent[parent[index]]; index = parent[index]; } return index; };
+    const join = (a, b) => { a = find(a); b = find(b); if (a !== b) parent[b] = a; };
+    for (let i = 0; i < primitive.indices.length; i += 3) {
+      const a = primitive.indices[i], b = primitive.indices[i + 1], c = primitive.indices[i + 2];
+      join(a, b); join(b, c);
+    }
+    const ids = new Float32Array(vertices), components = new Map();
+    for (let i = 0; i < vertices; i++) {
+      const root = find(i);
+      let id = components.get(root);
+      if (id === undefined) { id = next++; components.set(root, id); }
+      ids[i] = id;
+    }
+    primitive.windowIds = ids;
+  }
+  return next - 1;
+}
+
+/** Weld by position+colour+window id: panes never share vertices with walls or other panes. */
+function weld(primitives, materials, windowCount) {
+  const map = new Map(), positions = [], colors = [], windows = [], indices = [];
   for (const primitive of primitives) {
     const color = materialColor(materials, primitive.material).bytes;
     for (const index of primitive.indices) {
       const x = primitive.positions[index * 3], y = primitive.positions[index * 3 + 1], z = primitive.positions[index * 3 + 2];
-      const key = `${Math.round(x * 1e4) + 0},${Math.round(y * 1e4) + 0},${Math.round(z * 1e4) + 0},${color[0]},${color[1]},${color[2]}`;
+      const window = (primitive.windowIds?.[index] ?? 0) / Math.max(1, windowCount);
+      const key = `${Math.round(x * 1e4) + 0},${Math.round(y * 1e4) + 0},${Math.round(z * 1e4) + 0},${color[0]},${color[1]},${color[2]},${window}`;
       let vertex = map.get(key);
       if (vertex === undefined) {
         vertex = positions.length / 3;
         map.set(key, vertex);
-        positions.push(x, y, z); colors.push(color[0], color[1], color[2]);
+        positions.push(x, y, z); colors.push(color[0], color[1], color[2]); windows.push(window);
       }
       indices.push(vertex);
     }
   }
-  return { positions: new Float32Array(positions), colors: new Uint8Array(colors), indices: new Uint32Array(indices) };
+  return { positions: new Float32Array(positions), colors: new Uint8Array(colors), windows: new Float32Array(windows), indices: new Uint32Array(indices) };
 }
 
 /** Simplify one welded group: reduce until the error budget is spent (target 0 = error-driven) or until an
@@ -318,7 +347,7 @@ async function simplify(welded, error, targetTriangles = welded.indices.length /
 /** Non-indexed triangles with one flat normal per face (low-poly look, no smoothing seams). */
 function flatShade(welded, indices) {
   const count = indices.length;
-  const positions = new Float32Array(count * 3), normals = new Float32Array(count * 3), colors = new Uint8Array(count * 3);
+  const positions = new Float32Array(count * 3), normals = new Float32Array(count * 3), colors = new Uint8Array(count * 3), windows = new Float32Array(count);
   for (let triangle = 0; triangle < count / 3; triangle++) {
     const corner = [indices[triangle * 3], indices[triangle * 3 + 1], indices[triangle * 3 + 2]];
     const [a, b, c] = corner;
@@ -335,9 +364,10 @@ function flatShade(welded, indices) {
       positions[offset + 2] = welded.positions[vertex * 3 + 2];
       normals[offset] = nx; normals[offset + 1] = ny; normals[offset + 2] = nz;
       colors[offset] = welded.colors[vertex * 3]; colors[offset + 1] = welded.colors[vertex * 3 + 1]; colors[offset + 2] = welded.colors[vertex * 3 + 2];
+      windows[triangle * 3 + k] = welded.windows[vertex];
     }
   }
-  return { positions, normals, colors };
+  return { positions, normals, colors, windows };
 }
 
 /** Rotate 180° (+Z front → −Z), uniform-scale into the footprint with a 0.92 margin, centre x/z, base at y=0.
@@ -364,7 +394,7 @@ function fitToGrid(shaded, gameSize) {
     out[i + 2] = (rotated[i + 2] - centerZ) * scale;
   }
   return {
-    positions: out, normals: rotatedNormals, scale,
+    positions: out, normals: rotatedNormals, colors: shaded.colors, windows: shaded.windows, scale,
     centerOffset: [-centerX * scale, -minY * scale, -centerZ * scale],
     sizeAfter: [(maxX - minX) * scale, (maxY - minY) * scale, (maxZ - minZ) * scale],
   };
@@ -373,31 +403,38 @@ function fitToGrid(shaded, gameSize) {
 // ---------- GLB writing (single mesh, single primitive, single material; float32 pos/normal + u8 colour) ----------
 
 function writeGlb(shaded) {
-  const buffers = [
+  const rawBuffers = [
     Buffer.from(shaded.positions.buffer, shaded.positions.byteOffset, shaded.positions.byteLength),
     Buffer.from(shaded.normals.buffer, shaded.normals.byteOffset, shaded.normals.byteLength),
     Buffer.from(shaded.colors.buffer, shaded.colors.byteOffset, shaded.colors.byteLength),
+    Buffer.from(shaded.windows.buffer, shaded.windows.byteOffset, shaded.windows.byteLength),
   ];
   const minimum = [Infinity, Infinity, Infinity], maximum = [-Infinity, -Infinity, -Infinity];
   for (let i = 0; i < shaded.positions.length; i += 3) for (let c = 0; c < 3; c++) {
     minimum[c] = Math.min(minimum[c], shaded.positions[i + c]); maximum[c] = Math.max(maximum[c], shaded.positions[i + c]);
   }
   let offset = 0;
+  const bufferViews = rawBuffers.map(buffer => {
+    const view = { buffer: 0, byteOffset: offset, byteLength: buffer.length, target: 34962 };
+    offset += buffer.length + (4 - buffer.length % 4) % 4;
+    return view;
+  });
+  const binary = Buffer.concat(rawBuffers.map(buffer => Buffer.concat([buffer, Buffer.alloc((4 - buffer.length % 4) % 4)])));
   const document = {
-    asset: { version: '2.0', generator: 'AI Farm import-model-pack.mjs (D029, source: Bo_21_Mo_Hinh_3D_GLTF_Day_Du)' },
+    asset: { version: '2.0', generator: 'AI Farm import-model-pack.mjs (D031, source: Bo_21_Mo_Hinh_3D_GLTF_Day_Du)' },
     scene: 0, scenes: [{ nodes: [0] }], nodes: [{ mesh: 0 }],
-    meshes: [{ primitives: [{ attributes: { POSITION: 0, NORMAL: 1, COLOR_0: 2 }, material: 0 }] }],
+    meshes: [{ primitives: [{ attributes: { POSITION: 0, NORMAL: 1, COLOR_0: 2, _WINDOW: 3 }, material: 0 }] }],
     materials: [{ name: 'vertex-palette', doubleSided: true, pbrMetallicRoughness: { baseColorFactor: [1, 1, 1, 1], metallicFactor: 0, roughnessFactor: 0.85 } }],
-    buffers: [{ byteLength: buffers.reduce((sum, buffer) => sum + buffer.length, 0) }],
-    bufferViews: buffers.map(buffer => { const view = { buffer: 0, byteOffset: offset, byteLength: buffer.length, target: 34962 }; offset += buffer.length; return view; }),
+    buffers: [{ byteLength: binary.length }], bufferViews,
     accessors: [
       { bufferView: 0, componentType: 5126, count: shaded.positions.length / 3, type: 'VEC3', min: minimum, max: maximum },
       { bufferView: 1, componentType: 5126, count: shaded.normals.length / 3, type: 'VEC3' },
       { bufferView: 2, componentType: 5121, normalized: true, count: shaded.colors.length / 3, type: 'VEC3' },
+      { bufferView: 3, componentType: 5126, count: shaded.windows.length, type: 'SCALAR' },
     ],
   };
   const json = Buffer.from(JSON.stringify(document));
-  const jsonPadding = Buffer.alloc((4 - json.length % 4) % 4, 32), binary = Buffer.concat(buffers);
+  const jsonPadding = Buffer.alloc((4 - json.length % 4) % 4, 32);
   const header = Buffer.alloc(12), jsonHeader = Buffer.alloc(8), binHeader = Buffer.alloc(8);
   header.writeUInt32LE(0x46546c67, 0); header.writeUInt32LE(2, 4); header.writeUInt32LE(12 + 8 + json.length + jsonPadding.length + 8 + binary.length, 8);
   jsonHeader.writeUInt32LE(json.length + jsonPadding.length, 0); jsonHeader.writeUInt32LE(0x4e4f534a, 4);
@@ -459,6 +496,7 @@ async function buildAll() {
     const parsed = parseGlb(await readFile(join(process.cwd(), source)));
     const primitives = collectPrimitives(parsed.json, parsed.binary);
     const materials = parsed.json.materials ?? [];
+    const windowCount = tagWindows(primitives, materials);
     const policies = GROUP_POLICIES[gameId] ?? {};
     const cap = triangleCap(catalog.buildings[gameId].size, gameId);
     // Models with group policies take the per-group pipeline (weld → per-group simplify → merge, then a
@@ -471,11 +509,11 @@ async function buildAll() {
     const groupReport = {};
     if (!useGroupPipeline) {
       const kept = primitives.filter(primitive => !ALWAYS_DROP.includes(primitive.group));
-      const welded = weld(kept, materials);
+      const welded = weld(kept, materials, windowCount);
       const simplified = await simplify(welded, 0.02, cap * SIMPLIFY_RATIO);
       const globalShaded = flatShade(welded, simplified.indices);
       fitted = fitToGrid(globalShaded, catalog.buildings[gameId].size);
-      glb = writeGlb({ positions: fitted.positions, normals: fitted.normals, colors: globalShaded.colors });
+      glb = writeGlb({ positions: fitted.positions, normals: fitted.normals, colors: globalShaded.colors, windows: fitted.windows });
       groupReport.__global = { action: 'global', triangles: simplified.indices.length / 3, reason: 'no per-group policies; proven D029 path' };
     } else {
     const byGroup = new Map();
@@ -489,7 +527,7 @@ async function buildAll() {
     for (const [group, groupPrimitives] of byGroup) {
       const policy = policies[group];
       if (policy ? policy.drop : ALWAYS_DROP.includes(group)) { groupReport[group] = { action: 'drop', triangles: groupPrimitives.reduce((sum, p) => sum + p.indices.length / 3, 0), reason: policy?.reason ?? 'spilling ground group (always dropped)' }; continue; }
-      const welded = weld(groupPrimitives, materials);
+      const welded = weld(groupPrimitives, materials, windowCount);
       weldedGroups.set(group, welded);
       if (policy?.preserve) {
         groupReport[group] = { action: 'preserve', triangles: welded.indices.length / 3, reason: policy.reason };
@@ -523,28 +561,30 @@ async function buildAll() {
         }
       }
     }
-    shaded = { positions: new Float32Array(0), normals: new Float32Array(0), colors: new Uint8Array(0) };
+    shaded = { positions: new Float32Array(0), normals: new Float32Array(0), colors: new Uint8Array(0), windows: new Float32Array(0) };
     for (const group of byGroup.keys()) {
       const welded = weldedGroups.get(group), simplified = simplifiedGroups.get(group);
       if (!welded) continue; // dropped
+      const groupShaded = flatShade(welded, simplified ? simplified.indices : welded.indices);
       shaded = {
-        positions: Float32Array.from([...shaded.positions, ...flatShade(welded, simplified ? simplified.indices : welded.indices).positions]),
-        normals: Float32Array.from([...shaded.normals, ...flatShade(welded, simplified ? simplified.indices : welded.indices).normals]),
-        colors: Uint8Array.from([...shaded.colors, ...flatShade(welded, simplified ? simplified.indices : welded.indices).colors]),
+        positions: Float32Array.from([...shaded.positions, ...groupShaded.positions]),
+        normals: Float32Array.from([...shaded.normals, ...groupShaded.normals]),
+        colors: Uint8Array.from([...shaded.colors, ...groupShaded.colors]),
+        windows: Float32Array.from([...shaded.windows, ...groupShaded.windows]),
       };
     }
     fitted = fitToGrid(shaded, catalog.buildings[gameId].size);
-    glb = writeGlb({ positions: fitted.positions, normals: fitted.normals, colors: shaded.colors });
+    glb = writeGlb({ positions: fitted.positions, normals: fitted.normals, colors: shaded.colors, windows: fitted.windows });
     // Fallback: per-group locked-border floors can exceed the cap (e.g. the bank's columns). A single global
     // weld shares colour seams across groups and simplifies further — the proven D029 path. Quality policies
     // are best-effort; the cap is hard.
     if (glb.triangles > cap) {
       const all = [...byGroup.entries()].filter(([group]) => !policies[group]?.drop && !ALWAYS_DROP.includes(group)).flatMap(([, groupPrimitives]) => groupPrimitives);
-      const welded = weld(all, materials);
+      const welded = weld(all, materials, windowCount);
       const simplified = await simplify(welded, 0.01, cap * SIMPLIFY_RATIO);
       const fallbackShaded = flatShade(welded, simplified.indices);
       fitted = fitToGrid(fallbackShaded, catalog.buildings[gameId].size);
-      glb = writeGlb({ positions: fitted.positions, normals: fitted.normals, colors: fallbackShaded.colors });
+      glb = writeGlb({ positions: fitted.positions, normals: fitted.normals, colors: fallbackShaded.colors, windows: fitted.windows });
       groupReport.__global_fallback = { action: 'global-fallback', triangles: simplified.indices.length / 3, reason: 'per-group floors exceed the cap; one weld simplifies further' };
       console.error(`[dbg] ${gameId} fallback: welded ${welded.indices.length / 3} -> simplified ${simplified.indices.length / 3} (target ${cap * SIMPLIFY_RATIO}, error ${simplified.error})`);
     }
@@ -559,6 +599,7 @@ async function buildAll() {
       source, world, droppedGroups: dropped,
       triangleCap: cap, triangles: glb.triangles,
       sourceTriangles: primitives.reduce((sum, p) => sum + p.indices.length / 3, 0),
+      windowCount,
       rotationYDeg: 180, scale: +fitted.scale.toFixed(6),
       centerOffsetM: fitted.centerOffset.map(value => +value.toFixed(6)),
       sizeAfterM: fitted.sizeAfter.map(value => +value.toFixed(6)),
