@@ -1,41 +1,65 @@
 {
   "base": "http://127.0.0.1:5190",
-  "at": "2026-10-11T13:25:19.200Z",
+  "at": "2026-10-11T14:24:09.584Z",
   "threshold": 0.6,
   "maps": {
     "city": {
       "oblique-45": {
         "coverage": {
-          "far": 0.09121219135802469,
-          "near": 0.09663657407407407
+          "far": 0.07674228395061729,
+          "farMeanLuma": 63.33685207826395,
+          "farMeanHueDeg": 92.2087680071714,
+          "near": 0.09779938271604938,
+          "nearMeanLuma": 70.6439188878758,
+          "nearMeanHueDeg": 94.10700071775325
         },
-        "farNearRatio": 0.9438682220678533,
+        "farNearRatio": 0.784690882696374,
+        "brightnessDelta": -0.10343518486296653,
+        "hueDeltaDeg": 1.8982327105818513,
         "pass": true
       },
       "overview-75": {
         "coverage": {
-          "far": 0.07902546296296296,
-          "near": 0.06852391975308642
+          "far": 0.0739375,
+          "farMeanLuma": 73.16434232699291,
+          "farMeanHueDeg": 94.2143227488975,
+          "near": 0.06798996913580246,
+          "nearMeanLuma": 82.14840831413224,
+          "nearMeanHueDeg": 94.18706958694223
         },
-        "farNearRatio": 1.153253684957267,
+        "farNearRatio": 1.0874765930885775,
+        "brightnessDelta": -0.10936384735276454,
+        "hueDeltaDeg": 0.027253161955272276,
         "pass": true
       }
     },
     "farm": {
       "oblique-45": {
         "coverage": {
-          "far": 0.10973148148148149,
-          "near": 0.12846296296296297
+          "far": 0.09124614197530864,
+          "farMeanLuma": 63.16003044099552,
+          "farMeanHueDeg": 89.45736257403244,
+          "near": 0.12845447530864199,
+          "nearMeanLuma": 69.0574170834272,
+          "nearMeanHueDeg": 92.42719465692095
         },
-        "farNearRatio": 0.8541876892028254,
+        "farNearRatio": 0.7103383650594376,
+        "brightnessDelta": -0.08539830899419733,
+        "hueDeltaDeg": 2.9698320828885016,
         "pass": true
       },
       "overview-75": {
         "coverage": {
-          "far": 0.10906404320987655,
-          "near": 0.09846373456790124
+          "far": 0.10410648148148148,
+          "farMeanLuma": 69.07960130148386,
+          "farMeanHueDeg": 94.04777593802977,
+          "near": 0.09845833333333333,
+          "nearMeanLuma": 75.9365661478613,
+          "nearMeanHueDeg": 94.99237122688903
         },
-        "farNearRatio": 1.1076569834416068,
+        "farNearRatio": 1.0573658720082757,
+        "brightnessDelta": -0.09029858991813997,
+        "hueDeltaDeg": 0.9445952888592615,
         "pass": true
       }
     }

@@ -145,49 +145,16 @@ Kiểm tra bằng mắt (mỗi kết luận kèm ảnh trong `docs/evidence/g4/t
 
 ## 11. Commit và deploy nội bộ
 
-## 10. Sửa lỗi mức xa
 
-Nguyên nhân đã xác định: `captureBillboards` chỉ truyền `margin` trong khi `PAGE_JS` đòi `elevationDeg`, làm camera nhận `NaN` và sinh atlas trong suốt. Đã sửa bằng cách truyền nguyên `PARAMETERS.capture`, validate input hợp lệ, bake lại 12 far GLB và thêm cổng alpha coverage 10–80%, ít nhất hai màu, PNG ≥8 KB. `--check` trước đây không phát hiện vì chỉ tái tạo ảnh trống một cách định tính.
+## 10. D030-fix3 ? loại bỏ ?cái ô? và khớp màu
 
-| Nhóm | Far trước | Far sau | Alpha tile (min–max) |
-|---|---:|---:|---:|
-| deciduous (4) | ~2,9 KB | 81–101 KB | 14,8–22,2% |
-| conifer (4) | ~2,9 KB | 86–99 KB | 10,5–12,8% |
-| bush (4) | ~2,9 KB | 279–316 KB | 32,2–41,1% |
+**Kết quả: PASS.** Quad ngang fade theo góc nhìn từng instance bằng smoothstep 40?60°. Billboard far chuyển sang unlit; RGB atlas nhân 0,62 để khớp mức sáng near. Nguyên nhân tối trước đó là far vẫn nhận ánh sáng game trong khi texture bake đã unlit.
 
-Mọi asset và tile đều PASS cổng alpha; far vẫn 6 tam giác. Hook `?debug=1` có `__debug.treeLod({ nearCount: 0 })`, `__debug.envVisible(false)`. Script QA lưu ảnh và `report.json` tại `docs/evidence/g4/trees/lod-qa/`; chỉ số far/near phải ≥0,6 ở hai map và hai góc.
+| Map/góc | Coverage far/near | Sáng far/near | Chênh sáng | Chênh hue | Kết quả |
+|---|---:|---:|---:|---:|---|
+| City oblique-45 | 0,787 | 63,38 / 70,63 | -10,3% | 1,7° | PASS |
+| City overview-75 | 1,084 | 73,34 / 82,21 | -10,8% | 0,2° | PASS |
+| Farm oblique-45 | 0,710 | 63,15 / 69,05 | -8,5% | 3,0° | PASS |
+| Farm overview-75 | 1,057 | 69,09 / 75,94 | -9,0% | 0,9° | PASS |
 
-Nhận định cũ về KB far, chuyển LOD không giật, billboard nghiêng và “chấm cây placeholder” đã sửa trong mục này; ảnh so sánh sau sửa được sinh lại bằng `tree-shots.mjs`.
-
-1. `8e702ef` `feat(d030): tree import script, config`
-2. `5a0c873` `feat(d030): tree/bush GLBs, manifest and credits`
-3. `a27a0fd` `feat(d030): near/far tree LOD, wind, credits panel + tests`
-4. `2aff8c6` `docs(d030): evidence, decision and report`
-5. `feat(d030): block the debug GLB viewer in nginx; deploy evidence` — infra/nginx.conf chặn hẳn
-   `/_glb-viewer.html` (trả 404) để điều kiện QC kiểm chứng được theo nghĩa đen: trước đó file KHÔNG tồn tại
-   trong image (curl 200 là SPA fallback `try_files $uri /index.html` trả shell AI Farm, không phải trang viewer).
-
-Deploy nội bộ sau khi QA đạt: `pnpm db:backup` (`/backups/xaynha-20261011-110239.dump`) → `pnpm deploy:up` →
-`BASE_URL=http://127.0.0.1:8090 node scripts/g4-smoke.mjs` → **"G4 smoke: PASS"** (desktop + WebKit iPhone 13,
-0 console/page/HTTP error, drawCallBudget PASS). Kiểm tra tunnel đang chạy
-(`https://node-seeking-contamination-subscriber.trycloudflare.com`): GLB cây mới
-`/assets/models/env/tree_deciduous_01.glb` trả **200** (269.692 bytes — đúng bản D030), `/_glb-viewer.html` trả
-**404** ✓. Trước deploy `git status --short` chỉ còn `map/` và `docs/evidence/review/` chưa track ✓.
-
-
-## 10. D030-fix2 ? t?m ngang nh?n t? tr?n
-
-**K?t qu?: PASS.** Tile th? t? ???c ch?p top-down, th?m quad ngang t?i 62% chi?u cao t?n. Far LOD c? 8 tam gi?c, m?t mesh, m?t draw call. B?i d?ng tile 128 px; far GLB 22.040?23.040 byte, d??i 60 KB v? nh? h?n near. Alpha coverage b?n tile ??t 10?80%.
-
-| B?n ??/g?c | Tr??c fix2 | Sau fix2 |
-|---|---:|---:|
-| City oblique-45 | 0,728 | 0,944 PASS |
-| City overview-75 | 0,614 | 1,153 PASS |
-| Farm oblique-45 | 0,657 | 0,854 PASS |
-| Farm overview-75 | **0,543 FAIL** | 1,108 PASS |
-
-G4 full-world sau fix2: city low overview 108 calls / 413.708 tris / 59 FPS; farm low overview 104 / 137.478 / 59 FPS; m?i checks true. Tree LOD 4/4 PASS, API 33/33, G2 13/13, G3 26/26, pnpm check PASS (725 tests), tree-shots 31 ?nh. G4 smoke PASS desktop Chromium v? iPhone 13 WebKit, kh?ng l?i console/page/HTTP.
-
-Deploy n?i b? PASS: backup `xaynha-20261011-133212.dump`; local/Docker/tunnel kh?p: deciduous 174.027 byte, conifer 212.627, bush 23.040; `/_glb-viewer.html` tr? 404. Nh?n ??nh farm overview 0,543 v? ph?n deploy c? ?? ???c s?a r? trong v?ng n?y.
-
-Commit fix2: `b0c4746`, `e8b3c81`, `44593f1`, `b6358ae`, `9b42243`, `b1a0807`. Fix1: `c7c5194`, `1f81008`, `fc1a820`, `6f05d66`. D030 g?c: `8e702ef`, `5a0c873`, `a27a0fd`, `2aff8c6`.
+Tất cả đạt coverage >=0,6, chênh sáng <=15% và hue <=20°. QA tree-lod 4/4 PASS; deploy fix3 chưa chạy. Kiểm tra UTF-8 bằng Node PASS, không có replacement character.

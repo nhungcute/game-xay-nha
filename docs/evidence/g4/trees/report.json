@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:5190",
-  "at": "2026-10-11T13:27:16.848Z",
+  "at": "2026-10-11T14:22:20.605Z",
   "shots": [
     {
       "file": "variant-tree_deciduous_01.jpg",
@@ -14,7 +14,7 @@
       },
       "drawCalls": 144,
       "triangles": 200256,
-      "fps": 59
+      "fps": 57
     },
     {
       "file": "variant-tree_deciduous_02.jpg",
@@ -28,7 +28,7 @@
       },
       "drawCalls": 135,
       "triangles": 200328,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "variant-tree_deciduous_03.jpg",
@@ -42,7 +42,7 @@
       },
       "drawCalls": 154,
       "triangles": 206704,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "variant-tree_deciduous_04.jpg",
@@ -56,7 +56,7 @@
       },
       "drawCalls": 145,
       "triangles": 195012,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "variant-tree_conifer_01.jpg",
@@ -70,7 +70,7 @@
       },
       "drawCalls": 114,
       "triangles": 167596,
-      "fps": 59
+      "fps": 57
     },
     {
       "file": "variant-tree_conifer_02.jpg",
@@ -84,7 +84,7 @@
       },
       "drawCalls": 143,
       "triangles": 192422,
-      "fps": 59
+      "fps": 57
     },
     {
       "file": "variant-tree_conifer_03.jpg",
@@ -98,7 +98,7 @@
       },
       "drawCalls": 149,
       "triangles": 201910,
-      "fps": 59
+      "fps": 57
     },
     {
       "file": "variant-tree_conifer_04.jpg",
@@ -112,7 +112,7 @@
       },
       "drawCalls": 156,
       "triangles": 205866,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "variant-bush_01.jpg",
@@ -126,7 +126,7 @@
       },
       "drawCalls": 150,
       "triangles": 201338,
-      "fps": 39
+      "fps": 56
     },
     {
       "file": "variant-bush_02.jpg",
@@ -140,7 +140,7 @@
       },
       "drawCalls": 131,
       "triangles": 203918,
-      "fps": 41
+      "fps": 56
     },
     {
       "file": "variant-bush_03.jpg",
@@ -154,7 +154,7 @@
       },
       "drawCalls": 147,
       "triangles": 195418,
-      "fps": 49
+      "fps": 56
     },
     {
       "file": "variant-bush_04.jpg",
@@ -168,7 +168,7 @@
       },
       "drawCalls": 124,
       "triangles": 205800,
-      "fps": 37
+      "fps": 56
     },
     {
       "file": "lod-far-twin.jpg",
@@ -179,7 +179,7 @@
       "cameraDistance": 90,
       "drawCalls": 164,
       "triangles": 236506,
-      "fps": 30
+      "fps": 56
     },
     {
       "file": "lod-zoom-40.jpg",
@@ -190,7 +190,7 @@
       "cameraDistance": 40,
       "drawCalls": 123,
       "triangles": 183596,
-      "fps": 30
+      "fps": 56
     },
     {
       "file": "lod-zoom-110.jpg",
@@ -201,7 +201,7 @@
       "cameraDistance": 110,
       "drawCalls": 170,
       "triangles": 245442,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "lod-zoom-220.jpg",
@@ -212,7 +212,7 @@
       "cameraDistance": 220,
       "drawCalls": 197,
       "triangles": 260574,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "forest-conifer-45.jpg",
@@ -220,7 +220,7 @@
       "targetId": "Z26-tree_conifer-39",
       "drawCalls": 120,
       "triangles": 173938,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "clear-before.jpg",
@@ -236,7 +236,7 @@
       ],
       "drawCalls": 179,
       "triangles": 222158,
-      "fps": 59
+      "fps": 57
     },
     {
       "file": "clear-after.jpg",
@@ -244,9 +244,9 @@
       "targetId": "Z28-tree_deciduous-160",
       "command": {
         "accepted": true,
-        "commandId": "44eb35cc-f873-4f68-93bb-746a124bbc5f",
+        "commandId": "52cb29eb-cecd-423d-b2ef-059ec8c4b343",
         "revision": 34529,
-        "serverTime": 1791725279025,
+        "serverTime": 1791728581805,
         "patch": {
           "wallet": {
             "cash": 3131414,
@@ -3828,7 +3828,7 @@
       },
       "drawCalls": 180,
       "triangles": 216318,
-      "fps": 58
+      "fps": 56
     },
     {
       "file": "farm-high-overview.jpg",
@@ -3836,7 +3836,7 @@
       "quality": "high",
       "drawCalls": 251,
       "triangles": 269370,
-      "fps": 57
+      "fps": 56
     },
     {
       "file": "farm-high-oblique.jpg",
@@ -3844,7 +3844,7 @@
       "quality": "high",
       "drawCalls": 234,
       "triangles": 261298,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "farm-low-overview.jpg",
@@ -3852,7 +3852,7 @@
       "quality": "low",
       "drawCalls": 104,
       "triangles": 137430,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "farm-low-oblique.jpg",
@@ -3860,7 +3860,7 @@
       "quality": "low",
       "drawCalls": 89,
       "triangles": 129526,
-      "fps": 59
+      "fps": 57
     },
     {
       "file": "credits-desktop.jpg",
@@ -3868,7 +3868,7 @@
       "panel": "credits",
       "drawCalls": 89,
       "triangles": 129526,
-      "fps": 59
+      "fps": 57
     },
     {
       "file": "city-high-overview.jpg",
@@ -3876,7 +3876,7 @@
       "quality": "high",
       "drawCalls": 241,
       "triangles": 538058,
-      "fps": 38
+      "fps": 42
     },
     {
       "file": "city-high-oblique.jpg",
@@ -3884,7 +3884,7 @@
       "quality": "high",
       "drawCalls": 217,
       "triangles": 525154,
-      "fps": 37
+      "fps": 40
     },
     {
       "file": "city-low-overview.jpg",
@@ -3892,7 +3892,7 @@
       "quality": "low",
       "drawCalls": 108,
       "triangles": 413708,
-      "fps": 58
+      "fps": 55
     },
     {
       "file": "city-low-oblique.jpg",
@@ -3900,7 +3900,7 @@
       "quality": "low",
       "drawCalls": 86,
       "triangles": 405316,
-      "fps": 58
+      "fps": 55
     },
     {
       "file": "mobile/pixel7-farm.jpg",
@@ -3908,7 +3908,7 @@
       "device": "pixel7",
       "drawCalls": 60,
       "triangles": 111362,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "mobile/pixel7-close.jpg",
@@ -3917,7 +3917,7 @@
       "targetId": "Z26-tree_conifer-39",
       "drawCalls": 39,
       "triangles": 61002,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "mobile/pixel7-credits.jpg",
@@ -3926,7 +3926,7 @@
       "panel": "credits",
       "drawCalls": 39,
       "triangles": 61002,
-      "fps": 59
+      "fps": 56
     },
     {
       "file": "mobile/iphone13-farm.jpg",
@@ -3934,7 +3934,7 @@
       "device": "iphone13",
       "drawCalls": 60,
       "triangles": 111362,
-      "fps": 59
+      "fps": 57
     },
     {
       "file": "mobile/iphone13-close.jpg",
@@ -3943,7 +3943,7 @@
       "targetId": "Z26-tree_conifer-39",
       "drawCalls": 39,
       "triangles": 61002,
-      "fps": 59
+      "fps": 57
     },
     {
       "file": "mobile/iphone13-credits.jpg",
@@ -3952,7 +3952,7 @@
       "panel": "credits",
       "drawCalls": 39,
       "triangles": 61002,
-      "fps": 59
+      "fps": 56
     }
   ],
   "errors": []
