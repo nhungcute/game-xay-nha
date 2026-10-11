@@ -1,0 +1,613 @@
+{
+  "sourcePack": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+  "sourceLod": "lod0",
+  "cellSizeM": 2,
+  "margin": 0.92,
+  "simplifyRatio": 0.7,
+  "generatedBy": "scripts/import-model-pack.mjs",
+  "models": {
+    "house_small": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_small_house.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 1800,
+      "triangles": 1186,
+      "sourceTriangles": 20144,
+      "simplifyError": 0.04,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.505854,
+      "centerOffsetM": [
+        -0.021275,
+        0,
+        0.032432
+      ],
+      "sizeAfterM": [
+        3.68,
+        3.055361,
+        3.362755
+      ],
+      "footprintCells": [
+        2,
+        2
+      ],
+      "bytes": 97098
+    },
+    "shop_grocery": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_convenience_store.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PARKING_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 1800,
+      "triangles": 1260,
+      "sourceTriangles": 6504,
+      "simplifyError": 0.01,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.340907,
+      "centerOffsetM": [
+        -0.051943,
+        0,
+        -0.26331
+      ],
+      "sizeAfterM": [
+        3.68,
+        1.858795,
+        3.260694
+      ],
+      "footprintCells": [
+        2,
+        2
+      ],
+      "bytes": 103092
+    },
+    "house_town": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_townhouse.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 1800,
+      "triangles": 1034,
+      "sourceTriangles": 6604,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.625142,
+      "centerOffsetM": [
+        0,
+        0,
+        0.378211
+      ],
+      "sizeAfterM": [
+        3.450781,
+        7.120363,
+        5.52
+      ],
+      "footprintCells": [
+        2,
+        3
+      ],
+      "bytes": 84786
+    },
+    "shop_cafe": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_coffee_shop.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 1800,
+      "triangles": 1256,
+      "sourceTriangles": 9716,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.342804,
+      "centerOffsetM": [
+        -0.021425,
+        0,
+        0.429554
+      ],
+      "sizeAfterM": [
+        3.68,
+        2.750144,
+        3.073622
+      ],
+      "footprintCells": [
+        2,
+        2
+      ],
+      "bytes": 102768
+    },
+    "shop_restaurant": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_restaurant.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 2500,
+      "triangles": 1406,
+      "sourceTriangles": 14576,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.376985,
+      "centerOffsetM": [
+        0,
+        0,
+        0.628105
+      ],
+      "sizeAfterM": [
+        5.52,
+        3.381652,
+        4.596298
+      ],
+      "footprintCells": [
+        3,
+        3
+      ],
+      "bytes": 114922
+    },
+    "bank": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_bank.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 2500,
+      "triangles": 1750,
+      "sourceTriangles": 7356,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.598698,
+      "centerOffsetM": [
+        0,
+        0,
+        0.466985
+      ],
+      "sizeAfterM": [
+        4.94525,
+        4.892863,
+        5.52
+      ],
+      "footprintCells": [
+        3,
+        3
+      ],
+      "bytes": 142786
+    },
+    "house_apartment": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_apartment.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 3500,
+      "triangles": 1814,
+      "sourceTriangles": 26992,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.669395,
+      "centerOffsetM": [
+        0,
+        0,
+        0.299554
+      ],
+      "sizeAfterM": [
+        7.296407,
+        10.491095,
+        7.36
+      ],
+      "footprintCells": [
+        4,
+        4
+      ],
+      "bytes": 147970
+    },
+    "office_tower": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_office_tower.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 4500,
+      "triangles": 2986,
+      "sourceTriangles": 22764,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.520509,
+      "centerOffsetM": [
+        0,
+        0,
+        0
+      ],
+      "sizeAfterM": [
+        7.36,
+        13.935332,
+        7.255898
+      ],
+      "footprintCells": [
+        4,
+        4
+      ],
+      "bytes": 242902
+    },
+    "hotel": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_hotel.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 3500,
+      "triangles": 1598,
+      "sourceTriangles": 13900,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.681481,
+      "centerOffsetM": [
+        0,
+        0,
+        0.597912
+      ],
+      "sizeAfterM": [
+        7.36,
+        9.806519,
+        8.051529
+      ],
+      "footprintCells": [
+        4,
+        5
+      ],
+      "bytes": 130466
+    },
+    "shop_supermarket": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_supermarket.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PARKING_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 3500,
+      "triangles": 2450,
+      "sourceTriangles": 7284,
+      "simplifyError": 0.01,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.387884,
+      "centerOffsetM": [
+        -0.024191,
+        0,
+        -0.222018
+      ],
+      "sizeAfterM": [
+        7.36,
+        2.405852,
+        5.416711
+      ],
+      "footprintCells": [
+        4,
+        4
+      ],
+      "bytes": 199482
+    },
+    "deco_garden": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_flower_garden.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 800,
+      "triangles": 558,
+      "sourceTriangles": 27728,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.180204,
+      "centerOffsetM": [
+        -0.17822,
+        -0.028833,
+        -0.102408
+      ],
+      "sizeAfterM": [
+        1.520561,
+        0.977875,
+        1.84
+      ],
+      "footprintCells": [
+        1,
+        1
+      ],
+      "bytes": 46230,
+      "note": "decor/market: optional groups are the visible content; only spilling ground groups are dropped"
+    },
+    "deco_park": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\city\\city_park.glb",
+      "world": "city",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 2500,
+      "triangles": 1730,
+      "sourceTriangles": 27804,
+      "simplifyError": 0.01,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.357555,
+      "centerOffsetM": [
+        0,
+        -0.057209,
+        0
+      ],
+      "sizeAfterM": [
+        5.52,
+        1.040485,
+        5.52
+      ],
+      "footprintCells": [
+        3,
+        3
+      ],
+      "bytes": 141162,
+      "note": "decor/market: optional groups are the visible content; only spilling ground groups are dropped"
+    },
+    "farmhouse": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_farmer_house.glb",
+      "world": "rural",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 2500,
+      "triangles": 1652,
+      "sourceTriangles": 29900,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.593395,
+      "centerOffsetM": [
+        -0.004905,
+        0,
+        -0.06899
+      ],
+      "sizeAfterM": [
+        5.52,
+        3.584106,
+        5.416763
+      ],
+      "footprintCells": [
+        3,
+        3
+      ],
+      "bytes": 134844
+    },
+    "market": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_market.glb",
+      "world": "rural",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL"
+      ],
+      "triangleCap": 2500,
+      "triangles": 1750,
+      "sourceTriangles": 4140,
+      "simplifyError": 0.01,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.486951,
+      "centerOffsetM": [
+        0.002869,
+        -0.053565,
+        -0.095159
+      ],
+      "sizeAfterM": [
+        5.52,
+        1.567981,
+        3.482103
+      ],
+      "footprintCells": [
+        3,
+        3
+      ],
+      "bytes": 142786,
+      "note": "stalls/canopy/produce optional groups are the market itself; only spilling ground groups are dropped"
+    },
+    "well": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_well.glb",
+      "world": "rural",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL"
+      ],
+      "triangleCap": 800,
+      "triangles": 556,
+      "sourceTriangles": 16224,
+      "simplifyError": 0.04,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.278945,
+      "centerOffsetM": [
+        -0.005592,
+        -0.046026,
+        0.16108
+      ],
+      "sizeAfterM": [
+        1.84,
+        1.351111,
+        1.354259
+      ],
+      "footprintCells": [
+        1,
+        1
+      ],
+      "bytes": 46068
+    },
+    "chicken_coop": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_chicken_coop.glb",
+      "world": "rural",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL"
+      ],
+      "triangleCap": 2500,
+      "triangles": 1656,
+      "sourceTriangles": 15500,
+      "simplifyError": 0.01,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.482594,
+      "centerOffsetM": [
+        0,
+        -0.069976,
+        0
+      ],
+      "sizeAfterM": [
+        5.52,
+        1.701749,
+        5.52
+      ],
+      "footprintCells": [
+        3,
+        3
+      ],
+      "bytes": 135168
+    },
+    "rice_mill": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_windmill.glb",
+      "world": "rural",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL"
+      ],
+      "triangleCap": 2500,
+      "triangles": 1734,
+      "sourceTriangles": 16584,
+      "simplifyError": 0.01,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.482594,
+      "centerOffsetM": [
+        0,
+        -0.08928,
+        0
+      ],
+      "sizeAfterM": [
+        5.52,
+        5.61045,
+        5.52
+      ],
+      "footprintCells": [
+        3,
+        3
+      ],
+      "bytes": 141486
+    },
+    "cow_barn": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_cowshed.glb",
+      "world": "rural",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL"
+      ],
+      "triangleCap": 3500,
+      "triangles": 2424,
+      "sourceTriangles": 21424,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.552828,
+      "centerOffsetM": [
+        0.022118,
+        -0.024877,
+        0.25836
+      ],
+      "sizeAfterM": [
+        7.36,
+        3.74103,
+        5.348436
+      ],
+      "footprintCells": [
+        4,
+        4
+      ],
+      "bytes": 197376
+    },
+    "bakery": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_bakery_oven.glb",
+      "world": "rural",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL",
+        "PATH_OPTIONAL"
+      ],
+      "triangleCap": 2500,
+      "triangles": 1622,
+      "sourceTriangles": 21592,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.551373,
+      "centerOffsetM": [
+        -0.047277,
+        0,
+        -0.007264
+      ],
+      "sizeAfterM": [
+        5.52,
+        3.330295,
+        5.472969
+      ],
+      "footprintCells": [
+        3,
+        3
+      ],
+      "bytes": 132418
+    },
+    "deco_flowerbed": {
+      "source": "map\\Bo_21_Mo_Hinh_3D_GLTF_Day_Du\\assets\\rural\\rural_flower_bed.glb",
+      "world": "rural",
+      "droppedGroups": [
+        "LANDSCAPE_OPTIONAL"
+      ],
+      "triangleCap": 800,
+      "triangles": 560,
+      "sourceTriangles": 21964,
+      "simplifyError": 0.02,
+      "simplifySkipped": false,
+      "rotationYDeg": 180,
+      "scale": 0.295576,
+      "centerOffsetM": [
+        0.030318,
+        -0.036947,
+        0
+      ],
+      "sizeAfterM": [
+        1.84,
+        1.041904,
+        1.341913
+      ],
+      "footprintCells": [
+        1,
+        1
+      ],
+      "bytes": 46392,
+      "note": "decor/market: optional groups are the visible content; only spilling ground groups are dropped"
+    }
+  },
+  "placeholderKept": {
+    "silo": "rural_warehouse is a 4×3 barn; squeezed into the 2×2 silo footprint it reads wrong — keep the placeholder silo drum (D029)"
+  }
+}
