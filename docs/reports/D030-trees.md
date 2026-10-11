@@ -188,3 +188,4 @@ Vòng fix2 thay tile 3 trùng tile 0 b?ng ?nh ch?p top-down, thêm m?t quad ngang t
 `g4-full-world` sau fix2: city/farm checks d?u true; ?nh và `render.json` du?c sinh l?i. Deploy chua th?c hi?n trong vòng này; local Docker/tunnel byte verification và smoke còn PENDING.
 
 Các nh?n d?nh sai c?a vòng tru?c dã s?a: farm overview 0,543 du?c ghi rõ FAIL; ph?n deploy cu du?c thay b?ng tr?ng thái PENDING th?c t?.
+
