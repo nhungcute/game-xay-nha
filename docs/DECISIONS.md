@@ -308,3 +308,11 @@ mesh/material GLB with POSITION+NORMAL+COLOR_0 — one draw call per building.
 - Windmill sails and well pulley stay static (animations deferred, per brief §3.3).
 - Evidence: `docs/evidence/g4/model-pack/` (136 in-game shots incl. 4-rotation row, construction + upgrade states,
   overviews; `glb-standalone/` renders of all 20 fronts), `docs/reports/D029-model-pack-import.md`.
+- **Review round (same day, see report §10)**: history rewrite removed 11 G3 files committed by mistake
+  (size-pack 127.85 → 79.31 MiB; paths pinned in `.git/info/exclude`); well roof re-supported (cap 1200),
+  deco_park keeps lawn/trees/paths, rice_mill fence dropped, house_town walls flattened via the Regularize flag;
+  **the floating-part QC gate in `import-model-pack.mjs` (connected components, 5 cm ground / 3 cm bbox-pad /
+  0.3 m size-floor tests, per-model baselines in `GATE_EXCEPTIONS`) is now a MANDATORY gate for every future
+  model import — the import FAILS when a model exceeds its baseline**; the `simplify()` target comparison was
+  fixed (index-vs-triangle units) so error escalation actually runs; per-group simplification policies
+  (drop/preserve/error per group, reasons in `model-pack.config.json`) shape where the budget goes.

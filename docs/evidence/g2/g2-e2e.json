@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:5191",
-  "at": "2026-10-11T06:09:14.398Z",
+  "at": "2026-10-11T08:00:09.564Z",
   "checks": [
     {
       "name": "name shorter than 3 characters keeps the submit button disabled",
@@ -16,7 +16,7 @@
       "detail": [
         "T",
         "1",
-        "Thử Nghiệm 39891",
+        "Thử Nghiệm 98667",
         "Người khai hoang"
       ]
     },
