@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
 import { cellIndex, type Cell, type CommandType } from '@xay-nha/contracts';
 import { builderCapacity, fieldQuota, populationAndJobs } from '@xay-nha/sim';
-import { AssetManager } from './game/assets/AssetManager';
+import { AssetManager, type AssetManifestEntry } from './game/assets/AssetManager';
 import { GameLoop } from './game/GameLoop';
 import { WorldStore, useWorld } from './game/WorldStore';
 import { useTools, type Tool } from './game/ToolController';
@@ -36,6 +36,29 @@ function MusicSettings({ on, onChange }: { on: boolean | undefined; onChange: (o
   return <div className="settings" role="group" aria-label={t('music')}><span>{t('music')}</span>
     {([true, false] as const).map(value => <button type="button" key={String(value)} aria-pressed={on === value}
       className={on === value ? 'selected' : ''} onClick={() => onChange(value)}>{t(value ? 'soundOn' : 'soundOff')}</button>)}
+  </div>;
+}
+/** D030: attribution for every manifest entry under a Creative Commons license — model, author, license (linked),
+ *  source link and the "modified" notice. Read straight from /assets/manifest.json at panel open. */
+const LICENSE_URLS: Record<string, string> = {
+  'CC-BY-4.0': 'https://creativecommons.org/licenses/by/4.0/',
+  'CC-BY-SA-4.0': 'https://creativecommons.org/licenses/by-sa/4.0/',
+};
+function AssetCredits() {
+  const [credits, setCredits] = useState<AssetManifestEntry[]>([]);
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/assets/manifest.json').then(response => response.json()).then(document => {
+      if (!cancelled) setCredits(document.assets.filter((asset: AssetManifestEntry) => typeof asset.license === 'string' && asset.license.startsWith('CC-')));
+    }).catch(() => undefined);
+    return () => { cancelled = true; };
+  }, []);
+  if (!credits.length) return null;
+  return <div className="settings hud3-credits" role="group" aria-label="Ghi công"><span>Ghi công</span>
+    <ul>{credits.map(asset => <li key={asset.id}>
+      <strong>{asset.id}</strong> — {asset.author} · <a href={LICENSE_URLS[asset.license] ?? asset.url} target="_blank" rel="noreferrer">{asset.license}</a>
+      {' · '}<a href={asset.source} target="_blank" rel="noreferrer">nguồn</a>{asset.modified && ' · đã chỉnh sửa'}
+    </li>)}</ul>
   </div>;
 }
 function Profile({ state }: { state: NonNullable<ReturnType<typeof useWorld.getState>['state']> }) {
@@ -167,6 +190,7 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
         {panel==='profile'?<Profile state={state}/>
           :panel==='settings'?<>{onSwitchMap&&<button type="button" className="hud3-switch" aria-label={t('switchMap')} disabled={switchingMap} onClick={()=>{void switchMap();}}><GameIcon name="maps"/>{switchingMap?'Đang đổi…':t('switchMap')}</button>}
             <GraphicsSettings quality={stats?.quality} onChange={setQuality}/><SoundSettings muted={stats?.muted} onChange={setMuted}/><MusicSettings on={stats?.musicOn} onChange={setMusic}/>
+            <AssetCredits/>
             {onLogout&&<button type="button" className="hud3-switch hud3-logout" onClick={()=>{const w=gameRef.current?.world;if(w)void onLogout(w);}}><GameIcon name="close"/>Đăng xuất · {state.snapshot.character.displayName}</button>}
             <p className="hud3-panel-note">{status} · {cacheStatus||'—'}</p></>
           :panel==='notifications'?(alerts.length?<ul className="hud3-notes">{alerts.map(text=><li key={text}>{text}</li>)}</ul>:<p className="empty-inventory"><GameIcon name="mail"/>Chưa có thông báo mới.</p>)

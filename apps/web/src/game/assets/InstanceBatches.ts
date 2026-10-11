@@ -9,8 +9,10 @@ export class InstanceBatches {
   readonly group = new Group();
   private readonly batches = new Map<string, Batch>();
   private readonly matrix = new Matrix4();
-  /** `castShadow` decides per asset whether its instances go into the shadow pass (each caster costs a draw call). */
-  constructor(scene: Scene, private readonly assets: AssetManager, private readonly castShadow: (handle: AssetHandle) => boolean = () => true) { scene.add(this.group); }
+  /** `castShadow` decides per asset whether its instances go into the shadow pass (each caster costs a draw call);
+   *  `decorate` runs once per allocated InstancedMesh (custom depth materials, wind patches — D030). */
+  constructor(scene: Scene, private readonly assets: AssetManager, private readonly castShadow: (handle: AssetHandle) => boolean = () => true,
+    private readonly decorate: (mesh: InstancedMesh, assetId: string) => void = () => undefined) { scene.add(this.group); }
   private allocate(key: string, assetId: string, count: number): Batch {
     const capacity = 2 ** Math.ceil(Math.log2(Math.max(1, count)));
     const handle = this.assets.get(assetId);
@@ -18,6 +20,7 @@ export class InstanceBatches {
     const meshes = handle.parts.map(part => {
       const mesh = new InstancedMesh(part.geometry, part.material, capacity);
       mesh.castShadow = casts; mesh.receiveShadow = true; mesh.name = `${key}:${assetId}`;
+      this.decorate(mesh, assetId);
       this.group.add(mesh);
       return mesh;
     });
@@ -47,6 +50,10 @@ export class InstanceBatches {
         mesh.computeBoundingSphere();
       });
     }
+  }
+  /** Iterates live batches (debug/QA accessors only). */
+  each(visit: (key: string, batch: Batch) => void): void {
+    for (const [key, batch] of this.batches) visit(key, batch);
   }
   dispose(): void {
     for (const [key, batch] of this.batches) this.destroy(key, batch);

@@ -12,6 +12,8 @@ import { BuildingRenderer } from '../render/BuildingRenderer';
 import { CropRenderer } from '../render/CropRenderer';
 import { EnvRenderer } from '../render/EnvRenderer';
 import { GhostRenderer } from '../render/GhostRenderer';
+import { TREE_LOD } from '../render/treeLod';
+import { keepInLow } from '../quality';
 
 // Imported GLBs are texture-less (vertex colours only); GLTFLoader still probes `self` for image decoding.
 // Node has no image decoder, so texture loads would fail softly — geometry, the subject of these tests, loads normally.
@@ -45,28 +47,50 @@ const modelPackConfig = JSON.parse(await readFile(new URL('../../../../../script
   models: Record<string, { triangleCap: number }>;
 };
 const AUTHORED_IDS = Object.keys(modelPackConfig.models).sort();
+// D030: 12 tree/bush ids (near + far LOD) imported from map/tree by scripts/import-trees.mjs.
+const treesConfig = JSON.parse(await readFile(new URL('../../../../../scripts/trees.config.json', import.meta.url), 'utf8')) as {
+  parameters: { nearLod: { count: number; radiusM: number }; farLod: { recomputeMoveM: number; recomputeYawDeg: number }; triangleCaps: Record<string, { near: number; far: number }>; atlas: { leafSlotPx: number; barkSlotPx: number } };
+  models: Record<string, { family: string; nearTriangles: number; farTriangles: number; file: string; farFile: string }>;
+};
+const TREE_IDS = Object.keys(treesConfig.models).filter(id => !id.endsWith('_far')).sort();
+
+/** PNG IHDR dimensions of the first embedded image of a GLB (textures are committed, Node cannot decode pixels). */
+async function glbTextureSize(manifestFile: string): Promise<{ width: number; height: number }> {
+  const bytes = await readFile(new URL(manifestFile, assetRoot));
+  const jsonLength = bytes.readUInt32LE(12);
+  const json = JSON.parse(bytes.subarray(20, 20 + jsonLength).toString('utf8')) as {
+    images: { bufferView: number }[]; bufferViews: { byteOffset?: number; byteLength: number }[];
+  };
+  const view = json.bufferViews[json.images[0]!.bufferView]!;
+  const png = bytes.subarray(20 + jsonLength + 8 + (view.byteOffset ?? 0));
+  return { width: png.readUInt32BE(16), height: png.readUInt32BE(20) };
+}
 
 describe('actual placeholder GLB artifacts', () => {
   it('loads every model with valid triangles, bottom pivot, footprint bounds and explicit provenance', async () => {
     const manager = await setup();
-    expect(manager.manifest).toHaveLength(74);
-    expect(manager.manifest.filter(entry => !entry.placeholder).map(entry => entry.id).sort()).toEqual(AUTHORED_IDS);
+    expect(manager.manifest).toHaveLength(74 + TREE_IDS.length); // near entries replace placeholders, far ones are added
+    expect(manager.manifest.filter(entry => !entry.placeholder).map(entry => entry.id).sort())
+      .toEqual([...AUTHORED_IDS, ...TREE_IDS, ...TREE_IDS.map(id => `${id}_far`)].sort());
     for (const entry of manager.manifest) {
-      // Imported models (D029) arrive pre-fitted: one mesh, no load-time fitting; everything else is a generated placeholder.
+      // Imported models (D029/D030) arrive pre-fitted; everything else is a generated placeholder.
       expect(entry.license).toBeTruthy(); expect(entry.source).toBeTruthy();
       const asset = manager.get(entry.id);
       expect(asset.parts.length).toBeGreaterThan(0);
       if (!entry.placeholder) {
-        expect(entry.footprint).toBeTruthy();
-        expect(asset.parts).toHaveLength(1); // one draw call per building
+        if (catalog.buildings[entry.id]) expect(entry.footprint).toBeTruthy();
+        else expect(asset.parts).toHaveLength(1); // one draw call per imported building / tree LOD level
       }
       expect(asset.bounds.min.y).toBeCloseTo(0);
+      const tree = treesConfig.models[entry.id.replace(/_far$/, '')];
       let triangles = 0;
       for (const part of asset.parts) {
         const positions = part.geometry.getAttribute('position');
-        triangles += positions.count / 3;
+        const index = part.geometry.getIndex();
+        triangles += (index ? index.count : positions.count) / 3; // D030 foliage is indexed; D029 buildings are not
         expect(part.geometry.getAttribute('normal').count).toBe(positions.count);
-        expect(part.geometry.getAttribute('color').count).toBe(positions.count);
+        if (tree) expect(part.geometry.getAttribute('uv').count).toBe(positions.count); // textured foliage
+        else expect(part.geometry.getAttribute('color').count).toBe(positions.count);
         for (const number of positions.array) expect(Number.isFinite(number)).toBe(true);
       }
       expect(triangles).toBe(entry.triangles);
@@ -75,14 +99,46 @@ describe('actual placeholder GLB artifacts', () => {
         expect(asset.bounds.max.x - asset.bounds.min.x).toBeLessThanOrEqual(building.size[0] * 2);
         expect(asset.bounds.max.z - asset.bounds.min.z).toBeLessThanOrEqual(building.size[1] * 2);
       }
-      expect(triangles).toBeLessThanOrEqual(entry.id.startsWith('tree') ? 800 : building ? 5000 : 300);
-      if (!entry.placeholder) {
-        const cap = modelPackConfig.models[entry.id]?.triangleCap;
-        expect(cap).toBeDefined();
-        expect(triangles).toBeLessThanOrEqual(cap!);
+      const cap = tree
+        ? entry.id.endsWith('_far') ? treesConfig.parameters.triangleCaps[tree.family]!.far : treesConfig.parameters.triangleCaps[tree.family]!.near
+        : entry.id.startsWith('tree') ? 800 : building ? 5000 : 300;
+      expect(triangles).toBeLessThanOrEqual(cap);
+      if (!entry.placeholder && catalog.buildings[entry.id]) {
+        const modelCap = modelPackConfig.models[entry.id]?.triangleCap;
+        expect(modelCap).toBeDefined();
+        expect(triangles).toBeLessThanOrEqual(modelCap!);
       }
       asset.release();
     }
+    manager.dispose();
+  });
+  it('keeps D030 tree LOD parameters, licence layout and texture budgets in sync with the import config', async () => {
+    const manager = await setup();
+    expect(TREE_LOD).toEqual({
+      nearCount: treesConfig.parameters.nearLod.count,
+      nearRadiusM: treesConfig.parameters.nearLod.radiusM,
+      recomputeMoveM: treesConfig.parameters.farLod.recomputeMoveM,
+      recomputeYawDeg: treesConfig.parameters.farLod.recomputeYawDeg,
+    });
+    for (const [id, model] of Object.entries(treesConfig.models)) {
+      const entry = manager.manifest.find(candidate => candidate.id === id)!;
+      // CC-* provenance: author, source, url, license and the "modified" notice, plus the far-LOD link.
+      expect(entry.author).toBeTruthy(); expect(entry.source).toContain('sketchfab.com');
+      expect(entry.url).toContain('sketchfab.com'); expect(entry.license).toMatch(/^CC-/);
+      expect(entry.modified).toBe(true); expect(entry.lod).toEqual({ far: `${id}_far` });
+      // Conifer derivatives are CC-BY-SA: they must live in their own directory beside LICENSE.md.
+      if (model.family === 'conifer') {
+        expect(entry.license).toBe('CC-BY-SA-4.0');
+        expect(entry.file).toContain('env-by-sa/');
+      } else {
+        expect(entry.file).not.toContain('env-by-sa/');
+      }
+      // Foliage atlas: foliage slot ≤ 512 px, bark slot ≤ 128 px, packed into one ≤ 512-wide texture.
+      const { width, height } = await glbTextureSize(entry.file);
+      expect(width).toBeLessThanOrEqual(treesConfig.parameters.atlas.leafSlotPx);
+      expect(height).toBeLessThanOrEqual(treesConfig.parameters.atlas.leafSlotPx + treesConfig.parameters.atlas.barkSlotPx);
+    }
+    await expect(readFile(new URL('models/env-by-sa/LICENSE.md', assetRoot), 'utf8')).resolves.toMatch(/CC-BY-SA 4\.0/);
     manager.dispose();
   });
   it('keeps the imported models byte-identical to what the deterministic import script generates', async () => {
@@ -114,17 +170,62 @@ describe('actual placeholder GLB artifacts', () => {
     renderer.dispose(); expect(scene.children).toHaveLength(0); expect(disposed).not.toHaveBeenCalled();
     handle.release(); manager.dispose(); expect(disposed).toHaveBeenCalledTimes(1);
   });
-  it('batches scenery per asset × map quadrant and keeps low plants out of the shadow pass (draw-call budget)', async () => {
+  it('batches scenery per asset × LOD × map quadrant and keeps far billboards and low plants out of the shadow pass', async () => {
     const manager = await setup(), scene = new Scene(), renderer = new EnvRenderer(scene, manager);
     const s = createState(createTestTemplate(), 1000);
     renderer.update(s);
+    renderer.frame(0.016, { x: 128, z: 128, yawDeg: 0 }); // centre the camera so the near LOD actually populates
     const all = meshes(scene), assets = new Set(s.env.map(e => e.assetId));
-    expect(all.length).toBeLessThanOrEqual(assets.size * 4);
+    expect(all.length).toBeLessThanOrEqual(assets.size * 2 * 4);
     for (const mesh of all) {
       const id = mesh.name.split(':').at(-1)!, handle = manager.get(id), height = handle.bounds.max.y - handle.bounds.min.y; handle.release();
-      expect(mesh.castShadow).toBe(height >= 1.5);
+      expect(mesh.castShadow).toBe(!id.endsWith('_far') && height >= 1.5);
     }
     expect(all.some(m => m.castShadow) && all.some(m => !m.castShadow)).toBe(true);
+    renderer.dispose(); manager.dispose();
+  });
+  it('picks the TREE_LOD.nearCount closest instances for the near LOD, keeps the rest far, and only re-partitions past the hysteresis', async () => {
+    const manager = await setup(), scene = new Scene(), renderer = new EnvRenderer(scene, manager);
+    const template = WorldTemplateSchema.parse(JSON.parse(await readFile(new URL('worlds/farm-valley-01/template.v2.json', new URL('../', assetRoot)), 'utf8')));
+    const s = createState(template, 1000, generateEnvironment(template));
+    const lodCount = (lod: 'near' | 'far') => meshes(scene).filter(mesh => mesh.name.includes(`:${lod}:`)).reduce((sum, mesh) => sum + mesh.count, 0);
+    renderer.update(s);
+    renderer.frame(0.016, { x: 128, z: 128, yawDeg: 0 });
+    const total = s.env.length, near = lodCount('near');
+    expect(near).toBe(Math.min(TREE_LOD.nearCount, total));
+    expect(near + lodCount('far')).toBe(total);
+    // Camera below the hysteresis: no re-partition (rebuild counter unchanged), counts stay stable.
+    const rebuilds = renderer.lodRebuilds;
+    renderer.frame(0.016, { x: 129, z: 129, yawDeg: 5 });
+    expect(renderer.lodRebuilds).toBe(rebuilds);
+    expect(lodCount('near')).toBe(near);
+    // Beyond 4 m: one re-partition; the nearest count is unchanged but the selection follows the camera.
+    renderer.frame(0.016, { x: 200, z: 200, yawDeg: 5 });
+    expect(renderer.lodRebuilds).toBe(rebuilds + 1);
+    expect(lodCount('near')).toBe(near);
+    renderer.frame(0.016, { x: 200, z: 200, yawDeg: 5 });
+    expect(renderer.lodRebuilds).toBe(rebuilds + 1); // standing still never recomputes
+    // Low graphics: far LOD only.
+    renderer.setQuality('low');
+    expect(lodCount('near')).toBe(0);
+    expect(lodCount('far')).toBe(total - s.env.filter(e => !keepInLow(e.assetId, e.id)).length);
+    renderer.dispose(); manager.dispose();
+  });
+  it('removes cleared instances from both LOD batches', async () => {
+    const manager = await setup(), scene = new Scene(), renderer = new EnvRenderer(scene, manager);
+    const template = WorldTemplateSchema.parse(JSON.parse(await readFile(new URL('worlds/farm-valley-01/template.v2.json', new URL('../', assetRoot)), 'utf8')));
+    const s = createState(template, 1000, generateEnvironment(template));
+    renderer.update(s);
+    renderer.frame(0.016, { x: 128, z: 128, yawDeg: 0 });
+    const total = () => meshes(scene).reduce((sum, mesh) => sum + mesh.count, 0);
+    const before = total();
+    const changed = cloneState(s);
+    const removed = s.env[0]!;
+    changed.snapshot.delta.removedEnvIds.push(removed.id);
+    renderer.update(changed);
+    expect(total()).toBe(before - 1);
+    expect(meshes(scene).filter(mesh => mesh.name.includes(':near:')).reduce((sum, mesh) => sum + mesh.count, 0)
+      + meshes(scene).filter(mesh => mesh.name.includes(':far:')).reduce((sum, mesh) => sum + mesh.count, 0)).toBe(before - 1);
     renderer.dispose(); manager.dispose();
   });
   it('low graphics drops flowers/reeds, thins bushes and merges batches; switching back restores everything', async () => {

@@ -6,6 +6,8 @@ export interface AssetManifestEntry {
   modified: boolean; placeholder: boolean; triangles: number;
   /** Game-grid footprint in cells (CELL_SIZE_M each). Imported models are pre-fitted; no load-time fitting since D029. */
   footprint?: [number, number];
+  /** D030: far-LOD companion id (a crossed-plane billboard GLB) rendered beyond the near radius. */
+  lod?: { far: string };
 }
 export interface AssetPart { geometry: BufferGeometry; material: Material | Material[]; matrix: Matrix4 }
 interface LoadedAsset { parts: AssetPart[]; bounds: Box3; refs: number }
