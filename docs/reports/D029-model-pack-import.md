@@ -144,9 +144,7 @@ với model mới), `docs/evidence/g4/full-world/render.json`.
 
 ## 9. Danh sách commit
 
-1. `<hash>` — feat(d029): deterministic model-pack import script, config and meshoptimizer devDep
-2. `<hash>` — feat(d029): 20 imported building GLBs + manifest provenance (silo keeps placeholder)
-3. `<hash>` — feat(d029): pre-fitted asset loading, updated asset rules, visual QA shots script
-4. `<hash>` — docs(d029): model-pack evidence, D029 decision and import report
-
-(Cập nhật hash thật sau khi commit — xem phần cuối báo cáo nếu cần.)
+1. `a023dff` — feat(d029): deterministic model-pack import script, config and meshoptimizer devDep
+2. `340a789` — feat(d029): 20 imported building GLBs + manifest provenance (silo keeps placeholder)
+3. `ee15b7b` — feat(d029): pre-fitted asset loading, updated asset rules, visual QA shots script
+4. `1a6b3e2` — docs(d029): model-pack evidence, D029 decision and import report
