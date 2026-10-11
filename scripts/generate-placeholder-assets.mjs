@@ -120,18 +120,20 @@ const scaffold=model();
 for(const x of [-.46,.46])for(const z of [-.46,.46])scaffold.box(x,0,z,.07,1,.07,palette.wood);
 for(const y of [.3,.7]){scaffold.box(0,y,-.46,1,.05,.07,palette.gold);scaffold.box(0,y,.46,1,.05,.07,palette.gold);scaffold.box(-.46,y,0,.07,.05,1,palette.gold);scaffold.box(.46,y,0,.07,.05,1,palette.gold);}
 await save('construction_scaffold',scaffold,'construction');
-// Authored models from the user's Building_3D_POC pack (map/, LOD1) replace the placeholders for these buildings.
-// They are fitted to the footprint at load time (AssetManager + fit.ts): the pack uses 4 m cells and a +Z front.
-const AUTHORED={
-  house_small:'city_small_house_lod1.glb', shop_cafe:'city_coffee_shop_lod1.glb', farmhouse:'rural_farmer_house_lod1.glb',
-};
-for(const [id,name] of Object.entries(AUTHORED)) {
-  const entry=assets.find(asset=>asset.id===id),bytes=await readFile(new URL(`models/authored/${name}`,directory));
-  const json=JSON.parse(bytes.subarray(20,20+bytes.readUInt32LE(12)).toString('utf8'));
-  const triangles=json.meshes.flatMap(mesh=>mesh.primitives).reduce((sum,p)=>sum+json.accessors[p.indices ?? p.attributes.POSITION].count/3,0);
-  Object.assign(entry,{file:`models/authored/${name}`,source:`Building_3D_POC pack (${name.replace('_lod1.glb','')}, LOD1), supplied by the project owner`,
-    author:'Project owner (procedural generator sources/build_prototypes.py)',license:'original_procedural_geometry_and_textures (map/Building_3D_POC/LICENSES.md)',
-    url:'map/Building_3D_POC',modified:false,placeholder:false,fit:{rotateY:180,margin:.92},triangles});
+// D029: 20 buildings use models imported from the owner's Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack by
+// scripts/import-model-pack.mjs, which pre-fits them (one mesh/material, flat normals, vertex colours,
+// 2 m/cell, door facing -Z, bottom-centre pivot) — no load-time fitting needed. The silo keeps its
+// placeholder: rural_warehouse is a 4×3 barn, the wrong silhouette for a 2×2 silo (D029 decision).
+const AUTHORED = ['house_small', 'shop_grocery', 'house_town', 'shop_cafe', 'shop_restaurant', 'bank', 'house_apartment',
+  'office_tower', 'hotel', 'shop_supermarket', 'deco_garden', 'deco_park', 'farmhouse', 'market', 'well',
+  'chicken_coop', 'rice_mill', 'cow_barn', 'bakery', 'deco_flowerbed'];
+for (const id of AUTHORED) {
+  const entry = assets.find(asset => asset.id === id), bytes = await readFile(new URL(`models/authored/${id}.glb`, directory));
+  const json = JSON.parse(bytes.subarray(20, 20 + bytes.readUInt32LE(12)).toString('utf8'));
+  const triangles = json.meshes.flatMap(mesh => mesh.primitives).reduce((sum, p) => sum + json.accessors[p.attributes.POSITION].count / 3, 0);
+  Object.assign(entry, { file: `models/authored/${id}.glb`, source: 'Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs',
+    author: 'Project owner (procedural generator sources/build_assets.py)', license: 'original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)',
+    url: 'map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du', modified: true, placeholder: false, triangles });
   delete entry.bounds;
 }
 await writeFile(new URL('manifest.json',directory),`${JSON.stringify({version:1,placeholder:assets.every(asset=>asset.placeholder),assets},null,2)}\n`);
