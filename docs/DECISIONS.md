@@ -316,3 +316,48 @@ mesh/material GLB with POSITION+NORMAL+COLOR_0 — one draw call per building.
   model import — the import FAILS when a model exceeds its baseline**; the `simplify()` target comparison was
   fixed (index-vs-triangle units) so error escalation actually runs; per-group simplification policies
   (drop/preserve/error per group, reasons in `model-pack.config.json`) shape where the budget goes.
+
+
+## D030 — 2026-10-11 — All trees and bushes replaced from the map/tree pack, with near/far LODs
+
+From the user's D030 brief. Source: `map/tree/` (owner-supplied, NOT committed): `stylized_tree.glb` (CC-BY-4.0,
+Aki), `fur_tree.glb` (CC-BY-SA-4.0, Harri Jones), `small_bush.glb` (CC-BY-4.0, yanix); `tree_animate.glb` NOT used.
+`scripts/import-trees.mjs` (deterministic, `--check` byte-compares outputs, skips when the pack is absent) bakes
+node transforms via the game's own GLTFLoader, converts units, packs foliage + bark into ONE atlas per tree
+(leaf slot ≤ 512 px, bark slot ≤ 128 px, one material → one draw call per LOD level), remaps UVs (frac only for the
+tiling trunk), and writes one indexed GLB per asset with `alphaMode: MASK` (deciduous cutoff 0.865 → 0.4 — the
+source value clipped the canopy to bare branches).
+- **12 game ids keep their codes and worldgen/template/contracts/sim untouched**; `contentVersion` stays 3. Every
+  id gains a near LOD (≤ 1500 triangles trees / 320 bush) and a far LOD (`<id>_far`, 3 crossed alpha-cutout planes
+  textured with unlit albedo captures of the near model rendered in headless Chrome on SwiftShader, packed 2×2
+  ≤ 512 px; +6 triangles per instance). Conifer derivatives live in `models/env-by-sa/` with their own `LICENSE.md`
+  (CC-BY-SA 4.0, modified-redistribution notice) and are labelled CC-BY-SA-4.0 in the in-game "Ghi công" panel.
+- **Deciduous variants**: canopy hue-rotated to greens for 01–03, original red-orange kept on 04; leaf cards thinned
+  to a seeded subset (~19 %, mulberry32 seed) enlarged ~1.9× to compensate area; bark simplified with meshoptimizer.
+  **Conifer**: spec-gloss → metal-rough, buried trunk cut at y = 0, textures brightened 15–25 %, cards simplified
+  2240 → ~1408. **Bush**: BLEND → MASK, `KHR_materials_specular` removed, texture brightened (scan is very dark),
+  the 16 sprig components rearranged from the source's stem-on-a-stick layout into a dome, material marked
+  `KHR_materials_unlit` (up-facing scan normals shade nearly black under the game lights; unlit matches the
+  billboard captures and the terrain palette).
+- **EnvRenderer**: instances are split near/far by distance from the camera target — the `TREE_LOD.nearCount = 160`
+  nearest within 60 m use the near model, everything else billboards; re-partitioned only when the camera moves
+  > 4 m or turns > 10° (no per-frame allocation, `lodRebuilds` counter for QA). Far batches never cast shadows;
+  near trees cast alpha-cutout shadows through a `MeshDepthMaterial` that carries the same cutout and sway.
+  **Wind**: shared-clock vertex-shader sway (`onBeforeCompile`, amplitude ∝ vertex height, phase per instance),
+  applied to both LODs and the shadow pass, strength 0 in low graphics. Low graphics renders far LOD only and keeps
+  the existing flower/reed drop + bush thinning. `CLEAR_ENV` removes from both LODs and the near set refills, so
+  clearing shows real wood gain with stable budgets (evidence: `docs/evidence/g4/trees/clear-*.jpg`).
+- **Budgets** (docs/11 §8, `g4-full-world`): city low **410,612** triangles (was 499,670 — the blocking D029
+  headroom problem is resolved), farm low 134,182 (was 229,240); desktop worst view 241 calls / 534,874 triangles
+  (limits 300 / 1.5 M); zone rebuild ≤ 3 ms; no console errors. g3 mobile suites 26/26.
+- **In-game credits**: settings panel section "Ghi công" reads `/assets/manifest.json` live, lists every `CC-*`
+  entry (model, author, license link, source link, "đã chỉnh sửa"); provenance also in `docs/ASSET_CREDITS.md` and
+  `scripts/trees.config.json`. Manifest grows 74 → 86 entries (`lod.far` links each near id to its billboard).
+- Reversible: remove the tree block from `generate-placeholder-assets.mjs`, regenerate the manifest, restore the
+  placeholder env GLBs from git history and revert the three renderer files; worldgen/templates/contracts/sim
+  untouched.
+- Known tradeoff: the far billboards are vertical planes and read thin from the 75° top-down evidence view
+  (comparable to the old placeholder cones; captures are taken at 28° elevation to keep mid-pitch volume).
+- Evidence: `docs/evidence/g4/trees/` (34 in-game shots: 12 variant close-ups, LOD zoom-outs, dense conifer forest,
+  clear before/after, city/farm high+low, Pixel 7 + iPhone 13, credits panel desktop+mobile; `report.json` with
+  per-shot draw calls/triangles/fps).

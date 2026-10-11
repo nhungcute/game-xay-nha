@@ -1,0 +1,3959 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-11T10:45:32.429Z",
+  "shots": [
+    {
+      "file": "variant-tree_deciduous_01.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z27-tree_deciduous-125",
+      "assetId": "tree_deciduous_01",
+      "lod": "near",
+      "projected": {
+        "x": 720.0000000000007,
+        "y": 450
+      },
+      "drawCalls": 144,
+      "triangles": 196848,
+      "fps": 59
+    },
+    {
+      "file": "variant-tree_deciduous_02.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z27-tree_deciduous-58",
+      "assetId": "tree_deciduous_02",
+      "lod": "near",
+      "projected": {
+        "x": 720.0000000000007,
+        "y": 450.0000000000006
+      },
+      "drawCalls": 135,
+      "triangles": 196952,
+      "fps": 59
+    },
+    {
+      "file": "variant-tree_deciduous_03.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z34-tree_deciduous-95",
+      "assetId": "tree_deciduous_03",
+      "lod": "near",
+      "projected": {
+        "x": 719.9999999999995,
+        "y": 450.0000000000006
+      },
+      "drawCalls": 154,
+      "triangles": 203406,
+      "fps": 59
+    },
+    {
+      "file": "variant-tree_deciduous_04.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z28-tree_deciduous-160",
+      "assetId": "tree_deciduous_04",
+      "lod": "near",
+      "projected": {
+        "x": 720,
+        "y": 450.0000000000006
+      },
+      "drawCalls": 145,
+      "triangles": 191610,
+      "fps": 59
+    },
+    {
+      "file": "variant-tree_conifer_01.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z26-tree_conifer-39",
+      "assetId": "tree_conifer_01",
+      "lod": "near",
+      "projected": {
+        "x": 719.9999999999999,
+        "y": 450.0000000000012
+      },
+      "drawCalls": 114,
+      "triangles": 164434,
+      "fps": 59
+    },
+    {
+      "file": "variant-tree_conifer_02.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z27-tree_conifer-174",
+      "assetId": "tree_conifer_02",
+      "lod": "near",
+      "projected": {
+        "x": 720,
+        "y": 450
+      },
+      "drawCalls": 143,
+      "triangles": 189020,
+      "fps": 59
+    },
+    {
+      "file": "variant-tree_conifer_03.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z27-tree_conifer-185",
+      "assetId": "tree_conifer_03",
+      "lod": "near",
+      "projected": {
+        "x": 720.0000000000007,
+        "y": 450.0000000000006
+      },
+      "drawCalls": 149,
+      "triangles": 198504,
+      "fps": 59
+    },
+    {
+      "file": "variant-tree_conifer_04.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z35-tree_conifer-55",
+      "assetId": "tree_conifer_04",
+      "lod": "near",
+      "projected": {
+        "x": 719.9999999999995,
+        "y": 450.0000000000006
+      },
+      "drawCalls": 156,
+      "triangles": 202462,
+      "fps": 59
+    },
+    {
+      "file": "variant-bush_01.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z27-bush-205",
+      "assetId": "bush_01",
+      "lod": "near",
+      "projected": {
+        "x": 720,
+        "y": 450.0000000000006
+      },
+      "drawCalls": 150,
+      "triangles": 197940,
+      "fps": 59
+    },
+    {
+      "file": "variant-bush_02.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z20-bush-131",
+      "assetId": "bush_02",
+      "lod": "near",
+      "projected": {
+        "x": 720,
+        "y": 450.0000000000006
+      },
+      "drawCalls": 131,
+      "triangles": 200732,
+      "fps": 59
+    },
+    {
+      "file": "variant-bush_03.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z28-bush-177",
+      "assetId": "bush_03",
+      "lod": "near",
+      "projected": {
+        "x": 720,
+        "y": 450.0000000000006
+      },
+      "drawCalls": 147,
+      "triangles": 192024,
+      "fps": 59
+    },
+    {
+      "file": "variant-bush_04.jpg",
+      "label": "near LOD close-up",
+      "targetId": "Z19-bush-245",
+      "assetId": "bush_04",
+      "lod": "near",
+      "projected": {
+        "x": 719.9999999999991,
+        "y": 450
+      },
+      "drawCalls": 124,
+      "triangles": 202454,
+      "fps": 59
+    },
+    {
+      "file": "lod-far-twin.jpg",
+      "label": "near→far LOD far-twin",
+      "targetId": "Z26-tree_conifer-39",
+      "assetId": "tree_conifer_01",
+      "lod": "far-twin",
+      "cameraDistance": 90,
+      "drawCalls": 164,
+      "triangles": 233108,
+      "fps": 55
+    },
+    {
+      "file": "lod-zoom-40.jpg",
+      "label": "near→far LOD zoom-40",
+      "targetId": "Z26-tree_conifer-39",
+      "assetId": "tree_conifer_01",
+      "lod": "zoom-40",
+      "cameraDistance": 40,
+      "drawCalls": 123,
+      "triangles": 180408,
+      "fps": 58
+    },
+    {
+      "file": "lod-zoom-110.jpg",
+      "label": "near→far LOD zoom-110",
+      "targetId": "Z26-tree_conifer-39",
+      "assetId": "tree_conifer_01",
+      "lod": "zoom-110",
+      "cameraDistance": 110,
+      "drawCalls": 170,
+      "triangles": 242044,
+      "fps": 56
+    },
+    {
+      "file": "lod-zoom-220.jpg",
+      "label": "near→far LOD zoom-220",
+      "targetId": "Z26-tree_conifer-39",
+      "assetId": "tree_conifer_01",
+      "lod": "zoom-220",
+      "cameraDistance": 220,
+      "drawCalls": 197,
+      "triangles": 257176,
+      "fps": 56
+    },
+    {
+      "file": "forest-conifer-45.jpg",
+      "label": "dense conifer forest (5 conifers within 12 m), 45° oblique",
+      "targetId": "Z26-tree_conifer-39",
+      "drawCalls": 120,
+      "triangles": 171036,
+      "fps": 58
+    },
+    {
+      "file": "clear-before.jpg",
+      "label": "before CLEAR_ENV",
+      "targetId": "Z28-tree_deciduous-160",
+      "cleared": [
+        "Z28-tree_deciduous-160",
+        "Z27-tree_conifer-174",
+        "Z27-tree_conifer-185",
+        "Z27-tree_deciduous-125",
+        "Z35-tree_conifer-55",
+        "Z35-tree_conifer-22"
+      ],
+      "drawCalls": 179,
+      "triangles": 218746,
+      "fps": 59
+    },
+    {
+      "file": "clear-after.jpg",
+      "label": "after CLEAR_ENV (accepted)",
+      "targetId": "Z28-tree_deciduous-160",
+      "command": {
+        "accepted": true,
+        "commandId": "5345664e-0b35-4f32-9ea8-831c9629eaa0",
+        "revision": 34529,
+        "serverTime": 1791715574003,
+        "patch": {
+          "wallet": {
+            "cash": 3131414,
+            "wood": 21,
+            "stone": 0
+          },
+          "progress": {
+            "xp": 156053,
+            "level": 20,
+            "questIndex": 12,
+            "questProgress": {
+              "spend_xp_remainder": 1,
+              "farm-1": 1,
+              "infra_paid_road_10183": 5,
+              "infra_paid_road_10055": 5,
+              "infra_paid_road_9927": 5,
+              "infra_paid_road_9799": 5,
+              "infra_paid_road_9671": 5,
+              "farm-2": 1,
+              "farm-3": 24,
+              "farm-4": 24,
+              "infra_paid_road_9670": 5,
+              "infra_paid_road_9669": 5,
+              "infra_paid_road_9797": 5,
+              "infra_paid_road_9796": 5,
+              "infra_paid_road_9924": 5,
+              "infra_paid_road_9543": 5,
+              "infra_paid_road_9415": 5,
+              "infra_paid_road_9287": 5,
+              "infra_paid_road_9288": 5,
+              "infra_paid_road_9289": 5,
+              "infra_paid_road_9290": 5,
+              "infra_paid_road_9291": 5,
+              "infra_paid_road_9419": 5,
+              "infra_paid_road_9547": 5,
+              "farm-5": 24,
+              "farm-6": 48,
+              "farm-7": 24,
+              "farm-9": 18,
+              "farm-10": 4,
+              "infra_paid_road_9159": 5,
+              "infra_paid_road_9158": 5,
+              "infra_paid_road_9157": 5,
+              "infra_paid_road_9285": 5,
+              "infra_paid_road_9284": 5,
+              "infra_paid_road_9412": 5,
+              "infra_paid_road_9411": 5,
+              "infra_paid_road_9539": 5,
+              "infra_paid_road_9538": 5,
+              "infra_paid_road_9666": 5,
+              "infra_paid_road_9665": 5,
+              "infra_paid_road_9664": 5,
+              "infra_paid_road_9663": 5,
+              "infra_paid_road_9662": 5,
+              "infra_paid_road_9661": 5,
+              "infra_paid_road_9660": 5,
+              "infra_paid_road_9659": 5,
+              "infra_paid_road_9658": 5,
+              "infra_paid_road_9657": 5,
+              "infra_paid_road_9656": 5,
+              "infra_paid_road_9655": 5,
+              "infra_paid_road_9654": 5,
+              "infra_paid_road_9653": 5,
+              "infra_paid_road_9652": 5,
+              "infra_paid_road_9651": 5,
+              "infra_paid_road_9523": 5,
+              "infra_paid_road_9395": 5,
+              "infra_paid_road_9522": 5,
+              "infra_paid_road_9521": 5,
+              "infra_paid_road_9520": 5,
+              "infra_paid_road_9519": 5,
+              "infra_paid_road_9518": 5,
+              "infra_paid_road_9517": 5,
+              "infra_paid_road_9516": 5,
+              "infra_paid_road_9510": 5,
+              "farm-11": 1,
+              "farm-12": 1,
+              "infra_paid_road_9029": 5,
+              "infra_paid_road_8901": 5,
+              "infra_paid_road_8773": 5,
+              "infra_paid_road_8645": 5,
+              "infra_paid_road_8517": 5,
+              "infra_paid_road_8389": 5,
+              "infra_paid_road_8390": 5,
+              "infra_paid_road_8391": 5,
+              "infra_paid_road_8519": 5,
+              "infra_paid_road_8520": 5,
+              "infra_paid_road_8521": 5,
+              "infra_paid_road_8522": 5,
+              "infra_paid_road_9784": 5,
+              "infra_paid_road_8388": 5,
+              "infra_paid_road_8387": 5,
+              "infra_paid_road_8515": 5,
+              "infra_paid_road_8514": 5,
+              "infra_paid_road_8513": 5,
+              "infra_paid_road_8261": 5,
+              "infra_paid_road_8133": 5,
+              "infra_paid_road_8005": 5,
+              "infra_paid_road_7877": 5,
+              "infra_paid_road_7749": 5,
+              "infra_paid_road_7750": 5,
+              "infra_paid_road_7751": 5,
+              "infra_paid_road_9781": 5,
+              "infra_paid_road_8512": 5,
+              "infra_paid_road_8511": 5,
+              "infra_paid_road_8510": 5,
+              "infra_paid_road_9779": 5,
+              "infra_paid_road_7621": 5,
+              "infra_paid_road_7493": 5,
+              "infra_paid_road_7365": 5,
+              "infra_paid_road_7237": 5,
+              "infra_paid_road_7109": 5,
+              "infra_paid_road_7110": 5,
+              "infra_paid_road_7111": 5,
+              "infra_paid_road_7112": 5,
+              "infra_paid_road_7113": 5,
+              "infra_paid_road_7114": 5,
+              "infra_paid_road_7115": 5,
+              "infra_paid_road_7116": 5,
+              "infra_paid_road_7244": 5,
+              "infra_paid_road_7372": 5,
+              "infra_paid_road_9267": 5,
+              "infra_paid_road_9139": 5,
+              "infra_paid_road_9011": 5,
+              "infra_paid_road_8883": 5,
+              "infra_paid_road_8755": 5,
+              "infra_paid_road_8627": 5,
+              "infra_paid_road_8499": 5,
+              "infra_paid_road_8500": 5,
+              "infra_paid_road_8501": 5,
+              "infra_paid_road_8502": 5,
+              "infra_paid_road_8503": 5,
+              "infra_paid_road_8504": 5,
+              "infra_paid_road_9646": 5,
+              "infra_paid_road_9774": 5
+            },
+            "tutorialDone": true,
+            "repeat": {
+              "seq": 19,
+              "rerollAt": 0,
+              "last": "harvest_crop",
+              "active": [
+                {
+                  "id": "r3",
+                  "template": "harvest_crop",
+                  "subject": "tomato",
+                  "target": 31,
+                  "progress": 11,
+                  "reward": {
+                    "cash": 360,
+                    "wood": 0,
+                    "stone": 0
+                  },
+                  "xp": 38,
+                  "ref": 1440
+                },
+                {
+                  "id": "r9",
+                  "template": "sell_item",
+                  "subject": "tomato",
+                  "target": 29,
+                  "progress": 0,
+                  "reward": {
+                    "cash": 720,
+                    "wood": 0,
+                    "stone": 0
+                  },
+                  "xp": 54,
+                  "ref": 2880
+                },
+                {
+                  "id": "r18",
+                  "template": "sell_item",
+                  "subject": "sugarcane",
+                  "target": 13,
+                  "progress": 0,
+                  "reward": {
+                    "cash": 900,
+                    "wood": 0,
+                    "stone": 0
+                  },
+                  "xp": 60,
+                  "ref": 3600
+                }
+              ]
+            }
+          },
+          "character": {
+            "displayName": "Người chơi",
+            "tag": "0001",
+            "createdAt": 28800000,
+            "netWorth": 3495400
+          },
+          "unlockedZones": [
+            19,
+            20,
+            26,
+            27,
+            28,
+            34,
+            35,
+            36
+          ],
+          "landValue": 10900,
+          "zones": {},
+          "buildings": {
+            "upsert": [
+              {
+                "id": "b_2_0",
+                "defId": "market",
+                "anchor": [
+                  72,
+                  76
+                ],
+                "rotation": 0,
+                "placedAt": 28800000,
+                "investedValue": 275,
+                "status": "ACTIVE",
+                "buildEndsAt": 28800000,
+                "cashPaid": 200,
+                "materialsPaid": {
+                  "cash": 200,
+                  "wood": 5,
+                  "stone": 0
+                }
+              },
+              {
+                "id": "b_7_0",
+                "defId": "farmhouse",
+                "anchor": [
+                  72,
+                  73
+                ],
+                "rotation": 0,
+                "placedAt": 28860000,
+                "investedValue": 750,
+                "status": "ACTIVE",
+                "buildEndsAt": 28860000,
+                "cashPaid": 500,
+                "materialsPaid": {
+                  "cash": 500,
+                  "wood": 10,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_30_0",
+                "defId": "well",
+                "anchor": [
+                  68,
+                  78
+                ],
+                "rotation": 0,
+                "placedAt": 28920000,
+                "investedValue": 400,
+                "status": "ACTIVE",
+                "buildEndsAt": 29040000,
+                "cashPaid": 300,
+                "materialsPaid": {
+                  "cash": 300,
+                  "wood": 0,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_34_0",
+                "defId": "silo",
+                "anchor": [
+                  75,
+                  75
+                ],
+                "rotation": 0,
+                "placedAt": 28920000,
+                "investedValue": 1150,
+                "status": "ACTIVE",
+                "buildEndsAt": 29220000,
+                "cashPaid": 800,
+                "materialsPaid": {
+                  "cash": 800,
+                  "wood": 10,
+                  "stone": 10
+                }
+              },
+              {
+                "id": "b_59_0",
+                "defId": "chicken_coop",
+                "anchor": [
+                  65,
+                  77
+                ],
+                "rotation": 0,
+                "placedAt": 29340000,
+                "investedValue": 1900,
+                "status": "ACTIVE",
+                "buildEndsAt": 29640000,
+                "cashPaid": 1500,
+                "materialsPaid": {
+                  "cash": 1500,
+                  "wood": 20,
+                  "stone": 5
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173200000,
+                      "readyAt": 5174400000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174400000,
+                      "readyAt": 5175600000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175600000,
+                      "readyAt": 5176800000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173200000,
+                      "readyAt": 5174400000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174400000,
+                      "readyAt": 5175600000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175600000,
+                      "readyAt": 5176800000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173200000,
+                      "readyAt": 5174400000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174400000,
+                      "readyAt": 5175600000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175600000,
+                      "readyAt": 5176800000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_234_0",
+                "defId": "farmhouse",
+                "anchor": [
+                  72,
+                  69
+                ],
+                "rotation": 0,
+                "placedAt": 75600000,
+                "investedValue": 1750,
+                "status": "ACTIVE",
+                "buildEndsAt": 75660000,
+                "cashPaid": 1500,
+                "materialsPaid": {
+                  "cash": 1500,
+                  "wood": 10,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_747_0",
+                "defId": "farmhouse",
+                "anchor": [
+                  76,
+                  71
+                ],
+                "rotation": 0,
+                "placedAt": 198000000,
+                "investedValue": 4250,
+                "status": "ACTIVE",
+                "buildEndsAt": 198060000,
+                "cashPaid": 4000,
+                "materialsPaid": {
+                  "cash": 4000,
+                  "wood": 10,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_786_0",
+                "defId": "chicken_coop",
+                "anchor": [
+                  72,
+                  63
+                ],
+                "rotation": 0,
+                "placedAt": 198060000,
+                "investedValue": 1900,
+                "status": "ACTIVE",
+                "buildEndsAt": 198360000,
+                "cashPaid": 1500,
+                "materialsPaid": {
+                  "cash": 1500,
+                  "wood": 20,
+                  "stone": 5
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_874_0",
+                "defId": "rice_mill",
+                "anchor": [
+                  63,
+                  72
+                ],
+                "rotation": 0,
+                "placedAt": 216060000,
+                "investedValue": 3700,
+                "status": "ACTIVE",
+                "buildEndsAt": 216960000,
+                "cashPaid": 3000,
+                "materialsPaid": {
+                  "cash": 3000,
+                  "wood": 20,
+                  "stone": 20
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174160000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174160000,
+                      "readyAt": 5175060000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175060000,
+                      "readyAt": 5175960000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_1094_0",
+                "defId": "farmhouse",
+                "anchor": [
+                  59,
+                  76
+                ],
+                "rotation": 0,
+                "placedAt": 248400000,
+                "investedValue": 8250,
+                "status": "ACTIVE",
+                "buildEndsAt": 248460000,
+                "cashPaid": 8000,
+                "materialsPaid": {
+                  "cash": 8000,
+                  "wood": 10,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_1097_0",
+                "defId": "cow_barn",
+                "anchor": [
+                  75,
+                  64
+                ],
+                "rotation": 0,
+                "placedAt": 248400000,
+                "investedValue": 7000,
+                "status": "ACTIVE",
+                "buildEndsAt": 250200000,
+                "cashPaid": 6000,
+                "materialsPaid": {
+                  "cash": 6000,
+                  "wood": 40,
+                  "stone": 20
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5173320000,
+                      "readyAt": 5176920000
+                    },
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5176920000,
+                      "readyAt": 5180520000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5173320000,
+                      "readyAt": 5176920000
+                    },
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5176920000,
+                      "readyAt": 5180520000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5173320000,
+                      "readyAt": 5176920000
+                    },
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5176920000,
+                      "readyAt": 5180520000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5173320000,
+                      "readyAt": 5176920000
+                    },
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5176920000,
+                      "readyAt": 5180520000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5173320000,
+                      "readyAt": 5176920000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5173320000,
+                      "readyAt": 5176920000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_1602_0",
+                "defId": "rice_mill",
+                "anchor": [
+                  56,
+                  77
+                ],
+                "rotation": 0,
+                "placedAt": 335460000,
+                "investedValue": 3700,
+                "status": "ACTIVE",
+                "buildEndsAt": 336360000,
+                "cashPaid": 3000,
+                "materialsPaid": {
+                  "cash": 3000,
+                  "wood": 20,
+                  "stone": 20
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_2438_0",
+                "defId": "farmhouse",
+                "anchor": [
+                  66,
+                  67
+                ],
+                "rotation": 0,
+                "placedAt": 579600000,
+                "investedValue": 15250,
+                "status": "ACTIVE",
+                "buildEndsAt": 579660000,
+                "cashPaid": 15000,
+                "materialsPaid": {
+                  "cash": 15000,
+                  "wood": 10,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_2441_0",
+                "defId": "chicken_coop",
+                "anchor": [
+                  60,
+                  72
+                ],
+                "rotation": 0,
+                "placedAt": 579600000,
+                "investedValue": 1900,
+                "status": "ACTIVE",
+                "buildEndsAt": 579900000,
+                "cashPaid": 1500,
+                "materialsPaid": {
+                  "cash": 1500,
+                  "wood": 20,
+                  "stone": 5
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_2495_0",
+                "defId": "bakery",
+                "anchor": [
+                  63,
+                  67
+                ],
+                "rotation": 0,
+                "placedAt": 579660000,
+                "investedValue": 13100,
+                "status": "ACTIVE",
+                "buildEndsAt": 583260000,
+                "cashPaid": 12000,
+                "materialsPaid": {
+                  "cash": 12000,
+                  "wood": 20,
+                  "stone": 40
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5173200000,
+                      "readyAt": 5175000000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5175000000,
+                      "readyAt": 5176800000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5176800000,
+                      "readyAt": 5178600000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5173200000,
+                      "readyAt": 5175000000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5175000000,
+                      "readyAt": 5176800000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5176800000,
+                      "readyAt": 5178600000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5173200000,
+                      "readyAt": 5175000000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5175000000,
+                      "readyAt": 5176800000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5176800000,
+                      "readyAt": 5178600000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_3490_0",
+                "defId": "cow_barn",
+                "anchor": [
+                  72,
+                  57
+                ],
+                "rotation": 0,
+                "placedAt": 802800000,
+                "investedValue": 7000,
+                "status": "ACTIVE",
+                "buildEndsAt": 804600000,
+                "cashPaid": 6000,
+                "materialsPaid": {
+                  "cash": 6000,
+                  "wood": 40,
+                  "stone": 20
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "cow_barn",
+                      "startedAt": 5173200000,
+                      "readyAt": 5176800000
+                    }
+                  ],
+                  [],
+                  [],
+                  [],
+                  [],
+                  []
+                ]
+              },
+              {
+                "id": "b_5166_0",
+                "defId": "farmhouse",
+                "anchor": [
+                  53,
+                  77
+                ],
+                "rotation": 0,
+                "placedAt": 1166400000,
+                "investedValue": 25250,
+                "status": "ACTIVE",
+                "buildEndsAt": 1166460000,
+                "cashPaid": 25000,
+                "materialsPaid": {
+                  "cash": 25000,
+                  "wood": 10,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_5170_0",
+                "defId": "rice_mill",
+                "anchor": [
+                  57,
+                  72
+                ],
+                "rotation": 0,
+                "placedAt": 1166400000,
+                "investedValue": 3700,
+                "status": "ACTIVE",
+                "buildEndsAt": 1167300000,
+                "cashPaid": 3000,
+                "materialsPaid": {
+                  "cash": 3000,
+                  "wood": 20,
+                  "stone": 20
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_7554_0",
+                "defId": "chicken_coop",
+                "anchor": [
+                  66,
+                  61
+                ],
+                "rotation": 0,
+                "placedAt": 1598400000,
+                "investedValue": 1900,
+                "status": "ACTIVE",
+                "buildEndsAt": 1598700000,
+                "cashPaid": 1500,
+                "materialsPaid": {
+                  "cash": 1500,
+                  "wood": 20,
+                  "stone": 5
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5173260000,
+                      "readyAt": 5174460000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5174460000,
+                      "readyAt": 5175660000
+                    },
+                    {
+                      "recipeId": "chicken_coop",
+                      "startedAt": 5175660000,
+                      "readyAt": 5176860000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_7584_0",
+                "defId": "bakery",
+                "anchor": [
+                  60,
+                  67
+                ],
+                "rotation": 0,
+                "placedAt": 1598460000,
+                "investedValue": 13100,
+                "status": "ACTIVE",
+                "buildEndsAt": 1602060000,
+                "cashPaid": 12000,
+                "materialsPaid": {
+                  "cash": 12000,
+                  "wood": 20,
+                  "stone": 40
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5173200000,
+                      "readyAt": 5175000000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5175000000,
+                      "readyAt": 5176800000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5176800000,
+                      "readyAt": 5178600000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5173200000,
+                      "readyAt": 5175000000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5175000000,
+                      "readyAt": 5176800000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5176800000,
+                      "readyAt": 5178600000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5173200000,
+                      "readyAt": 5175000000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5175000000,
+                      "readyAt": 5176800000
+                    },
+                    {
+                      "recipeId": "bakery",
+                      "startedAt": 5176800000,
+                      "readyAt": 5178600000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_9826_0",
+                "defId": "farmhouse",
+                "anchor": [
+                  50,
+                  77
+                ],
+                "rotation": 0,
+                "placedAt": 2012400000,
+                "investedValue": 40250,
+                "status": "ACTIVE",
+                "buildEndsAt": 2012460000,
+                "cashPaid": 40000,
+                "materialsPaid": {
+                  "cash": 40000,
+                  "wood": 10,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_9830_0",
+                "defId": "cow_barn",
+                "anchor": [
+                  62,
+                  62
+                ],
+                "rotation": 0,
+                "placedAt": 2012400000,
+                "investedValue": 7000,
+                "status": "ACTIVE",
+                "buildEndsAt": 2014200000,
+                "cashPaid": 6000,
+                "materialsPaid": {
+                  "cash": 6000,
+                  "wood": 40,
+                  "stone": 20
+                },
+                "slots": [
+                  [],
+                  [],
+                  [],
+                  [],
+                  [],
+                  []
+                ]
+              },
+              {
+                "id": "b_12742_0",
+                "defId": "rice_mill",
+                "anchor": [
+                  76,
+                  58
+                ],
+                "rotation": 0,
+                "placedAt": 2444400000,
+                "investedValue": 3700,
+                "status": "ACTIVE",
+                "buildEndsAt": 2445300000,
+                "cashPaid": 3000,
+                "materialsPaid": {
+                  "cash": 3000,
+                  "wood": 20,
+                  "stone": 20
+                },
+                "slots": [
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ],
+                  [
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5173320000,
+                      "readyAt": 5174220000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5174220000,
+                      "readyAt": 5175120000
+                    },
+                    {
+                      "recipeId": "rice_mill",
+                      "startedAt": 5175120000,
+                      "readyAt": 5176020000
+                    }
+                  ]
+                ]
+              },
+              {
+                "id": "b_16571_0",
+                "defId": "farmhouse",
+                "anchor": [
+                  72,
+                  52
+                ],
+                "rotation": 0,
+                "placedAt": 2999340000,
+                "investedValue": 60250,
+                "status": "ACTIVE",
+                "buildEndsAt": 2999400000,
+                "cashPaid": 60000,
+                "materialsPaid": {
+                  "cash": 60000,
+                  "wood": 10,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_16574_0",
+                "defId": "bakery",
+                "anchor": [
+                  66,
+                  58
+                ],
+                "rotation": 0,
+                "placedAt": 2999340000,
+                "investedValue": 13100,
+                "status": "ACTIVE",
+                "buildEndsAt": 3002940000,
+                "cashPaid": 12000,
+                "materialsPaid": {
+                  "cash": 12000,
+                  "wood": 20,
+                  "stone": 40
+                },
+                "slots": [
+                  [],
+                  [],
+                  []
+                ]
+              },
+              {
+                "id": "b_20764_0",
+                "defId": "cow_barn",
+                "anchor": [
+                  57,
+                  63
+                ],
+                "rotation": 0,
+                "placedAt": 3567600000,
+                "investedValue": 7000,
+                "status": "ACTIVE",
+                "buildEndsAt": 3569400000,
+                "cashPaid": 6000,
+                "materialsPaid": {
+                  "cash": 6000,
+                  "wood": 40,
+                  "stone": 20
+                },
+                "slots": [
+                  [],
+                  [],
+                  [],
+                  [],
+                  [],
+                  []
+                ]
+              },
+              {
+                "id": "b_26204_0",
+                "defId": "farmhouse",
+                "anchor": [
+                  45,
+                  77
+                ],
+                "rotation": 0,
+                "placedAt": 4276800000,
+                "investedValue": 90250,
+                "status": "ACTIVE",
+                "buildEndsAt": 4276860000,
+                "cashPaid": 90000,
+                "materialsPaid": {
+                  "cash": 90000,
+                  "wood": 10,
+                  "stone": 5
+                }
+              },
+              {
+                "id": "b_33159_0",
+                "defId": "bakery",
+                "anchor": [
+                  77,
+                  54
+                ],
+                "rotation": 0,
+                "placedAt": 5054400000,
+                "investedValue": 13100,
+                "status": "ACTIVE",
+                "buildEndsAt": 5058000000,
+                "cashPaid": 12000,
+                "materialsPaid": {
+                  "cash": 12000,
+                  "wood": 20,
+                  "stone": 40
+                },
+                "slots": [
+                  [],
+                  [],
+                  []
+                ]
+              }
+            ],
+            "remove": []
+          },
+          "bridges": {
+            "upsert": [
+              {
+                "id": "br_658_0",
+                "typeId": "bridge_wood",
+                "a": [
+                  44,
+                  74
+                ],
+                "b": [
+                  38,
+                  74
+                ],
+                "deckHeightDm": 40,
+                "buildEndsAt": 162780000,
+                "placedAt": 162480000,
+                "status": "ACTIVE",
+                "cashPaid": 400,
+                "materialsPaid": {
+                  "cash": 400,
+                  "wood": 25,
+                  "stone": 0
+                },
+                "investedValue": 775
+              }
+            ],
+            "remove": []
+          },
+          "crops": [
+            {
+              "cell": [
+                71,
+                54
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                71,
+                56
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                72,
+                56
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                73,
+                56
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                74,
+                56
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                75,
+                56
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                68,
+                57
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                70,
+                57
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                71,
+                57
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                70,
+                58
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                71,
+                58
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                70,
+                59
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                71,
+                59
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                65,
+                60
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                79,
+                60
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                64,
+                61
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                65,
+                61
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                70,
+                61
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                70,
+                67
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                71,
+                67
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                72,
+                67
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                73,
+                67
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                32,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                59,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                70,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                71,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                72,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                73,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                74,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                75,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                76,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                77,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                78,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                79,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                58,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                59,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                70,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                71,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                75,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                76,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                67,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                68,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                70,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                71,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                75,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5175000000
+            },
+            {
+              "cell": [
+                66,
+                72
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5174640000
+            },
+            {
+              "cell": [
+                70,
+                73
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5174640000
+            },
+            {
+              "cell": [
+                69,
+                74
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5174640000
+            },
+            {
+              "cell": [
+                70,
+                74
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173200000,
+              "readyAt": 5174640000
+            },
+            {
+              "cell": [
+                74,
+                61
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                75,
+                61
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                76,
+                61
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                77,
+                61
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                78,
+                61
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                79,
+                61
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                70,
+                62
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                71,
+                62
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                72,
+                62
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                74,
+                67
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                79,
+                67
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                57,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                58,
+                68
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                56,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                57,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                77,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                78,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                79,
+                69
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                55,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                56,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                57,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                58,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                59,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                60,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                61,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                62,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                63,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                64,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                65,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                66,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                79,
+                70
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                54,
+                71
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                55,
+                71
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                56,
+                71
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                57,
+                71
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                58,
+                71
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                59,
+                71
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                60,
+                71
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                68,
+                71
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                75,
+                71
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                53,
+                72
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                54,
+                72
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                67,
+                72
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                79,
+                72
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                66,
+                73
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                68,
+                75
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                62,
+                76
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                64,
+                77
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                69,
+                77
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                70,
+                77
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                62,
+                78
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                63,
+                78
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                64,
+                78
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                76,
+                78
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                77,
+                78
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                62,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                63,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                64,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                68,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                69,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                70,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                73,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                74,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5174760000
+            },
+            {
+              "cell": [
+                75,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                76,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                77,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                78,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                79,
+                79
+              ],
+              "cropId": "corn",
+              "plantedAt": 5173320000,
+              "readyAt": 5175120000
+            },
+            {
+              "cell": [
+                67,
+                75
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                63,
+                76
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                64,
+                76
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                66,
+                76
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                67,
+                76
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                70,
+                76
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                62,
+                77
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                63,
+                77
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                69,
+                78
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                70,
+                78
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173740000,
+              "readyAt": 5174220000
+            },
+            {
+              "cell": [
+                70,
+                56
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                71,
+                61
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                72,
+                61
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                73,
+                61
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                76,
+                70
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                77,
+                70
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                78,
+                70
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                61,
+                71
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                62,
+                71
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                63,
+                71
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                64,
+                71
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                65,
+                71
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                66,
+                71
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                67,
+                71
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                79,
+                71
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                55,
+                72
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                56,
+                72
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                70,
+                72
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174340000
+            },
+            {
+              "cell": [
+                53,
+                73
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                55,
+                73
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                56,
+                73
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                69,
+                73
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174340000
+            },
+            {
+              "cell": [
+                79,
+                73
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                52,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                53,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                68,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174340000
+            },
+            {
+              "cell": [
+                76,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                79,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                50,
+                75
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                77,
+                75
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                78,
+                75
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                79,
+                75
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                65,
+                76
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174340000
+            },
+            {
+              "cell": [
+                77,
+                76
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                78,
+                76
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                75,
+                77
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                76,
+                77
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                77,
+                77
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                78,
+                77
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                79,
+                77
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                48,
+                78
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                49,
+                78
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                75,
+                78
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173860000,
+              "readyAt": 5174460000
+            },
+            {
+              "cell": [
+                73,
+                62
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                74,
+                62
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                75,
+                62
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                76,
+                62
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                77,
+                62
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                78,
+                62
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                79,
+                62
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                70,
+                63
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                71,
+                63
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                75,
+                63
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                76,
+                63
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                77,
+                63
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                78,
+                63
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                79,
+                63
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                61,
+                64
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                66,
+                64
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                67,
+                64
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                68,
+                64
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                70,
+                64
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                71,
+                64
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                79,
+                64
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                61,
+                65
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                66,
+                65
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                79,
+                65
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                61,
+                66
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                68,
+                66
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                70,
+                66
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                79,
+                66
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                58,
+                67
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                59,
+                67
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                52,
+                73
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                54,
+                73
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                54,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                55,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                56,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                77,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                78,
+                74
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                79,
+                76
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                49,
+                77
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                78,
+                78
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                79,
+                78
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                48,
+                79
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                49,
+                79
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                59,
+                79
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                60,
+                79
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            },
+            {
+              "cell": [
+                61,
+                79
+              ],
+              "cropId": "rice",
+              "plantedAt": 5173980000,
+              "readyAt": 5174580000
+            }
+          ],
+          "inventory": {
+            "veg_greens": 0,
+            "rice": 3,
+            "corn": 0,
+            "egg": 0,
+            "tomato": 0,
+            "sugarcane": 0,
+            "flour": 0,
+            "milk": 0,
+            "watermelon": 0,
+            "bread": 0,
+            "pumpkin": 0,
+            "coffee": 0
+          },
+          "removedEnvIds": [
+            "Z28-tree_deciduous-160",
+            "Z27-tree_conifer-174",
+            "Z27-tree_conifer-185",
+            "Z27-tree_deciduous-125",
+            "Z35-tree_conifer-55",
+            "Z35-tree_conifer-22"
+          ]
+        },
+        "events": []
+      },
+      "drawCalls": 180,
+      "triangles": 212910,
+      "fps": 59
+    },
+    {
+      "file": "farm-high-overview.jpg",
+      "label": "farm overview high",
+      "quality": "high",
+      "drawCalls": 251,
+      "triangles": 265978,
+      "fps": 48
+    },
+    {
+      "file": "farm-high-oblique.jpg",
+      "label": "farm oblique high",
+      "quality": "high",
+      "drawCalls": 234,
+      "triangles": 257906,
+      "fps": 54
+    },
+    {
+      "file": "farm-low-overview.jpg",
+      "label": "farm overview low",
+      "quality": "low",
+      "drawCalls": 104,
+      "triangles": 134146,
+      "fps": 59
+    },
+    {
+      "file": "farm-low-oblique.jpg",
+      "label": "farm oblique low",
+      "quality": "low",
+      "drawCalls": 89,
+      "triangles": 126242,
+      "fps": 59
+    },
+    {
+      "file": "credits-desktop.jpg",
+      "label": "settings → Ghi công (desktop)",
+      "panel": "credits",
+      "drawCalls": 89,
+      "triangles": 126242,
+      "fps": 59
+    },
+    {
+      "file": "city-high-overview.jpg",
+      "label": "city overview high",
+      "quality": "high",
+      "drawCalls": 241,
+      "triangles": 534874,
+      "fps": 36
+    },
+    {
+      "file": "city-high-oblique.jpg",
+      "label": "city oblique high",
+      "quality": "high",
+      "drawCalls": 217,
+      "triangles": 521968,
+      "fps": 35
+    },
+    {
+      "file": "city-low-overview.jpg",
+      "label": "city overview low",
+      "quality": "low",
+      "drawCalls": 108,
+      "triangles": 410612,
+      "fps": 58
+    },
+    {
+      "file": "city-low-oblique.jpg",
+      "label": "city oblique low",
+      "quality": "low",
+      "drawCalls": 86,
+      "triangles": 402220,
+      "fps": 57
+    },
+    {
+      "file": "mobile/pixel7-farm.jpg",
+      "label": "farm on pixel7 (touch defaults to low graphics)",
+      "device": "pixel7",
+      "drawCalls": 60,
+      "triangles": 108066,
+      "fps": 59
+    },
+    {
+      "file": "mobile/pixel7-close.jpg",
+      "label": "close on pixel7",
+      "device": "pixel7",
+      "targetId": "Z26-tree_conifer-39",
+      "drawCalls": 39,
+      "triangles": 57706,
+      "fps": 59
+    },
+    {
+      "file": "mobile/pixel7-credits.jpg",
+      "label": "Ghi công on mobile",
+      "device": "pixel7",
+      "panel": "credits",
+      "drawCalls": 39,
+      "triangles": 57706,
+      "fps": 59
+    },
+    {
+      "file": "mobile/iphone13-farm.jpg",
+      "label": "farm on iphone13 (touch defaults to low graphics)",
+      "device": "iphone13",
+      "drawCalls": 60,
+      "triangles": 108066,
+      "fps": 59
+    },
+    {
+      "file": "mobile/iphone13-close.jpg",
+      "label": "close on iphone13",
+      "device": "iphone13",
+      "targetId": "Z26-tree_conifer-39",
+      "drawCalls": 39,
+      "triangles": 57706,
+      "fps": 59
+    },
+    {
+      "file": "mobile/iphone13-credits.jpg",
+      "label": "Ghi công on mobile",
+      "device": "iphone13",
+      "panel": "credits",
+      "drawCalls": 39,
+      "triangles": 57706,
+      "fps": 59
+    }
+  ],
+  "errors": []
+}

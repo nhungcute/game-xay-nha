@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:5190",
-  "at": "2026-10-11T08:06:51.181Z",
+  "at": "2026-10-11T10:55:52.360Z",
   "maps": {
     "city": {
       "world": {
@@ -19,83 +19,83 @@
         {
           "quality": "high",
           "view": "default",
-          "fps": 53,
-          "p95FrameMs": 29.7,
-          "drawCalls": 165,
-          "triangles": 513880,
-          "geometries": 95
+          "fps": 38,
+          "p95FrameMs": 63.7,
+          "drawCalls": 223,
+          "triangles": 529434,
+          "geometries": 107
         },
         {
           "quality": "high",
           "view": "overview-75",
-          "fps": 49,
-          "p95FrameMs": 26.1,
-          "drawCalls": 183,
-          "triangles": 519320,
-          "geometries": 110
+          "fps": 37,
+          "p95FrameMs": 32,
+          "drawCalls": 241,
+          "triangles": 534874,
+          "geometries": 122
         },
         {
           "quality": "high",
           "view": "oblique-45",
-          "fps": 54,
-          "p95FrameMs": 24.7,
-          "drawCalls": 173,
-          "triangles": 516704,
-          "geometries": 117
+          "fps": 38,
+          "p95FrameMs": 52.1,
+          "drawCalls": 233,
+          "triangles": 528448,
+          "geometries": 129
         },
         {
           "quality": "high",
           "view": "close",
-          "fps": 54,
-          "p95FrameMs": 24.4,
-          "drawCalls": 128,
-          "triangles": 497996,
-          "geometries": 117
+          "fps": 45,
+          "p95FrameMs": 26.8,
+          "drawCalls": 153,
+          "triangles": 464216,
+          "geometries": 129
         },
         {
           "quality": "low",
           "view": "default",
-          "fps": 56,
-          "p95FrameMs": 18.5,
+          "fps": 59,
+          "p95FrameMs": 17.7,
           "drawCalls": 64,
-          "triangles": 480954,
-          "geometries": 117
+          "triangles": 392456,
+          "geometries": 129
         },
         {
           "quality": "low",
           "view": "overview-75",
-          "fps": 56,
-          "p95FrameMs": 18.7,
+          "fps": 59,
+          "p95FrameMs": 18.4,
           "drawCalls": 108,
-          "triangles": 499110,
-          "geometries": 117
+          "triangles": 410612,
+          "geometries": 129
         },
         {
           "quality": "low",
           "view": "oblique-45",
-          "fps": 57,
-          "p95FrameMs": 18.6,
+          "fps": 59,
+          "p95FrameMs": 17.8,
           "drawCalls": 98,
-          "triangles": 496494,
-          "geometries": 117
+          "triangles": 407996,
+          "geometries": 129
         },
         {
           "quality": "low",
           "view": "close",
-          "fps": 56,
-          "p95FrameMs": 18.5,
+          "fps": 59,
+          "p95FrameMs": 17.9,
           "drawCalls": 64,
-          "triangles": 480954,
-          "geometries": 117
+          "triangles": 392456,
+          "geometries": 129
         }
       ],
       "rebuild": {
         "accepted": false,
         "code": "OCCUPIED",
         "stats": {
-          "lastRebuildMs": 0.10000002384185791,
-          "maxRebuildMs": 6,
-          "zonesRebuilt": 640
+          "lastRebuildMs": 0,
+          "maxRebuildMs": 1.2000000476837158,
+          "zonesRebuilt": 576
         }
       },
       "checks": {
@@ -125,74 +125,74 @@
         {
           "quality": "high",
           "view": "default",
-          "fps": 56,
-          "p95FrameMs": 19.1,
-          "drawCalls": 181,
-          "triangles": 250260,
-          "geometries": 108
+          "fps": 52,
+          "p95FrameMs": 22.7,
+          "drawCalls": 253,
+          "triangles": 275326,
+          "geometries": 120
         },
         {
           "quality": "high",
           "view": "overview-75",
-          "fps": 56,
-          "p95FrameMs": 19,
-          "drawCalls": 179,
-          "triangles": 251500,
-          "geometries": 114
+          "fps": 51,
+          "p95FrameMs": 23,
+          "drawCalls": 251,
+          "triangles": 268512,
+          "geometries": 126
         },
         {
           "quality": "high",
           "view": "oblique-45",
-          "fps": 57,
-          "p95FrameMs": 19.3,
-          "drawCalls": 175,
-          "triangles": 248860,
-          "geometries": 122
+          "fps": 53,
+          "p95FrameMs": 23.4,
+          "drawCalls": 247,
+          "triangles": 265872,
+          "geometries": 134
         },
         {
           "quality": "high",
           "view": "close",
-          "fps": 56,
-          "p95FrameMs": 19,
-          "drawCalls": 124,
-          "triangles": 218608,
-          "geometries": 122
+          "fps": 59,
+          "p95FrameMs": 18.3,
+          "drawCalls": 163,
+          "triangles": 207346,
+          "geometries": 134
         },
         {
           "quality": "low",
           "view": "default",
-          "fps": 56,
-          "p95FrameMs": 18.6,
+          "fps": 59,
+          "p95FrameMs": 17.8,
           "drawCalls": 54,
-          "triangles": 198700,
-          "geometries": 122
+          "triangles": 103642,
+          "geometries": 134
         },
         {
           "quality": "low",
           "view": "overview-75",
-          "fps": 57,
-          "p95FrameMs": 18.6,
+          "fps": 59,
+          "p95FrameMs": 18.2,
           "drawCalls": 104,
-          "triangles": 229240,
-          "geometries": 122
+          "triangles": 134182,
+          "geometries": 134
         },
         {
           "quality": "low",
           "view": "oblique-45",
-          "fps": 56,
-          "p95FrameMs": 18.8,
+          "fps": 59,
+          "p95FrameMs": 17.9,
           "drawCalls": 99,
-          "triangles": 226456,
-          "geometries": 122
+          "triangles": 131398,
+          "geometries": 134
         },
         {
           "quality": "low",
           "view": "close",
-          "fps": 56,
-          "p95FrameMs": 18.4,
+          "fps": 59,
+          "p95FrameMs": 17.6,
           "drawCalls": 54,
-          "triangles": 198700,
-          "geometries": 122
+          "triangles": 103642,
+          "geometries": 134
         }
       ],
       "rebuild": {
@@ -200,8 +200,8 @@
         "code": "CELL_BLOCKED",
         "stats": {
           "lastRebuildMs": 0,
-          "maxRebuildMs": 3.8000000715255737,
-          "zonesRebuilt": 704
+          "maxRebuildMs": 3,
+          "zonesRebuilt": 576
         }
       },
       "checks": {
