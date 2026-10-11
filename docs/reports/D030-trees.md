@@ -173,3 +173,18 @@ Deploy ná»™i bá»™ sau khi QA Ä‘áº¡t: `pnpm db:backup` (`/backups/xaynha-20261011
 (`https://node-seeking-contamination-subscriber.trycloudflare.com`): GLB cÃ¢y má»›i
 `/assets/models/env/tree_deciduous_01.glb` tráº£ **200** (269.692 bytes â€” Ä‘Ãºng báº£n D030), `/_glb-viewer.html` tráº£
 **404** âœ“. TrÆ°á»›c deploy `git status --short` chá»‰ cÃ²n `map/` vÃ  `docs/evidence/review/` chÆ°a track âœ“.
+
+## 10. D030-fix2 — t?m ngang nhìn t? trên
+
+Vòng fix2 thay tile 3 trùng tile 0 b?ng ?nh ch?p top-down, thêm m?t quad ngang t?i kho?ng 62% chi?u cao tán và tang far LOD t? 6 lên 8 tam giác (v?n m?t mesh, m?t draw call). B?i dùng tile 128 px, PNG Sub filter và lu?ng t? màu nh?; far GLB còn 22.040–23.040 byte, nh? hon near và du?i 60 KB. Alpha coverage b?n tile d?u trong 10–80%.
+
+| Map/góc | Tru?c fix2 | Sau fix2 | K?t qu? |
+|---|---:|---:|---|
+| city oblique-45 | 0,728 | 0,944 | PASS |
+| city overview-75 | 0,614 | 1,153 | PASS |
+| farm oblique-45 | 0,657 | 0,854 | PASS |
+| farm overview-75 | 0,543 | 1,108 | PASS |
+
+`g4-full-world` sau fix2: city/farm checks d?u true; ?nh và `render.json` du?c sinh l?i. Deploy chua th?c hi?n trong vòng này; local Docker/tunnel byte verification và smoke còn PENDING.
+
+Các nh?n d?nh sai c?a vòng tru?c dã s?a: farm overview 0,543 du?c ghi rõ FAIL; ph?n deploy cu du?c thay b?ng tr?ng thái PENDING th?c t?.
