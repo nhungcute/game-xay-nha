@@ -694,6 +694,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 const renderer = new WebGLRenderer({ alpha: true, antialias: true, preserveDrawingBuffer: true });
 document.body.append(renderer.domElement);
 window.__capture = async (url, anglesDeg, size, light) => {
+  if (!Number.isFinite(light?.elevationDeg)) throw new Error('capture elevationDeg must be a finite number');
+  if (!Number.isFinite(light?.margin) || light.margin <= 0) throw new Error('capture margin must be a positive finite number');
   const gltf = await new GLTFLoader().loadAsync(url);
   gltf.scene.updateMatrixWorld(true);
   const box = new Box3().setFromObject(gltf.scene);
@@ -729,7 +731,7 @@ window.__capture = async (url, anglesDeg, size, light) => {
 /** Capture the near model from the configured horizontal angles. gl.readPixels rows start at the BOTTOM, so
  *  the readback is flipped and un-premultiplied (the buffer holds src*alpha over a transparent clear). */
 async function captureBillboards(browser, nearBytes, id) {
-  const { sizePx, margin } = PARAMETERS.capture;
+  const { sizePx } = PARAMETERS.capture;
   const server = createServer(async (request, response) => {
     const url = new URL(request.url, 'http://localhost');
     const serve = (body, type = 'application/octet-stream') => { response.writeHead(200, { 'content-type': type }); response.end(body); };
@@ -750,7 +752,7 @@ async function captureBillboards(browser, nearBytes, id) {
     const page = await browser.newPage();
     await page.goto(`http://127.0.0.1:${port}/page.html`);
     const result = await page.evaluate(async ([modelId, angles, size, light]) => await window.__capture(`/model/${modelId}.glb`, angles, size, light),
-      [id, PARAMETERS.atlas.farAnglesDeg, sizePx, { margin }]);
+      [id, PARAMETERS.atlas.farAnglesDeg, sizePx, PARAMETERS.capture]);
     await page.close();
     return result.frames.map(b64 => {
       const raw = Buffer.from(b64, 'base64');
@@ -778,6 +780,43 @@ function packFarAtlas(frames) {
   frames.forEach((frame, k) => blit(atlas, frame, (k % 2) * tile, Math.floor(k / 2) * tile));
   blit(atlas, frames[0], tile, tile);
   return atlas;
+}
+
+function validateFarFrames(id, frames) {
+  const coverage = frames.map((frame, tile) => {
+    let covered = 0;
+    const colors = new Set();
+    for (let i = 0; i < frame.rgba.length; i += 4) {
+      if (frame.rgba[i + 3] >= 128) {
+        covered++;
+        colors.add(`${frame.rgba[i]},${frame.rgba[i + 1]},${frame.rgba[i + 2]}`);
+      }
+    }
+    const ratio = covered / (frame.width * frame.height);
+    console.log(`  ${id} tile ${tile}: alpha>=128 ${(ratio * 100).toFixed(1)}%`);
+    if (ratio < 0.1 || ratio > 0.8 || colors.size < 2) {
+      throw new Error(`${id} tile ${tile}: invalid billboard coverage ${(ratio * 100).toFixed(1)}%, colors=${colors.size}`);
+    }
+    return ratio;
+  });
+  return coverage;
+}
+
+function validateFarPng(id, png) {
+  if (png.length < 8 * 1024) throw new Error(`${id}_far atlas PNG is too small: ${png.length} bytes (< 8192)`);
+  const { width, rgba } = decodePng(png);
+  const tileSize = PARAMETERS.capture.sizePx;
+  const tiles = [];
+  for (let tile = 0; tile < PARAMETERS.atlas.farAnglesDeg.length; tile++) {
+    const frame = { width: tileSize, height: tileSize, rgba: new Uint8ClampedArray(tileSize * tileSize * 4) };
+    const x0 = (tile % 2) * tileSize, y0 = Math.floor(tile / 2) * tileSize;
+    for (let y = 0; y < tileSize; y++) {
+      const src = ((y0 + y) * width + x0) * 4;
+      frame.rgba.set(rgba.subarray(src, src + tileSize * 4), y * tileSize * 4);
+    }
+    tiles.push(frame);
+  }
+  return validateFarFrames(id, tiles);
 }
 
 /** 3 crossed planes (60° apart), each UV-mapped to one captured view; bottom edge at y=0.
@@ -825,10 +864,13 @@ async function buildAll() {
       const family = PARAMETERS[tree.family];
       const built = await buildTree(tree);
       const farFrames = await captureBillboards(browser, built.near.bytes, tree.id);
+      validateFarFrames(tree.id, farFrames);
       const farAtlas = packFarAtlas(farFrames);
       // The capture fits the model into a square of this side length, so the billboard plane matches it 1:1.
       const farSide = Math.max(built.measured.canopyWidthM * built.measured.sxz, built.measured.sourceHeightM * built.measured.sy) * PARAMETERS.capture.margin;
-      const far = writeGlb({ ...farGeometry(farSide), png: encodePng(farAtlas.rgba, farAtlas.width, farAtlas.height), alphaCutoff: PARAMETERS.alphaCutoff.far, generator: built.near.generator, unlit: tree.family === 'bush' });
+      const farPng = encodePng(farAtlas.rgba, farAtlas.width, farAtlas.height);
+      validateFarPng(tree.id, farPng);
+      const far = writeGlb({ ...farGeometry(farSide), png: farPng, alphaCutoff: PARAMETERS.alphaCutoff.far, generator: built.near.generator, unlit: tree.family === 'bush' });
       const caps = PARAMETERS.triangleCaps[tree.family];
       if (built.near.triangles > caps.near) throw new Error(`${tree.id}: ${built.near.triangles} near triangles exceed the ${caps.near} cap`);
       if (far.triangles > caps.far) throw new Error(`${tree.id}: ${far.triangles} far triangles exceed the ${caps.far} cap`);
