@@ -144,10 +144,22 @@ với model mới), `docs/evidence/g4/full-world/render.json`.
 
 ## 9. Danh sách commit
 
+Chuỗi D029 sau khi viết lại lịch sử (§10.1) — hash hiện tại:
+
 1. `a023dff` — feat(d029): deterministic model-pack import script, config and meshoptimizer devDep
 2. `340a789` — feat(d029): 20 imported building GLBs + manifest provenance (silo keeps placeholder)
 3. `ee15b7b` — feat(d029): pre-fitted asset loading, updated asset rules, visual QA shots script
-4. `1a6b3e2` — docs(d029): model-pack evidence, D029 decision and import report
+4. `1e40bf5` — docs(d029): model-pack evidence, D029 decision and import report
+5. `1413a46` — docs(d029): record real commit hashes in the import report
+6. `6976cec` — docs(d029): refresh full-world and smoke evidence; generator authored-map
+
+Các commit sửa sau review (§10):
+
+7. `9748080` — fix(d029): per-group simplification and floating-part QC gate
+8. `868b5e4` — fix(d029): rebuild well, park, windmill, townhouse models
+9. `b1b42aa` — test(d029): framed visual QA shots
+10. `151247d` — docs(d029): review fixes, evidence and updated commit hashes
+11. `8c1979d` — docs(d029): refresh full-world and smoke evidence after the review fixes
 
 ## 10. Sửa sau review (2026-10-11, vòng này)
 
