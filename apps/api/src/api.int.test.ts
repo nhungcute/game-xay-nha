@@ -7,7 +7,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { sql } from 'drizzle-orm';
 import { cellIndex, Surface, type Command, type CommandType, type WorldSnapshot } from '@xay-nha/contracts';
-import { catalog } from '@xay-nha/content';
+import { catalog, economy } from '@xay-nha/content';
 import { createTestTemplate, generateEnvironment } from '@xay-nha/worldgen';
 import { execute, netWorth, stateHash, type SimState } from '@xay-nha/sim';
 import { createDatabase, migrate } from './db/database';
@@ -228,16 +228,16 @@ describe('world access and commands', () => {
     const r = await call('GET', `/api/worlds/${p.worldId}`, undefined, p.token);
     expect(r.status).toBe(500); expect(r.body.error).toBe('INVALID_SNAPSHOT');
   });
-  it('a stored contentVersion 1 Farm world migrates on read (D025): XP kept, level recomputed, then persists as v2', async () => {
+  it('a stored contentVersion 1 Farm world migrates on read (D025, D028): XP kept, level recomputed, then persists as the current version', async () => {
     const p = await newPlayer('farm', 'Bản Cũ');
     await db.execute(sql`UPDATE worlds SET snapshot = jsonb_set(jsonb_set(jsonb_set(snapshot, '{contentVersion}', '1'), '{progress,xp}', '5700'), '{progress,level}', '8') WHERE id = ${p.worldId}`);
     const first = await snapshotOf(p.token, p.worldId);
-    expect(first.snapshot.contentVersion).toBe(2);
+    expect(first.snapshot.contentVersion).toBe(economy.contentVersion);
     expect(first.snapshot.progress).toMatchObject({ xp: 5700, level: 9 });
     const r = await send(p.token, p.worldId, [command(first.snapshot, 'BUY_MATERIAL', { wood: 1 })]);
     expect(r.body.results[0].accepted).toBe(true);
     const [row] = (await db.execute(sql`SELECT snapshot->>'contentVersion' AS v, level FROM worlds WHERE id = ${p.worldId}`)).rows as { v: string; level: number }[];
-    expect(row).toMatchObject({ v: '2', level: 9 });
+    expect(row).toMatchObject({ v: String(economy.contentVersion), level: 9 });
   });
   it('telemetry: valid report 204 without auth, malformed 400, over the per-IP limit dropped with 204', async () => {
     const limited = makeApp({ telemetryPerMinute: 2 });

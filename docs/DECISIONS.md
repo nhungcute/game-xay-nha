@@ -269,6 +269,12 @@ reads them into `economy.upgrades`, `economy.relief` and `economy.farm.baseStora
 - **Emergency relief (§9.1)**: `CLAIM_RELIEF` pays $600 when cash < $150 and nothing will earn (City: no income, no
   waiting money, no business under construction; Farm: no crops, empty storage, no production), once per 24 h
   (`progress.reliefAt`), no XP. Shown as a card at the top of the mission panel.
+- **Authored 3D models (B5)**: `house_small`, `shop_cafe` and `farmhouse` use LOD1 of the user's Building_3D_POC pack
+  (`apps/web/public/assets/models/authored/`, licence `original_procedural_geometry_and_textures`). The manifest marks
+  them `placeholder: false` with a `fit`; `AssetManager` bakes node transforms, merges parts per material (2 draw calls
+  per model), rebuilds flat normals, turns them 180° (pack front is +Z, game doorway −Z), centres them and scales them
+  to 92% of the footprint. Materials draw both faces because the prototype roofs have gaps. Full-world budgets still
+  pass (city desktop ≤ 185 calls / 390k triangles). Evidence: `docs/evidence/g4/authored-models/`.
 - `contentVersion` 2 → 3. `migrateContent` now chains v1 → v2 (level recompute) → v3 (no data change: every new field
   is optional and every rule change only loosens). Reversible by reverting the docs/16 rows and regenerating, but v3
   saves with tiers would then fail validation.

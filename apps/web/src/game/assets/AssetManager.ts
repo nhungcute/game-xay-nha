@@ -1,9 +1,12 @@
 import { Box3, BufferGeometry, Matrix4, Mesh, Texture, type Material, type Object3D } from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { fitParts, type AssetFit } from './fit';
 
 export interface AssetManifestEntry {
   id: string; file: string; source: string; author: string; license: string; url: string;
   modified: boolean; placeholder: boolean; triangles: number;
+  /** Authored models (placeholder: false) are fitted to `footprint` cells at load time. */
+  footprint?: [number, number]; fit?: AssetFit;
 }
 export interface AssetPart { geometry: BufferGeometry; material: Material | Material[]; matrix: Matrix4 }
 interface LoadedAsset { parts: AssetPart[]; bounds: Box3; refs: number }
@@ -42,6 +45,14 @@ export class AssetManager {
         if (object instanceof Mesh) parts.push({ geometry: object.geometry, material: object.material, matrix: object.matrixWorld.clone() });
       });
       if (!parts.length) throw new Error(`GLB contains no mesh: ${entry.id}`);
+      if (entry.fit) {
+        if (!entry.footprint) throw new Error(`Fitted asset needs a footprint: ${entry.id}`);
+        const fitted = fitParts(parts, entry.footprint, entry.fit), bounds = new Box3();
+        for (const part of parts) part.geometry.dispose();
+        for (const part of fitted) bounds.union(part.geometry.boundingBox!);
+        this.assets.set(entry.id, { parts: fitted, bounds, refs: 0 });
+        return;
+      }
       this.assets.set(entry.id, { parts, bounds: new Box3().setFromObject(gltf.scene), refs: 0 });
     }));
     const failed = results.find(result => result.status === 'rejected');

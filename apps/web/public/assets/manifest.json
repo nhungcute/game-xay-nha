@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "placeholder": true,
+  "placeholder": false,
   "assets": [
     {
       "id": "tree_deciduous_01",
@@ -676,31 +676,23 @@
     },
     {
       "id": "house_small",
-      "file": "models/house_small.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
+      "file": "models/authored/city_small_house_lod1.glb",
+      "source": "Building_3D_POC pack (city_small_house, LOD1), supplied by the project owner",
+      "author": "Project owner (procedural generator sources/build_prototypes.py)",
+      "license": "original_procedural_geometry_and_textures (map/Building_3D_POC/LICENSES.md)",
+      "url": "map/Building_3D_POC",
       "modified": false,
-      "placeholder": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         2,
         2
       ],
-      "bounds": {
-        "min": [
-          -1.76,
-          0,
-          -1.81
-        ],
-        "max": [
-          1.76,
-          3.5,
-          1.76
-        ]
-      },
-      "triangles": 54
+      "triangles": 2932,
+      "fit": {
+        "rotateY": 180,
+        "margin": 0.92
+      }
     },
     {
       "id": "shop_grocery",
@@ -788,31 +780,23 @@
     },
     {
       "id": "shop_cafe",
-      "file": "models/shop_cafe.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
+      "file": "models/authored/city_coffee_shop_lod1.glb",
+      "source": "Building_3D_POC pack (city_coffee_shop, LOD1), supplied by the project owner",
+      "author": "Project owner (procedural generator sources/build_prototypes.py)",
+      "license": "original_procedural_geometry_and_textures (map/Building_3D_POC/LICENSES.md)",
+      "url": "map/Building_3D_POC",
       "modified": false,
-      "placeholder": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         2,
         2
       ],
-      "bounds": {
-        "min": [
-          -1.76,
-          0,
-          -1.9043999999999999
-        ],
-        "max": [
-          1.76,
-          3.5,
-          1.76
-        ]
-      },
-      "triangles": 66
+      "triangles": 4188,
+      "fit": {
+        "rotateY": 180,
+        "margin": 0.92
+      }
     },
     {
       "id": "shop_restaurant",
@@ -1040,31 +1024,23 @@
     },
     {
       "id": "farmhouse",
-      "file": "models/farmhouse.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
+      "file": "models/authored/rural_farmer_house_lod1.glb",
+      "source": "Building_3D_POC pack (rural_farmer_house, LOD1), supplied by the project owner",
+      "author": "Project owner (procedural generator sources/build_prototypes.py)",
+      "license": "original_procedural_geometry_and_textures (map/Building_3D_POC/LICENSES.md)",
+      "url": "map/Building_3D_POC",
       "modified": false,
-      "placeholder": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         3,
         3
       ],
-      "bounds": {
-        "min": [
-          -2.64,
-          0,
-          -2.69
-        ],
-        "max": [
-          2.64,
-          3.5,
-          2.64
-        ]
-      },
-      "triangles": 54
+      "triangles": 3100,
+      "fit": {
+        "rotateY": 180,
+        "margin": 0.92
+      }
     },
     {
       "id": "well",

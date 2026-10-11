@@ -1,0 +1,91 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-11T01:03:01.909Z",
+  "shots": [
+    {
+      "kind": "city",
+      "id": "house_small",
+      "label": "front",
+      "file": "docs/evidence/g4/authored-models/city-house_small-front.jpg",
+      "drawCalls": 132
+    },
+    {
+      "kind": "city",
+      "id": "house_small",
+      "label": "side",
+      "file": "docs/evidence/g4/authored-models/city-house_small-side.jpg",
+      "drawCalls": 98
+    },
+    {
+      "kind": "city",
+      "id": "house_small",
+      "label": "back",
+      "file": "docs/evidence/g4/authored-models/city-house_small-back.jpg",
+      "drawCalls": 105
+    },
+    {
+      "kind": "city",
+      "id": "shop_cafe",
+      "label": "front",
+      "file": "docs/evidence/g4/authored-models/city-shop_cafe-front.jpg",
+      "drawCalls": 130
+    },
+    {
+      "kind": "city",
+      "id": "shop_cafe",
+      "label": "side",
+      "file": "docs/evidence/g4/authored-models/city-shop_cafe-side.jpg",
+      "drawCalls": 112
+    },
+    {
+      "kind": "city",
+      "id": "shop_cafe",
+      "label": "back",
+      "file": "docs/evidence/g4/authored-models/city-shop_cafe-back.jpg",
+      "drawCalls": 111
+    },
+    {
+      "kind": "city",
+      "id": "overview",
+      "file": "docs/evidence/g4/authored-models/city-overview.jpg",
+      "drawCalls": 153
+    },
+    {
+      "kind": "farm",
+      "id": "farmhouse",
+      "label": "front",
+      "file": "docs/evidence/g4/authored-models/farm-farmhouse-front.jpg",
+      "drawCalls": 126
+    },
+    {
+      "kind": "farm",
+      "id": "farmhouse",
+      "label": "side",
+      "file": "docs/evidence/g4/authored-models/farm-farmhouse-side.jpg",
+      "drawCalls": 108
+    },
+    {
+      "kind": "farm",
+      "id": "farmhouse",
+      "label": "back",
+      "file": "docs/evidence/g4/authored-models/farm-farmhouse-back.jpg",
+      "drawCalls": 112
+    },
+    {
+      "kind": "farm",
+      "id": "overview",
+      "file": "docs/evidence/g4/authored-models/farm-overview.jpg",
+      "drawCalls": 150
+    }
+  ],
+  "errors": [],
+  "upgrade": {
+    "city": {
+      "panel": "Cấp 1/3Cấp 2: +50% thu nhập · +50% dân số · 1:00Nâng cấp · $750 + 13 gỗ",
+      "running": "Đang nâng lên cấp 2 · còn 1:00Xây nhanhHủy · hoàn $750"
+    },
+    "farm": {
+      "panel": null
+    }
+  }
+}

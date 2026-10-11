@@ -12,7 +12,12 @@ import { CropRenderer } from '../render/CropRenderer';
 import { EnvRenderer } from '../render/EnvRenderer';
 import { GhostRenderer } from '../render/GhostRenderer';
 
+// Authored GLBs embed PNG textures; GLTFLoader probes `self` for image decoding. Node has no image decoder, so
+// texture loads fail softly (materials keep their factors) while geometry, the subject of these tests, loads normally.
+(globalThis as { self?: unknown }).self ??= globalThis;
 const assetRoot = new URL('../../../public/assets/', import.meta.url);
+const consoleError = console.error.bind(console);
+vi.spyOn(console, 'error').mockImplementation((...args: unknown[]) => { if (!String(args[0]).includes("Couldn't load texture")) consoleError(...args); });
 async function parse(entry: AssetManifestEntry): Promise<GLTF> {
   const buffer = await readFile(new URL(entry.file, assetRoot));
   return new GLTFLoader().parseAsync(new Uint8Array(buffer).buffer, '');
@@ -39,8 +44,11 @@ describe('actual placeholder GLB artifacts', () => {
   it('loads every model with valid triangles, bottom pivot, footprint bounds and explicit provenance', async () => {
     const manager = await setup();
     expect(manager.manifest).toHaveLength(74);
+    expect(manager.manifest.filter(entry => !entry.placeholder).map(entry => entry.id).sort()).toEqual(['farmhouse', 'house_small', 'shop_cafe']);
     for (const entry of manager.manifest) {
-      expect(entry.placeholder).toBe(true); expect(entry.license).toBeTruthy(); expect(entry.source).toBeTruthy();
+      // Authored models (D028 B5) must say how they are fitted; everything else is a generated placeholder.
+      if (!entry.placeholder) { expect(entry.fit).toBeTruthy(); expect(entry.footprint).toBeTruthy(); }
+      expect(entry.license).toBeTruthy(); expect(entry.source).toBeTruthy();
       const asset = manager.get(entry.id);
       expect(asset.parts.length).toBeGreaterThan(0);
       expect(asset.bounds.min.y).toBeCloseTo(0);
@@ -49,7 +57,8 @@ describe('actual placeholder GLB artifacts', () => {
         const positions = part.geometry.getAttribute('position');
         triangles += positions.count / 3;
         expect(part.geometry.getAttribute('normal').count).toBe(positions.count);
-        expect(part.geometry.getAttribute('color').count).toBe(positions.count);
+        // Placeholders are vertex-coloured; authored models may use textured materials instead.
+        if (entry.placeholder || part.geometry.getAttribute('color')) expect(part.geometry.getAttribute('color').count).toBe(positions.count);
         for (const number of positions.array) expect(Number.isFinite(number)).toBe(true);
       }
       expect(triangles).toBe(entry.triangles);
@@ -126,7 +135,10 @@ describe('actual placeholder GLB artifacts', () => {
     s.snapshot.buildings[0]!.status = 'ACTIVE'; renderer.update(s);
     expect(meshes(scene)[0]!.name).toContain('farmhouse');
     for (let count = 0; count < 50; count++) renderer.update(s);
-    expect(meshes(scene)).toHaveLength(1);
+    // One instanced mesh per material of the (authored, fitted) farmhouse — never one per update.
+    const farmhouse = manager.get('farmhouse'), parts = farmhouse.parts.length; farmhouse.release();
+    expect(parts).toBeLessThanOrEqual(2);
+    expect(meshes(scene)).toHaveLength(parts);
     expect(new Box3().setFromObject(scene).isEmpty()).toBe(false);
     s.snapshot.buildings = []; renderer.update(s); expect(meshes(scene)).toHaveLength(0);
     renderer.dispose(); manager.dispose(); expect(scene.children).toHaveLength(0);

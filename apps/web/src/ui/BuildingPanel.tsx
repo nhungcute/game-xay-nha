@@ -88,7 +88,7 @@ export function BuildingPanel({ state, building, bridge, apply, onClose }: {
         <button onClick={() => apply('COLLECT_PRODUCTION', { buildingId: building.id })}>{t('collect')}</button>
         {building.slots.flat().map((job, index) => <p key={index}>{t(catalog.items[catalog.recipes[job.recipeId]!.output]!.nameKey)} · {duration(job.readyAt - now)}</p>)}
       </>}
-      {confirmDemolish
+      {building?.upgrade ? null : confirmDemolish
         ? <div className="confirm-row" role="alertdialog" aria-label="Xác nhận phá">
           <p>Phá {def ? t(def.nameKey) : 'cầu'}? Hoàn lại {money(refund)} (50%).</p>
           <button className="danger" onClick={() => apply(building ? 'DEMOLISH' : 'REMOVE_BRIDGE', target)}>Phá</button>

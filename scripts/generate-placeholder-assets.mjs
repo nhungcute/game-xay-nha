@@ -120,5 +120,19 @@ const scaffold=model();
 for(const x of [-.46,.46])for(const z of [-.46,.46])scaffold.box(x,0,z,.07,1,.07,palette.wood);
 for(const y of [.3,.7]){scaffold.box(0,y,-.46,1,.05,.07,palette.gold);scaffold.box(0,y,.46,1,.05,.07,palette.gold);scaffold.box(-.46,y,0,.07,.05,1,palette.gold);scaffold.box(.46,y,0,.07,.05,1,palette.gold);}
 await save('construction_scaffold',scaffold,'construction');
-await writeFile(new URL('manifest.json',directory),`${JSON.stringify({version:1,placeholder:true,assets},null,2)}\n`);
+// Authored models from the user's Building_3D_POC pack (map/, LOD1) replace the placeholders for these buildings.
+// They are fitted to the footprint at load time (AssetManager + fit.ts): the pack uses 4 m cells and a +Z front.
+const AUTHORED={
+  house_small:'city_small_house_lod1.glb', shop_cafe:'city_coffee_shop_lod1.glb', farmhouse:'rural_farmer_house_lod1.glb',
+};
+for(const [id,name] of Object.entries(AUTHORED)) {
+  const entry=assets.find(asset=>asset.id===id),bytes=await readFile(new URL(`models/authored/${name}`,directory));
+  const json=JSON.parse(bytes.subarray(20,20+bytes.readUInt32LE(12)).toString('utf8'));
+  const triangles=json.meshes.flatMap(mesh=>mesh.primitives).reduce((sum,p)=>sum+json.accessors[p.indices ?? p.attributes.POSITION].count/3,0);
+  Object.assign(entry,{file:`models/authored/${name}`,source:`Building_3D_POC pack (${name.replace('_lod1.glb','')}, LOD1), supplied by the project owner`,
+    author:'Project owner (procedural generator sources/build_prototypes.py)',license:'original_procedural_geometry_and_textures (map/Building_3D_POC/LICENSES.md)',
+    url:'map/Building_3D_POC',modified:false,placeholder:false,fit:{rotateY:180,margin:.92},triangles});
+  delete entry.bounds;
+}
+await writeFile(new URL('manifest.json',directory),`${JSON.stringify({version:1,placeholder:assets.every(asset=>asset.placeholder),assets},null,2)}\n`);
 console.log(`Generated ${assets.length} actual GLB placeholder assets; every source/license is recorded in assets/manifest.json.`);

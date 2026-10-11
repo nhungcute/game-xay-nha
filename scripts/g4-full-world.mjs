@@ -4,6 +4,7 @@
 // Usage: (vite offline dev on 5190) node scripts/g4-full-world.mjs
 import { chromium } from '@playwright/test';
 import { readFile, writeFile } from 'node:fs/promises';
+import { dismissLevelUp, openSettings } from './lib/hud.mjs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5190', OUT = 'docs/evidence/g4/full-world';
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe', args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'] });
@@ -22,9 +23,10 @@ for (const [kind, mapId] of [['city', 'city-coast-01'], ['farm', 'farm-valley-01
   const loaded = await page.evaluate(s => { const cur = window.__debug.snapshot(); s.worldId = cur.worldId; s.accountId = cur.accountId; return window.__debug.loadSnapshot(s); }, snapshot);
   if (!loaded.ok) { console.error(kind, 'snapshot rejected', JSON.stringify(loaded.errors).slice(0, 500)); failed = true; await context.close(); continue; }
   await page.waitForTimeout(3000);
+  await dismissLevelUp(page);
   const views = [];
   for (const quality of ['high', 'low']) {
-    if (quality === 'low') { await page.locator('header .brand').click(); await page.locator('.settings button', { hasText: 'Thấp' }).click(); await page.locator('.side.panel .close').click(); }
+    if (quality === 'low') { await openSettings(page); await page.locator('.settings button', { hasText: 'Thấp' }).click(); await page.locator('.side.panel .close').click(); }
     for (const [label, cam] of [['default', null], ['overview-75', [128, 128, 220, 45, 75]], ['oblique-45', [128, 128, 160, 200, 45]], ['close', [128, 128, 45, 30, 40]]]) {
       if (cam) await page.evaluate(c => window.__debug.camera(...c), cam);
       await page.waitForTimeout(3000);
