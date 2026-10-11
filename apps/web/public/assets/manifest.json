@@ -676,399 +676,243 @@
     },
     {
       "id": "house_small",
-      "file": "models/authored/city_small_house_lod1.glb",
-      "source": "Building_3D_POC pack (city_small_house, LOD1), supplied by the project owner",
-      "author": "Project owner (procedural generator sources/build_prototypes.py)",
-      "license": "original_procedural_geometry_and_textures (map/Building_3D_POC/LICENSES.md)",
-      "url": "map/Building_3D_POC",
-      "modified": false,
+      "file": "models/authored/house_small.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
       "placeholder": false,
       "category": "building",
       "footprint": [
         2,
         2
       ],
-      "triangles": 2932,
-      "fit": {
-        "rotateY": 180,
-        "margin": 0.92
-      }
+      "triangles": 1186
     },
     {
       "id": "shop_grocery",
-      "file": "models/shop_grocery.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/shop_grocery.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         2,
         2
       ],
-      "bounds": {
-        "min": [
-          -1.76,
-          0,
-          -1.9043999999999999
-        ],
-        "max": [
-          1.76,
-          3.5,
-          1.76
-        ]
-      },
-      "triangles": 66
+      "triangles": 1260
     },
     {
       "id": "deco_garden",
-      "file": "models/deco_garden.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/deco_garden.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         1,
         1
       ],
-      "bounds": {
-        "min": [
-          -0.88,
-          0,
-          -0.88
-        ],
-        "max": [
-          0.88,
-          0.62,
-          0.88
-        ]
-      },
-      "triangles": 52
+      "triangles": 558
     },
     {
       "id": "house_town",
-      "file": "models/house_town.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/house_town.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         2,
         3
       ],
-      "bounds": {
-        "min": [
-          -1.76,
-          0,
-          -2.69
-        ],
-        "max": [
-          1.76,
-          3.5,
-          2.64
-        ]
-      },
-      "triangles": 54
+      "triangles": 1034
     },
     {
       "id": "shop_cafe",
-      "file": "models/authored/city_coffee_shop_lod1.glb",
-      "source": "Building_3D_POC pack (city_coffee_shop, LOD1), supplied by the project owner",
-      "author": "Project owner (procedural generator sources/build_prototypes.py)",
-      "license": "original_procedural_geometry_and_textures (map/Building_3D_POC/LICENSES.md)",
-      "url": "map/Building_3D_POC",
-      "modified": false,
+      "file": "models/authored/shop_cafe.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
       "placeholder": false,
       "category": "building",
       "footprint": [
         2,
         2
       ],
-      "triangles": 4188,
-      "fit": {
-        "rotateY": 180,
-        "margin": 0.92
-      }
+      "triangles": 1256
     },
     {
       "id": "shop_restaurant",
-      "file": "models/shop_restaurant.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/shop_restaurant.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         3,
         3
       ],
-      "bounds": {
-        "min": [
-          -2.64,
-          0,
-          -2.7316
-        ],
-        "max": [
-          2.64,
-          3.5,
-          2.64
-        ]
-      },
-      "triangles": 66
+      "triangles": 1406
     },
     {
       "id": "deco_park",
-      "file": "models/deco_park.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/deco_park.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         3,
         3
       ],
-      "bounds": {
-        "min": [
-          -2.64,
-          0,
-          -2.64
-        ],
-        "max": [
-          2.64,
-          0.62,
-          2.64
-        ]
-      },
-      "triangles": 52
+      "triangles": 1730
     },
     {
       "id": "bank",
-      "file": "models/bank.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/bank.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         3,
         3
       ],
-      "bounds": {
-        "min": [
-          -2.64,
-          0,
-          -2.69
-        ],
-        "max": [
-          2.64,
-          5.2,
-          2.64
-        ]
-      },
-      "triangles": 78
+      "triangles": 1750
     },
     {
       "id": "house_apartment",
-      "file": "models/house_apartment.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/house_apartment.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         4,
         4
       ],
-      "bounds": {
-        "min": [
-          -3.52,
-          0,
-          -3.57
-        ],
-        "max": [
-          3.52,
-          7.4,
-          3.52
-        ]
-      },
-      "triangles": 132
+      "triangles": 1814
     },
     {
       "id": "shop_supermarket",
-      "file": "models/shop_supermarket.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/shop_supermarket.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         4,
         4
       ],
-      "bounds": {
-        "min": [
-          -3.52,
-          0,
-          -3.57
-        ],
-        "max": [
-          3.52,
-          3.5,
-          3.52
-        ]
-      },
-      "triangles": 66
+      "triangles": 2450
     },
     {
       "id": "hotel",
-      "file": "models/hotel.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/hotel.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         4,
         5
       ],
-      "bounds": {
-        "min": [
-          -3.52,
-          0,
-          -4.45
-        ],
-        "max": [
-          3.52,
-          8.4,
-          4.4
-        ]
-      },
-      "triangles": 156
+      "triangles": 1598
     },
     {
       "id": "office_tower",
-      "file": "models/office_tower.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/office_tower.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         4,
         4
       ],
-      "bounds": {
-        "min": [
-          -3.52,
-          0,
-          -3.57
-        ],
-        "max": [
-          3.52,
-          12.4,
-          3.52
-        ]
-      },
-      "triangles": 204
+      "triangles": 2986
     },
     {
       "id": "market",
-      "file": "models/market.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
-      "category": "building",
-      "footprint": [
-        3,
-        3
-      ],
-      "bounds": {
-        "min": [
-          -2.64,
-          0,
-          -2.7316
-        ],
-        "max": [
-          2.64,
-          3.5,
-          2.64
-        ]
-      },
-      "triangles": 66
-    },
-    {
-      "id": "farmhouse",
-      "file": "models/authored/rural_farmer_house_lod1.glb",
-      "source": "Building_3D_POC pack (rural_farmer_house, LOD1), supplied by the project owner",
-      "author": "Project owner (procedural generator sources/build_prototypes.py)",
-      "license": "original_procedural_geometry_and_textures (map/Building_3D_POC/LICENSES.md)",
-      "url": "map/Building_3D_POC",
-      "modified": false,
+      "file": "models/authored/market.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
       "placeholder": false,
       "category": "building",
       "footprint": [
         3,
         3
       ],
-      "triangles": 3100,
-      "fit": {
-        "rotateY": 180,
-        "margin": 0.92
-      }
+      "triangles": 1750
+    },
+    {
+      "id": "farmhouse",
+      "file": "models/authored/farmhouse.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
+      "category": "building",
+      "footprint": [
+        3,
+        3
+      ],
+      "triangles": 1652
     },
     {
       "id": "well",
-      "file": "models/well.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/well.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         1,
         1
       ],
-      "bounds": {
-        "min": [
-          -0.88,
-          0,
-          -0.88
-        ],
-        "max": [
-          0.88,
-          1.95,
-          0.88
-        ]
-      },
-      "triangles": 62
+      "triangles": 556
     },
     {
       "id": "silo",
@@ -1100,143 +944,83 @@
     },
     {
       "id": "chicken_coop",
-      "file": "models/chicken_coop.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/chicken_coop.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         3,
         3
       ],
-      "bounds": {
-        "min": [
-          -2.64,
-          0,
-          -2.69
-        ],
-        "max": [
-          2.64,
-          3.5,
-          2.64
-        ]
-      },
-      "triangles": 54
+      "triangles": 1656
     },
     {
       "id": "rice_mill",
-      "file": "models/rice_mill.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/rice_mill.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         3,
         3
       ],
-      "bounds": {
-        "min": [
-          -2.64,
-          0,
-          -2.7800000000000002
-        ],
-        "max": [
-          2.64,
-          5.5,
-          2.64
-        ]
-      },
-      "triangles": 78
+      "triangles": 1734
     },
     {
       "id": "cow_barn",
-      "file": "models/cow_barn.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/cow_barn.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         4,
         4
       ],
-      "bounds": {
-        "min": [
-          -3.52,
-          0,
-          -3.57
-        ],
-        "max": [
-          3.52,
-          3.5,
-          3.52
-        ]
-      },
-      "triangles": 54
+      "triangles": 2424
     },
     {
       "id": "bakery",
-      "file": "models/bakery.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/bakery.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         3,
         3
       ],
-      "bounds": {
-        "min": [
-          -2.64,
-          0,
-          -2.69
-        ],
-        "max": [
-          2.64,
-          3.5,
-          2.64
-        ]
-      },
-      "triangles": 54
+      "triangles": 1622
     },
     {
       "id": "deco_flowerbed",
-      "file": "models/deco_flowerbed.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/authored/deco_flowerbed.glb",
+      "source": "Bo_21_Mo_Hinh_3D_GLTF_Day_Du pack (owner-supplied procedural GLTF), imported by scripts/import-model-pack.mjs",
+      "author": "Project owner (procedural generator sources/build_assets.py)",
+      "license": "original_procedural_geometry_and_textures (map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du/LICENSES.md)",
+      "url": "map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du",
+      "modified": true,
+      "placeholder": false,
       "category": "building",
       "footprint": [
         1,
         1
       ],
-      "bounds": {
-        "min": [
-          -0.88,
-          0,
-          -0.88
-        ],
-        "max": [
-          0.88,
-          0.62,
-          0.88
-        ]
-      },
-      "triangles": 52
+      "triangles": 560
     },
     {
       "id": "veg_greens_seed",
