@@ -28,19 +28,52 @@ const hideHud = page => page.evaluate(() => {
 });
 const showHud = page => page.evaluate(() => document.getElementById('d029-hud-hide')?.remove());
 /** Frames one building (world centre x/z, footprint cells) from three yaw angles and screenshots it.
- *  Same recipe as the D028 B5 shots (yaw 0/135/180, pitch clamps to 35) — the target is the lot centre. */
-async function shoot(page, kind, id, x, z, footprint, quality, label = null) {
+ *  D029 review fix: the camera targets the building's own footprint centre, `window.__debug.project` must
+ *  confirm the centre (and a point above the roof) land inside the viewport, and taller neighbours along the
+ *  view line push the distance out so nothing occludes the target. `targetId` lands in report.json. */
+async function shoot(page, kind, id, x, z, footprint, quality, label = null, distOverride = null) {
   const [sw, sd] = footprint;
-  const dist = Math.max(sw, sd) >= 4 ? 20 : 14;
   const angles = label ? [[label, 0]] : [['front', 0], ['side', 135], ['back', 180]];
+  const height = await page.evaluate(async defId => {
+    const manifest = await (await fetch('/assets/manifest.json')).json();
+    return manifest.assets.find(asset => asset.id === defId)?.sizeAfterM?.[1] ?? 3;
+  }, id);
   for (const [name, yaw] of angles) {
-    await page.evaluate(([cx, cz, distance, y, p]) => window.__debug.camera(cx, cz, distance, y, p), [x, z, dist, yaw, 32]);
-    await page.waitForTimeout(1100);
-    const cam = await page.evaluate(() => window.__debug.cameraState().target.map(v => Math.round(v)));
-    const file = `${OUT}/${kind}-${id}-${name}-${quality}.jpg`;
-    await page.screenshot({ path: file, type: 'jpeg', quality: 80 });
-    const m = await page.evaluate(() => window.__debug.metrics());
-    report.shots.push({ kind, id, label: name, quality, file, drawCalls: m.drawCalls, triangles: m.triangles, cam });
+    let dist = distOverride ?? Math.max(10, Math.max(sw, sd) * 2.6);
+    if (distOverride) dist = Math.min(dist, distOverride);
+    for (let attempt = 0; attempt < 4; attempt++) {
+      await page.evaluate(([cx, cz, distance, y, p]) => window.__debug.camera(cx, cz, distance, y, p), [x, z, dist, yaw, 32]);
+      await page.waitForTimeout(1100);
+      const framed = await page.evaluate(([cx, cz, topY]) => {
+        const project = window.__debug.project;
+        const centre = project(cx, cz), top = project(cx, cz);
+        const w = innerWidth, h = innerHeight;
+        const inside = point => point.x >= 60 && point.x <= w - 60 && point.y >= 40 && point.y <= h - 40;
+        return { centre: { ...centre, ok: inside(centre) }, topOk: inside({ x: top.x, y: top.y - topY }) };
+      }, [x, z, height + 2]);
+      const blocked = await page.evaluate(([cx, cz, distance, y]) => {
+        // Anything taller than the sight line between the camera and the target centre occludes it.
+        const yaw = y * Math.PI / 180;
+        const camX = cx + Math.sin(yaw) * distance, camZ = cz + Math.cos(yaw) * distance;
+        const s = window.__debug.snapshot();
+        return s.buildings.some(b => {
+          if (!b.anchor) return false;
+          const bx = (b.anchor[0] + 1.5) * 2, bz = (b.anchor[1] + 1.5) * 2;
+          const along = ((bx - camX) * (cx - camX) + (bz - camZ) * (cz - camZ)) / ((cx - camX) ** 2 + (cz - camZ) ** 2 || 1);
+          if (along <= 0.02 || along >= 0.98) return false;
+          const px = camX + along * (cx - camX), pz = camZ + along * (cz - camZ);
+          return Math.hypot(bx - px, bz - pz) < 3.2 && (b.defId === 'office_tower' || b.defId === 'house_apartment' || b.defId === 'hotel');
+        });
+      }, [x, z, dist, yaw]);
+      if ((framed.centre.ok && framed.topOk && !blocked) || attempt === 3) {
+        const file = `${OUT}/${kind}-${id}-${name}-${quality}.jpg`;
+        await page.screenshot({ path: file, type: 'jpeg', quality: 80 });
+        const m = await page.evaluate(() => window.__debug.metrics());
+        report.shots.push({ kind, id, targetId: id, label: name, quality, file, drawCalls: m.drawCalls, triangles: m.triangles, framed: { centreInFrame: framed.centre.ok, topInFrame: framed.topOk, blocked }, cameraDistance: dist });
+        break;
+      }
+      dist *= 1.35; // occluded or out of frame — back off and try again
+    }
   }
 }
 
@@ -76,6 +109,8 @@ async function shoot(page, kind, id, x, z, footprint, quality, label = null) {
   const manifest = await (await fetch(new URL('/assets/manifest.json', BASE))).json();
   const footprintOf = id => manifest.assets.find(asset => asset.id === id)?.footprint ?? [2, 2];
 
+  // D029 review fixes get an extra ≤ 10 m close-up per quality (well, park, windmill, townhouse, restaurant).
+  const CLOSE_UP = new Set(['well', 'deco_park', 'rice_mill', 'house_town', 'shop_restaurant']);
   for (const id of ids) {
     let building = snapshot.buildings.find(b => b.defId === id);
     if (!building && id === 'deco_flowerbed') building = await placeInFreeCell(page, 'deco_flowerbed');
@@ -86,6 +121,12 @@ async function shoot(page, kind, id, x, z, footprint, quality, label = null) {
     await setQuality(page, 'low');
     await shoot(page, kind, id, x, z, [sw, sd], 'low');
     await setQuality(page, 'high');
+    if (CLOSE_UP.has(id)) {
+      await shoot(page, kind, id, x, z, [sw, sd], 'high', 'close', 10);
+      await setQuality(page, 'low');
+      await shoot(page, kind, id, x, z, [sw, sd], 'low', 'close', 10);
+      await setQuality(page, 'high');
+    }
   }
 
   // Four rotations of house_small in a cleared row: the door must track the building rotation (entranceSide S).
