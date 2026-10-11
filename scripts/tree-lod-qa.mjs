@@ -57,15 +57,27 @@ try {
       for (const lod of ['far', 'near']) {
         const baseline = decodePng(captures[`${lod}Baseline`]);
         const image = decodePng(captures[lod]); let changed = 0;
+      let luminance = 0, hue = 0;
         for (let i = 0; i < image.data.length; i += image.channels) {
-          if (Math.max(Math.abs(image.data[i] - baseline.data[i]), Math.abs(image.data[i + 1] - baseline.data[i + 1]), Math.abs(image.data[i + 2] - baseline.data[i + 2])) > 24) changed++;
+          const r = image.data[i], g = image.data[i + 1], b = image.data[i + 2];
+          if (Math.max(Math.abs(r - baseline.data[i]), Math.abs(g - baseline.data[i + 1]), Math.abs(b - baseline.data[i + 2])) > 24) {
+            changed++; luminance += 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b), delta = max - min;
+            let degrees = 0;
+            if (delta) degrees = max === r ? 60 * (((g - b) / delta) % 6) : max === g ? 60 * ((b - r) / delta + 2) : 60 * ((r - g) / delta + 4);
+            hue += (degrees + 360) % 360;
+          }
         }
         coverage[lod] = changed / (baseline.width * baseline.height);
+        coverage[`${lod}MeanLuma`] = changed ? luminance / changed : 0;
+        coverage[`${lod}MeanHueDeg`] = changed ? hue / changed : 0;
         await writeFile(`${OUT}/${kind}-${label}-${lod}.png`, captures[lod]);
         await writeFile(`${OUT}/${kind}-${label}-${lod}-baseline.png`, captures[`${lod}Baseline`]);
       }
       const ratio = coverage.far / Math.max(coverage.near, Number.EPSILON);
-      views[label] = { coverage, farNearRatio: ratio, pass: ratio >= 0.6 };
+      const brightnessDelta = (coverage.farMeanLuma - coverage.nearMeanLuma) / Math.max(coverage.nearMeanLuma, 1);
+      const hueDeltaDeg = Math.abs(coverage.farMeanHueDeg - coverage.nearMeanHueDeg);
+      views[label] = { coverage, farNearRatio: ratio, brightnessDelta, hueDeltaDeg, pass: ratio >= 0.6 && Math.abs(brightnessDelta) <= 0.15 && hueDeltaDeg <= 20 };
       if (!views[label].pass) failed = true;
     }
     report.maps[kind] = views;
