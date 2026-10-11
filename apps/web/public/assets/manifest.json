@@ -1524,7 +1524,7 @@
       "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "tree_deciduous_02_far",
@@ -1536,7 +1536,7 @@
       "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "tree_deciduous_03_far",
@@ -1548,7 +1548,7 @@
       "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "tree_deciduous_04_far",
@@ -1560,7 +1560,7 @@
       "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "tree_conifer_01_far",
@@ -1572,7 +1572,7 @@
       "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "tree_conifer_02_far",
@@ -1584,7 +1584,7 @@
       "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "tree_conifer_03_far",
@@ -1596,7 +1596,7 @@
       "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "tree_conifer_04_far",
@@ -1608,7 +1608,7 @@
       "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "bush_01_far",
@@ -1620,7 +1620,7 @@
       "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "bush_02_far",
@@ -1632,7 +1632,7 @@
       "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "bush_03_far",
@@ -1644,7 +1644,7 @@
       "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     },
     {
       "id": "bush_04_far",
@@ -1656,7 +1656,7 @@
       "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
       "modified": true,
       "placeholder": false,
-      "triangles": 6
+      "triangles": 8
     }
   ]
 }
