@@ -116,7 +116,7 @@ Nâng cấp đường = trả chênh lệch giữa hai tier. Gỡ bất kỳ h�
 | `hotel` | Khách sạn | 4×5 | 50 000 | 40 | 80 | 52 200 | 12 | — | 40 | **7 480** | 7,0 h | 374 | 2 giờ |
 | `office_tower` | Tòa văn phòng | 4×4 | 100 000 | 20 | 120 | 102 700 | 15 | — | 60 | **9 680** | 10,6 h | 605 | 4 giờ |
 
-Ngân hàng: ngoài thu nhập, mỗi ngân hàng (tối đa 4 có hiệu lực) **+2 giờ trần kho tiền** cho toàn bộ công trình và mở nút "Thu tất cả". Khách sạn nhận thưởng view nước +20% thay vì +10%.
+Ngân hàng: ngoài thu nhập, mỗi ngân hàng (tối đa 4 có hiệu lực) **+2 giờ trần kho tiền** cho toàn bộ công trình. Nút "Thu tất cả" có ngay từ đầu, không cần ngân hàng (D028). Khách sạn nhận thưởng view nước +20% thay vì +10%.
 
 ### 6.2 Giới hạn số lượng theo cấp
 
@@ -178,6 +178,19 @@ settle(b, now):
 - `COLLECT(b)`: settle → cộng `floor(accrued)` vào ví → `accrued -= floor(accrued)`.
 - Bong bóng tiền hiện khi `accrued ≥ 10% trần`.
 
+### 6.5 Nâng cấp công trình (D028)
+
+Bể tiêu tiền cuối game. Công trình kinh doanh, nhà ở, xưởng/chuồng và kho nâng được tới **cấp 3**. Trong lúc nâng cấp, công trình vẫn hoạt động và thu tiền như cũ nhưng **chiếm 1 đội thợ**; xong thì hiệu quả mới áp dụng.
+
+| Cấp công trình | Cấp người chơi | Chi phí (× giá xây) | Thời gian (× thời gian xây) | Hiệu quả |
+|---|---|---|---|---|
+| 2 | 10 | 2,5 | 2 | +50% |
+| 3 | 15 | 5 | 3 | +100% |
+
+- Hiệu quả: thu nhập/giờ và dân số × (1 + hiệu quả); xưởng/chuồng **+1 hàng sản xuất** mỗi cấp; kho: sức chứa cộng thêm × (1 + hiệu quả).
+- Phần thu nhập tăng thêm hoàn vốn chậm 5–10 lần so với công trình gốc, nên nâng cấp là chỗ tiêu tiền cuối game, không rút ngắn nhịp §12.
+- Phá dỡ hoàn 50% cả phần đã nâng cấp; hủy khi đang nâng cấp hoàn 100% chi phí nâng cấp; xây nhanh tính theo chi phí nâng cấp.
+
 ## 7. Quê
 
 ### 7.1 Cây trồng
@@ -233,7 +246,7 @@ Hạt mua bằng $ khi gieo. Sản lượng tính trên mỗi ô. **Giá bán đ
 | Cấp | 1 | 3 | 5 | 7 | 9 | 11 | 13 | 15 | 17 | 19 |
 | Tổng ô ruộng | 24 | 48 | 72 | 96 | 120 | 144 | 168 | 192 | 216 | 240 |
 
-- **Sức chứa kho cơ bản:** 50 đơn vị nông sản/sản phẩm (gỗ, đá không tính). Bán ở chợ ngay lập tức, nên kho chỉ giới hạn lượng giữ lại làm nguyên liệu.
+- **Sức chứa kho cơ bản:** 100 đơn vị nông sản/sản phẩm (gỗ, đá không tính). Bán ở chợ ngay lập tức, nên kho chỉ giới hạn lượng giữ lại làm nguyên liệu.
 
 ### 7.4 Giá mua và giá bán (tổng hợp)
 
@@ -306,6 +319,10 @@ Mỗi lần lên cấp còn nâng giới hạn số lượng công trình (§6.2
 - **Cấp yêu cầu:** `min(20, 2 + floor(k / 3))`.
 - Khu có > 50% diện tích là nước: giá × 0,5.
 - Chỉ mua khu kề cạnh (4 hướng) một khu đã mở.
+
+### 9.1 Trợ cấp khẩn cấp (D028)
+
+Lưới an toàn chống kẹt: khi tiền mặt **dưới $150** và không còn nguồn thu nào (Thành phố: không công trình nào đang có thu nhập, có tiền chờ thu hay là công trình kinh doanh đang xây; Quê: không có cây đang trồng, kho trống và không có mẻ sản xuất), người chơi nhận **$600** trợ cấp, tối đa 1 lần mỗi **24 giờ**. Không cộng XP.
 
 | k | Giá | Cấp |
 |---|---|---|

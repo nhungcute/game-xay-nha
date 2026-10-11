@@ -36,7 +36,7 @@ describe('docs/16 generated economy content', () => {
   });
   it('contains all catalog balance tables in the economy artifact', () => {
     expect(economy.catalog).toEqual(catalog);
-    expect(contentVersion).toBe(2); // D025
+    expect(contentVersion).toBe(3); // D025, D028
     expect(catalog.contentVersion).toBe(contentVersion);
   });
   it.each(cityRows)('matches city table %s', (id, _name, size, cash, wood, stone, _value, level, population, jobs, rate) => {

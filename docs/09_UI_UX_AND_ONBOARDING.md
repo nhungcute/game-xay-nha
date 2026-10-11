@@ -89,7 +89,7 @@ Thanh tiến độ theo bước: Dữ liệu → Địa hình → Cây cối →
 | Dùng công cụ | Chuột trái kéo/chạm | Một ngón kéo/chạm |
 | Xoay công trình | R / Q-E | Nút ⟳ |
 | Hủy | Esc / chuột phải nhấp | Nút ✖ |
-| Thu tất cả (khi có ngân hàng) | Phím C | Nút trong HUD |
+| Thu tất cả (có ngay từ đầu, D028) | Phím C | Nút trong HUD |
 
 - Camera: perspective FOV 40°, pitch 35°–75°, mặc định 55°; yaw tự do 360°; zoom 30–220 m; target giới hạn trong khu đã mở + 1 khu viền.
 - Nút ⟲ đưa camera về góc mặc định của template.
@@ -120,7 +120,7 @@ Chợ (nối đường) → Nhà nông → Cuốc 6 ô → Gieo rau cải (chín
 
 ## 6. Thông báo và popup
 
-- "Trong lúc bạn vắng mặt": tổng tiền chờ thu (city) / số ô đã chín, sản phẩm xong (farm). Nút "Thu tất cả" (city cần ngân hàng; nếu chưa có thì nút "Đi tới" từng công trình).
+- "Trong lúc bạn vắng mặt": tổng tiền chờ thu (city) / số ô đã chín, sản phẩm xong (farm). Nút "Thu tất cả" (city, không cần ngân hàng từ D028).
 - Lên cấp: popup danh sách mở khóa mới.
 - Mất kết nối: banner vàng cố định trên cùng.
 - Không dùng popup chặn cho lỗi validate — chỉ hiện ở thanh phụ.

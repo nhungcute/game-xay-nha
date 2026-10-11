@@ -52,7 +52,7 @@ it('1000 seeded random commands preserve occupancy, integer wallet, unique IDs a
       run('PLACE_BUILDING',{defId:'shop_grocery',anchor:[54,68],rotation:0},true);
       now+=60_000;run('BUY_MATERIAL',{wood:1},true);
     }
-    const all:Command['type'][]=['CLEAR_ENV','TERRAFORM','TILL','UNTILL','EMBANK','REMOVE_EMBANK','BUILD_ROAD','REMOVE_ROAD','BUILD_BRIDGE','REMOVE_BRIDGE','PLACE_BUILDING','DEMOLISH','CANCEL_CONSTRUCTION','SPEED_UP','COLLECT','PLANT','HARVEST','START_PRODUCTION','COLLECT_PRODUCTION','SELL','BUY_MATERIAL','UNLOCK_ZONE','CLAIM_QUEST'];
+    const all:Command['type'][]=['CLEAR_ENV','TERRAFORM','TILL','UNTILL','EMBANK','REMOVE_EMBANK','BUILD_ROAD','REMOVE_ROAD','BUILD_BRIDGE','REMOVE_BRIDGE','PLACE_BUILDING','DEMOLISH','CANCEL_CONSTRUCTION','SPEED_UP','COLLECT','PLANT','HARVEST','START_PRODUCTION','COLLECT_PRODUCTION','SELL','BUY_MATERIAL','UNLOCK_ZONE','CLAIM_QUEST','UPGRADE_BUILDING','CLAIM_RELIEF'];
     for(let n=0;n<500;n++) {
       now+=60_000;
       const type=pick(all);types.add(type);
@@ -80,11 +80,13 @@ it('1000 seeded random commands preserve occupancy, integer wallet, unique IDs a
         case 'BUY_MATERIAL':payload={wood:pick([1,2,10]),stone:1};break;
         case 'UNLOCK_ZONE':payload={zoneId:Math.floor(rng()*64)};break;
         case 'CLAIM_QUEST':payload={questId:`${kind}-12`};break;
+        case 'UPGRADE_BUILDING':payload={buildingId:b?.id ?? 'b_missing'};break;
+        case 'CLAIM_RELIEF':payload={};break;
       }
       run(type,payload);
     }
     expect(s.surface.some(v=>v===Surface.WATER)).toBe(true);
   }
-  expect(accepted+rejected).toBe(1000);expect(accepted).toBeGreaterThan(150);expect(rejected).toBeGreaterThan(150);expect(types.size).toBe(23);
+  expect(accepted+rejected).toBe(1000);expect(accepted).toBeGreaterThan(150);expect(rejected).toBeGreaterThan(150);expect(types.size).toBe(25);
   console.info(`1000 random commands: ${accepted} accepted, ${rejected} rejected; ${types.size} command types; invariants checked after every command.`);
 },60_000);

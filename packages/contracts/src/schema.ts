@@ -118,6 +118,10 @@ export const PlacedBuildingSchema = z.object({
   accrued: z.number().finite().nonnegative().optional(),
   settledAt: TimestampSchema.optional(),
   slots: z.array(z.array(ProductionJobSchema).max(3)).optional(),
+  /** D028: completed upgrade tier (absent = tier 1). Upgrade costs are derived from the tier, never stored. */
+  tier: z.union([z.literal(2), z.literal(3)]).optional(),
+  /** D028: upgrade in progress; the building keeps working and holds one builder until `endsAt`. */
+  upgrade: z.object({ tier: z.union([z.literal(2), z.literal(3)]), startedAt: TimestampSchema, endsAt: TimestampSchema }).strict().optional(),
 }).strict();
 
 export const PlacedBridgeSchema = z.object({
@@ -149,6 +153,8 @@ export const ProgressSchema = z.object({
   xp: IntegerSchema, level: IntegerSchema.min(1).max(20), questIndex: IntegerSchema,
   questProgress: z.record(IdSchema, IntegerSchema), tutorialDone: z.boolean(),
   repeat: RepeatStateSchema.optional(),
+  /** D028 §9.1: when the last emergency relief was claimed. */
+  reliefAt: TimestampSchema.optional(),
 }).strict();
 
 export const WorldSnapshotSchema = z.object({

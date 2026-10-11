@@ -9,3 +9,4 @@ export * from './farm';
 export * from './engine';
 export * from './snapshot';
 export * from './quests';
+export * from './upgrades';

@@ -195,7 +195,7 @@ describe('construction lifecycle and refunds', () => {
   });
   it('guards demolition of silo holding excess inventory', () => {
     const s = setup(), b = place(s, 'silo'); completeConstruction(s, b);
-    s.snapshot.inventory.rice = 51;
+    s.snapshot.inventory.rice = economy.farm.baseStorage + 1;
     rejects(s, command('DEMOLISH', { buildingId: b.id }), 'STORAGE_FULL');
   });
   it('guards demolition of production with queued ingredients', () => {

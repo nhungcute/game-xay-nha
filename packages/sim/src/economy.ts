@@ -6,13 +6,14 @@ import { completeConstruction } from './construction';
 import { addXp, guard } from './common';
 import type { SimState } from './state';
 import { roadPaidValue } from './road-value';
+import { completeUpgrade, tierMultiplier, upgradeWorth } from './upgrades';
 
 export const costValue = (c: Cost): number => c.cash + c.wood * economy.materialPrices.wood + c.stone * economy.materialPrices.stone;
 export const distance = (a: Cell[], b: Cell[]): number => Math.min(...a.flatMap(c => b.map(n => Math.max(Math.abs(c[0]-n[0]),Math.abs(c[1]-n[1])))));
 export function populationAndJobs(s: SimState): {population: number; jobs: number} {
   let population = 0, jobs = 0;
   for (const b of s.snapshot.buildings) if (b.status === 'ACTIVE' && access(s,b)) {
-    population += catalog.buildings[b.defId]?.population ?? 0; jobs += catalog.buildings[b.defId]?.jobs ?? 0;
+    population += Math.round((catalog.buildings[b.defId]?.population ?? 0) * tierMultiplier(b)); jobs += catalog.buildings[b.defId]?.jobs ?? 0;
   }
   return { population, jobs };
 }
@@ -42,7 +43,7 @@ export function recompute(s: SimState): void {
     }
     s.rates[b.id] = def.baseRatePerHour * (def.jobs ? work : 1)
       * (1 + Math.min(economy.income.decorCap,decor) + (water ? def.waterBonusOverride ?? economy.income.waterBonus : 0))
-      * economy.roadTiers[access(s,b) as 1|2|3].multiplier;
+      * economy.roadTiers[access(s,b) as 1|2|3].multiplier * tierMultiplier(b);
   }
   s.snapshot.character.netWorth = netWorth(s);
 }
@@ -62,11 +63,15 @@ export function settle(s: SimState, now: number): void {
 export function advanceTime(s: SimState, now: number): void {
   guard(Number.isSafeInteger(now) && now >= s.snapshot.serverTime,'INVALID_TIME');
   recompute(s);
-  const pending = [...s.snapshot.buildings,...s.snapshot.bridges]
-    .filter(o => o.status === 'CONSTRUCTING' && o.buildEndsAt <= now)
-    .sort((a,b) => a.buildEndsAt-b.buildEndsAt || a.id.localeCompare(b.id));
+  // Constructions and D028 upgrades finish in time order; income is settled at each boundary first.
+  const pending = [
+    ...[...s.snapshot.buildings,...s.snapshot.bridges].filter(o => o.status === 'CONSTRUCTING' && o.buildEndsAt <= now)
+      .map(o => ({at:o.buildEndsAt,id:o.id,done:() => completeConstruction(s,o)})),
+    ...s.snapshot.buildings.filter(b => b.upgrade && b.upgrade.endsAt <= now)
+      .map(b => ({at:b.upgrade!.endsAt,id:b.id,done:() => completeUpgrade(s,b)})),
+  ].sort((a,b) => a.at-b.at || a.id.localeCompare(b.id));
   for (const o of pending) {
-    settle(s,o.buildEndsAt); completeConstruction(s,o); recompute(s);
+    settle(s,o.at); o.done(); recompute(s);
   }
   settle(s,now);
   for (const b of s.snapshot.buildings) for (const queue of b.slots ?? []) for (const job of queue) {
@@ -76,7 +81,7 @@ export function advanceTime(s: SimState, now: number): void {
 }
 export function netWorth(s: SimState): number {
   let total = costValue(s.snapshot.wallet) + s.snapshot.landValue;
-  for (const b of s.snapshot.buildings) total += b.investedValue + Math.floor(b.accrued ?? 0);
+  for (const b of s.snapshot.buildings) total += b.investedValue + upgradeWorth(b) + Math.floor(b.accrued ?? 0);
   for (const b of s.snapshot.bridges) total += b.investedValue;
   // Starting natural roads are not purchased assets.
   for (let i = 0; i < s.surface.length; i++) {

@@ -2,8 +2,9 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
 const root = new URL('../', import.meta.url);
-// Bump on every balance change (docs/16 §11). v2 = D025 Farm XP table; snapshots migrate in sim validateSnapshot.
-const CONTENT_VERSION = 2;
+// Bump on every balance change (docs/16 §11). v2 = D025 Farm XP table; v3 = D028 upgrades, relief, storage 100,
+// collect-all without a bank. Snapshots migrate in sim validateSnapshot.
+const CONTENT_VERSION = 3;
 const source = await readFile(new URL('docs/16_ECONOMY_AND_BALANCE.md', root), 'utf8');
 // The reference model's CLI must stay silent when used as a data source.
 const savedArgs = process.argv;
@@ -139,6 +140,8 @@ const terraformRow = findRow(infraSource, 'San nền');
 const buildSection = section('### 3.1', '### 3.2');
 const incomeSection = section('### 6.3', '### 6.4');
 const farmSection = section('### 7.1', '### 7.2');
+const upgradeSection = section('### 6.5', '## 7.');
+const reliefSection = section('### 9.1', '## 10.');
 const economy = {
   contentVersion: CONTENT_VERSION,
   sources: ['docs/16_ECONOMY_AND_BALANCE.md', 'docs/tools/economy/model.mjs'],
@@ -173,6 +176,10 @@ const economy = {
     costQuadratic: capture(/\+ ([\d ]+)·k²/), unlockBase: capture(/min\(20, (\d+) \+ floor\(k \/ 3\)\)/),
     unlockEvery: capture(/floor\(k \/ (\d+)\)/), unlockMax: capture(/min\((\d+), 2 \+ floor\(k/),
     waterThreshold: capture(/Khu có > (\d+)%/) / 100, waterPriceMultiplier: capture(/diện tích là nước: giá × ([\d,]+)/) },
+  // D028 §6.5: building tiers 2–3 (late-game money sink) and §9.1 emergency relief.
+  upgrades: { maxTier: 3, tiers: ['2', '3'].map(tier => { const row = findRow(upgradeSection, tier);
+    return { tier: Number(tier), unlockLevel: number(row[1]), costMultiplier: number(row[2]), secondsMultiplier: number(row[3]), effect: number(row[4]) / 100 }; }) },
+  relief: { cashBelow: capture(/dưới \$(\d+)/, reliefSection), amount: capture(/nhận \*\*\$(\d+)\*\*/, reliefSection), cooldownHours: capture(/mỗi \*\*(\d+) giờ\*\*/, reliefSection) },
   tutorial: { cityIncomeMultiplier: capture(/tích lũy tăng tốc (\d+)×/, questsSource), farmGrowSeconds: capture(/chín sau (\d+) giây/, questsSource) },
   // docs/16 §10.3 (D017) constants are parsed from the doc; target sizing ranges are D024 (30–60 min of play).
   repeatQuests: { defined: true, rewardIncomeMinutes: capture(/thưởng ≈ (\d+) phút/, questsSource),

@@ -5,22 +5,29 @@ import {
 import { catalog, economy } from '@xay-nha/content';
 import { createState, inBounds, isUnlocked, isShore, corners, affectedVertexCells, meanHeight, neighbors, slope, rebuildOccupancy, restoreDeltas, type SimState } from './state';
 import { footprintCells } from './footprint';
-import { builderCapacity, buildingLimit, validateBridge } from './construction';
+import { builderCapacity, buildersBusy, buildingLimit, validateBridge } from './construction';
+import { slotCount, tierDef, upgradeSeconds, upgradeable } from './upgrades';
 import { costValue, recompute } from './economy';
 import { validateRoadPayments } from './road-value';
 import { validateRepeat } from './quests';
 
 /**
- * Content migrations (docs/16 §11). v1 → v2 (D025): Farm XP thresholds lowered; XP is kept and the level is
- * recomputed from it (never lower, since thresholds only dropped). Unknown/newer versions are left for the
- * CONTENT_VERSION check to reject.
+ * Content migrations (docs/16 §11), applied in sequence. v1 → v2 (D025): Farm XP thresholds lowered; XP is
+ * kept and the level is recomputed from it (never lower, since thresholds only dropped). v2 → v3 (D028):
+ * upgrades, relief, larger base storage and collect-all only add optional fields or loosen rules, so the data
+ * carries over unchanged. Unknown/newer versions are left for the CONTENT_VERSION check to reject.
  */
 export function migrateContent(snapshot: WorldSnapshot): WorldSnapshot {
-  if (snapshot.contentVersion !== 1 || economy.contentVersion !== 2) return snapshot;
-  const table = economy.xp.cumulative[snapshot.mapKind];
-  let level = 1;
-  while (level < economy.xp.maxLevel && snapshot.progress.xp >= table[level + 1]!) level++;
-  return { ...snapshot, contentVersion: 2, progress: { ...snapshot.progress, level: Math.max(level, snapshot.progress.level) } };
+  if (snapshot.contentVersion >= economy.contentVersion) return snapshot;
+  let migrated = snapshot;
+  if (migrated.contentVersion === 1) {
+    const table = economy.xp.cumulative[migrated.mapKind];
+    let level = 1;
+    while (level < economy.xp.maxLevel && migrated.progress.xp >= table[level + 1]!) level++;
+    migrated = { ...migrated, contentVersion: 2, progress: { ...migrated.progress, level: Math.max(level, migrated.progress.level) } };
+  }
+  if (migrated.contentVersion === 2) migrated = { ...migrated, contentVersion: 3 };
+  return migrated;
 }
 
 export type SnapshotValidation = { ok: true; state: SimState } | { ok: false; errors: string[] };
@@ -38,6 +45,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
   if (!Number.isFinite(now) || snapshot.serverTime > now + 300000) errors.push('TIME:serverTime');
   const createdTime = (time: number, label: string) => { if (time > snapshot.serverTime + 300000) errors.push(`TIME:${label}`); };
   createdTime(snapshot.character.createdAt, 'character.createdAt');
+  if (snapshot.progress.reliefAt !== undefined) createdTime(snapshot.progress.reliefAt, 'progress.reliefAt');
   const table = economy.xp.cumulative[snapshot.mapKind];
   let level = 1;
   while (level < economy.xp.maxLevel && snapshot.progress.xp >= table[level + 1]!) level++;
@@ -94,7 +102,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
     errors.push(...rebuildOccupancy(candidate));
     candidate.snapshot.buildings = buildings;
   } else errors.push(...rebuildOccupancy(candidate));
-  if ([...snapshot.buildings, ...snapshot.bridges].filter(entity => entity.status === 'CONSTRUCTING').length > builderCapacity(candidate)) errors.push('NO_BUILDER_FREE');
+  if (buildersBusy(candidate) > builderCapacity(candidate)) errors.push('NO_BUILDER_FREE');
   const templateSurface = decodeUint8(template.layers.surface, GRID * GRID), templateFlags = decodeUint8(template.layers.flags, GRID * GRID);
   const templateRoads = decodeUint8(template.layers.roadTier, GRID * GRID), templateHeights = decodeInt16(template.layers.heightsDm, VERTS * VERTS);
   for (let i = 0; i < GRID * GRID; i++) {
@@ -145,6 +153,14 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
       || !(def.costScaling ?? [def.cost.cash]).includes(building.cashPaid) || building.investedValue !== costValue(building.materialsPaid)) errors.push(`PAID_VALUE:${building.id}`);
     if (building.buildEndsAt - building.placedAt > def.buildSeconds * 1000 + 1000) errors.push(`CONSTRUCTION_DURATION:${building.id}`);
     if (building.settledAt !== undefined) createdTime(building.settledAt, `${building.id}.settledAt`);
+    // D028 upgrades: tier needs the level; an upgrade in progress runs on a finished building and is not yet due.
+    if (building.tier !== undefined && (!upgradeable(def) || snapshot.progress.level < tierDef(building.tier).unlockLevel)) errors.push(`UPGRADE_TIER:${building.id}`);
+    if (building.upgrade) {
+      const { tier, startedAt, endsAt } = building.upgrade;
+      if (!upgradeable(def) || building.status !== 'ACTIVE' || tier !== (building.tier ?? 1) + 1 || snapshot.progress.level < tierDef(tier).unlockLevel) errors.push(`UPGRADE_TIER:${building.id}`);
+      if (startedAt < building.buildEndsAt || endsAt <= snapshot.serverTime || endsAt < startedAt || endsAt - startedAt > upgradeSeconds(def, tier) * 1000 + 1000) errors.push(`UPGRADE_TIME:${building.id}`);
+      createdTime(startedAt, `${building.id}.upgrade.startedAt`);
+    }
     const cells = footprintCells(def, building.anchor, building.rotation), vertices = new Set<number>();
     for (const cell of cells) {
       if (!inBounds(cell)) continue;
@@ -157,7 +173,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
     if (new Set([...vertices].map(index => candidate.heights[index])).size > 1) errors.push(`NOT_FLAT:${building.id}`);
     if (def.production && !building.slots) errors.push(`PRODUCTION_SLOTS:${building.id}`);
     if (building.slots) {
-      if (!def.production || building.slots.length !== def.production.slots) errors.push(`PRODUCTION_SLOTS:${building.id}`);
+      if (!def.production || building.slots.length !== slotCount(building, def)) errors.push(`PRODUCTION_SLOTS:${building.id}`);
       if (building.status !== 'ACTIVE' && building.slots.some(slot => slot.length)) errors.push(`PRODUCTION_STATUS:${building.id}`);
       for (const slot of building.slots) {
         if (slot.length > (def.production?.queueLimit ?? 0)) errors.push(`QUEUE_LIMIT:${building.id}`);

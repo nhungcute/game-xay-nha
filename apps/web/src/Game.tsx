@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
 import { cellIndex, type Cell, type CommandType } from '@xay-nha/contracts';
-import { access, builderCapacity, fieldQuota, populationAndJobs } from '@xay-nha/sim';
+import { builderCapacity, fieldQuota, populationAndJobs } from '@xay-nha/sim';
 import { AssetManager } from './game/assets/AssetManager';
 import { GameLoop } from './game/GameLoop';
 import { WorldStore, useWorld } from './game/WorldStore';
@@ -108,7 +108,8 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
   const q=state?catalog.quests[kind][state.snapshot.progress.questIndex]:undefined;
   const hint=q&&!hideHints?HINTS[q.action]:undefined;
   const hintCategory=hint&&hint.tool!=='explore'?categoryOf(hint.tool,q?.buildingId??ui.buildingId):null;
-  const hasBank=!!state&&kind==='city'&&state.snapshot.buildings.some(b=>b.status==='ACTIVE'&&catalog.buildings[b.defId]?.bankCapHours&&access(state,b));
+  // D028: "collect all" is there from the start whenever any business has money waiting.
+  const canCollect=!!state&&kind==='city'&&state.snapshot.buildings.some(b=>(b.accrued??0)>=1);
   const alerts=state?notifications(state):[],signature=alerts.join('|');
   const openPanel=(next:GamePanel)=>{gameRef.current?.tools.choose('explore');setCategory(null);if(next==='notifications')setSeen(signature);setPanel(current=>current===next?null:next);};
   const setQuality=(quality:'high'|'low')=>{gameRef.current?.setQuality(quality);setStats(gameRef.current?.metrics()??null);};
@@ -148,10 +149,10 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
     {!ready&&<div className="loading"><h1>AI Farm</h1><p>{loadingError||t('loading')}</p>{loadingError&&<button onClick={()=>{setLoadingError('');setAttempt(attempt+1);}}>{t('retry')}</button>}</div>}
     {ready&&state&&<>
       <TopBar state={state} panel={panel} status={status} connected={connection==='online'||connection==='local'} unread={alerts.length>0&&signature!==seen}
-        hasBank={hasBank} onPanel={openPanel} onCollect={()=>apply('COLLECT',{buildingIds:[]})} onMeasure={hudRef}/>
+        canCollect={canCollect} onPanel={openPanel} onCollect={()=>apply('COLLECT',{buildingIds:[]})} onMeasure={hudRef}/>
       <MissionPanel state={state} open={missionsOpen} hint={hint?.text} onToggle={()=>setMissionsOpen(!missionsOpen)}
         onSkipHints={()=>{try{localStorage.setItem(SKIP_KEY,'1');}catch{/* storage blocked */}setHideHints(true);}}
-        onClaim={id=>apply('CLAIM_QUEST',{questId:id})} onReroll={id=>apply('REROLL_QUEST',{questId:id})}
+        onClaim={id=>apply('CLAIM_QUEST',{questId:id})} onReroll={id=>apply('REROLL_QUEST',{questId:id})} onRelief={()=>apply('CLAIM_RELIEF',{})}
         onChoose={action=>{const tool=HINTS[action]?.tool??'explore';if(tool==='build'&&q?.buildingId)pickBuilding(q.buildingId);else choose(tool);}}/>
       <MiniMap state={state} rig={gameRef.current?.rig}/>
       <div className="hud3-controls" role="group" aria-label="Điều khiển góc nhìn">

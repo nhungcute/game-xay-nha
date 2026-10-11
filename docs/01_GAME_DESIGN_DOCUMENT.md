@@ -95,7 +95,7 @@ Chi tiết luật nằm ở `15`, con số nằm ở `16`. Ở đây mô tả ý
 
 ### 6.6 Sản xuất và thu hoạch
 
-- **Thành phố:** mỗi công trình kinh doanh có tốc độ thu ($/giờ) và **kho tiền** (trần = N giờ sản xuất). Đầy kho thì ngừng tích lũy. Chạm vào bong bóng tiền để thu. Ngân hàng tăng trần kho tiền và mở nút "Thu tất cả".
+- **Thành phố:** mỗi công trình kinh doanh có tốc độ thu ($/giờ) và **kho tiền** (trần = N giờ sản xuất). Đầy kho thì ngừng tích lũy. Chạm vào bong bóng tiền để thu. Nút "Thu tất cả" có ngay từ đầu; ngân hàng tăng trần kho tiền (D028). Công trình nâng cấp được tới cấp 3 (docs/16 §6.5).
 - **Quê:** cây trồng có thời gian lớn; chín thì thu vào kho; bán ở **chợ** (chợ phải nối đường). Chuồng trại/xưởng chế biến nhận nguyên liệu, trả sản phẩm giá trị cao hơn sau thời gian chờ.
 
 ### 6.7 Tiến trình

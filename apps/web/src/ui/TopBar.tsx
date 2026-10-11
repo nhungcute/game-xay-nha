@@ -38,10 +38,10 @@ export function notifications(state: State): string[] {
 }
 
 interface TopBarProps {
-  state: State; panel: GamePanel | null; status: string; connected: boolean; unread: boolean; hasBank: boolean;
+  state: State; panel: GamePanel | null; status: string; connected: boolean; unread: boolean; canCollect: boolean;
   onPanel: (panel: GamePanel) => void; onCollect: () => void; onMeasure: (element: HTMLElement | null) => void;
 }
-export function TopBar({ state, panel, status, connected, unread, hasBank, onPanel, onCollect, onMeasure }: TopBarProps) {
+export function TopBar({ state, panel, status, connected, unread, canCollect, onPanel, onCollect, onMeasure }: TopBarProps) {
   const s = state.snapshot, kind = s.mapKind, table = economy.xp.cumulative[kind];
   const floor = table[s.progress.level] ?? 0, next = table[s.progress.level + 1];
   const need = next === undefined ? 1 : Math.max(1, next - floor), have = next === undefined ? 1 : Math.min(need, Math.max(0, s.progress.xp - floor));
@@ -62,7 +62,7 @@ export function TopBar({ state, panel, status, connected, unread, hasBank, onPan
     </button>
     <div className="hud3-pill hud3-resources">
       <span className="hud3-cash" title="Tiền mặt"><GameIcon name="cash"/><strong>{money(s.wallet.cash)}</strong></span>
-      {hasBank && <button type="button" className="hud3-collect" onClick={onCollect} title="Thu tiền tất cả công trình"><GameIcon name="collect"/></button>}
+      {canCollect && <button type="button" className="hud3-collect" onClick={onCollect} title="Thu tiền tất cả công trình"><GameIcon name="collect"/></button>}
       <span className="hud3-divider" aria-hidden="true"/>
       <button type="button" className="hud3-chip" data-res="wood" aria-label="Gỗ (mua vật liệu)" aria-pressed={panel === 'materials'} onClick={() => onPanel('materials')}><GameIcon name="wood"/><strong>{s.wallet.wood.toLocaleString('en-US')}</strong></button>
       <button type="button" className="hud3-chip" data-res="stone" aria-label="Đá (mua vật liệu)" aria-pressed={panel === 'materials'} onClick={() => onPanel('materials')}><GameIcon name="stone"/><strong>{s.wallet.stone.toLocaleString('en-US')}</strong></button>

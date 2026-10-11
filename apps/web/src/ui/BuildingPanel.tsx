@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
 import type { CommandType, PlacedBridge, PlacedBuilding } from '@xay-nha/contracts';
-import { access } from '@xay-nha/sim';
+import { access, currentTier, slotCount, tierDef, upgradeCost, upgradeSeconds, upgradeable } from '@xay-nha/sim';
 import type { WorldStore } from '../game/WorldStore';
 import { duration, money, t } from '../i18n';
 import { GameIcon } from './GameIcon';
@@ -11,12 +11,47 @@ type Apply = (type: CommandType, payload: unknown) => void;
 
 /** Batches a producer can still queue for `recipeId`: free queue room limited by the inputs in storage. */
 export function maxBatches(state: State, building: PlacedBuilding, recipeId: string): number {
-  const producer = catalog.buildings[building.defId]?.production, recipe = catalog.recipes[recipeId];
-  if (!producer || !recipe) return 0;
+  const def = catalog.buildings[building.defId], producer = def?.production, recipe = catalog.recipes[recipeId];
+  if (!def || !producer || !recipe) return 0;
   const queued = (building.slots ?? []).reduce((n, slot) => n + slot.length, 0);
-  const room = producer.slots * producer.queueLimit - queued;
+  const room = slotCount(building, def) * producer.queueLimit - queued;
   const inputs = Object.entries(recipe.inputs).map(([id, count]) => Math.floor((state.snapshot.inventory[id] ?? 0) / count));
   return Math.max(0, Math.min(room, ...inputs));
+}
+
+/** What the next tier adds, in player terms (D028, docs/16 §6.5). */
+function upgradeGain(building: PlacedBuilding, effect: number): string {
+  const def = catalog.buildings[building.defId]!, pct = `+${Math.round(effect * 100)}%`, parts: string[] = [];
+  if (def.baseRatePerHour) parts.push(`${pct} thu nhập`);
+  if (def.population) parts.push(`${pct} dân số`);
+  if (def.production) parts.push('+1 hàng sản xuất');
+  if (def.storageBonus) parts.push(`${pct} sức chứa kho`);
+  return parts.join(' · ');
+}
+
+/** Upgrade block: current tier, next tier's price/time/gain, or the running upgrade with speed-up/cancel. */
+function UpgradeRow({ state, building, apply }: { state: State; building: PlacedBuilding; apply: Apply }) {
+  const def = catalog.buildings[building.defId]!, tier = currentTier(building), max = economy.upgrades.maxTier;
+  if (!upgradeable(def)) return null;
+  const now = state.snapshot.serverTime, target = { buildingId: building.id };
+  if (building.upgrade) {
+    const cost = upgradeCost(def, building.upgrade.tier);
+    return <div className="upgrade-row is-running">
+      <span className="upgrade-head"><GameIcon name="build"/>Đang nâng lên cấp {building.upgrade.tier} · còn {duration(building.upgrade.endsAt - now)}</span>
+      <button onClick={() => apply('SPEED_UP', target)}>{t('speed')}</button>
+      <button onClick={() => apply('CANCEL_CONSTRUCTION', target)}>{t('cancel')} · hoàn {money(cost.cash)}</button>
+    </div>;
+  }
+  if (tier >= max) return <div className="upgrade-row"><span className="upgrade-head"><GameIcon name="level"/>Cấp {tier}/{max} · tối đa</span></div>;
+  const next = (tier + 1) as 2 | 3, row = tierDef(next), cost = upgradeCost(def, next), level = state.snapshot.progress.level;
+  const wallet = state.snapshot.wallet, short = wallet.cash < cost.cash || wallet.wood < cost.wood || wallet.stone < cost.stone;
+  const price = [money(cost.cash), cost.wood ? `${cost.wood} gỗ` : '', cost.stone ? `${cost.stone} đá` : ''].filter(Boolean).join(' + ');
+  return <div className="upgrade-row">
+    <span className="upgrade-head"><GameIcon name="level"/>Cấp {tier}/{max}</span>
+    <span className="upgrade-gain">Cấp {next}: {upgradeGain(building, row.effect)} · {duration(upgradeSeconds(def, next) * 1000)}</span>
+    <button className="primary" disabled={level < row.unlockLevel || short} onClick={() => apply('UPGRADE_BUILDING', target)}>
+      {level < row.unlockLevel ? `Cần cấp ${row.unlockLevel}` : `Nâng cấp · ${price}`}</button>
+  </div>;
 }
 
 /** Side panel for the selected building or bridge. Demolition asks once more (G4 review), production picks a batch count. */
@@ -48,6 +83,7 @@ export function BuildingPanel({ state, building, bridge, apply, onClose }: {
           <button disabled={!max} onClick={() => apply('START_PRODUCTION', { buildingId: building.id, recipeId: id, count: max })}>{max ? `Tối đa ×${max}` : 'Thiếu nguyên liệu'}</button>
         </div>;
       })}
+      {building && <UpgradeRow state={state} building={building} apply={apply}/>}
       {building?.slots && <>
         <button onClick={() => apply('COLLECT_PRODUCTION', { buildingId: building.id })}>{t('collect')}</button>
         {building.slots.flat().map((job, index) => <p key={index}>{t(catalog.items[catalog.recipes[job.recipeId]!.output]!.nameKey)} · {duration(job.readyAt - now)}</p>)}

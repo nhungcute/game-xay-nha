@@ -7,6 +7,7 @@ import { terrain } from './terrain';
 import { advanceTime, populationAndJobs, recompute } from './economy';
 import { access } from './roads';
 import { claimRepeat, ensureRepeatQuests, rerollRepeat } from './quests';
+import { claimRelief } from './upgrades';
 import { cloneState, rebuildOccupancy, writeDeltas, type SimState } from './state';
 
 export interface Execution { state: SimState; result: CommandResult; cost: Cost; dirtyZones: number[] }
@@ -54,8 +55,8 @@ function administrative(s: SimState, cmd: Command, now: number): Cost | undefine
   if (cmd.type === 'COLLECT') {
     guard(s.template.mapKind === 'city','WRONG_MAP');
     let ids = cmd.payload.buildingIds;
+    // D028: "collect all" (empty list) no longer needs a bank.
     if (!ids.length) {
-      guard(s.snapshot.buildings.some(b=>b.status==='ACTIVE' && catalog.buildings[b.defId]?.bankCapHours && access(s,b)),'NO_ROAD_ACCESS');
       ids = s.snapshot.buildings.filter(b=>b.status==='ACTIVE' && catalog.buildings[b.defId]?.baseRatePerHour).map(b=>b.id);
     }
     let collected=0;
@@ -103,7 +104,7 @@ export function authoredQuestProgress(s: SimState): number {
 
 function applyDraft(s: SimState, cmd: Command, now: number): Cost {
   advanceTime(s,now);
-  const cost = terrain(s,cmd) ?? construction(s,cmd,now) ?? farm(s,cmd,now) ?? administrative(s,cmd,now);
+  const cost = terrain(s,cmd) ?? construction(s,cmd,now) ?? farm(s,cmd,now) ?? claimRelief(s,cmd,now) ?? administrative(s,cmd,now);
   guard(cost!==undefined,'INVALID_COMMAND');
   guard(rebuildOccupancy(s).length===0,'OCCUPIED'); recompute(s);
   if (cmd.type==='BUILD_ROAD') {

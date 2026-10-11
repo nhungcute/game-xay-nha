@@ -5,9 +5,10 @@ import {
 import { catalog, economy } from '@xay-nha/content';
 import { footprintCells, rotatedSize } from './footprint';
 import { bridgeCells, corners, inBounds, isShore, isUnlocked, neighbors, rebuildOccupancy, type SimState } from './state';
-import { constructionCompleted, guard, lookup, pay, refund, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
+import { addCost, constructionCompleted, guard, lookup, pay, refund, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
 import { terraform } from './terrain';
 import { fieldQuota, inventoryCount, storageCapacity } from './farm';
+import { cancelOrSpeedUpgrade, upgradeValue, upgrades } from './upgrades';
 
 export type ConstructionObject = PlacedBuilding | PlacedBridge;
 
@@ -15,9 +16,12 @@ export function builderCapacity(s: SimState): number {
   return economy.construction.builders.reduce((count, row) => s.snapshot.progress.level >= row.unlockLevel ? row.count : count, 0);
 }
 
+/** Construction sites plus upgrades in progress (D028) — each holds one builder. */
+export function buildersBusy(s: SimState): number {
+  return [...s.snapshot.buildings, ...s.snapshot.bridges].filter(object => object.status === 'CONSTRUCTING' || ('upgrade' in object && object.upgrade)).length;
+}
 export function requireBuilder(s: SimState): void {
-  const busy = [...s.snapshot.buildings, ...s.snapshot.bridges].filter(object => object.status === 'CONSTRUCTING').length;
-  guard(busy < builderCapacity(s), 'NO_BUILDER_FREE');
+  guard(buildersBusy(s) < builderCapacity(s), 'NO_BUILDER_FREE');
 }
 
 export function buildingLimit(s: SimState, def: BuildingDef): number {
@@ -162,7 +166,7 @@ function requireDemolitionSafe(s: SimState, object: PlacedBuilding): void {
 }
 
 function remove(s: SimState, object: ConstructionObject, fraction: number): void {
-  refund(s, object.materialsPaid, fraction);
+  refund(s, 'defId' in object ? addCost(object.materialsPaid, upgradeValue(object)) : object.materialsPaid, fraction);
   if ('defId' in object) {
     s.snapshot.wallet.cash += Math.floor(object.accrued ?? 0);
     for (const c of footprintCells(catalog.buildings[object.defId]!, object.anchor, object.rotation)) s.surface[cellIndex(...c)] = Surface.FOUNDATION;
@@ -174,12 +178,13 @@ function remove(s: SimState, object: ConstructionObject, fraction: number): void
 export function construction(s: SimState, cmd: Command, now: number): Cost | undefined {
   if (cmd.type === 'PLACE_BUILDING') return placeBuilding(s, cmd, now);
   if (cmd.type === 'BUILD_BRIDGE') return buildBridge(s, cmd, now);
+  if (cmd.type === 'UPGRADE_BUILDING') return upgrades(s, cmd, now, requireBuilder);
   if (cmd.type === 'DEMOLISH' || cmd.type === 'REMOVE_BRIDGE') {
     const payload = cmd.payload;
     const object = 'buildingId' in payload ? s.snapshot.buildings.find(building => building.id === payload.buildingId)
       : s.snapshot.bridges.find(bridge => bridge.id === payload.bridgeId);
     guard(object, 'NOT_FOUND');
-    guard(object.status === 'ACTIVE', 'UNDER_CONSTRUCTION');
+    guard(object.status === 'ACTIVE' && !('upgrade' in object && object.upgrade), 'UNDER_CONSTRUCTION');
     if ('defId' in object) requireDemolitionSafe(s, object);
     remove(s, object, economy.construction.refund);
     return zeroCost();
@@ -189,6 +194,10 @@ export function construction(s: SimState, cmd: Command, now: number): Cost | und
     const object = 'buildingId' in payload ? s.snapshot.buildings.find(building => building.id === payload.buildingId)
       : s.snapshot.bridges.find(bridge => bridge.id === payload.bridgeId);
     guard(object, 'NOT_FOUND');
+    if ('defId' in object && object.status === 'ACTIVE' && object.upgrade) {
+      guard(now < object.upgrade.endsAt, 'NOT_UNDER_CONSTRUCTION');
+      return cancelOrSpeedUpgrade(s, object, cmd.type === 'SPEED_UP', now);
+    }
     guard(object.status === 'CONSTRUCTING' && now < object.buildEndsAt, 'NOT_UNDER_CONSTRUCTION');
     if (cmd.type === 'CANCEL_CONSTRUCTION') {
       remove(s, object, economy.construction.cancelRefund);

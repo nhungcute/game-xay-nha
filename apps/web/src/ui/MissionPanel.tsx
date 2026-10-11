@@ -1,6 +1,6 @@
-import { catalog } from '@xay-nha/content';
+import { catalog, economy } from '@xay-nha/content';
 import type { RepeatQuest } from '@xay-nha/contracts';
-import { authoredQuestProgress, repeatQuestProgress } from '@xay-nha/sim';
+import { authoredQuestProgress, reliefAvailable, repeatQuestProgress } from '@xay-nha/sim';
 import type { WorldStore } from '../game/WorldStore';
 import { duration, money, t } from '../i18n';
 import { GameIcon, type GameIconName } from './GameIcon';
@@ -38,8 +38,9 @@ function Progress({ value, target }: { value: number; target: number }) {
 interface Props {
   state: State; open: boolean; hint?: string;
   onToggle: () => void; onSkipHints: () => void; onClaim: (id: string) => void; onReroll: (id: string) => void; onChoose: (action: string) => void;
+  onRelief: () => void;
 }
-export function MissionPanel({ state, open, hint, onToggle, onSkipHints, onClaim, onReroll, onChoose }: Props) {
+export function MissionPanel({ state, open, hint, onToggle, onSkipHints, onClaim, onReroll, onChoose, onRelief }: Props) {
   const s = state.snapshot, quests = catalog.quests[s.mapKind], index = s.progress.questIndex, quest = quests[index];
   const repeat = !quest ? s.progress.repeat?.active ?? [] : [];
   const heading = quest ? `${index}/${quests.length}` : `${repeat.filter(q => repeatQuestProgress(state, q) >= q.target).length}/${repeat.length}`;
@@ -47,6 +48,14 @@ export function MissionPanel({ state, open, hint, onToggle, onSkipHints, onClaim
     <button type="button" className="hud3-missions-head" aria-expanded={open} onClick={onToggle}>
       <strong>{quest ? 'Nhiệm vụ' : 'Nhiệm vụ hằng ngày'}</strong><small>{heading}</small><GameIcon name={open ? 'up' : 'down'}/>
     </button>
+    {/* D028 §9.1: a stuck player always sees the relief offer, even with the panel folded. */}
+    {reliefAvailable(state, s.serverTime) && <div className="hud3-mission is-active is-done hud3-relief">
+      <span className="hud3-mission-icon"><GameIcon name="gift"/></span>
+      <div className="hud3-mission-copy"><strong>Trợ cấp khẩn cấp</strong>
+        <small className="hud3-reward">Hết tiền và chưa có nguồn thu? Nhận {money(economy.relief.amount)} để làm lại từ đầu (mỗi {economy.relief.cooldownHours} giờ một lần).</small>
+        <button type="button" className="hud3-claim" onClick={onRelief}><GameIcon name="cash"/>Nhận {money(economy.relief.amount)}</button>
+      </div>
+    </div>}
     {open && quest && (() => {
       const earned = authoredQuestProgress(state), done = earned >= quest.target;
       return <>

@@ -193,3 +193,12 @@
 .levelup-card li .game-icon{width:15px;height:15px;color:#5a9a45}
 .levelup-card .primary{width:100%;min-height:44px;border-radius:14px}
 
+/* ---------- D028: building upgrades, emergency relief ---------- */
+.hud3-shell .upgrade-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0;padding:10px;border-radius:12px;background:#eef4e4;border:1px solid #d6e5c6}
+.hud3-shell .upgrade-row.is-running{background:#fff6e0;border-color:#f0d9a2}
+.hud3-shell .upgrade-head{flex:1 1 100%;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#2f5a2a}
+.hud3-shell .upgrade-head .game-icon{width:15px;height:15px}
+.hud3-shell .upgrade-gain{flex:1 1 100%;font-size:12px;color:#5b6b60}
+.hud3-shell .upgrade-row>button.primary{flex:1 1 100%}
+.hud3-shell .hud3-relief{background:#fff6e0;border-radius:14px}
+

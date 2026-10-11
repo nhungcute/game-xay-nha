@@ -62,6 +62,8 @@ export const CommandSchema = z.discriminatedUnion('type', [
   command('UNLOCK_ZONE', z.object({ zoneId: IntegerSchema.max(63) }).strict()),
   command('CLAIM_QUEST', z.object({ questId: IdSchema }).strict()),
   command('REROLL_QUEST', z.object({ questId: IdSchema }).strict()),
+  command('UPGRADE_BUILDING', z.object({ buildingId: building }).strict()),
+  command('CLAIM_RELIEF', z.object({}).strict()),
 ]);
 
 export type Command = z.infer<typeof CommandSchema>;
@@ -80,6 +82,7 @@ export const ErrorCodeSchema = z.enum([
   'NOT_UNDER_CONSTRUCTION', 'LIMIT_REACHED', 'REVISION_CONFLICT',
   'INVALID_COMMAND', 'INVALID_SNAPSHOT', 'INVALID_TEMPLATE', 'INVALID_TIME', 'NOT_FOUND',
   'BUILDING_NOT_FOUND', 'INSUFFICIENT_ITEMS', 'QUEST_NOT_READY', 'PRODUCTION_ACTIVE',
+  'NOT_UPGRADEABLE', 'RELIEF_UNAVAILABLE',
 ]);
 export type ErrorCode = z.infer<typeof ErrorCodeSchema>;
 

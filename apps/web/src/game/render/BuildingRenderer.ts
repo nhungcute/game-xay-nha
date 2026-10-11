@@ -23,6 +23,8 @@ export class BuildingRenderer {
         // Authored doorway is north-facing. Match the catalog's declared side.
         const entrance = { N: 0, E: -Math.PI / 2, S: Math.PI, W: Math.PI / 2 }[def.entranceSide];
         addInstance(groups, def.modelId, def.modelId, matrix(x, y, z, -b.rotation * Math.PI / 2 + entrance));
+        // D028: an upgrade in progress shows a low scaffold ring around the working building.
+        if (b.upgrade) addInstance(groups, 'construction_scaffold', 'construction_scaffold', matrix(x, y, z, 0, [w * CELL_SIZE_M * 1.02, 1.3, d * CELL_SIZE_M * 1.02]));
       }
     }
     this.batches.update(groups);

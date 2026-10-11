@@ -252,3 +252,24 @@ The entry screen has two flows: **Đăng nhập** (username + PIN) and **Tạo n
   lockout); players are told to keep their PIN private. Supersedes the recovery-code parts of docs/01 §8, docs/09 §2
   and docs/11 §4.
 
+## D028 — 2026-10-11 — Gameplay review wave B: upgrades, relief, storage 100, collect-all for everyone (contentVersion 3)
+
+From the user's "Đánh giá Gameplay — AI Farm" review ("triển khai cả A và B"). Numbers live in docs/16; the generator
+reads them into `economy.upgrades`, `economy.relief` and `economy.farm.baseStorage`.
+- **Building upgrades (§6.5)**: businesses, housing, producers and storage go to tier 2 (player level 10, 2.5× build
+  cost, 2× build time, +50%) and tier 3 (level 15, 5×, 3×, +100%). New command `UPGRADE_BUILDING`; the building keeps
+  working during the upgrade but holds one builder. Income and population scale by the effect, producers gain one
+  production line per tier, storage bonus scales. Cancel refunds the upgrade 100%, speed-up is priced from the upgrade
+  cash cost, demolition (blocked while upgrading) refunds 50% of base + tiers. Upgrade costs are derived from the
+  tier, never stored: `PlacedBuilding.tier?` and `PlacedBuilding.upgrade? {tier,startedAt,endsAt}`. Snapshot checks:
+  `UPGRADE_TIER`, `UPGRADE_TIME`, slot count = catalog slots + tier − 1, builders count upgrades.
+- **Collect all without a bank**: `COLLECT` with an empty list no longer requires a bank; the HUD button shows
+  whenever a business has money waiting. Banks keep their +2 h cap bonus.
+- **Base Farm storage 100** (was 50).
+- **Emergency relief (§9.1)**: `CLAIM_RELIEF` pays $600 when cash < $150 and nothing will earn (City: no income, no
+  waiting money, no business under construction; Farm: no crops, empty storage, no production), once per 24 h
+  (`progress.reliefAt`), no XP. Shown as a card at the top of the mission panel.
+- `contentVersion` 2 → 3. `migrateContent` now chains v1 → v2 (level recompute) → v3 (no data change: every new field
+  is optional and every rule change only loosens). Reversible by reverting the docs/16 rows and regenerating, but v3
+  saves with tiers would then fail validation.
+

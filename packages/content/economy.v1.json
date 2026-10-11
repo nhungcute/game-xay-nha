@@ -1,5 +1,5 @@
 {
-  "contentVersion": 2,
+  "contentVersion": 3,
   "sources": [
     "docs/16_ECONOMY_AND_BALANCE.md",
     "docs/tools/economy/model.mjs"
@@ -167,7 +167,7 @@
     "bubbleFraction": 0.1
   },
   "farm": {
-    "baseStorage": 50,
+    "baseStorage": 100,
     "irrigationMultiplier": 0.8,
     "waterIrrigationRadius": 3,
     "productionQueueLimit": 3
@@ -238,6 +238,30 @@
     "waterThreshold": 0.5,
     "waterPriceMultiplier": 0.5
   },
+  "upgrades": {
+    "maxTier": 3,
+    "tiers": [
+      {
+        "tier": 2,
+        "unlockLevel": 10,
+        "costMultiplier": 2.5,
+        "secondsMultiplier": 2,
+        "effect": 0.5
+      },
+      {
+        "tier": 3,
+        "unlockLevel": 15,
+        "costMultiplier": 5,
+        "secondsMultiplier": 3,
+        "effect": 1
+      }
+    ]
+  },
+  "relief": {
+    "cashBelow": 150,
+    "amount": 600,
+    "cooldownHours": 24
+  },
   "tutorial": {
     "cityIncomeMultiplier": 60,
     "farmGrowSeconds": 20
@@ -289,7 +313,7 @@
     }
   },
   "catalog": {
-    "contentVersion": 2,
+    "contentVersion": 3,
     "buildings": {
       "house_small": {
         "id": "house_small",

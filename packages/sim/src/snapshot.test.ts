@@ -251,14 +251,14 @@ describe('validate everything then swap snapshot', () => {
 });
 
 describe('content migration v1 → v2 (D025)', () => {
-  it('a v1 Farm world (old thresholds) loads: XP kept, level recomputed upwards, contentVersion 2', () => {
+  it('a v1 Farm world (old thresholds) loads: XP kept, level recomputed upwards, migrated to the current version', () => {
     const state = createState(createTestTemplate('farm'), NOW), snapshot = snapshotCopy(state);
     // Level 8 under the v1 Farm table (5 700 XP); the v2 table puts 5 700 XP at level 9 (5 320 ≤ xp < 8 270).
     snapshot.contentVersion = 1; snapshot.progress.xp = 5700; snapshot.progress.level = 8;
     const result = validateSnapshot(state, snapshot, NOW);
     expect(result.ok ? 'ok' : result.errors).toBe('ok');
     if (result.ok) {
-      expect(result.state.snapshot.contentVersion).toBe(2);
+      expect(result.state.snapshot.contentVersion).toBe(economy.contentVersion);
       expect(result.state.snapshot.progress).toMatchObject({ xp: 5700, level: 9 });
     }
     expect(state.snapshot.contentVersion).toBe(economy.contentVersion);
@@ -269,8 +269,15 @@ describe('content migration v1 → v2 (D025)', () => {
     const result = validateSnapshot(state, snapshot, NOW);
     expect(result.ok && result.state.snapshot.progress.level).toBe(6);
   });
+  it('a v2 world (before D028) loads unchanged as the current version', () => {
+    const state = playingState(), snapshot = snapshotCopy(state);
+    snapshot.contentVersion = 2;
+    const result = validateSnapshot(state, snapshot, NOW);
+    expect(result.ok ? result.state.snapshot.contentVersion : result.errors).toBe(economy.contentVersion);
+    if (result.ok) expect(stateHash(result.state)).toBe(stateHash(state));
+  });
   it('unknown future versions are still rejected', () => {
     const state = playingState();
-    rejectsWithoutMutation(state, snapshot => { snapshot.contentVersion = 3; }, 'CONTENT_VERSION');
+    rejectsWithoutMutation(state, snapshot => { snapshot.contentVersion = economy.contentVersion + 1; }, 'CONTENT_VERSION');
   });
 });

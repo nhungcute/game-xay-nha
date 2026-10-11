@@ -3,6 +3,7 @@ import { catalog, economy } from '@xay-nha/content';
 import { footprintCells } from './footprint';
 import { access } from './roads';
 import { editable, slope, type SimState } from './state';
+import { slotCount, tierMultiplier } from './upgrades';
 import { addXp, event, guard, isFarBank, lookup, pay, rectCells, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
 
 function operating(s: SimState, building: SimState['snapshot']['buildings'][number]): boolean {
@@ -13,7 +14,8 @@ export function fieldQuota(s: SimState): number {
   return s.snapshot.buildings.reduce((total, b) => total + (operating(s, b) ? lookup(catalog.buildings, b.defId)?.fieldQuota ?? 0 : 0), 0);
 }
 export function storageCapacity(s: SimState): number {
-  return economy.farm.baseStorage + s.snapshot.buildings.reduce((total, b) => total + (operating(s, b) ? lookup(catalog.buildings, b.defId)?.storageBonus ?? 0 : 0), 0);
+  return economy.farm.baseStorage + s.snapshot.buildings.reduce((total, b) =>
+    total + (operating(s, b) ? Math.round((lookup(catalog.buildings, b.defId)?.storageBonus ?? 0) * tierMultiplier(b)) : 0), 0);
 }
 export function inventoryCount(s: SimState): number {
   return Object.values(s.snapshot.inventory).reduce((total, count) => total + count, 0);
@@ -125,8 +127,9 @@ export function farm(s: SimState, cmd: Command, now: number): Cost | undefined {
       const producer = lookup(catalog.buildings, building.defId)?.production;
       const recipe = lookup(catalog.recipes, cmd.payload.recipeId);
       guard(producer !== undefined && recipe !== undefined && producer.recipes.includes(recipe.id), 'NOT_FOUND');
-      const slots = building.slots ?? Array.from({ length: producer.slots }, () => []);
-      guard(slots.length === producer.slots, 'INVALID_SNAPSHOT');
+      const lines = slotCount(building, catalog.buildings[building.defId]!);
+      const slots = building.slots ?? Array.from({ length: lines }, () => []);
+      guard(slots.length === lines, 'INVALID_SNAPSHOT');
       const capacity = slots.reduce((total, slot) => total + producer.queueLimit - slot.length, 0);
       guard(cmd.payload.count <= capacity, 'LIMIT_REACHED');
       for (const [id, count] of Object.entries(recipe.inputs)) {
