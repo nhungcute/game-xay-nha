@@ -143,12 +143,19 @@ Kiểm tra bằng mắt (mỗi kết luận kèm ảnh trong `docs/evidence/g4/t
 - **Đơn định**: capture billboard dùng Chrome + SwiftShader — nếu nâng Chrome lớn có thể lệch pixel → `--check`
   sẽ bắt và chỉ cần chạy lại import để làm mới.
 
-## 10. Commit
+## 10. Commit và deploy nội bộ
 
-1. `feat(d030): tree import script, config`
-2. `feat(d030): tree/bush GLBs, manifest and credits`
-3. `feat(d030): near/far tree LOD, wind, credits panel + tests`
-4. `docs(d030): evidence, decision and report`
+1. `8e702ef` `feat(d030): tree import script, config`
+2. `5a0c873` `feat(d030): tree/bush GLBs, manifest and credits`
+3. `a27a0fd` `feat(d030): near/far tree LOD, wind, credits panel + tests`
+4. `2aff8c6` `docs(d030): evidence, decision and report`
+5. `feat(d030): block the debug GLB viewer in nginx; deploy evidence` — infra/nginx.conf chặn hẳn
+   `/_glb-viewer.html` (trả 404) để điều kiện QC kiểm chứng được theo nghĩa đen: trước đó file KHÔNG tồn tại
+   trong image (curl 200 là SPA fallback `try_files $uri /index.html` trả shell AI Farm, không phải trang viewer).
 
-(Hash xem `git log --oneline -6` sau khi commit; deploy nội bộ Docker + smoke + kiểm tra tunnel được ghi bổ sung
-ngay sau mục này nếu chạy.)
+Deploy nội bộ sau khi QA đạt: `pnpm db:backup` (`/backups/xaynha-20261011-110239.dump`) → `pnpm deploy:up` →
+`BASE_URL=http://127.0.0.1:8090 node scripts/g4-smoke.mjs` → **"G4 smoke: PASS"** (desktop + WebKit iPhone 13,
+0 console/page/HTTP error, drawCallBudget PASS). Kiểm tra tunnel đang chạy
+(`https://node-seeking-contamination-subscriber.trycloudflare.com`): GLB cây mới
+`/assets/models/env/tree_deciduous_01.glb` trả **200** (269.692 bytes — đúng bản D030), `/_glb-viewer.html` trả
+**404** ✓. Trước deploy `git status --short` chỉ còn `map/` và `docs/evidence/review/` chưa track ✓.
