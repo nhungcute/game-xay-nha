@@ -28,6 +28,7 @@ export class EnvRenderer {
   private previous?: SimState;
   private lodDirty = true;
   private quality: Quality = 'high';
+  private forcedNearCount?: number;
   /** Times near/far re-partitioning ran — test/debug observable for the hysteresis (no per-frame recomputes). */
   lodRebuilds = 0;
   constructor(scene: Scene, assets: AssetManager) {
@@ -85,7 +86,8 @@ export class EnvRenderer {
     let nearAssigned = 0;
     for (const index of order) {
       const item = this.items[index]!;
-      const near = !low && nearAssigned < TREE_LOD.nearCount && this.distance2(item) <= TREE_LOD.nearRadiusM ** 2;
+      const near = !low && nearAssigned < (this.forcedNearCount ?? TREE_LOD.nearCount)
+        && (this.forcedNearCount !== undefined || this.distance2(item) <= TREE_LOD.nearRadiusM ** 2);
       if (near) nearAssigned++;
       const far = !near && this.farIds.has(item.assetId);
       addInstance(groups, `${item.assetId}:${near ? 'near' : 'far'}:${low ? 0 : regionOf(item.cell)}`,
@@ -121,6 +123,12 @@ export class EnvRenderer {
   /** Debug/QA accessor: force frustum culling on/off for every environment mesh (culling investigations). */
   setFrustumCulled(enabled: boolean): void {
     this.batches.each((_, batch) => { for (const mesh of batch.meshes) mesh.frustumCulled = enabled; });
+  }
+  setVisible(visible: boolean): void { this.batches.each((_, batch) => { for (const mesh of batch.meshes) mesh.visible = visible; }); }
+  setNearCount(count: number): void {
+    if (!Number.isInteger(count) || count < 0) throw new RangeError('nearCount must be a non-negative integer');
+    this.forcedNearCount = count;
+    if (this.previous) { this.collect(this.previous); this.rebuild(); }
   }
   dispose(): void {
     this.batches.dispose();

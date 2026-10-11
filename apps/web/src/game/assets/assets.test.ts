@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { inflateSync } from 'node:zlib';
 import { execFileSync } from 'node:child_process';
 import { describe, expect, it, vi } from 'vitest';
 import { Box3, InstancedMesh, Scene } from 'three';
@@ -50,7 +51,7 @@ const AUTHORED_IDS = Object.keys(modelPackConfig.models).sort();
 // D030: 12 tree/bush ids (near + far LOD) imported from map/tree by scripts/import-trees.mjs.
 const treesConfig = JSON.parse(await readFile(new URL('../../../../../scripts/trees.config.json', import.meta.url), 'utf8')) as {
   parameters: { nearLod: { count: number; radiusM: number }; farLod: { recomputeMoveM: number; recomputeYawDeg: number }; triangleCaps: Record<string, { near: number; far: number }>; atlas: { leafSlotPx: number; barkSlotPx: number } };
-  models: Record<string, { family: string; nearTriangles: number; farTriangles: number; file: string; farFile: string }>;
+  models: Record<string, { family: string; nearTriangles: number; farTriangles: number; file: string; farFile: string; farBytes: number }>;
 };
 const TREE_IDS = Object.keys(treesConfig.models).filter(id => !id.endsWith('_far')).sort();
 
@@ -64,6 +65,46 @@ async function glbTextureSize(manifestFile: string): Promise<{ width: number; he
   const view = json.bufferViews[json.images[0]!.bufferView]!;
   const png = bytes.subarray(20 + jsonLength + 8 + (view.byteOffset ?? 0));
   return { width: png.readUInt32BE(16), height: png.readUInt32BE(20) };
+}
+
+async function farTextureCoverage(manifestFile: string): Promise<number[]> {
+  const bytes = await readFile(new URL(manifestFile, assetRoot));
+  const jsonLength = bytes.readUInt32LE(12);
+  const json = JSON.parse(bytes.subarray(20, 20 + jsonLength).toString('utf8')) as {
+    images: { bufferView: number }[]; bufferViews: { byteOffset?: number; byteLength: number }[];
+  };
+  const view = json.bufferViews[json.images[0]!.bufferView]!;
+  const png = bytes.subarray(20 + jsonLength + 8 + (view.byteOffset ?? 0), 20 + jsonLength + 8 + (view.byteOffset ?? 0) + view.byteLength);
+  let offset = 8, width = 0, height = 0, colorType = 0;
+  const idat: Buffer[] = [];
+  while (offset < png.length) {
+    const length = png.readUInt32BE(offset), type = png.toString('ascii', offset + 4, offset + 8), data = png.subarray(offset + 8, offset + 8 + length);
+    if (type === 'IHDR') { width = data.readUInt32BE(0); height = data.readUInt32BE(4); colorType = data[9]!; }
+    if (type === 'IDAT') idat.push(data);
+    offset += length + 12;
+    if (type === 'IEND') break;
+  }
+  expect(colorType).toBe(6);
+  const channels = 4, stride = width * channels, packed = inflateSync(Buffer.concat(idat)), raw = Buffer.alloc(stride * height);
+  const paeth = (a: number, b: number, c: number) => { const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c); return pa <= pb && pa <= pc ? a : pb <= pc ? b : c; };
+  for (let y = 0; y < height; y++) for (let x = 0; x < stride; x++) {
+    const f = packed[y * (stride + 1)]!, value = packed[y * (stride + 1) + x + 1]!, left = x >= 4 ? raw[y * stride + x - 4]! : 0;
+    const up = y ? raw[(y - 1) * stride + x]! : 0, ul = y && x >= 4 ? raw[(y - 1) * stride + x - 4]! : 0;
+    raw[y * stride + x] = (value + (f === 1 ? left : f === 2 ? up : f === 3 ? Math.floor((left + up) / 2) : f === 4 ? paeth(left, up, ul) : 0)) & 255;
+  }
+  const tile = width / 2;
+  return [0, 1, 2].map(index => {
+    let covered = 0; const colors = new Set<string>();
+    for (let y = 0; y < tile; y++) for (let x = 0; x < tile; x++) {
+      const at = (Math.floor(index / 2) * tile + y) * stride + (index % 2 * tile + x) * 4;
+      if (raw[at + 3]! >= 128) { covered++; colors.add(`${raw[at]},${raw[at + 1]},${raw[at + 2]}`); }
+    }
+    const ratio = covered / (tile * tile);
+    expect(ratio, `${manifestFile} tile ${index} alpha coverage`).toBeGreaterThanOrEqual(0.1);
+    expect(ratio, `${manifestFile} tile ${index} alpha coverage`).toBeLessThanOrEqual(0.8);
+    expect(colors.size, `${manifestFile} tile ${index} distinct colors`).toBeGreaterThanOrEqual(2);
+    return ratio;
+  });
 }
 
 describe('actual placeholder GLB artifacts', () => {
@@ -126,6 +167,8 @@ describe('actual placeholder GLB artifacts', () => {
       expect(entry.author).toBeTruthy(); expect(entry.source).toContain('sketchfab.com');
       expect(entry.url).toContain('sketchfab.com'); expect(entry.license).toMatch(/^CC-/);
       expect(entry.modified).toBe(true); expect(entry.lod).toEqual({ far: `${id}_far` });
+      expect(model.farBytes).toBeGreaterThanOrEqual(8 * 1024);
+      expect(await farTextureCoverage(model.farFile.replace(/^apps\/web\/public\/assets\//, ''))).toHaveLength(3);
       // Conifer derivatives are CC-BY-SA: they must live in their own directory beside LICENSE.md.
       if (model.family === 'conifer') {
         expect(entry.license).toBe('CC-BY-SA-4.0');
