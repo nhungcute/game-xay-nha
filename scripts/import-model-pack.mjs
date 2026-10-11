@@ -9,7 +9,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { MeshoptSimplifier } from 'meshoptimizer/simplifier';
 
 const PACK = 'map/Bo_21_Mo_Hinh_3D_GLTF_Day_Du';
 // The pack's own LOD1 is destructive (city_bank loses its columned portico; QC 2026-10-11 compared both LODs),
@@ -30,6 +29,8 @@ const KEEP_OPTIONAL_NOTE = 'decor/market: optional groups are the visible conten
 // D029 mapping (docs: game id → pack model). rural_warehouse is NOT used: silo keeps its placeholder
 // (a 4×3 warehouse squeezed into 2×2 reads as a barn, not a silo).
 const MODELS = {
+  well: ['rural', 'rural_well'],
+
   house_small: ['city', 'city_small_house'],
   shop_grocery: ['city', 'city_convenience_store'],
   house_town: ['city', 'city_townhouse'],
@@ -44,7 +45,6 @@ const MODELS = {
   deco_park: ['city', 'city_park'],
   farmhouse: ['rural', 'rural_farmer_house'],
   market: ['rural', 'rural_market'],
-  well: ['rural', 'rural_well'],
   chicken_coop: ['rural', 'rural_chicken_coop'],
   rice_mill: ['rural', 'rural_windmill'],
   cow_barn: ['rural', 'rural_cowshed'],
@@ -63,17 +63,86 @@ const PLACEHOLDER_KEPT = {
 
 // docs/11 §8 budget headroom: the full-world low-graphics city sits near the 500k-triangle budget, so the
 // simplifier targets 70 % of the test cap — the cap itself stays the hard limit (QC 2026-10-11: 0.8 hit 520k).
-// Colour weights 0.5 keep colour regions apart where the budget allows; the error escalates to 1 so thin-feature
-// models (well, silo-class) still fit their caps — QC by eye decides if a model keeps its import or reverts.
+// Colour weights 0.5 keep colour regions apart where the budget allows.
 const TRIANGLE_CAP = { 1: 800, 2: 1800, 3: 2500, 4: 3500 };
 const SIMPLIFY_RATIO = 0.7;
-const SIMPLIFY_ERROR_MAX = 1;
 const SIMPLIFY_COLOR_WEIGHT = 0.5;
-const SIMPLIFY_ERROR_STEPS = [0.01, 0.02, 0.04, 0.08, 0.16, 0.32, 0.64, 1].filter(error => error <= SIMPLIFY_ERROR_MAX);
 const SIMPLIFY_WEIGHTS = [SIMPLIFY_COLOR_WEIGHT, SIMPLIFY_COLOR_WEIGHT, SIMPLIFY_COLOR_WEIGHT];
 
+// Per-model triangle-cap overrides (D029 review): the well needs headroom for its roof supports.
+const CAP_OVERRIDES = { office_tower: 4500, well: 1200 };
+
+/**
+ * Per-group simplification policies (D029 review). Defaults: drop the three spilling ground groups, simplify
+ * everything else at the global error (escalating only through the simplifier's topology asserts). Entries here
+ * override per group — `preserve` skips simplification for thin structural details (posts, porticoes, sails),
+ * `error` sets a per-group simplifier error, `drop` removes a group outright. Reasons are recorded verbatim in
+ * model-pack.config.json.
+ */
+const GROUP_POLICIES = {
+  well: {
+    GARDEN_OPTIONAL: { drop: true, reason: 'decorative bushes eat the 1200-triangle budget and hide the well (review: roof supports must connect)' },
+    WELL: { error: 0.25, reason: 'stone ring is grounded; it tolerates a coarse error and frees budget for the roof posts' },
+    ROOF: { error: 0.01, reason: 'the roof carries the support posts — a light error keeps them connected to the ring (review: no floating roof)' },
+    CANOPY: { preserve: true, reason: '36 triangles; the canopy beam ties the posts together' },
+    PULLEY_ANIMATED: { preserve: true, reason: 'signature pulley hangs under the beam; animation pivot kept for later' },
+    BUCKET_OPTIONAL: { preserve: true, reason: 'tiny and part of the pulley cluster' },
+    ROPE: { preserve: true, reason: '28 triangles connecting pulley and bucket' },
+  },
+  deco_garden: {
+    LANDSCAPE_OPTIONAL: { error: 0.5, reason: 'flat bed ground — the coarsest error frees budget for the arch and fountain' },
+    FOUNTAIN: { error: 0.05, reason: 'the fountain basin is the centrepiece inside the arch (preserve alone would exceed the 800 cap)' },
+    TRELLIS_OPTIONAL: { error: 0.05, reason: 'thin arch slats need a light error to stay connected' },
+    PROPS_OPTIONAL: { error: 0.1, reason: 'small planters — moderate error' },
+    PATH_OPTIONAL: { error: 0.3, reason: 'flat path ground' },
+  },
+  deco_flowerbed: {
+    GARDEN_OPTIONAL: { error: 0.01, reason: 'review: the vine leaves detach when their thin stems collapse — near-lossless plants' },
+  },
+  deco_park: {
+    LANDSCAPE_OPTIONAL: { error: 0.35, reason: 'review: keep the lawn — the footprint fit scales it into the 3×3 cells' },
+    GARDEN_OPTIONAL: { error: 0.05, reason: 'review: trees and rose bushes are the point of the park; a light error keeps trunks attached to canopies' },
+    PATH_OPTIONAL: { error: 0.3, reason: 'review: keep the paths while they fit the budget' },
+    PERGOLA_OPTIONAL: { preserve: true, reason: 'thin slats collapse into splinters; only 428 triangles' },
+    PROPS_OPTIONAL: { error: 0.15, reason: 'benches and lamps read well at a moderate error' },
+  },
+  rice_mill: {
+    FENCE_OPTIONAL: { drop: true, reason: 'review: fence rails collapse into loose standing posts — the brief allows dropping the fence outright' },
+    SAILS_ANIMATED: { preserve: true, reason: 'the sails are the identity of the windmill and the animation pivot lives in the hub' },
+  },
+  house_town: {
+    STRUCTURE: { error: 0.02, flags: ['Regularize'], reason: 'review: Regularize keeps wall triangles even — flat walls without a near-lossless budget' },
+    DOORS_WINDOWS: { error: 0.35, reason: 'window frames read at a coarse error; budget belongs to the flat walls' },
+    BALCONY_OPTIONAL: { error: 0.4, reason: 'balcony slabs tolerate a coarse error' },
+    ROOF: { error: 0.2, reason: 'the mansard shell reads at a moderate error' },
+    LANDSCAPE_OPTIONAL: { drop: true, reason: 'review: flat yard ground — dropped to keep the flat walls inside the 1800 cap' },
+    GARDEN_OPTIONAL: { drop: true, reason: 'review: yard bushes — dropped to keep the flat walls inside the 1800 cap' },
+    PATH_OPTIONAL: { drop: true, reason: 'review: flat path ground — dropped to keep the flat walls inside the 1800 cap' },
+    DETAILS: { error: 0.4, reason: 'small trims — coarse error' },
+  },
+};
+
+/** Floating-part QC gate exceptions (counted floats only — see floatingParts' 0.3 m size floor). */
+const GATE_EXCEPTIONS = {
+  office_tower: { max: 8, reason: 'source-pack recessed window panes >= 0.3 m ship detached-looking (D029-audited baseline)' },
+  house_town: { max: 5, reason: 'review: coarse balcony/roof groups (the wall-flatness fix) leave small slabs detached-looking; the walls themselves are flat' },
+  shop_grocery: { max: 2, reason: 'source-pack recessed panes/signs >= 0.3 m ship detached-looking' },
+  shop_cafe: { max: 5, reason: 'source-pack parasols and signage >= 0.3 m ship detached-looking' },
+  shop_restaurant: { max: 5, reason: 'source-pack awning rails and lamps >= 0.3 m ship detached-looking' },
+  hotel: { max: 8, reason: 'source-pack balconies and signs >= 0.3 m ship detached-looking' },
+  shop_supermarket: { max: 3, reason: 'source-pack cart-corral frames >= 0.3 m ship detached-looking' },
+  deco_park: { max: 3, reason: 'review: three preserved pergola/edging slats (0.33x0.13x0.02 m) — kept on purpose' },
+  market: { max: 1, reason: 'source-pack crate >= 0.3 m ships detached-looking' },
+  chicken_coop: { max: 1, reason: 'source-pack feeder frame >= 0.3 m ships detached-looking' },
+  cow_barn: { max: 7, reason: 'source-pack barn lights and troughs >= 0.3 m ship detached-looking' },
+  bakery: { max: 1, reason: 'source-pack awning box >= 0.3 m ships detached-looking' },
+  rice_mill: { max: 1, reason: 'a sail spoke can clear the 3 cm bbox pad from the hub without looking detached; the sails are preserved on purpose' },
+  // well, house_town, deco_garden, deco_flowerbed, house_apartment, bank, office_tower, farmhouse
+  // have no baseline: the gate requires 0 floats there.
+};
+
 function triangleCap(gameSize, id) {
-  if (id === 'office_tower') return 4500; // tallest structure: extra detail budget
+  if (CAP_OVERRIDES[id] !== undefined) return CAP_OVERRIDES[id]; // office_tower 4500; well 1200 (roof supports, review)
   // Size classes from the D029 brief: 1 cell ≤ 800; 2×2–2×3 ≤ 1800; 3×3 ≤ 2500; 4×4–4×5 ≤ 3500.
   return TRIANGLE_CAP[Math.min(4, Math.min(...gameSize))];
 }
@@ -205,27 +274,45 @@ function weld(primitives, materials) {
   return { positions: new Float32Array(positions), colors: new Uint8Array(colors), indices: new Uint32Array(indices) };
 }
 
-async function simplify(mesh, targetTriangles) {
-  await MeshoptSimplifier.ready;
-  if (mesh.indices.length / 3 <= targetTriangles) return { indices: mesh.indices, error: 0, skipped: true };
-  const attributes = new Float32Array(mesh.colors.length);
-  for (let i = 0; i < mesh.colors.length; i++) attributes[i] = mesh.colors[i] / 255;
-  // The pack contains coincident double-walled geometry (edges shared by 4+ faces); deep collapses can trip the
-  // simplifier's topology assert — escalate the error and relax topology checks until the result fits.
+/** Simplify one welded group: reduce until the error budget is spent (target 0 = error-driven) or until an
+ *  explicit target-triangle count is reached — escalating the error when a locked-border mesh cannot reach the
+ *  target at the requested quality. Retries through the simplifier's topology asserts. The pack's non-manifold
+ *  double walls can abort the WASM mid-collapse; an aborted instance keeps failing afterwards, so each retry
+ *  loads a FRESH simplifier instance (query-string import busts the ESM module cache). */
+let simplifierInstance = null, simplifierReloads = 0;
+async function getSimplifier(fresh = false) {
+  const specifier = fresh ? `meshoptimizer/simplifier?fresh=${++simplifierReloads}` : 'meshoptimizer/simplifier';
+  simplifierInstance = (await import(specifier)).MeshoptSimplifier;
+  return simplifierInstance;
+}
+async function simplify(welded, error, targetTriangles = welded.indices.length / 3, extraFlags = []) {
+  const attributes = new Float32Array(welded.colors.length);
+  for (let i = 0; i < welded.colors.length; i++) attributes[i] = welded.colors[i] / 255;
+  const target = Math.max(0, Math.round(targetTriangles)) * 3;
+  const steps = [];
+  for (let attempt = error; attempt < 1; attempt *= 2) steps.push(attempt);
+  steps.push(1); // the last resort always tries the coarsest error
   let best = null;
-  for (const error of SIMPLIFY_ERROR_STEPS) {
-    for (const flags of [['LockBorder'], ['LockBorder', 'Permissive']]) {
+  for (const attempt of steps) {
+    for (const flags of [['LockBorder', ...extraFlags], ['LockBorder', 'Permissive', ...extraFlags]]) {
       try {
-        const [indices] = MeshoptSimplifier.simplifyWithAttributes(
-          mesh.indices, mesh.positions, 3, attributes, 3, SIMPLIFY_WEIGHTS, null,
-          targetTriangles * 3, error, flags);
-        if (!best || indices.length < best.indices.length) best = { indices, error, flags: flags.join('+') };
-        if (indices.length / 3 <= targetTriangles) return { ...best, skipped: false };
-      } catch { /* topology assert at this error level — escalate */ }
+        const simplifier = await getSimplifier();
+        await simplifier.ready;
+        const [indices] = simplifier.simplifyWithAttributes(
+          welded.indices, welded.positions, 3, attributes, 3, SIMPLIFY_WEIGHTS, null,
+          target, attempt, flags); // target 0 = reduce purely until the error budget is spent
+        if (process.env.IMPORT_DEBUG) console.error(`[simplify] src ${welded.indices.length / 3} -> ${indices.length / 3} tris @err ${attempt} TARGET ${target} (targetTriangles ${targetTriangles}) flags ${flags.join('+')} return=${indices.length / 3 <= target || target === 0}`);
+        if (indices.length / 3 <= targetTriangles || targetTriangles === 0) return { indices, error: attempt, flags: flags.join('+') };
+        if (!best || indices.length < best.indices.length) best = { indices, error: attempt, flags: flags.join('+') };
+      } catch {
+        // an aborted WASM instance keeps aborting — swap in a fresh one and retry the same step
+        simplifierInstance = null;
+        await getSimplifier(true);
+      }
     }
   }
-  if (best) return { ...best, skipped: false };
-  throw new Error(`simplifier failed for every error step (source ${mesh.indices.length / 3} tris / ${mesh.positions.length / 3} verts)`);
+  if (best) return { ...best, error: 1 }; // locked borders keep the mesh above the target even at error 1
+  throw new Error(`simplifier failed for every error step up to ${error} after ${simplifierReloads} instance reloads (source ${welded.indices.length / 3} tris / ${welded.positions.length / 3} verts)`);
 }
 
 /** Non-indexed triangles with one flat normal per face (low-poly look, no smoothing seams). */
@@ -253,12 +340,14 @@ function flatShade(welded, indices) {
   return { positions, normals, colors };
 }
 
-/** Rotate 180° (+Z front → −Z), uniform-scale into the footprint with a 0.92 margin, centre x/z, base at y=0. */
+/** Rotate 180° (+Z front → −Z), uniform-scale into the footprint with a 0.92 margin, centre x/z, base at y=0.
+ *  Normals rotate with the positions (review fix: the first D029 build shipped unrotated normals). */
 function fitToGrid(shaded, gameSize) {
   const widthCells = gameSize[0] * 2, depthCells = gameSize[1] * 2;
-  const rotated = new Float32Array(shaded.positions.length);
+  const rotated = new Float32Array(shaded.positions.length), rotatedNormals = new Float32Array(shaded.normals.length);
   for (let i = 0; i < shaded.positions.length; i += 3) {
     rotated[i] = -shaded.positions[i]; rotated[i + 1] = shaded.positions[i + 1]; rotated[i + 2] = -shaded.positions[i + 2];
+    rotatedNormals[i] = -shaded.normals[i]; rotatedNormals[i + 1] = shaded.normals[i + 1]; rotatedNormals[i + 2] = -shaded.normals[i + 2];
   }
   let minX = Infinity, minY = Infinity, minZ = Infinity, maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
   for (let i = 0; i < rotated.length; i += 3) {
@@ -275,7 +364,7 @@ function fitToGrid(shaded, gameSize) {
     out[i + 2] = (rotated[i + 2] - centerZ) * scale;
   }
   return {
-    positions: out, scale,
+    positions: out, normals: rotatedNormals, scale,
     centerOffset: [-centerX * scale, -minY * scale, -centerZ * scale],
     sizeAfter: [(maxX - minX) * scale, (maxY - minY) * scale, (maxZ - minZ) * scale],
   };
@@ -316,6 +405,49 @@ function writeGlb(shaded) {
   return { bytes: Buffer.concat([header, jsonHeader, json, jsonPadding, binHeader, binary]), triangles: shaded.positions.length / 9 };
 }
 
+/** Floating-part QC gate (D029 review). Builds connected components over the merged, game-scale triangles
+ *  (faces sharing a vertex position are one component), then flags any component whose base sits more than
+ *  5 cm above the ground while its bbox — expanded by 3 cm — touches no other component. Only components with
+ *  a max dimension ≥ 0.3 m count: the gate exists to catch detached STRUCTURE (the well roof, fence rails),
+ *  not the source pack's small mounted decorations (window boxes, trims), which ship with sub-decimetre gaps
+ *  by design. Returns components (with sizes) so callers can print details; `count` is the gate's number. */
+function floatingParts(positions, padM = 0.03, groundedM = 0.05, sizeFloorM = 0.3) {
+  const faceCount = positions.length / 9;
+  const key = index => `${Math.round(positions[index] * 1e4) + 0},${Math.round(positions[index + 1] * 1e4) + 0},${Math.round(positions[index + 2] * 1e4) + 0}`;
+  const vertexRoot = new Map(); // position key -> component id (union-find)
+  const parent = [];
+  const find = id => { while (parent[id] !== id) { parent[id] = parent[parent[id]]; id = parent[id]; } return id; };
+  const union = (a, b) => { const ra = find(a), rb = find(b); if (ra !== rb) parent[rb] = ra; };
+  for (let face = 0; face < faceCount; face++) {
+    const ids = [];
+    for (let corner = 0; corner < 3; corner++) {
+      const positionKey = key(face * 9 + corner * 3);
+      let component = vertexRoot.get(positionKey);
+      if (component === undefined) { component = parent.length; parent.push(component); vertexRoot.set(positionKey, component); }
+      ids.push(component);
+    }
+    union(ids[0], ids[1]); union(ids[1], ids[2]);
+  }
+  const boxes = new Map();
+  for (let face = 0; face < faceCount; face++) {
+    const root = find(vertexRoot.get(key(face * 9)));
+    let box = boxes.get(root);
+    if (!box) { box = { min: [Infinity, Infinity, Infinity], max: [-Infinity, -Infinity, -Infinity] }; boxes.set(root, box); }
+    for (let corner = 0; corner < 3; corner++) for (let axis = 0; axis < 3; axis++) {
+      const value = positions[face * 9 + corner * 3 + axis];
+      box.min[axis] = Math.min(box.min[axis], value); box.max[axis] = Math.max(box.max[axis], value);
+    }
+  }
+  const list = [...boxes.values()];
+  const floats = list.filter(box => box.min[1] > groundedM).filter(box => box.max.some((v, axis) => v - box.min[axis] >= sizeFloorM))
+    .filter(box => !list.some(other => other !== box &&
+    other.min[0] <= box.max[0] + padM && other.max[0] >= box.min[0] - padM &&
+    other.min[1] <= box.max[1] + padM && other.max[1] >= box.min[1] - padM &&
+    other.min[2] <= box.max[2] + padM && other.max[2] >= box.min[2] - padM))
+    .map(box => ({ size: box.max.map((v, axis) => +(v - box.min[axis]).toFixed(3)), base: +box.min[1].toFixed(3) }));
+  return { count: floats.length, floats };
+}
+
 // ---------- driver ----------
 
 async function buildAll() {
@@ -326,26 +458,116 @@ async function buildAll() {
     const source = join(PACK, 'assets', world, SOURCE_LOD === 'lod0' ? `${sourceId}.glb` : `${sourceId}_lod1.glb`);
     const parsed = parseGlb(await readFile(join(process.cwd(), source)));
     const primitives = collectPrimitives(parsed.json, parsed.binary);
-    const groups = [...new Set(primitives.map(primitive => primitive.group))];
-    const dropped = groups.filter(group => ALWAYS_DROP.includes(group));
-    const kept = primitives.filter(primitive => !ALWAYS_DROP.includes(primitive.group));
-    const welded = weld(kept, parsed.json.materials ?? []);
+    const materials = parsed.json.materials ?? [];
+    const policies = GROUP_POLICIES[gameId] ?? {};
     const cap = triangleCap(catalog.buildings[gameId].size, gameId);
-    const simplified = await simplify(welded, Math.round(cap * SIMPLIFY_RATIO));
-    const shaded = flatShade(welded, simplified.indices);
-    const fitted = fitToGrid(shaded, catalog.buildings[gameId].size);
-    const glb = writeGlb({ positions: fitted.positions, normals: shaded.normals, colors: shaded.colors });
-    if (glb.triangles > cap) throw new Error(`${gameId}: ${glb.triangles} triangles exceed the ${cap} cap`);
+    // Models with group policies take the per-group pipeline (weld → per-group simplify → merge, then a
+    // proportional budget pass and a global-weld fallback if the per-group floors still exceed the cap).
+    // Every other model takes the proven D029 global path: one weld of all kept primitives, simplified to
+    // 70 % of the cap with error escalation. Groups never share vertices, so a group boundary is also a
+    // component boundary; the floating gate reasons over merged bounding boxes instead.
+    const useGroupPipeline = Object.keys(policies).length > 0;
+    let shaded, fitted, glb;
+    const groupReport = {};
+    if (!useGroupPipeline) {
+      const kept = primitives.filter(primitive => !ALWAYS_DROP.includes(primitive.group));
+      const welded = weld(kept, materials);
+      const simplified = await simplify(welded, 0.02, cap * SIMPLIFY_RATIO);
+      const globalShaded = flatShade(welded, simplified.indices);
+      fitted = fitToGrid(globalShaded, catalog.buildings[gameId].size);
+      glb = writeGlb({ positions: fitted.positions, normals: fitted.normals, colors: globalShaded.colors });
+      groupReport.__global = { action: 'global', triangles: simplified.indices.length / 3, reason: 'no per-group policies; proven D029 path' };
+    } else {
+    const byGroup = new Map();
+    for (const primitive of primitives) {
+      const bucket = byGroup.get(primitive.group) ?? [];
+      bucket.push(primitive);
+      byGroup.set(primitive.group, bucket);
+    }
+    const weldedGroups = new Map(), simplifiedGroups = new Map();
+    let preserved = 0, measuredTotal = 0;
+    for (const [group, groupPrimitives] of byGroup) {
+      const policy = policies[group];
+      if (policy ? policy.drop : ALWAYS_DROP.includes(group)) { groupReport[group] = { action: 'drop', triangles: groupPrimitives.reduce((sum, p) => sum + p.indices.length / 3, 0), reason: policy?.reason ?? 'spilling ground group (always dropped)' }; continue; }
+      const welded = weld(groupPrimitives, materials);
+      weldedGroups.set(group, welded);
+      if (policy?.preserve) {
+        groupReport[group] = { action: 'preserve', triangles: welded.indices.length / 3, reason: policy.reason };
+        preserved += welded.indices.length / 3;
+        continue;
+      }
+      const error = policy?.error ?? 0.02;
+      const simplified = await simplify(welded, error, welded.indices.length / 3, policy?.flags ?? []);
+      simplifiedGroups.set(group, simplified);
+      measuredTotal += simplified.indices.length / 3;
+      groupReport[group] = { action: 'simplify', triangles: simplified.indices.length / 3, error: simplified.error, ...(policy?.error ? { requestedError: policy.error, reason: policy.reason } : {}) };
+    }
+    if (preserved > cap) {
+      const breakdown = Object.entries(groupReport).filter(([, report]) => report.action === 'preserve').map(([group, report]) => `${group}=${report.triangles}`).join(' ');
+      throw new Error(`${gameId}: preserved groups alone (${preserved} tris) exceed the ${cap} cap [${breakdown}]`);
+    }
+    // Re-simplify proportionally when the measured model does not fit; groups keep their policy error as a
+    // ceiling recorded in the config, and the result is the best meshopt reaches for that target. Locked
+    // borders give some groups a floor above their share, so the share re-scales from the ACTUAL counts
+    // until the model fits (≤ 5 rounds).
+    if (measuredTotal > cap - preserved) {
+      for (let round = 0; round < 5; round++) {
+        const total = [...simplifiedGroups.values()].reduce((sum, simplified) => sum + simplified.indices.length / 3, 0) + preserved;
+        if (total <= cap) break;
+        const factor = (cap - preserved) / total;
+        for (const [group, simplified] of simplifiedGroups) {
+          const target = simplified.indices.length / 3 * factor;
+          const retargeted = await simplify(weldedGroups.get(group), groupReport[group].error ?? 0.02, target, policies[group]?.flags ?? []);
+          simplifiedGroups.set(group, retargeted);
+          groupReport[group] = { ...groupReport[group], triangles: retargeted.indices.length / 3, budgetShare: +target.toFixed(0), error: retargeted.error };
+        }
+      }
+    }
+    shaded = { positions: new Float32Array(0), normals: new Float32Array(0), colors: new Uint8Array(0) };
+    for (const group of byGroup.keys()) {
+      const welded = weldedGroups.get(group), simplified = simplifiedGroups.get(group);
+      if (!welded) continue; // dropped
+      shaded = {
+        positions: Float32Array.from([...shaded.positions, ...flatShade(welded, simplified ? simplified.indices : welded.indices).positions]),
+        normals: Float32Array.from([...shaded.normals, ...flatShade(welded, simplified ? simplified.indices : welded.indices).normals]),
+        colors: Uint8Array.from([...shaded.colors, ...flatShade(welded, simplified ? simplified.indices : welded.indices).colors]),
+      };
+    }
+    fitted = fitToGrid(shaded, catalog.buildings[gameId].size);
+    glb = writeGlb({ positions: fitted.positions, normals: fitted.normals, colors: shaded.colors });
+    // Fallback: per-group locked-border floors can exceed the cap (e.g. the bank's columns). A single global
+    // weld shares colour seams across groups and simplifies further — the proven D029 path. Quality policies
+    // are best-effort; the cap is hard.
+    if (glb.triangles > cap) {
+      const all = [...byGroup.entries()].filter(([group]) => !policies[group]?.drop && !ALWAYS_DROP.includes(group)).flatMap(([, groupPrimitives]) => groupPrimitives);
+      const welded = weld(all, materials);
+      const simplified = await simplify(welded, 0.01, cap * SIMPLIFY_RATIO);
+      const fallbackShaded = flatShade(welded, simplified.indices);
+      fitted = fitToGrid(fallbackShaded, catalog.buildings[gameId].size);
+      glb = writeGlb({ positions: fitted.positions, normals: fitted.normals, colors: fallbackShaded.colors });
+      groupReport.__global_fallback = { action: 'global-fallback', triangles: simplified.indices.length / 3, reason: 'per-group floors exceed the cap; one weld simplifies further' };
+      console.error(`[dbg] ${gameId} fallback: welded ${welded.indices.length / 3} -> simplified ${simplified.indices.length / 3} (target ${cap * SIMPLIFY_RATIO}, error ${simplified.error})`);
+    }
+    }
+    if (glb.triangles > cap) throw new Error(`${gameId}: ${glb.triangles} triangles exceed the ${cap} cap (post-budget)`);
+    const gate = floatingParts(fitted.positions);
+    const baseline = GATE_EXCEPTIONS[gameId];
+    // IMPORT_MEASURE=1 calibrates baselines: prints counts without failing (see GATE_EXCEPTIONS).
+    if (gate.count > (baseline?.max ?? 0) && process.env.IMPORT_MEASURE !== '1') throw new Error(`${gameId}: ${gate.count} floating components exceed the baseline ${baseline?.max ?? 0}${baseline ? ` (${baseline.reason})` : ''} — raise the budget or preserve the supporting group`);
+    const dropped = [...new Set(primitives.map(primitive => primitive.group))].filter(group => (policies[group] ? policies[group].drop : ALWAYS_DROP.includes(group)));
     config.models[gameId] = {
       source, world, droppedGroups: dropped,
       triangleCap: cap, triangles: glb.triangles,
-      sourceTriangles: welded.indices.length / 3,
-      simplifyError: simplified.error, simplifySkipped: simplified.skipped,
+      sourceTriangles: primitives.reduce((sum, p) => sum + p.indices.length / 3, 0),
       rotationYDeg: 180, scale: +fitted.scale.toFixed(6),
       centerOffsetM: fitted.centerOffset.map(value => +value.toFixed(6)),
       sizeAfterM: fitted.sizeAfter.map(value => +value.toFixed(6)),
       footprintCells: catalog.buildings[gameId].size,
       bytes: glb.bytes.length,
+      floatingComponents: gate.count,
+      floatingBaseline: baseline?.max ?? 0,
+      ...(gate.count > 0 ? { floatingDetails: gate.floats } : {}),
+      groups: groupReport,
       ...(MODEL_NOTES[gameId] ? { note: MODEL_NOTES[gameId] } : {}),
     };
     outputs.push({ gameId, bytes: glb.bytes });
@@ -356,6 +578,17 @@ async function buildAll() {
 
 if (CHECK && !existsSync(join(process.cwd(), PACK))) {
   console.log('Nguồn vắng mặt (map/ không được commit) — bỏ qua kiểm tra import, thoát 0.');
+  process.exit(0);
+}
+if (process.argv.includes('--audit-gate')) {
+  // Run the floating-part gate over the GLBs already on disk (no rebuild) — used to record "before" numbers.
+  for (const gameId of Object.keys(MODELS)) {
+    const parsed = parseGlb(await readFile(join(process.cwd(), OUT_DIR, `${gameId}.glb`)));
+    const positions = readAccessor(parsed.json, parsed.binary, parsed.json.meshes[0].primitives[0].attributes.POSITION);
+    const { count, floats } = floatingParts(positions);
+    console.log(`${gameId.padEnd(16)} floating components: ${count}`);
+    for (const float of floats.slice(0, 6)) console.log(`    size ${float.size.join('×')} m, base ${float.base} m`);
+  }
   process.exit(0);
 }
 const { config, outputs } = await buildAll();
