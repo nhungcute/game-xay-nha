@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
 import { describe, expect, it, vi } from 'vitest';
 import { Box3, InstancedMesh, Scene } from 'three';
 import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
@@ -12,8 +13,8 @@ import { CropRenderer } from '../render/CropRenderer';
 import { EnvRenderer } from '../render/EnvRenderer';
 import { GhostRenderer } from '../render/GhostRenderer';
 
-// Authored GLBs embed PNG textures; GLTFLoader probes `self` for image decoding. Node has no image decoder, so
-// texture loads fail softly (materials keep their factors) while geometry, the subject of these tests, loads normally.
+// Imported GLBs are texture-less (vertex colours only); GLTFLoader still probes `self` for image decoding.
+// Node has no image decoder, so texture loads would fail softly — geometry, the subject of these tests, loads normally.
 (globalThis as { self?: unknown }).self ??= globalThis;
 const assetRoot = new URL('../../../public/assets/', import.meta.url);
 const consoleError = console.error.bind(console);
@@ -39,26 +40,33 @@ function meshes(scene: Scene): InstancedMesh[] {
   scene.traverse(object => { if (object instanceof InstancedMesh) result.push(object); });
   return result;
 }
+// D029: buildings imported from the owner's 21-model pack (silo keeps its placeholder — see model-pack.config.json).
+const modelPackConfig = JSON.parse(await readFile(new URL('../../../../../scripts/model-pack.config.json', import.meta.url), 'utf8')) as {
+  models: Record<string, { triangleCap: number }>;
+};
+const AUTHORED_IDS = Object.keys(modelPackConfig.models).sort();
 
 describe('actual placeholder GLB artifacts', () => {
   it('loads every model with valid triangles, bottom pivot, footprint bounds and explicit provenance', async () => {
     const manager = await setup();
     expect(manager.manifest).toHaveLength(74);
-    expect(manager.manifest.filter(entry => !entry.placeholder).map(entry => entry.id).sort()).toEqual(['farmhouse', 'house_small', 'shop_cafe']);
+    expect(manager.manifest.filter(entry => !entry.placeholder).map(entry => entry.id).sort()).toEqual(AUTHORED_IDS);
     for (const entry of manager.manifest) {
-      // Authored models (D028 B5) must say how they are fitted; everything else is a generated placeholder.
-      if (!entry.placeholder) { expect(entry.fit).toBeTruthy(); expect(entry.footprint).toBeTruthy(); }
+      // Imported models (D029) arrive pre-fitted: one mesh, no load-time fitting; everything else is a generated placeholder.
       expect(entry.license).toBeTruthy(); expect(entry.source).toBeTruthy();
       const asset = manager.get(entry.id);
       expect(asset.parts.length).toBeGreaterThan(0);
+      if (!entry.placeholder) {
+        expect(entry.footprint).toBeTruthy();
+        expect(asset.parts).toHaveLength(1); // one draw call per building
+      }
       expect(asset.bounds.min.y).toBeCloseTo(0);
       let triangles = 0;
       for (const part of asset.parts) {
         const positions = part.geometry.getAttribute('position');
         triangles += positions.count / 3;
         expect(part.geometry.getAttribute('normal').count).toBe(positions.count);
-        // Placeholders are vertex-coloured; authored models may use textured materials instead.
-        if (entry.placeholder || part.geometry.getAttribute('color')) expect(part.geometry.getAttribute('color').count).toBe(positions.count);
+        expect(part.geometry.getAttribute('color').count).toBe(positions.count);
         for (const number of positions.array) expect(Number.isFinite(number)).toBe(true);
       }
       expect(triangles).toBe(entry.triangles);
@@ -68,9 +76,19 @@ describe('actual placeholder GLB artifacts', () => {
         expect(asset.bounds.max.z - asset.bounds.min.z).toBeLessThanOrEqual(building.size[1] * 2);
       }
       expect(triangles).toBeLessThanOrEqual(entry.id.startsWith('tree') ? 800 : building ? 5000 : 300);
+      if (!entry.placeholder) {
+        const cap = modelPackConfig.models[entry.id]?.triangleCap;
+        expect(cap).toBeDefined();
+        expect(triangles).toBeLessThanOrEqual(cap!);
+      }
       asset.release();
     }
     manager.dispose();
+  });
+  it('keeps the imported models byte-identical to what the deterministic import script generates', async () => {
+    // Skips with a notice (exit 0) when the 283 MB source pack is absent, e.g. in CI.
+    const output = execFileSync('node', ['scripts/import-model-pack.mjs', '--check'], { encoding: 'utf8', timeout: 25_000 });
+    expect(output).toMatch(/--check PASS|bỏ qua/);
   });
   it('does not dispose shared GLB resources while retained handles exist', async () => {
     const manager = await setup(), first = manager.get('farmhouse'), second = manager.get('farmhouse');
