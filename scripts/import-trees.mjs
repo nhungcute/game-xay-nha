@@ -148,11 +148,12 @@ function decodePng(bytes) {
   return { width, height, rgba };
 }
 
-function encodePng(rgba, width, height) {
+function encodePng(rgba, width, height, subFilter = false) {
   const stride = width * 4, raw = Buffer.alloc((stride + 1) * height);
   for (let y = 0; y < height; y++) {
-    raw[y * (stride + 1)] = 0; // filter none — deterministic; these textures compress well enough
-    Buffer.from(rgba.buffer, rgba.byteOffset + y * stride, stride).copy(raw, y * (stride + 1) + 1);
+    raw[y * (stride + 1)] = subFilter ? 1 : 0;
+    if (subFilter) for (let x = 0; x < stride; x++) raw[y * (stride + 1) + 1 + x] = rgba[y * stride + x] - (x >= 4 ? rgba[y * stride + x - 4] : 0);
+    else Buffer.from(rgba.buffer, rgba.byteOffset + y * stride, stride).copy(raw, y * (stride + 1) + 1);
   }
   const idat = deflateSync(raw, { level: 9 });
   const crcTable = Array.from({ length: 256 }, (_, n) => {
@@ -176,6 +177,7 @@ function encodePng(rgba, width, height) {
   ihdr[8] = 8; ihdr[9] = 6; ihdr[10] = 0; ihdr[11] = 0; ihdr[12] = 0;
   return Buffer.concat([PNG_SIGNATURE, chunk('IHDR', ihdr), chunk('IDAT', idat), chunk('IEND', Buffer.alloc(0))]);
 }
+
 
 // ---------- pixel operations ----------
 
@@ -714,10 +716,13 @@ window.__capture = async (url, anglesDeg, size, light) => {
   const gl = renderer.getContext();
   const buffer = new Uint8Array(size * size * 4);
   const frames = [];
-  const elevation = light.elevationDeg * Math.PI / 180;
-  for (const yawDeg of anglesDeg) {
-    const yaw = yawDeg * Math.PI / 180;
-    camera.position.set(centre.x + Math.sin(yaw) * Math.cos(elevation) * 100, centre.y + Math.sin(elevation) * 100, centre.z + Math.cos(yaw) * Math.cos(elevation) * 100);
+  for (let frameIndex = 0; frameIndex < anglesDeg.length; frameIndex++) {
+    const yawDeg = anglesDeg[frameIndex];
+    const frameSide = frameIndex === 3 ? width * 0.74 : side;
+    camera.left = -frameSide / 2; camera.right = frameSide / 2; camera.top = frameSide / 2; camera.bottom = -frameSide / 2;
+    camera.updateProjectionMatrix();
+    const yaw = yawDeg * Math.PI / 180, frameElevation = (light.elevationsDeg?.[frameIndex] ?? light.elevationDeg) * Math.PI / 180;
+    camera.position.set(centre.x + Math.sin(yaw) * Math.cos(frameElevation) * 100, centre.y + Math.sin(frameElevation) * 100, centre.z + Math.cos(yaw) * Math.cos(frameElevation) * 100);
     camera.lookAt(centre);
     renderer.render(scene, camera);
     gl.readPixels(0, 0, size, size, gl.RGBA, gl.UNSIGNED_BYTE, buffer);
@@ -731,7 +736,7 @@ window.__capture = async (url, anglesDeg, size, light) => {
 /** Capture the near model from the configured horizontal angles. gl.readPixels rows start at the BOTTOM, so
  *  the readback is flipped and un-premultiplied (the buffer holds src*alpha over a transparent clear). */
 async function captureBillboards(browser, nearBytes, id) {
-  const { sizePx } = PARAMETERS.capture;
+  const sizePx = id.startsWith('bush_') ? 128 : PARAMETERS.capture.sizePx;
   const server = createServer(async (request, response) => {
     const url = new URL(request.url, 'http://localhost');
     const serve = (body, type = 'application/octet-stream') => { response.writeHead(200, { 'content-type': type }); response.end(body); };
@@ -752,7 +757,7 @@ async function captureBillboards(browser, nearBytes, id) {
     const page = await browser.newPage();
     await page.goto(`http://127.0.0.1:${port}/page.html`);
     const result = await page.evaluate(async ([modelId, angles, size, light]) => await window.__capture(`/model/${modelId}.glb`, angles, size, light),
-      [id, PARAMETERS.atlas.farAnglesDeg, sizePx, PARAMETERS.capture]);
+      [id, [...PARAMETERS.atlas.farAnglesDeg, 0], sizePx, { ...PARAMETERS.capture, elevationsDeg: [PARAMETERS.capture.elevationDeg, PARAMETERS.capture.elevationDeg, PARAMETERS.capture.elevationDeg, 90] }]);
     await page.close();
     return result.frames.map(b64 => {
       const raw = Buffer.from(b64, 'base64');
@@ -775,10 +780,10 @@ async function captureBillboards(browser, nearBytes, id) {
 
 /** Pack the captured frames into a 2×2 atlas; tile 3 duplicates tile 0 so the sampler never sees an empty tile. */
 function packFarAtlas(frames) {
-  const tile = PARAMETERS.capture.sizePx, size = tile * 2;
+  const tile = frames[0].width, size = tile * 2;
   const atlas = { width: size, height: size, rgba: new Uint8ClampedArray(size * size * 4) };
   frames.forEach((frame, k) => blit(atlas, frame, (k % 2) * tile, Math.floor(k / 2) * tile));
-  blit(atlas, frames[0], tile, tile);
+  blit(atlas, frames[3], tile, tile);
   return atlas;
 }
 
@@ -805,9 +810,9 @@ function validateFarFrames(id, frames) {
 function validateFarPng(id, png) {
   if (png.length < 8 * 1024) throw new Error(`${id}_far atlas PNG is too small: ${png.length} bytes (< 8192)`);
   const { width, rgba } = decodePng(png);
-  const tileSize = PARAMETERS.capture.sizePx;
+  const tileSize = id.startsWith('bush_') ? 128 : PARAMETERS.capture.sizePx;
   const tiles = [];
-  for (let tile = 0; tile < PARAMETERS.atlas.farAnglesDeg.length; tile++) {
+  for (let tile = 0; tile < 4; tile++) {
     const frame = { width: tileSize, height: tileSize, rgba: new Uint8ClampedArray(tileSize * tileSize * 4) };
     const x0 = (tile % 2) * tileSize, y0 = Math.floor(tile / 2) * tileSize;
     for (let y = 0; y < tileSize; y++) {
@@ -822,9 +827,9 @@ function validateFarPng(id, png) {
 /** 3 crossed planes (60° apart), each UV-mapped to one captured view; bottom edge at y=0.
  *  Atlas rows run top-down (flipY=false), so a tile's top edge is at v = row*0.5 and the plane's TOP vertex
  *  samples the capture's top (canopy). */
-function farGeometry(side) {
+function farGeometry(side, canopyWidth, tileSize) {
   const planes = PARAMETERS.atlas.farAnglesDeg.length;
-  const inset = 1 / PARAMETERS.capture.sizePx / 2; // half a capture texel
+  const inset = 1 / tileSize / 2; // half a capture texel
   const positions = [], normals = [], uvs = [], indices = [];
   for (let k = 0; k < planes; k++) {
     const angle = k * Math.PI / planes, cos = Math.cos(angle), sin = Math.sin(angle);
@@ -839,6 +844,11 @@ function farGeometry(side) {
     }
     indices.push(base, base + 1, base + 2, base, base + 2, base + 3);
   }
+  const top = positions.length / 3, y = side * 0.62, half = canopyWidth / 2;
+  for (const [x, z, u, v] of [[-half, -half, 0.5 + inset, 0.5 + inset], [half, -half, 1 - inset, 0.5 + inset], [half, half, 1 - inset, 1 - inset], [-half, half, 0.5 + inset, 1 - inset]]) {
+    positions.push(x, y, z); normals.push(0, 1, 0); uvs.push(u, v);
+  }
+  indices.push(top, top + 1, top + 2, top, top + 2, top + 3);
   return { positions: new Float32Array(positions), normals: new Float32Array(normals), uvs: new Float32Array(uvs), indices: new Uint32Array(indices) };
 }
 
@@ -868,9 +878,14 @@ async function buildAll() {
       const farAtlas = packFarAtlas(farFrames);
       // The capture fits the model into a square of this side length, so the billboard plane matches it 1:1.
       const farSide = Math.max(built.measured.canopyWidthM * built.measured.sxz, built.measured.sourceHeightM * built.measured.sy) * PARAMETERS.capture.margin;
-      const farPng = encodePng(farAtlas.rgba, farAtlas.width, farAtlas.height);
+      if (tree.family === 'bush') for (let i = 0; i < farAtlas.rgba.length; i += 4) {
+        farAtlas.rgba[i] = Math.round(farAtlas.rgba[i] / 32) * 32;
+        farAtlas.rgba[i + 1] = Math.round(farAtlas.rgba[i + 1] / 32) * 32;
+        farAtlas.rgba[i + 2] = Math.round(farAtlas.rgba[i + 2] / 32) * 32;
+      }
+      const farPng = encodePng(farAtlas.rgba, farAtlas.width, farAtlas.height, true);
       validateFarPng(tree.id, farPng);
-      const far = writeGlb({ ...farGeometry(farSide), png: farPng, alphaCutoff: PARAMETERS.alphaCutoff.far, generator: built.near.generator, unlit: tree.family === 'bush' });
+      const far = writeGlb({ ...farGeometry(farSide, built.measured.canopyWidthM * built.measured.sxz, farFrames[0].width), png: farPng, alphaCutoff: PARAMETERS.alphaCutoff.far, generator: built.near.generator, unlit: tree.family === 'bush' });
       const caps = PARAMETERS.triangleCaps[tree.family];
       if (built.near.triangles > caps.near) throw new Error(`${tree.id}: ${built.near.triangles} near triangles exceed the ${caps.near} cap`);
       if (far.triangles > caps.far) throw new Error(`${tree.id}: ${far.triangles} far triangles exceed the ${caps.far} cap`);
