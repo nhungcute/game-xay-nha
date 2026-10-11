@@ -77,3 +77,21 @@ describe('actual paid value of remaining roads', () => {
     expect(stateHash(s)).toBe(before);
   });
 });
+
+describe('removing roads refunds 50% of what was paid (docs/16 §5)', () => {
+  it('a player-built road returns half its paid value in cash; a free template road returns nothing', () => {
+    let s = state(); s = apply(s, 'BUILD_ROAD', { tier: 2, cells: [fresh] });
+    const before = s.snapshot.wallet.cash;
+    s = apply(s, 'REMOVE_ROAD', { cells: [fresh] });
+    expect(s.snapshot.wallet.cash - before).toBe(Math.floor(costValue(economy.roadTiers[2].cost) * economy.construction.refund));
+    const cash = s.snapshot.wallet.cash;
+    s = apply(s, 'REMOVE_ROAD', { cells: [natural] });
+    expect(s.snapshot.wallet.cash).toBe(cash);
+  });
+  it('build → remove never gains money', () => {
+    let s = state(); const start = s.snapshot.wallet.cash + s.snapshot.wallet.stone * economy.materialPrices.stone + s.snapshot.wallet.wood * economy.materialPrices.wood;
+    for (let i = 0; i < 3; i++) { s = apply(s, 'BUILD_ROAD', { tier: 3, cells: [fresh] }); s = apply(s, 'REMOVE_ROAD', { cells: [fresh] }); }
+    const end = s.snapshot.wallet.cash + s.snapshot.wallet.stone * economy.materialPrices.stone + s.snapshot.wallet.wood * economy.materialPrices.wood;
+    expect(end).toBeLessThan(start);
+  });
+});

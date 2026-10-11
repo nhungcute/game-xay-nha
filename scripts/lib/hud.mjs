@@ -11,12 +11,19 @@ export const syncText = page => page.evaluate(sel => document.querySelector(sel)
 export const waitSynced = (page, timeout = 20000) =>
   page.waitForFunction(sel => /Đã đồng bộ/.test(document.querySelector(sel)?.textContent ?? ''), SYNC, { timeout });
 
+/** The level-up card is modal; scripts acknowledge it like a player would. */
+export async function dismissLevelUp(page) {
+  const ok = page.locator('.levelup-card .primary');
+  if (await ok.isVisible().catch(() => false)) { await ok.click(); await page.waitForTimeout(150); }
+}
 async function openCategory(page, category, tap = false) {
+  await dismissLevelUp(page);
   const button = page.locator(`.hud3-cat[data-cat=${category}]`);
   if ((await button.getAttribute('aria-pressed')) !== 'true') await (tap ? button.tap() : button.click());
 }
 /** Choose a tool by its label ("Khám phá" returns to explore mode by closing the open category). */
 export async function pickTool(page, label, { tap = false } = {}) {
+  await dismissLevelUp(page);
   if (label === 'Khám phá' || label === 'Xây') {
     const open = page.locator('.hud3-cat[aria-pressed=true]');
     if (label === 'Khám phá') { if (await open.count()) await (tap ? open.first().tap() : open.first().click()); await page.keyboard.press('Escape'); return; }
@@ -48,10 +55,11 @@ export const hudBar = page => page.locator('.hud3-top');
 export const cameraButtons = page => page.locator('.hud3-controls button');
 /** Map switching lives in Settings. */
 export async function openSwitchMap(page) {
+  await dismissLevelUp(page);
   await page.locator('.hud3-status button[aria-label="Cài đặt"]').click();
   await page.locator('button[aria-label="Đổi bản đồ"]').click();
 }
-export async function openSettings(page) { await page.locator('.hud3-status button[aria-label="Cài đặt"]').click(); }
+export async function openSettings(page) { await dismissLevelUp(page); await page.locator('.hud3-status button[aria-label="Cài đặt"]').click(); }
 
 // ---------- D027 entry: username + PIN ----------
 /** Usernames are unique and the dev DB persists between runs: base (≤ 14 chars) + 5 digits. */

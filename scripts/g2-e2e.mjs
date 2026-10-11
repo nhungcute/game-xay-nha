@@ -4,7 +4,7 @@
  * Writes docs/evidence/g2/*.jpg and g2-e2e.json; exit code 1 on any failed check.
  */
 import { chromium } from '@playwright/test';
-import { SYNC, claimButton, hudBar, loginUI, materialsButton, pickBuilding, pickTool, syncText, uniqueName, waitSynced as hudSynced } from './lib/hud.mjs';
+import { SYNC, claimButton, dismissLevelUp, hudBar, loginUI, materialsButton, pickBuilding, pickTool, syncText, uniqueName, waitSynced as hudSynced } from './lib/hud.mjs';
 import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5191';
@@ -41,6 +41,7 @@ async function at(page, cell) {
   return p;
 }
 async function frame(page, cells, distance = 70) {
+  await dismissLevelUp(page);
   const xs = cells.map(c => c[0] * 2 + 1), zs = cells.map(c => c[1] * 2 + 1);
   await debug(page, 'camera', [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...zs) + Math.max(...zs)) / 2 + 6, distance, 0, 62]); await page.waitForTimeout(200);
 }

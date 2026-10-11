@@ -212,4 +212,6 @@ export class WorldStore {
   }
   dispose(): void { this.disposed = true; clearTimeout(this.retryTimer); this.cache.close(); this.listeners.clear(); }
 }
-export interface ToolPreview { command: Command | null; cells: import('@xay-nha/contracts').Cell[]; valid: boolean; warning: boolean; code?: ErrorCode; cost?: Cost }
+export interface ToolPreview { command: Command | null; cells: import('@xay-nha/contracts').Cell[]; valid: boolean; warning: boolean; code?: ErrorCode; cost?: Cost;
+  /** Extra consequence shown before confirming (e.g. buildings that would lose road access). */ note?: string;
+  /** Cells that are themselves the obstacle (drawn darker than the rest of an invalid preview). */ bad?: import('@xay-nha/contracts').Cell[] }

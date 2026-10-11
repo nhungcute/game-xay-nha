@@ -5,7 +5,7 @@
 // Usage: BASE_URL=http://127.0.0.1:8090 MINUTES=15 node scripts/g4-soak.mjs
 import { chromium } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { cameraButtons, claimButton, createOtherMapUI, materialsButton, openSettings, openSwitchMap, pickTool, profileButton, registerUI, uniqueName } from './lib/hud.mjs';
+import { cameraButtons, claimButton, dismissLevelUp, createOtherMapUI, materialsButton, openSettings, openSwitchMap, pickTool, profileButton, registerUI, uniqueName } from './lib/hud.mjs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8090', OUT = process.env.OUT ?? 'docs/evidence/g4/soak';
 const MINUTES = Number(process.env.MINUTES ?? 15), END = Date.now() + MINUTES * 60_000;
@@ -92,7 +92,7 @@ while (Date.now() < END) {
       await openSwitchMap(page); await create('farm', 'Thử Lâu Quê'); switched = true; count('map-switch');
       timeline.push({ minute: Number(elapsed.toFixed(1)), event: 'switched to farm', metrics: await metrics() });
     }
-    await steps[rnd(steps.length)]();
+    await dismissLevelUp(page); await steps[rnd(steps.length)]();
   } catch { count('step-skipped'); await page.keyboard.press('Escape').catch(() => {}); }
   await page.waitForTimeout(250 + rnd(600));
   if (++i % 100 === 0) { const m = await metrics(); timeline.push({ minute: Number(elapsed.toFixed(1)), revision: m.revision, fps: Math.round(m.fps), drawCalls: m.drawCalls, geometries: m.geometries, textures: m.textures, programs: m.programs, errors: errors.length }); console.log(JSON.stringify(timeline.at(-1))); }

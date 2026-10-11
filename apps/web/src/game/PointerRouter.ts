@@ -16,7 +16,7 @@ export class PointerRouter {
     canvas.addEventListener('contextmenu',event=>event.preventDefault(),options);
     canvas.addEventListener('pointerdown',this.down,options);canvas.addEventListener('pointermove',this.move,options);canvas.addEventListener('pointerup',this.up,options);canvas.addEventListener('pointercancel',this.cancel,options);
     canvas.addEventListener('wheel',event=>{event.preventDefault();rig.zoom(event.deltaY);useTools.setState({radial:null});},{...options,passive:false});
-    window.addEventListener('keydown',event=>{if((event.target as HTMLElement).matches('input,select,textarea'))return;this.keys.add(event.key.toLowerCase());if(event.key==='Escape')tools.cancel();if(['r','e'].includes(event.key.toLowerCase()))tools.rotate();if(event.key.toLowerCase()==='q')tools.rotate(-1);},options);
+    window.addEventListener('keydown',event=>{if((event.target as HTMLElement).matches('input,select,textarea'))return;this.keys.add(event.key.toLowerCase());if(event.key==='Escape')tools.escape();if(['r','e'].includes(event.key.toLowerCase()))tools.rotate();if(event.key.toLowerCase()==='q')tools.rotate(-1);},options);
     window.addEventListener('keyup',event=>this.keys.delete(event.key.toLowerCase()),options);window.addEventListener('blur',()=>{this.keys.clear();this.points.clear();this.origin=null;},options);
   }
   update(dt:number):void {const x=Number(this.keys.has('d'))-Number(this.keys.has('a')),z=Number(this.keys.has('s'))-Number(this.keys.has('w'));if(x||z)this.rig.pan(x*dt*350,z*dt*350);}

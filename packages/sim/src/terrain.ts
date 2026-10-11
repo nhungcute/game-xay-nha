@@ -2,7 +2,7 @@ import { CellFlag, GRID, Surface, VERTS, cellIndex, vertIndex, type Cell, type C
 import { economy } from '@xay-nha/content';
 import { addCost, event, guard, pay, rectCells, refund, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
 import { affectedVertexCells, corners, isShore, meanHeight, neighbors, slope, type SimState } from './state';
-import { forgetRoadPayment, recordRoadPayment } from './road-value';
+import { forgetRoadPayment, recordRoadPayment, roadPaidValue } from './road-value';
 
 function shoreValid(s: SimState, c: Cell, embanked: boolean): boolean {
   if (!isShore(s,c)) return true;
@@ -89,14 +89,18 @@ export function terrain(s: SimState, cmd: Command): Cost | undefined {
     pay(s,cost,true); if (changed.length) event(s,'ROAD','cells',changed.length); return cost;
   }
   if (cmd.type === 'REMOVE_ROAD') {
+    // docs/16 §5: removing any infrastructure refunds 50% — of what was actually paid for that cell (template roads: 0).
+    let paid = 0;
     for (const c of cmd.payload.cells) {
       requireEditable(s,c); const i = cellIndex(...c);
       guard(!(s.flags[i]! & CellFlag.ENTRY),'PROTECTED');
       guard(!s.snapshot.bridges.some(b => cellIndex(...b.a) === i || cellIndex(...b.b) === i),'BRIDGE_END_INVALID');
       guard(s.roadTier[i]! > 0,'CELL_BLOCKED');
+      paid += roadPaidValue(s, i);
       s.surface[i] = Surface.DIRT; s.roadTier[i] = 0;
       forgetRoadPayment(s, i);
     }
+    refund(s, { cash: paid, wood: 0, stone: 0 }, economy.construction.refund);
     return zeroCost();
   }
   if (cmd.type === 'EMBANK' || cmd.type === 'REMOVE_EMBANK') {

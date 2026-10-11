@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { cellIndex, type Cell, type CommandType, type Rotation } from '@xay-nha/contracts';
 import { catalog } from '@xay-nha/content';
-import { buildingAtCell, footprintCells, inBounds, meanHeight, validate } from '@xay-nha/sim';
+import { access, buildingAtCell, execute, footprintCells, inBounds, isUnlocked, meanHeight, validate } from '@xay-nha/sim';
+import { Surface } from '@xay-nha/contracts';
 import { WorldStore, type ToolPreview } from './WorldStore';
 import { errorText, t } from '../i18n';
 
@@ -29,6 +30,8 @@ export class ToolController {
   tap(cell:Cell):void {if(useTools.getState().tool!=='explore'||!inBounds(cell))return;const s=useTools.getState();useTools.setState({radial:s.selection?null:cell});}
   rotate(direction=1):void {const rotation=((useTools.getState().rotation+direction+4)%4) as Rotation;useTools.setState({rotation});this.refresh();}
   cancel():void {this.start=null;this.bridgeStart=null;this.path=[];useTools.setState({preview:null});}
+  /** Escape: first abandons a drag/bridge in progress, otherwise leaves the tool for explore mode. */
+  escape():void {if(this.start||this.bridgeStart){this.cancel();return;}this.choose('explore');}
   down(cell:Cell):void {
     if(!inBounds(cell))return;
     useTools.setState({radial:null});
@@ -51,14 +54,16 @@ export class ToolController {
   up(cell:Cell,touch:boolean):void {
     if(useTools.getState().tool==='explore')return;
     if(useTools.getState().tool==='bridge'&&!this.bridgeStart){this.bridgeStart=cell;this.start=null;this.world.message(t('selectEnd'));return;}
-    this.preview(cell);if(!touch)this.confirm();this.start=null;this.path=[];
+    // Desktop confirms on release, except demolition: destructive, it always waits for the ✓ button.
+    this.preview(cell);if(!touch&&useTools.getState().tool!=='demolish')this.confirm();this.start=null;this.path=[];
   }
   refresh():void {const cell=useTools.getState().cell;if(cell)this.preview(cell);}
   confirm():void {
     const preview=useTools.getState().preview;
     if(!preview?.command)return;
     const result=this.world.apply(preview.command.type,preview.command.payload);
-    if(result.result.accepted)this.cancel();else this.refresh();
+    // A placed building ends build mode, so a later click (e.g. on its coin) cannot buy a second one by accident.
+    if(result.result.accepted){if(preview.command.type==='PLACE_BUILDING')this.choose('explore');else this.cancel();}else this.refresh();
   }
   private preview(cell:Cell):void {
     const ui=useTools.getState(),s=this.world.state,start=this.start??cell;
@@ -80,7 +85,16 @@ export class ToolController {
     }
     if(!type){useTools.setState({preview:{command:null,cells,valid:false,warning:false}});return;}
     const command=this.world.command(type,payload),result=validate(s,command,this.world.now());
-    useTools.setState({preview:{command,cells,valid:result.valid,warning:result.valid&&warning,...(result.valid?{cost:result.cost}:{code:result.code})}});
+    let note:string|undefined,bad:Cell[]|undefined;
+    if(result.valid&&(type==='REMOVE_ROAD'||type==='REMOVE_BRIDGE'||type==='DEMOLISH')){
+      // Consequence preview: which working buildings would be cut off from the road network.
+      const next=execute(s,command,this.world.now()).state;
+      const cut=s.snapshot.buildings.filter(b=>b.status==='ACTIVE'&&access(s,b)>0&&next.snapshot.buildings.some(n=>n.id===b.id)&&!access(next,next.snapshot.buildings.find(n=>n.id===b.id)!)).length;
+      if(cut){note=`${cut} công trình sẽ mất đường nối và ngừng hoạt động.`;warning=true;}
+    }
+    if(!result.valid)bad=cells.filter(c=>{const i=cellIndex(...c),id=s.occupancy.get(i);
+      return !isUnlocked(s,c)||(type!=='CLEAR_ENV'&&type!=='DEMOLISH'&&type!=='HARVEST'&&!!id&&!(type==='REMOVE_ROAD'))||(type!=='BUILD_BRIDGE'&&type!=='EMBANK'&&s.surface[i]===Surface.WATER);});
+    useTools.setState({preview:{command,cells,valid:result.valid,warning:result.valid&&warning,...(result.valid?{cost:result.cost}:{code:result.code}),...(note?{note}:{}),...(bad?.length?{bad}:{})}});
     if(!result.valid)this.world.message(errorText(result.code),true);
   }
 }

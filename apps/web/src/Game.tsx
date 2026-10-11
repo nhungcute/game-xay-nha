@@ -6,7 +6,7 @@ import { AssetManager } from './game/assets/AssetManager';
 import { GameLoop } from './game/GameLoop';
 import { WorldStore, useWorld } from './game/WorldStore';
 import { useTools, type Tool } from './game/ToolController';
-import { duration, errorText, money, t } from './i18n';
+import { errorText, money, t } from './i18n';
 import { GameIcon } from './ui/GameIcon';
 import { useOverlayEdge } from './ui/useOverlayEdge';
 import { report } from './net/telemetry';
@@ -17,6 +17,8 @@ import { MissionPanel } from './ui/MissionPanel';
 import { CategoryBar, CategoryTray, categoryOf, type Category } from './ui/CategoryBar';
 import { RadialMenu, type RadialAction } from './ui/RadialMenu';
 import type { GamePanel } from './ui/panels';
+import { BuildingPanel } from './ui/BuildingPanel';
+import { LevelUpCard } from './ui/LevelUp';
 
 function GraphicsSettings({ quality, onChange }: { quality: 'high' | 'low' | undefined; onChange: (quality: 'high' | 'low') => void }) {
   return <div className="settings" role="group" aria-label={t('graphics')}><span>{t('graphics')}</span>
@@ -58,7 +60,7 @@ const HINTS: Record<string, { tool: Tool; text: string }> = {
   ROAD: { tool: 'road', text: 'Chọn Đường, kéo từ ô đường làng (điểm vào) tới bãi đất trống.' },
   TERRAFORM: { tool: 'terraform', text: 'Chọn Thiên nhiên → San nền → Phẳng, rồi kéo một vùng 2 × 2 ô.' },
   BUILD: { tool: 'build', text: 'Chọn Công trình, chọn một công trình, đặt cạnh đường.' },
-  COLLECT: { tool: 'explore', text: 'Chạm vào công trình có đồng xu vàng để thu tiền.' },
+  COLLECT: { tool: 'explore', text: 'Chạm vào ngôi nhà hoặc cửa hàng có đồng đô la xanh bay phía trên, rồi bấm Thu tiền.' },
   POPULATION: { tool: 'build', text: 'Xây thêm nhà ở cạnh đường để có thêm dân.' },
   UNLOCK_ZONE: { tool: 'zone', text: 'Chọn Tiện ích → Khu đất rồi chạm vào khu sát khu đã mở.' },
   EMBANK: { tool: 'embank', text: 'Chọn Đường → Kè rồi chạm vào các ô đất sát mép nước.' },
@@ -79,6 +81,9 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
   const [ready,setReady]=useState(false),[hideHints,setHideHints]=useState(skipped()),[loadingError,setLoadingError]=useState(''),[attempt,setAttempt]=useState(0),[panel,setPanel]=useState<GamePanel|null>(null),[stats,setStats]=useState<ReturnType<GameLoop['metrics']>|null>(null);
   const [missionsOpen,setMissionsOpen]=useState(()=>!matchMedia('(max-width:700px)').matches),[switchingMap,setSwitchingMap]=useState(false),[category,setCategory]=useState<Category|null>(null),[seen,setSeen]=useState(''),[zones,setZones]=useState(true);
   const {state,message,error,cacheStatus,connection,pending}=useWorld(),ui=useTools();
+  const [levelUp,setLevelUp]=useState<number|null>(null),seenLevel=useRef<number|null>(null);
+  // Show what a new level unlocks (G4 review) — only for levels gained while playing, not on load.
+  useEffect(()=>{const level=state?.snapshot.progress.level;if(level===undefined)return;if(seenLevel.current!==null&&level>seenLevel.current)setLevelUp(level);seenLevel.current=level;},[state?.snapshot.progress.level]);
   const hudRef=useOverlayEdge('--hud-bottom','bottom'),dockRef=useOverlayEdge('--dock-top','top');
   useEffect(()=>{
     let cancelled=false;let game:GameLoop|undefined;let world:WorldStore|undefined;let selection:BuildingSelection|undefined;const assets=new AssetManager();
@@ -92,7 +97,7 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
   },[attempt]);
   useEffect(()=>{if(!ready)return;const id=window.setInterval(()=>setStats(gameRef.current?.metrics()??null),1000);return()=>window.clearInterval(id);},[ready]);
   useEffect(()=>{if(ui.selection)setPanel(null);},[ui.selection]);
-  useEffect(()=>{const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){setPanel(null);useTools.setState({selection:null,radial:null});}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape);},[]);
+  useEffect(()=>{const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){setPanel(null);useTools.setState({selection:null,radial:null});setCategory(null);}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape);},[]);
   // Keep the bar's highlighted category in step with tools chosen elsewhere (hints, radial menu, keyboard).
   useEffect(()=>{if(ui.tool!=='explore'){const next=categoryOf(ui.tool,ui.buildingId);if(next)setCategory(next);}},[ui.tool,ui.buildingId]);
   const apply=(type:CommandType,payload:unknown)=>gameRef.current?.world.apply(type,payload);
@@ -165,11 +170,11 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
             <p className="hud3-panel-note">{status} · {cacheStatus||'—'}</p></>
           :panel==='notifications'?(alerts.length?<ul className="hud3-notes">{alerts.map(text=><li key={text}>{text}</li>)}</ul>:<p className="empty-inventory"><GameIcon name="mail"/>Chưa có thông báo mới.</p>)
           :panel==='people'?<div className="population-summary"><GameIcon name="people"/>{kind==='city'?<><strong>{populationAndJobs(state).population} cư dân</strong><p>{populationAndJobs(state).jobs} việc làm từ các công trình hiện có.</p><p>Xây thêm nhà để tăng dân số và đáp ứng nhân lực kinh doanh.</p></>:<><strong>{state.snapshot.crops.length}/{fieldQuota(state)} ô ruộng</strong><p>Nhà nông giúp mở rộng diện tích canh tác.</p></>}</div>
-          :panel==='materials'?(['wood','stone'] as const).map(material=><div className="item" key={material}><GameIcon name={material}/><span>{t(material)}</span>{[1,10].map(count=><button key={count} onClick={()=>apply('BUY_MATERIAL',{[material]:count})}>{t('buy')} {count}</button>)}</div>)
-          :Object.keys(state.snapshot.inventory).length?Object.entries(state.snapshot.inventory).map(([id,count])=><div className="item" key={id}><span>{t(catalog.items[id]?.nameKey??id)} × {count}</span><button disabled={!count} onClick={()=>apply('SELL',{items:{[id]:count}})}>{t('sell')} {money(count*(catalog.items[id]?.sellPrice??0))}</button></div>)
+          :panel==='materials'?(['wood','stone'] as const).map(material=><div className="item" key={material}><GameIcon name={material}/><span>{t(material)}</span>{[1,10,50].map(count=><button key={count} onClick={()=>apply('BUY_MATERIAL',{[material]:count})}>{t('buy')} {count}</button>)}</div>)
+          :Object.keys(state.snapshot.inventory).length?Object.entries(state.snapshot.inventory).filter(([,count])=>count>0).map(([id,count])=>{const price=catalog.items[id]?.sellPrice??0;return <div className="item" key={id}><span>{t(catalog.items[id]?.nameKey??id)} × {count}</span>{[1,10].filter(n=>n<count).map(n=><button key={n} onClick={()=>apply('SELL',{items:{[id]:n}})}>{t('sell')} {n}</button>)}<button onClick={()=>apply('SELL',{items:{[id]:count}})}>{t('sell')} hết · {money(count*price)}</button></div>;})
           :<p className="empty-inventory"><GameIcon name="inventory"/>Kho đang trống. Thu hoạch hoặc thu sản phẩm để thêm hàng vào kho.</p>}
       </aside>}
-      {object&&!panel&&<aside className="side panel building-detail" key={object.id}><button className="close" aria-label="Đóng bảng" onClick={()=>update({selection:null})}><GameIcon name="close"/></button><span className="building-detail-eyebrow">Công trình đang chọn</span><h2><GameIcon name={selected?'build':'bridge'}/>{selected?t(catalog.buildings[selected.defId]!.nameKey):'Cầu'}</h2><p className="building-status">{object.status==='CONSTRUCTING'?`${t('progress')} ${duration(object.buildEndsAt-state.snapshot.serverTime)}`:t('active')}</p>{object.status==='CONSTRUCTING'?<><button onClick={()=>apply('SPEED_UP',selected?{buildingId:object.id}:{bridgeId:object.id})}>{t('speed')}</button><button onClick={()=>apply('CANCEL_CONSTRUCTION',selected?{buildingId:object.id}:{bridgeId:object.id})}>{t('cancel')} · 100%</button></>:selected?<><p>{access(state,selected)?t('active'):t('noRoad')}</p>{catalog.buildings[selected.defId]?.baseRatePerHour?<><p>{t('income')} {money(state.rates[selected.id]??0)}/h · {t('waiting')} {money(selected.accrued??0)}</p><button disabled={(selected.accrued??0)<1} onClick={()=>apply('COLLECT',{buildingIds:[selected.id]})}>{t('collectMoney')}</button></>:null}{catalog.buildings[selected.defId]?.production?.recipes.map(id=><button key={id} onClick={()=>apply('START_PRODUCTION',{buildingId:selected.id,recipeId:id,count:1})}>{t('produce')} · {t(catalog.items[catalog.recipes[id]!.output]!.nameKey)}</button>)}{selected.slots&&<><button onClick={()=>apply('COLLECT_PRODUCTION',{buildingId:selected.id})}>{t('collect')}</button>{selected.slots.flat().map((job,index)=><p key={index}>{t(catalog.items[catalog.recipes[job.recipeId]!.output]!.nameKey)} · {duration(job.readyAt-state.snapshot.serverTime)}</p>)}</>}<button onClick={()=>apply('DEMOLISH',{buildingId:selected.id})}>{t('demolish')}</button></>:<button onClick={()=>apply('REMOVE_BRIDGE',{bridgeId:object.id})}>{t('remove')}</button>}</aside>}
+      {object&&!panel&&<BuildingPanel key={object.id} state={state} building={selected} bridge={bridge} apply={(type,payload)=>{apply(type,payload);}} onClose={()=>update({selection:null})}/>}
       <footer className="hud3-dock" ref={dockRef}>
         <div className="feedback"><span className={error?'error':''} role="status">{message||t('select')}</span><small>{cacheStatus}</small></div>
         {ui.tool!=='explore'&&<div className="tool-options panel"><strong>{ui.tool==='build'?t(catalog.buildings[ui.buildingId]?.nameKey??'build'):t(ui.tool)}</strong>
@@ -179,12 +184,13 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
           {['road','embank','bridge','till'].includes(ui.tool)&&<label><input type="checkbox" checked={ui.remove} onChange={e=>update({remove:e.target.checked})}/>{t('remove')}</label>}
           {ui.tool==='build'&&<><button onClick={()=>gameRef.current?.tools.rotate()}><GameIcon name="rotate"/>{t('rotate')} {ui.rotation*90}°</button><label><input type="checkbox" checked={ui.autoFlatten} onChange={e=>update({autoFlatten:e.target.checked})}/>San tự động</label></>}
           {ui.tool==='plant'&&<select value={ui.cropId} onChange={e=>update({cropId:e.target.value})}>{Object.values(catalog.crops).map(crop=><option key={crop.id} value={crop.id}>{t(crop.nameKey)} · {money(crop.seedCost)} · {t('level')} {crop.unlockLevel}</option>)}</select>}
-          <span className={`preview-cost ${preview?.valid?(preview.warning?'warning':'valid'):'error'}`}>{preview?.cost?<>{money(preview.cost.cash)} <GameIcon name="wood"/>{preview.cost.wood} <GameIcon name="stone"/>{preview.cost.stone}</>:preview?.code?errorText(preview.code):t('select')}</span><button className="primary" disabled={!preview?.valid} onClick={()=>gameRef.current?.tools.confirm()}><GameIcon name="confirm"/>{t('confirm')}</button><button onClick={()=>gameRef.current?.tools.cancel()}><GameIcon name="close"/>{t('cancel')}</button>
+          {preview?.note&&<span className="preview-note" role="alert">{preview.note}</span>}<span className={`preview-cost ${preview?.valid?(preview.warning?'warning':'valid'):'error'}`}>{preview?.cost?<>{money(preview.cost.cash)} <GameIcon name="wood"/>{preview.cost.wood} <GameIcon name="stone"/>{preview.cost.stone}</>:preview?.code?errorText(preview.code):t('select')}</span><button className="primary" disabled={!preview?.valid} onClick={()=>gameRef.current?.tools.confirm()}><GameIcon name="confirm"/>{t('confirm')}</button><button onClick={()=>gameRef.current?.tools.cancel()}><GameIcon name="close"/>{t('cancel')}</button>
         </div>}
         {category&&<CategoryTray state={state} category={category} tool={ui.tool} buildingId={ui.buildingId} hintTool={hint?.tool}
           onTool={tool=>choose(tool)} onBuilding={defId=>pickBuilding(defId)}/>}
         <CategoryBar kind={kind} active={category} hintCategory={hintCategory} onCategory={pickCategory} onMeasure={()=>undefined}/>
       </footer>
+      {levelUp!==null&&<LevelUpCard kind={kind} level={levelUp} onClose={()=>setLevelUp(null)}/>}
       {new URLSearchParams(location.search).get('debug')==='1'&&<pre className="debug">{stats?`${stats.fps.toFixed(1)} FPS · ${stats.drawCalls} calls · ${stats.triangles} triangles\nGPU objects ${stats.geometries} geometries / ${stats.textures} textures / ${stats.programs} programs\nZone ${stats.terrain.lastRebuildMs.toFixed(2)} ms · max ${stats.terrain.maxRebuildMs.toFixed(2)} ms · ${stats.terrain.zonesRebuilt} rebuilds · revision ${stats.revision}\nQueue ${stats.pending} · clock skew ${Math.round(stats.clockSkewMs)} ms · graphics ${stats.quality}\nCell ${ui.cell?.join(',')??'—'}`:''}</pre>}
     </>}
   </main>;

@@ -9,7 +9,7 @@
  * Writes docs/evidence/g3/e2e/*.jpg and g3-e2e.json. Exit code 1 on any failed check.
  */
 import { chromium, webkit, devices } from '@playwright/test';
-import { claimButton, createOtherMapUI, inventoryButton, loginUI, openSwitchMap, pickBuilding, pickTool, registerUI, uniqueName, waitSynced as hudSynced } from './lib/hud.mjs';
+import { claimButton, createOtherMapUI, dismissLevelUp, inventoryButton, loginUI, openSwitchMap, pickBuilding, pickTool, registerUI, uniqueName, waitSynced as hudSynced } from './lib/hud.mjs';
 import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5191';
@@ -31,6 +31,7 @@ const snap = page => debug(page, 'snapshot');
 const waitSynced = (page, timeout = 20000) => hudSynced(page, timeout);
 const tool = (page, label) => pickTool(page, label);
 async function frame(page, cells, distance = 70) {
+  await dismissLevelUp(page);
   const xs = cells.map(c => c[0] * 2 + 1), zs = cells.map(c => c[1] * 2 + 1);
   await debug(page, 'camera', [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...zs) + Math.max(...zs)) / 2 + 6, distance, 0, 62]); await page.waitForTimeout(200);
 }
@@ -46,7 +47,7 @@ async function claim(page, label) {
   const button = claimButton(page);
   await button.waitFor({ timeout: 20000 });
   const before = (await snap(page)).progress.questIndex;
-  await button.click(); await page.waitForTimeout(400);
+  await dismissLevelUp(page); await button.click(); await page.waitForTimeout(400); await dismissLevelUp(page);
   const after = (await snap(page)).progress.questIndex;
   check(`quest claimed: ${label}`, after === before + 1, { before, after });
 }
@@ -143,7 +144,7 @@ await tool(page, 'Thu hoạch'); await drag(page, [65, 73], [70, 73]);
 await claim(page, 'Thu hoạch');
 const inv = (await snap(page)).inventory;
 await inventoryButton(page).click();
-for (const b of await page.locator('aside.side.panel .item button', { hasText: 'Bán' }).all()) await b.click();
+for (let i = 0; i < 10 && await page.locator('aside.side.panel .item button', { hasText: 'Bán hết' }).count(); i++) { await page.locator('aside.side.panel .item button', { hasText: 'Bán hết' }).first().click(); await page.waitForTimeout(150); }
 await page.locator('aside.side.panel .close').click();
 await page.waitForTimeout(400); await waitSynced(page);
 const farmAfter = await snap(page);
