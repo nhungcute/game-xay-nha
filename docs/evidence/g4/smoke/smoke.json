@@ -1,13 +1,13 @@
 {
   "base": "http://127.0.0.1:8090",
-  "startedAt": "2026-10-11T08:24:46.864Z",
+  "startedAt": "2026-10-11T08:33:30.905Z",
   "health": "ok",
   "runs": {
     "chromium-desktop": {
       "maps": {
         "city": {
           "world": {
-            "worldId": "e3716954-5a3e-43ee-91ff-8be7a54a8449",
+            "worldId": "4332b442-eb9f-4afb-aa0d-746dff40039f",
             "mapId": "city-coast-01",
             "revision": 1,
             "wallet": {
@@ -21,22 +21,22 @@
             "buildings": [],
             "removed": []
           },
-          "mapScreenMs": 220,
+          "mapScreenMs": 222,
           "metrics": {
             "quality": "high",
             "muted": false,
             "musicOn": true,
             "pending": 0,
-            "clockSkewMs": -65,
-            "fps": 56.37982195845697,
+            "clockSkewMs": -33,
+            "fps": 56.767254257544074,
             "drawCalls": 150,
             "triangles": 173370,
             "geometries": 83,
             "textures": 1,
             "programs": 15,
             "terrain": {
-              "lastRebuildMs": 0.20000004768371582,
-              "maxRebuildMs": 1.2000000476837158,
+              "lastRebuildMs": 0.19999992847442627,
+              "maxRebuildMs": 1.0999999046325684,
               "zonesRebuilt": 128
             },
             "revision": 1
@@ -51,7 +51,7 @@
         },
         "farm": {
           "world": {
-            "worldId": "aef8e819-74f9-4ae6-81bb-f5fe2244c2fb",
+            "worldId": "0e96d6c8-e163-401d-9649-45962c91c130",
             "mapId": "farm-valley-01",
             "revision": 1,
             "wallet": {
@@ -65,22 +65,22 @@
             "buildings": [],
             "removed": []
           },
-          "mapScreenMs": 363,
+          "mapScreenMs": 385,
           "metrics": {
             "quality": "high",
             "muted": false,
             "musicOn": true,
             "pending": 0,
-            "clockSkewMs": -94,
-            "fps": 56.45800316957214,
+            "clockSkewMs": -39,
+            "fps": 56.52518841729474,
             "drawCalls": 168,
             "triangles": 186062,
             "geometries": 95,
             "textures": 1,
             "programs": 15,
             "terrain": {
-              "lastRebuildMs": 0,
-              "maxRebuildMs": 0.7999999523162842,
+              "lastRebuildMs": 0.10000002384185791,
+              "maxRebuildMs": 0.9000000953674316,
               "zonesRebuilt": 128
             },
             "revision": 1
@@ -101,7 +101,7 @@
       "maps": {
         "city": {
           "world": {
-            "worldId": "f647d4ed-8168-4372-9c5e-963ebdc5a0b6",
+            "worldId": "bd11ec26-4e8a-4c08-9ca5-145532777c40",
             "mapId": "city-coast-01",
             "revision": 1,
             "wallet": {
@@ -115,14 +115,14 @@
             "buildings": [],
             "removed": []
           },
-          "mapScreenMs": 173,
+          "mapScreenMs": 199,
           "metrics": {
             "quality": "low",
             "muted": false,
             "musicOn": true,
             "pending": 0,
             "clockSkewMs": -46,
-            "fps": 14.231499051233397,
+            "fps": 14.82213438735178,
             "drawCalls": 57,
             "triangles": 139052,
             "geometries": 57,
@@ -145,7 +145,7 @@
         },
         "farm": {
           "world": {
-            "worldId": "5ad9b0ee-7988-4eec-bac6-d9f526553dcb",
+            "worldId": "19daa935-3927-40c1-bd43-df4531e22c29",
             "mapId": "farm-valley-01",
             "revision": 1,
             "wallet": {
@@ -159,21 +159,21 @@
             "buildings": [],
             "removed": []
           },
-          "mapScreenMs": 1329,
+          "mapScreenMs": 1189,
           "metrics": {
             "quality": "low",
             "muted": false,
             "musicOn": true,
             "pending": 0,
-            "clockSkewMs": -80,
-            "fps": 18.06083650190114,
+            "clockSkewMs": -49,
+            "fps": 17.84037558685446,
             "drawCalls": 62,
             "triangles": 150284,
             "geometries": 62,
             "textures": 0,
             "programs": 14,
             "terrain": {
-              "lastRebuildMs": 1,
+              "lastRebuildMs": 0,
               "maxRebuildMs": 1.0000000000009095,
               "zonesRebuilt": 128
             },
@@ -192,5 +192,5 @@
       "loginOnAnotherDevice": true
     }
   },
-  "finishedAt": "2026-10-11T08:25:23.344Z"
+  "finishedAt": "2026-10-11T08:34:07.630Z"
 }
