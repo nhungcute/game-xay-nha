@@ -1,0 +1,433 @@
+{
+  "generatedBy": "scripts/import-trees.mjs",
+  "parameters": {
+    "nearLod": {
+      "count": 160,
+      "radiusM": 60
+    },
+    "farLod": {
+      "recomputeMoveM": 4,
+      "recomputeYawDeg": 10
+    },
+    "triangleCaps": {
+      "deciduous": {
+        "near": 1500,
+        "far": 32
+      },
+      "conifer": {
+        "near": 1500,
+        "far": 32
+      },
+      "bush": {
+        "near": 320,
+        "far": 16
+      }
+    },
+    "atlas": {
+      "leafSlotPx": 512,
+      "barkSlotPx": 128,
+      "farTilePx": 256,
+      "farAnglesDeg": [
+        0,
+        60,
+        120
+      ]
+    },
+    "alphaCutoff": {
+      "deciduous": 0.4,
+      "conifer": 0.44,
+      "bush": 0.4,
+      "far": 0.35
+    },
+    "deciduous": {
+      "source": "stylized_tree.glb",
+      "unitScale": 0.01,
+      "barkTargetTriangles": 350,
+      "cardScaleMax": 1.9,
+      "canopyMaxM": 3.2,
+      "seed": 53296,
+      "variants": [
+        {
+          "heightM": 4.2,
+          "hueShiftDeg": 65,
+          "saturation": 0.92,
+          "lightness": 1,
+          "taper": 1
+        },
+        {
+          "heightM": 4.7,
+          "hueShiftDeg": 85,
+          "saturation": 1,
+          "lightness": 0.96,
+          "taper": 0.94
+        },
+        {
+          "heightM": 5.15,
+          "hueShiftDeg": 105,
+          "saturation": 0.85,
+          "lightness": 1.06,
+          "taper": 1.06
+        },
+        {
+          "heightM": 5.6,
+          "hueShiftDeg": 0,
+          "saturation": 1,
+          "lightness": 1,
+          "taper": 1
+        }
+      ]
+    },
+    "conifer": {
+      "source": "fur_tree.glb",
+      "unitScale": 1,
+      "branchTargetTriangles": 1420,
+      "canopyMaxM": 2.6,
+      "seed": 53297,
+      "trunkBrightness": 1.1,
+      "variants": [
+        {
+          "heightM": 4.5,
+          "brightness": 1.15,
+          "hueShiftDeg": -4,
+          "taper": 1
+        },
+        {
+          "heightM": 5,
+          "brightness": 1.2,
+          "hueShiftDeg": 0,
+          "taper": 0.92
+        },
+        {
+          "heightM": 5.5,
+          "brightness": 1.17,
+          "hueShiftDeg": 6,
+          "taper": 1.06
+        },
+        {
+          "heightM": 6,
+          "brightness": 1.25,
+          "hueShiftDeg": 2,
+          "taper": 0.96
+        }
+      ]
+    },
+    "bush": {
+      "source": "small_bush.glb",
+      "unitScale": 1,
+      "canopyMaxM": 1.4,
+      "seed": 53298,
+      "baseBrightness": 1.6,
+      "variants": [
+        {
+          "heightM": 0.9,
+          "hueShiftDeg": -6,
+          "saturation": 1.05,
+          "lightness": 1,
+          "taper": 1
+        },
+        {
+          "heightM": 1,
+          "hueShiftDeg": 8,
+          "saturation": 1,
+          "lightness": 0.95,
+          "taper": 0.9
+        },
+        {
+          "heightM": 1.05,
+          "hueShiftDeg": 0,
+          "saturation": 0.9,
+          "lightness": 1.08,
+          "taper": 1.05
+        },
+        {
+          "heightM": 1.1,
+          "hueShiftDeg": 18,
+          "saturation": 1.1,
+          "lightness": 0.92,
+          "taper": 0.96
+        }
+      ]
+    },
+    "capture": {
+      "sizePx": 256,
+      "margin": 1.06,
+      "elevationDeg": 28
+    }
+  },
+  "credits": {
+    "stylized_tree": {
+      "title": "Stylized Tree",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40"
+    },
+    "fur_tree": {
+      "title": "Fur Tree",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7"
+    },
+    "small_bush": {
+      "title": "Small bush",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af"
+    }
+  },
+  "models": {
+    "tree_deciduous_01": {
+      "family": "deciduous",
+      "variant": 0,
+      "source": "stylized_tree.glb",
+      "title": "Stylized Tree",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "heightM": 4.2,
+      "canopyWidthM": 3.065,
+      "nearTriangles": 1500,
+      "nearBytes": 269692,
+      "farTriangles": 6,
+      "farBytes": 2872,
+      "farSideM": 4.452,
+      "atlas": "512×640",
+      "leafQuadsKept": 588,
+      "file": "apps/web/public/assets/models/env/tree_deciduous_01.glb",
+      "farFile": "apps/web/public/assets/models/env/tree_deciduous_01_far.glb"
+    },
+    "tree_deciduous_02": {
+      "family": "deciduous",
+      "variant": 1,
+      "source": "stylized_tree.glb",
+      "title": "Stylized Tree",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "heightM": 4.7,
+      "canopyWidthM": 3.2,
+      "nearTriangles": 1500,
+      "nearBytes": 269669,
+      "farTriangles": 6,
+      "farBytes": 2864,
+      "farSideM": 4.982,
+      "atlas": "512×640",
+      "leafQuadsKept": 588,
+      "file": "apps/web/public/assets/models/env/tree_deciduous_02.glb",
+      "farFile": "apps/web/public/assets/models/env/tree_deciduous_02_far.glb"
+    },
+    "tree_deciduous_03": {
+      "family": "deciduous",
+      "variant": 2,
+      "source": "stylized_tree.glb",
+      "title": "Stylized Tree",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "heightM": 5.15,
+      "canopyWidthM": 3.2,
+      "nearTriangles": 1500,
+      "nearBytes": 269586,
+      "farTriangles": 6,
+      "farBytes": 2868,
+      "farSideM": 5.459,
+      "atlas": "512×640",
+      "leafQuadsKept": 588,
+      "file": "apps/web/public/assets/models/env/tree_deciduous_03.glb",
+      "farFile": "apps/web/public/assets/models/env/tree_deciduous_03_far.glb"
+    },
+    "tree_deciduous_04": {
+      "family": "deciduous",
+      "variant": 3,
+      "source": "stylized_tree.glb",
+      "title": "Stylized Tree",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "heightM": 5.6,
+      "canopyWidthM": 3.2,
+      "nearTriangles": 1500,
+      "nearBytes": 269636,
+      "farTriangles": 6,
+      "farBytes": 2872,
+      "farSideM": 5.936,
+      "atlas": "512×640",
+      "leafQuadsKept": 588,
+      "file": "apps/web/public/assets/models/env/tree_deciduous_04.glb",
+      "farFile": "apps/web/public/assets/models/env/tree_deciduous_04_far.glb"
+    },
+    "tree_conifer_01": {
+      "family": "conifer",
+      "variant": 0,
+      "source": "fur_tree.glb",
+      "title": "Fur Tree",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "heightM": 4.5,
+      "canopyWidthM": 2.009,
+      "nearTriangles": 1456,
+      "nearBytes": 545812,
+      "farTriangles": 6,
+      "farBytes": 2868,
+      "farSideM": 4.77,
+      "atlas": "512×640",
+      "branchTriangles": 1420,
+      "file": "apps/web/public/assets/models/env-by-sa/tree_conifer_01.glb",
+      "farFile": "apps/web/public/assets/models/env-by-sa/tree_conifer_01_far.glb"
+    },
+    "tree_conifer_02": {
+      "family": "conifer",
+      "variant": 1,
+      "source": "fur_tree.glb",
+      "title": "Fur Tree",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "heightM": 5,
+      "canopyWidthM": 2.054,
+      "nearTriangles": 1456,
+      "nearBytes": 541208,
+      "farTriangles": 6,
+      "farBytes": 2872,
+      "farSideM": 5.3,
+      "atlas": "512×640",
+      "branchTriangles": 1420,
+      "file": "apps/web/public/assets/models/env-by-sa/tree_conifer_02.glb",
+      "farFile": "apps/web/public/assets/models/env-by-sa/tree_conifer_02_far.glb"
+    },
+    "tree_conifer_03": {
+      "family": "conifer",
+      "variant": 2,
+      "source": "fur_tree.glb",
+      "title": "Fur Tree",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "heightM": 5.5,
+      "canopyWidthM": 2.6,
+      "nearTriangles": 1456,
+      "nearBytes": 545786,
+      "farTriangles": 6,
+      "farBytes": 2872,
+      "farSideM": 5.83,
+      "atlas": "512×640",
+      "branchTriangles": 1420,
+      "file": "apps/web/public/assets/models/env-by-sa/tree_conifer_03.glb",
+      "farFile": "apps/web/public/assets/models/env-by-sa/tree_conifer_03_far.glb"
+    },
+    "tree_conifer_04": {
+      "family": "conifer",
+      "variant": 3,
+      "source": "fur_tree.glb",
+      "title": "Fur Tree",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "heightM": 6,
+      "canopyWidthM": 2.571,
+      "nearTriangles": 1456,
+      "nearBytes": 547195,
+      "farTriangles": 6,
+      "farBytes": 2868,
+      "farSideM": 6.36,
+      "atlas": "512×640",
+      "branchTriangles": 1420,
+      "file": "apps/web/public/assets/models/env-by-sa/tree_conifer_04.glb",
+      "farFile": "apps/web/public/assets/models/env-by-sa/tree_conifer_04_far.glb"
+    },
+    "bush_01": {
+      "family": "bush",
+      "variant": 0,
+      "source": "small_bush.glb",
+      "title": "Small bush",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "heightM": 0.9,
+      "canopyWidthM": 1.088,
+      "nearTriangles": 320,
+      "nearBytes": 197784,
+      "farTriangles": 6,
+      "farBytes": 2952,
+      "farSideM": 1.154,
+      "atlas": "512×512",
+      "file": "apps/web/public/assets/models/env/bush_01.glb",
+      "farFile": "apps/web/public/assets/models/env/bush_01_far.glb"
+    },
+    "bush_02": {
+      "family": "bush",
+      "variant": 1,
+      "source": "small_bush.glb",
+      "title": "Small bush",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "heightM": 1,
+      "canopyWidthM": 1.088,
+      "nearTriangles": 320,
+      "nearBytes": 193890,
+      "farTriangles": 6,
+      "farBytes": 2952,
+      "farSideM": 1.154,
+      "atlas": "512×512",
+      "file": "apps/web/public/assets/models/env/bush_02.glb",
+      "farFile": "apps/web/public/assets/models/env/bush_02_far.glb"
+    },
+    "bush_03": {
+      "family": "bush",
+      "variant": 2,
+      "source": "small_bush.glb",
+      "title": "Small bush",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "heightM": 1.05,
+      "canopyWidthM": 1.333,
+      "nearTriangles": 320,
+      "nearBytes": 199042,
+      "farTriangles": 6,
+      "farBytes": 2952,
+      "farSideM": 1.413,
+      "atlas": "512×512",
+      "file": "apps/web/public/assets/models/env/bush_03.glb",
+      "farFile": "apps/web/public/assets/models/env/bush_03_far.glb"
+    },
+    "bush_04": {
+      "family": "bush",
+      "variant": 3,
+      "source": "small_bush.glb",
+      "title": "Small bush",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "heightM": 1.1,
+      "canopyWidthM": 1.277,
+      "nearTriangles": 320,
+      "nearBytes": 200075,
+      "farTriangles": 6,
+      "farBytes": 2952,
+      "farSideM": 1.354,
+      "atlas": "512×512",
+      "file": "apps/web/public/assets/models/env/bush_04.glb",
+      "farFile": "apps/web/public/assets/models/env/bush_04_far.glb"
+    }
+  },
+  "coniferLicense": "CC-BY-SA-4.0",
+  "coniferLicenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "note": "Billboard captures render in headless Chrome on SwiftShader; a Chrome update can shift pixels — re-run the import to refresh byte-identical outputs."
+}
