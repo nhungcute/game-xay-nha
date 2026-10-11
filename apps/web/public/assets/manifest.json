@@ -4,291 +4,183 @@
   "assets": [
     {
       "id": "tree_deciduous_01",
-      "file": "models/tree_deciduous_01.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/tree_deciduous_01.glb",
+      "source": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.9910657546926611,
-          0,
-          -1.0724207034000062
-        ],
-        "max": [
-          1.1,
-          4.095,
-          1.0724207034000062
-        ]
-      },
-      "triangles": 66
+      "triangles": 1500,
+      "lod": {
+        "far": "tree_deciduous_01_far"
+      }
     },
     {
       "id": "tree_deciduous_02",
-      "file": "models/tree_deciduous_02.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/tree_deciduous_02.glb",
+      "source": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -1.0541335754458305,
-          0,
-          -1.1406656572527338
-        ],
-        "max": [
-          1.1700000000000002,
-          4.563,
-          1.1406656572527338
-        ]
-      },
-      "triangles": 66
+      "triangles": 1500,
+      "lod": {
+        "far": "tree_deciduous_02_far"
+      }
     },
     {
       "id": "tree_deciduous_03",
-      "file": "models/tree_deciduous_03.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/tree_deciduous_03.glb",
+      "source": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -1.117201396199,
-          0,
-          -1.2089106111054615
-        ],
-        "max": [
-          1.2400000000000002,
-          5.031,
-          1.2089106111054615
-        ]
-      },
-      "triangles": 66
+      "triangles": 1500,
+      "lod": {
+        "far": "tree_deciduous_03_far"
+      }
     },
     {
       "id": "tree_deciduous_04",
-      "file": "models/tree_deciduous_04.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/tree_deciduous_04.glb",
+      "source": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -1.1802692169521691,
-          0,
-          -1.277155564958189
-        ],
-        "max": [
-          1.31,
-          5.4990000000000006,
-          1.277155564958189
-        ]
-      },
-      "triangles": 66
+      "triangles": 1500,
+      "lod": {
+        "far": "tree_deciduous_04_far"
+      }
     },
     {
       "id": "tree_conifer_01",
-      "file": "models/tree_conifer_01.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env-by-sa/tree_conifer_01.glb",
+      "source": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.9910657546926611,
-          0,
-          -1.0724207034000062
-        ],
-        "max": [
-          1.1,
-          4.525,
-          1.0724207034000062
-        ]
-      },
-      "triangles": 66
+      "triangles": 1456,
+      "lod": {
+        "far": "tree_conifer_01_far"
+      }
     },
     {
       "id": "tree_conifer_02",
-      "file": "models/tree_conifer_02.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env-by-sa/tree_conifer_02.glb",
+      "source": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.9910657546926611,
-          0,
-          -1.0724207034000062
-        ],
-        "max": [
-          1.1,
-          4.745,
-          1.0724207034000062
-        ]
-      },
-      "triangles": 66
+      "triangles": 1456,
+      "lod": {
+        "far": "tree_conifer_02_far"
+      }
     },
     {
       "id": "tree_conifer_03",
-      "file": "models/tree_conifer_03.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env-by-sa/tree_conifer_03.glb",
+      "source": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.9910657546926611,
-          0,
-          -1.0724207034000062
-        ],
-        "max": [
-          1.1,
-          4.965,
-          1.0724207034000062
-        ]
-      },
-      "triangles": 66
+      "triangles": 1456,
+      "lod": {
+        "far": "tree_conifer_03_far"
+      }
     },
     {
       "id": "tree_conifer_04",
-      "file": "models/tree_conifer_04.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env-by-sa/tree_conifer_04.glb",
+      "source": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.9910657546926611,
-          0,
-          -1.0724207034000062
-        ],
-        "max": [
-          1.1,
-          5.1850000000000005,
-          1.0724207034000062
-        ]
-      },
-      "triangles": 66
+      "triangles": 1456,
+      "lod": {
+        "far": "tree_conifer_04_far"
+      }
     },
     {
       "id": "bush_01",
-      "file": "models/bush_01.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/bush_01.glb",
+      "source": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.6757266509268144,
-          0,
-          -0.7311959341363677
-        ],
-        "max": [
-          0.75,
-          1,
-          0.7311959341363677
-        ]
-      },
-      "triangles": 40
+      "triangles": 320,
+      "lod": {
+        "far": "bush_01_far"
+      }
     },
     {
       "id": "bush_02",
-      "file": "models/bush_02.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/bush_02.glb",
+      "source": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.6757266509268144,
-          0,
-          -0.7311959341363677
-        ],
-        "max": [
-          0.75,
-          1,
-          0.7311959341363677
-        ]
-      },
-      "triangles": 40
+      "triangles": 320,
+      "lod": {
+        "far": "bush_02_far"
+      }
     },
     {
       "id": "bush_03",
-      "file": "models/bush_03.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/bush_03.glb",
+      "source": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.6757266509268144,
-          0,
-          -0.7311959341363677
-        ],
-        "max": [
-          0.75,
-          1,
-          0.7311959341363677
-        ]
-      },
-      "triangles": 40
+      "triangles": 320,
+      "lod": {
+        "far": "bush_03_far"
+      }
     },
     {
       "id": "bush_04",
-      "file": "models/bush_04.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/bush_04.glb",
+      "source": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.6757266509268144,
-          0,
-          -0.7311959341363677
-        ],
-        "max": [
-          0.75,
-          1,
-          0.7311959341363677
-        ]
-      },
-      "triangles": 40
+      "triangles": 320,
+      "lod": {
+        "far": "bush_04_far"
+      }
     },
     {
       "id": "rock_01",
@@ -1621,6 +1513,150 @@
         ]
       },
       "triangles": 144
+    },
+    {
+      "id": "tree_deciduous_01_far",
+      "file": "models/env/tree_deciduous_01_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "tree_deciduous_02_far",
+      "file": "models/env/tree_deciduous_02_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "tree_deciduous_03_far",
+      "file": "models/env/tree_deciduous_03_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "tree_deciduous_04_far",
+      "file": "models/env/tree_deciduous_04_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "author": "Aki (https://sketchfab.com/Akishaqs)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "tree_conifer_01_far",
+      "file": "models/env-by-sa/tree_conifer_01_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "tree_conifer_02_far",
+      "file": "models/env-by-sa/tree_conifer_02_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "tree_conifer_03_far",
+      "file": "models/env-by-sa/tree_conifer_03_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "tree_conifer_04_far",
+      "file": "models/env-by-sa/tree_conifer_04_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "author": "Harri Jones (https://sketchfab.com/HarriJones23)",
+      "license": "CC-BY-SA-4.0",
+      "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "bush_01_far",
+      "file": "models/env/bush_01_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "bush_02_far",
+      "file": "models/env/bush_02_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "bush_03_far",
+      "file": "models/env/bush_03_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
+    },
+    {
+      "id": "bush_04_far",
+      "file": "models/env/bush_04_far.glb",
+      "category": "environment",
+      "source": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "author": "yanix (https://sketchfab.com/yanix)",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
+      "modified": true,
+      "placeholder": false,
+      "triangles": 6
     }
   ]
 }
