@@ -174,18 +174,20 @@ Deploy ná»™i bá»™ sau khi QA Ä‘áº¡t: `pnpm db:backup` (`/backups/xaynha-20261011
 `/assets/models/env/tree_deciduous_01.glb` tráº£ **200** (269.692 bytes â€” Ä‘Ãºng báº£n D030), `/_glb-viewer.html` tráº£
 **404** âœ“. TrÆ°á»›c deploy `git status --short` chá»‰ cÃ²n `map/` vÃ  `docs/evidence/review/` chÆ°a track âœ“.
 
-## 10. D030-fix2 — t?m ngang nhìn t? trên
 
-Vòng fix2 thay tile 3 trùng tile 0 b?ng ?nh ch?p top-down, thêm m?t quad ngang t?i kho?ng 62% chi?u cao tán và tang far LOD t? 6 lên 8 tam giác (v?n m?t mesh, m?t draw call). B?i dùng tile 128 px, PNG Sub filter và lu?ng t? màu nh?; far GLB còn 22.040–23.040 byte, nh? hon near và du?i 60 KB. Alpha coverage b?n tile d?u trong 10–80%.
+## 10. D030-fix2 ? t?m ngang nh?n t? tr?n
 
-| Map/góc | Tru?c fix2 | Sau fix2 | K?t qu? |
-|---|---:|---:|---|
-| city oblique-45 | 0,728 | 0,944 | PASS |
-| city overview-75 | 0,614 | 1,153 | PASS |
-| farm oblique-45 | 0,657 | 0,854 | PASS |
-| farm overview-75 | 0,543 | 1,108 | PASS |
+**K?t qu?: PASS.** Tile th? t? ???c ch?p top-down, th?m quad ngang t?i 62% chi?u cao t?n. Far LOD c? 8 tam gi?c, m?t mesh, m?t draw call. B?i d?ng tile 128 px; far GLB 22.040?23.040 byte, d??i 60 KB v? nh? h?n near. Alpha coverage b?n tile ??t 10?80%.
 
-`g4-full-world` sau fix2: city/farm checks d?u true; ?nh và `render.json` du?c sinh l?i. Deploy chua th?c hi?n trong vòng này; local Docker/tunnel byte verification và smoke còn PENDING.
+| B?n ??/g?c | Tr??c fix2 | Sau fix2 |
+|---|---:|---:|
+| City oblique-45 | 0,728 | 0,944 PASS |
+| City overview-75 | 0,614 | 1,153 PASS |
+| Farm oblique-45 | 0,657 | 0,854 PASS |
+| Farm overview-75 | **0,543 FAIL** | 1,108 PASS |
 
-Các nh?n d?nh sai c?a vòng tru?c dã s?a: farm overview 0,543 du?c ghi rõ FAIL; ph?n deploy cu du?c thay b?ng tr?ng thái PENDING th?c t?.
+G4 full-world sau fix2: city low overview 108 calls / 413.708 tris / 59 FPS; farm low overview 104 / 137.478 / 59 FPS; m?i checks true. Tree LOD 4/4 PASS, API 33/33, G2 13/13, G3 26/26, pnpm check PASS (725 tests), tree-shots 31 ?nh. G4 smoke PASS desktop Chromium v? iPhone 13 WebKit, kh?ng l?i console/page/HTTP.
 
+Deploy n?i b? PASS: backup `xaynha-20261011-133212.dump`; local/Docker/tunnel kh?p: deciduous 174.027 byte, conifer 212.627, bush 23.040; `/_glb-viewer.html` tr? 404. Nh?n ??nh farm overview 0,543 v? ph?n deploy c? ?? ???c s?a r? trong v?ng n?y.
+
+Commit fix2: `b0c4746`, `e8b3c81`, `44593f1`, `b6358ae`, `9b42243`, `b1a0807`. Fix1: `c7c5194`, `1f81008`, `fc1a820`, `6f05d66`. D030 g?c: `8e702ef`, `5a0c873`, `a27a0fd`, `2aff8c6`.
