@@ -321,27 +321,49 @@ async function simplify(welded, error, targetTriangles = welded.indices.length /
   const steps = [];
   for (let attempt = error; attempt < 1; attempt *= 2) steps.push(attempt);
   steps.push(1); // the last resort always tries the coarsest error
-  let best = null;
-  for (const attempt of steps) {
-    for (const flags of [['LockBorder', ...extraFlags], ['LockBorder', 'Permissive', ...extraFlags]]) {
-      try {
-        const simplifier = await getSimplifier();
-        await simplifier.ready;
-        const [indices] = simplifier.simplifyWithAttributes(
-          welded.indices, welded.positions, 3, attributes, 3, SIMPLIFY_WEIGHTS, null,
-          target, attempt, flags); // target 0 = reduce purely until the error budget is spent
-        if (process.env.IMPORT_DEBUG) console.error(`[simplify] src ${welded.indices.length / 3} -> ${indices.length / 3} tris @err ${attempt} TARGET ${target} (targetTriangles ${targetTriangles}) flags ${flags.join('+')} return=${indices.length / 3 <= target || target === 0}`);
-        if (indices.length / 3 <= targetTriangles || targetTriangles === 0) return { indices, error: attempt, flags: flags.join('+') };
-        if (!best || indices.length < best.indices.length) best = { indices, error: attempt, flags: flags.join('+') };
-      } catch {
-        // an aborted WASM instance keeps aborting — swap in a fresh one and retry the same step
-        simplifierInstance = null;
-        await getSimplifier(true);
+
+  const hasWindows = welded.windows.some(v => v > 0);
+  const vertexLock = hasWindows ? new Uint8Array(welded.positions.length / 3) : null;
+  if (vertexLock) {
+    for (let i = 0; i < vertexLock.length; i++) if (welded.windows[i] > 0) vertexLock[i] = 1;
+  }
+
+  async function runAttempt(lock) {
+    let best = null;
+    for (const attempt of steps) {
+      for (const flags of [['LockBorder', ...extraFlags], ['LockBorder', 'Permissive', ...extraFlags]]) {
+        try {
+          const simplifier = await getSimplifier();
+          await simplifier.ready;
+          const [indices] = simplifier.simplifyWithAttributes(
+            welded.indices, welded.positions, 3, attributes, 3, SIMPLIFY_WEIGHTS, lock,
+            target, attempt, flags); // target 0 = reduce purely until the error budget is spent
+          if (process.env.IMPORT_DEBUG) console.error(`[simplify] src ${welded.indices.length / 3} -> ${indices.length / 3} tris @err ${attempt} TARGET ${target} (targetTriangles ${targetTriangles}) flags ${flags.join('+')} lock=${lock ? 'window' : 'none'} return=${indices.length / 3 <= target || target === 0}`);
+          if (indices.length / 3 <= targetTriangles || targetTriangles === 0) return { indices, error: attempt, flags: flags.join('+') };
+          if (!best || indices.length < best.indices.length) best = { indices, error: attempt, flags: flags.join('+') };
+        } catch {
+          // an aborted WASM instance keeps aborting — swap in a fresh one and retry the same step
+          simplifierInstance = null;
+          await getSimplifier(true);
+        }
       }
     }
+    if (best) return { ...best, error: 1 }; // locked borders keep the mesh above the target even at error 1
+    throw new Error(`simplifier failed for every error step up to ${error} after ${simplifierReloads} instance reloads (source ${welded.indices.length / 3} tris / ${welded.positions.length / 3} verts)`);
   }
-  if (best) return { ...best, error: 1 }; // locked borders keep the mesh above the target even at error 1
-  throw new Error(`simplifier failed for every error step up to ${error} after ${simplifierReloads} instance reloads (source ${welded.indices.length / 3} tris / ${welded.positions.length / 3} verts)`);
+
+  const result = await runAttempt(null);
+  if (hasWindows) {
+    let retainedWindows = 0;
+    for (let i = 0; i < result.indices.length; i++) {
+      if (welded.windows[result.indices[i]] > 0) retainedWindows++;
+    }
+    if (retainedWindows === 0 && vertexLock) {
+      if (process.env.IMPORT_DEBUG) console.error(`[simplify] window vertices lost, retrying with vertexLock`);
+      return await runAttempt(vertexLock);
+    }
+  }
+  return result;
 }
 
 /** Non-indexed triangles with one flat normal per face (low-poly look, no smoothing seams). */
@@ -497,6 +519,8 @@ async function buildAll() {
     const primitives = collectPrimitives(parsed.json, parsed.binary);
     const materials = parsed.json.materials ?? [];
     const windowCount = tagWindows(primitives, materials);
+    const glassFaces = primitives.filter(primitive => materialColor(materials, primitive.material).glass).reduce((sum, primitive) => sum + primitive.indices.length / 3, 0);
+    if (glassFaces > 0 && windowCount === 0) throw new Error(`${gameId}: source contains glass faces but produced zero windows`);
     const policies = GROUP_POLICIES[gameId] ?? {};
     const cap = triangleCap(catalog.buildings[gameId].size, gameId);
     // Models with group policies take the per-group pipeline (weld → per-group simplify → merge, then a
@@ -594,12 +618,20 @@ async function buildAll() {
     const baseline = GATE_EXCEPTIONS[gameId];
     // IMPORT_MEASURE=1 calibrates baselines: prints counts without failing (see GATE_EXCEPTIONS).
     if (gate.count > (baseline?.max ?? 0) && process.env.IMPORT_MEASURE !== '1') throw new Error(`${gameId}: ${gate.count} floating components exceed the baseline ${baseline?.max ?? 0}${baseline ? ` (${baseline.reason})` : ''} — raise the budget or preserve the supporting group`);
+    const outputWindows = new Set();
+    for (let i = 0; i < fitted.windows.length; i++) {
+      if (fitted.windows[i] > 0) outputWindows.add(Math.round(fitted.windows[i] * windowCount));
+    }
+    const outputWindowCount = outputWindows.size;
+    if (windowCount > 0 && outputWindowCount === 0) {
+      throw new Error(`${gameId}: source contains ${windowCount} windows but produced zero window vertices in output`);
+    }
     const dropped = [...new Set(primitives.map(primitive => primitive.group))].filter(group => (policies[group] ? policies[group].drop : ALWAYS_DROP.includes(group)));
     config.models[gameId] = {
       source, world, droppedGroups: dropped,
       triangleCap: cap, triangles: glb.triangles,
       sourceTriangles: primitives.reduce((sum, p) => sum + p.indices.length / 3, 0),
-      windowCount,
+      windowCount: outputWindowCount,
       rotationYDeg: 180, scale: +fitted.scale.toFixed(6),
       centerOffsetM: fitted.centerOffset.map(value => +value.toFixed(6)),
       sizeAfterM: fitted.sizeAfter.map(value => +value.toFixed(6)),
@@ -654,6 +686,6 @@ if (CHECK) {
   }
   console.log(`Imported ${outputs.length} models into ${OUT_DIR}:`);
   for (const [gameId, model] of Object.entries(config.models)) {
-    console.log(`  ${gameId.padEnd(16)} ${String(model.triangles).padStart(5)}/${model.triangleCap} tris  scale ${model.scale}  size ${model.sizeAfterM.map(v => v.toFixed(2)).join('×')}m  ${Math.round(model.bytes / 1024)} KB${model.droppedGroups.length ? `  dropped: ${model.droppedGroups.join(',')}` : ''}`);
+    console.log(`  ${gameId.padEnd(16)} ${String(model.triangles).padStart(5)}/${model.triangleCap} tris  windows ${String(model.windowCount).padStart(3)}  scale ${model.scale}  size ${model.sizeAfterM.map(v => v.toFixed(2)).join('×')}m  ${Math.round(model.bytes / 1024)} KB${model.droppedGroups.length ? `  dropped: ${model.droppedGroups.join(',')}` : ''}`);
   }
 }

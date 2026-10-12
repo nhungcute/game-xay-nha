@@ -667,7 +667,7 @@
       "triangleCap": 3500,
       "triangles": 1598,
       "sourceTriangles": 17340,
-      "windowCount": 70,
+      "windowCount": 64,
       "rotationYDeg": 180,
       "scale": 0.681481,
       "centerOffsetM": [
@@ -1150,7 +1150,7 @@
         "LANDSCAPE_OPTIONAL"
       ],
       "triangleCap": 2500,
-      "triangles": 2324,
+      "triangles": 2340,
       "sourceTriangles": 17608,
       "windowCount": 2,
       "rotationYDeg": 180,
@@ -1169,9 +1169,19 @@
         3,
         3
       ],
-      "bytes": 217308,
-      "floatingComponents": 0,
+      "bytes": 218796,
+      "floatingComponents": 1,
       "floatingBaseline": 1,
+      "floatingDetails": [
+        {
+          "size": [
+            0.234,
+            0.33,
+            0.033
+          ],
+          "base": 3.27
+        }
+      ],
       "groups": {
         "CONICAL_ROOF": {
           "action": "simplify",
@@ -1181,7 +1191,7 @@
         },
         "DOORS_WINDOWS": {
           "action": "simplify",
-          "triangles": 8,
+          "triangles": 24,
           "error": 1,
           "budgetShare": 8
         },
