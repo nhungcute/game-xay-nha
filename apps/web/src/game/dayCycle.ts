@@ -22,6 +22,8 @@ export interface LightingState {
   fogColor: string;
   exposure: number;
   sunDirection: readonly [number, number, number];
+  /** Linear RGB multiplier for unlit (MeshBasic) materials so they darken like lit surfaces; exactly 1 by day. */
+  unlitTint: readonly [number, number, number];
 }
 
 const DAY = {
@@ -54,6 +56,24 @@ function mixHex(a: string, b: string, amount: number): string {
   return `#${left.map((channel, index) => Math.round(channel + (right[index]! - channel) * amount).toString(16).padStart(2, '0')).join('')}`;
 }
 
+function linearRgb(hex: string): [number, number, number] {
+  return [1, 3, 5].map(index => {
+    const channel = Number.parseInt(hex.slice(index, index + 2), 16) / 255;
+    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+  }) as [number, number, number];
+}
+
+/** Sun incidence used to weigh sun against sky light on a typical lit surface (upward-facing, sun ~53° high). */
+const REFERENCE_SUN_COS = 0.8;
+
+/** Per-channel diffuse irradiance a lit surface receives: sun × incidence + hemisphere sky (three's Lambert terms). */
+function irradiance(sunColor: string, sunIntensity: number, skyColor: string, hemisphereIntensity: number): [number, number, number] {
+  const sun = linearRgb(sunColor), sky = linearRgb(skyColor);
+  return [0, 1, 2].map(channel => sun[channel]! * sunIntensity * REFERENCE_SUN_COS + sky[channel]! * hemisphereIntensity) as [number, number, number];
+}
+
+const DAY_IRRADIANCE = irradiance(DAY.sunColor, DAY.sunIntensity, DAY.hemisphereSkyColor, DAY.hemisphereIntensity);
+
 /** Pure, continuous day/night curve used by both the renderer and QA tests. */
 export function lighting(hour: number, mode: TimeOfDayMode = 'auto'): LightingState {
   const normalizedHour = ((hour % 24) + 24) % 24;
@@ -61,17 +81,21 @@ export function lighting(hour: number, mode: TimeOfDayMode = 'auto'): LightingSt
   const blend = night;
   const phase = normalizedHour / 24 * Math.PI * 2;
   const elevation = Math.max(0.2, Math.cos((normalizedHour - 12) / 12 * Math.PI) * 0.8 + 0.2);
+  const sunColor = mixHex(DAY.sunColor, NIGHT.sunColor, blend);
+  const sunIntensity = DAY.sunIntensity + (NIGHT.sunIntensity - DAY.sunIntensity) * blend;
+  const hemisphereSkyColor = mixHex(DAY.hemisphereSkyColor, NIGHT.hemisphereSkyColor, blend);
+  const hemisphereIntensity = DAY.hemisphereIntensity + (NIGHT.hemisphereIntensity - DAY.hemisphereIntensity) * blend;
+  const current = irradiance(sunColor, sunIntensity, hemisphereSkyColor, hemisphereIntensity);
   return {
     hour: normalizedHour, night,
-    sunColor: mixHex(DAY.sunColor, NIGHT.sunColor, blend),
-    sunIntensity: DAY.sunIntensity + (NIGHT.sunIntensity - DAY.sunIntensity) * blend,
-    hemisphereSkyColor: mixHex(DAY.hemisphereSkyColor, NIGHT.hemisphereSkyColor, blend),
+    sunColor, sunIntensity, hemisphereSkyColor,
     hemisphereGroundColor: mixHex(DAY.hemisphereGroundColor, NIGHT.hemisphereGroundColor, blend),
-    hemisphereIntensity: DAY.hemisphereIntensity + (NIGHT.hemisphereIntensity - DAY.hemisphereIntensity) * blend,
+    hemisphereIntensity,
     backgroundColor: mixHex(DAY.backgroundColor, NIGHT.backgroundColor, blend),
     fogColor: mixHex(DAY.fogColor, NIGHT.fogColor, blend),
     exposure: DAY.exposure + (NIGHT.exposure - DAY.exposure) * blend,
     sunDirection: [Math.cos(phase) * 50, Math.max(8, elevation * 90), Math.sin(phase) * 40],
+    unlitTint: blend === 0 ? [1, 1, 1] : current.map((value, channel) => value / DAY_IRRADIANCE[channel]!) as [number, number, number],
   };
 }
 

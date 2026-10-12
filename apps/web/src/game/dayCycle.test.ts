@@ -50,6 +50,22 @@ describe('day/night lighting', () => {
     expect(lighting(25).night).toBe(lighting(1).night);
     expect(lighting(48 + 13).night).toBe(lighting(13).night);
   });
+  it('tints unlit materials like lit surfaces: neutral by day, dark moonlit blue at night, monotonic at dusk', () => {
+    expect(lighting(13).unlitTint).toEqual([1, 1, 1]);
+    expect(lighting(22, 'day').unlitTint).toEqual([1, 1, 1]);
+    const [red, green, blue] = lighting(22).unlitTint;
+    // Lit terrain measured ~11% of its 13:00 luminance at 22:00; unlit foliage must follow, not stay at ~57%.
+    expect(0.2126 * red + 0.7152 * green + 0.0722 * blue).toBeGreaterThan(0.05);
+    expect(0.2126 * red + 0.7152 * green + 0.0722 * blue).toBeLessThan(0.2);
+    expect(blue).toBeGreaterThan(green); expect(green).toBeGreaterThan(red);
+    expect(lighting(12, 'night').unlitTint).toEqual(lighting(22).unlitTint);
+    let previous = 1;
+    for (let hour = 17; hour <= 19; hour += 0.25) {
+      const luma = lighting(hour).unlitTint[1];
+      expect(luma).toBeLessThanOrEqual(previous + 1e-9);
+      previous = luma;
+    }
+  });
   it('computes hour from timestamp accurately', () => {
     // 2026-10-12T13:30:00 local time
     const date = new Date(2026, 9, 12, 13, 30, 0);

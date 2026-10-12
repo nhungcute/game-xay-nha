@@ -37,11 +37,18 @@ export function notifications(state: State): string[] {
   return items;
 }
 
+/** HUD clock icon: follows the scene's time-of-day lighting when known (forced day/night modes included),
+ *  else the server hour. */
+export function clockIcon(hour: number, night?: number): 'sun' | 'moon' {
+  return (night === undefined ? hour < 6 || hour >= 18 : night > 0.5) ? 'moon' : 'sun';
+}
 interface TopBarProps {
   state: State; panel: GamePanel | null; status: string; connected: boolean; unread: boolean; canCollect: boolean;
+  /** Scene night factor (0 day … 1 night) from the time-of-day lighting; the icon follows the scene, not the server clock. */
+  night?: number;
   onPanel: (panel: GamePanel) => void; onCollect: () => void; onMeasure: (element: HTMLElement | null) => void;
 }
-export function TopBar({ state, panel, status, connected, unread, canCollect, onPanel, onCollect, onMeasure }: TopBarProps) {
+export function TopBar({ state, panel, status, connected, unread, canCollect, night, onPanel, onCollect, onMeasure }: TopBarProps) {
   const s = state.snapshot, kind = s.mapKind, table = economy.xp.cumulative[kind];
   const floor = table[s.progress.level] ?? 0, next = table[s.progress.level + 1];
   const need = next === undefined ? 1 : Math.max(1, next - floor), have = next === undefined ? 1 : Math.min(need, Math.max(0, s.progress.xp - floor));
@@ -73,7 +80,7 @@ export function TopBar({ state, panel, status, connected, unread, canCollect, on
       <button type="button" className="hud3-icon" aria-label="Thành tích" aria-pressed={panel === 'profile'} onClick={() => onPanel('profile')}><GameIcon name="trophy"/></button>
       <button type="button" className="hud3-icon" aria-label="Cài đặt" aria-pressed={panel === 'settings'} onClick={() => onPanel('settings')}><GameIcon name="settings"/></button>
       <span className="hud3-divider" aria-hidden="true"/>
-      <span className="hud3-clock"><GameIcon name={hour >= 6 && hour < 18 ? 'sun' : 'moon'}/><span><strong>Ngày {day}</strong><small>{now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</small></span></span>
+      <span className="hud3-clock"><GameIcon name={clockIcon(hour, night)}/><span><strong>Ngày {day}</strong><small>{now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</small></span></span>
       <span className={`hud3-sync ${connected ? 'is-on' : 'is-off'}`} role="status">{status}</span>
     </div>
   </header>;

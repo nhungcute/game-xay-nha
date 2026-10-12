@@ -3,7 +3,6 @@ import { CELL_SIZE_M } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { capHours, rotatedSize, type SimState } from '@xay-nha/sim';
 import { terrainHeight } from '../assets/placement';
-import { applyNightTint } from './night';
 
 const MAX = 512;
 /**
@@ -19,7 +18,6 @@ export class CoinRenderer {
     const geometry = new CylinderGeometry(0.9, 0.9, 0.22, 20);
     geometry.rotateX(Math.PI / 2);
     this.mesh = new InstancedMesh(geometry, new MeshStandardMaterial({ color: '#2fa35f', metalness: 0.45, roughness: 0.4, emissive: '#0b4a25', emissiveIntensity: 0.4 }), MAX);
-    applyNightTint(this.mesh.material as MeshStandardMaterial);
     this.mesh.name = 'income-coins'; this.mesh.count = 0; this.mesh.frustumCulled = false;
     scene.add(this.mesh);
   }

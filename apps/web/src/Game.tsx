@@ -164,7 +164,7 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
     <canvas ref={canvas} aria-label="Bản đồ 3D"/>
     {!ready&&<div className="loading"><h1>AI Farm</h1><p>{loadingError||t('loading')}</p>{loadingError&&<button onClick={()=>{setLoadingError('');setAttempt(attempt+1);}}>{t('retry')}</button>}</div>}
     {ready&&state&&<>
-      <TopBar state={state} panel={panel} status={status} connected={connection==='online'||connection==='local'} unread={alerts.length>0&&signature!==seen}
+      <TopBar state={state} night={stats?.night} panel={panel} status={status} connected={connection==='online'||connection==='local'} unread={alerts.length>0&&signature!==seen}
         canCollect={canCollect} onPanel={openPanel} onCollect={()=>apply('COLLECT',{buildingIds:[]})} onMeasure={hudRef}/>
       <MissionPanel state={state} open={missionsOpen} hint={hint?.text} onToggle={()=>setMissionsOpen(!missionsOpen)}
         onSkipHints={()=>{try{localStorage.setItem(SKIP_KEY,'1');}catch{/* storage blocked */}setHideHints(true);}}

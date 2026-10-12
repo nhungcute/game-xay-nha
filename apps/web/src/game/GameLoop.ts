@@ -119,7 +119,7 @@ export class GameLoop {
   private currentHour():number { return this.forcedHour ?? (this.timeOfDay==='day'?13:this.timeOfDay==='night'?22:hourFromTimestamp(Date.now())); }
   private updateLighting(force=false):void {
     const now=performance.now();if(!force&&now-this.lastLighting<1000)return;this.lastLighting=now;
-    const state=lighting(this.currentHour(),this.timeOfDay);setNight(state.night);setWindowTime(state.hour,state.night);
+    const state=lighting(this.currentHour(),this.timeOfDay);setNight(state.night,state.unlitTint);setWindowTime(state.hour,state.night);
     this.sun.color.set(state.sunColor);this.sun.intensity=state.sunIntensity;this.sunDirection.set(...state.sunDirection);
     this.hemisphere.color.set(state.hemisphereSkyColor);this.hemisphere.groundColor.set(state.hemisphereGroundColor);this.hemisphere.intensity=state.hemisphereIntensity;
     (this.scene.background as Color).set(state.backgroundColor);(this.scene.fog as Fog).color.set(state.fogColor);this.renderer.toneMappingExposure=state.exposure;

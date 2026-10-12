@@ -3,9 +3,15 @@ import { catalog, economy } from '@xay-nha/content';
 import { createTestTemplate } from '@xay-nha/worldgen';
 import { createState, recompute } from '@xay-nha/sim';
 import { CATEGORIES, buildingCategory, categoryOf, categoryTools } from './CategoryBar';
-import { notifications, playerTitle } from './TopBar';
+import { clockIcon, notifications, playerTitle } from './TopBar';
 
 describe('reference HUD logic', () => {
+  it('clock icon follows the scene lighting (forced day/night included), falling back to the server hour', () => {
+    expect(clockIcon(13, 1)).toBe('moon'); // "Luôn ban đêm" at 13:00
+    expect(clockIcon(22, 0)).toBe('sun');  // "Luôn ban ngày" at 22:00
+    expect(clockIcon(18, 0.4)).toBe('sun'); expect(clockIcon(18, 0.6)).toBe('moon');
+    expect(clockIcon(13)).toBe('sun'); expect(clockIcon(22)).toBe('moon'); expect(clockIcon(5)).toBe('moon');
+  });
   it('player titles climb with level, per map', () => {
     expect(playerTitle('city', 1)).toBe('Người lập làng');
     expect(playerTitle('city', 12)).toBe('Thị trưởng');
