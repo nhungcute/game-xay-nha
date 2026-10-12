@@ -198,3 +198,8 @@
 .hud3-shell .hud3-credits li{font-size:11px;line-height:1.55;color:#40514a;padding:7px 9px;border-radius:10px;background:#eef4e4;overflow-wrap:break-word}
 .hud3-shell .hud3-credits li strong{color:#22382e}
 .hud3-shell .hud3-credits a{color:#3a6b2f;text-decoration:underline;word-break:break-all}
+/* D033 object panel: each action shows its sim-priced outcome under the label; tool shortcuts are quieter rows. */
+.hud3-shell .object-detail>button:not(.close){display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;width:100%;margin-top:8px;text-align:left}
+.hud3-shell .object-detail>button .object-outcome{font-size:11px;font-weight:500;opacity:.85}
+.hud3-shell .object-detail>button.object-tool{flex-direction:row;align-items:center;gap:8px;background:transparent;color:#5d7046;border:1px dashed #c9d6b4}
+.hud3-shell .object-detail>button.demolish{color:#ad5a3c}

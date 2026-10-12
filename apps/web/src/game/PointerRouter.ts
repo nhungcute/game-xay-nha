@@ -47,7 +47,7 @@ export class PointerRouter {
     if(old)this.points.set(event.pointerId,{x:event.clientX,y:event.clientY});
   };
   private up=(event:PointerEvent):void=>{
-    if(this.points.size===1&&this.origin){const cell=this.pick(event.clientX,event.clientY);if(cell&&this.origin.button===0){this.tools.up(cell,event.pointerType==='touch');}if(this.origin.button===2&&!this.dragging)this.tools.cancel();}
+    if(this.points.size===1&&this.origin){const cell=this.pick(event.clientX,event.clientY);if(cell&&this.origin.button===0){this.tools.up(cell,event.pointerType==='touch',this.dragging);}if(this.origin.button===2&&!this.dragging)this.tools.cancel();}
     this.points.delete(event.pointerId);this.origin=null;if(this.canvas.hasPointerCapture(event.pointerId))this.canvas.releasePointerCapture(event.pointerId);
   };
   private cancel=():void=>{this.points.clear();this.origin=null;this.tools.cancel();};

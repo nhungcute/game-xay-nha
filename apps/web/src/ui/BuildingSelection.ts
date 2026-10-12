@@ -1,10 +1,11 @@
 import { BufferAttribute, BufferGeometry, DoubleSide, Group, LineLoop, LineBasicMaterial, Mesh, MeshBasicMaterial, PlaneGeometry, type Scene } from 'three';
 import { catalog } from '@xay-nha/content';
+import type { Cell } from '@xay-nha/contracts';
 import { footprintCells } from '@xay-nha/sim';
 import { useTools } from '../game/ToolController';
 import type { WorldStore } from '../game/WorldStore';
 
-/** Two pooled GPU objects for the current selection; game simulation and building meshes stay untouched. */
+/** Two pooled GPU objects for the current selection (building, bridge, or D033 picked object); game simulation and meshes stay untouched. */
 export class BuildingSelection {
   private readonly group = new Group();
   private readonly geometry = new BufferGeometry();
@@ -26,10 +27,14 @@ export class BuildingSelection {
     this.unsubscribers = [useTools.subscribe(() => this.update()), world.subscribe(() => this.update())]; this.update();
   }
   private update(): void {
-    const id = useTools.getState().selection, snapshot = this.world.state.snapshot;
+    const { selection: id, focus } = useTools.getState(), s = this.world.state, snapshot = s.snapshot;
     const building = snapshot.buildings.find(b => b.id === id), bridge = snapshot.bridges.find(b => b.id === id);
     const def = building && catalog.buildings[building.defId];
-    const cells = building && def ? footprintCells(def, building.anchor, building.rotation) : bridge ? [bridge.a, bridge.b] : [];
+    const env = focus?.kind === 'env' ? s.env.find(e => e.id === focus.id && !snapshot.delta.removedEnvIds.includes(e.id)) : undefined;
+    const envCells: Cell[] = env ? Array.from({ length: env.footprint ** 2 }, (_, k) => [env.cell[0] + k % env.footprint, env.cell[1] + Math.floor(k / env.footprint)]) : [];
+    const cells = building && def ? footprintCells(def, building.anchor, building.rotation) : bridge ? [bridge.a, bridge.b]
+      : focus?.kind === 'env' ? envCells : focus ? [focus.cell] : [];
+    const key = id ?? (focus ? `${focus.kind}:${focus.cell.join(',')}` : null);
     if (!cells.length) { this.group.visible = false; this.selected = null; cancelAnimationFrame(this.frame); return; }
     const x0 = Math.min(...cells.map(c => c[0])) * 2 - .2, x1 = (Math.max(...cells.map(c => c[0])) + 1) * 2 + .2;
     const z0 = Math.min(...cells.map(c => c[1])) * 2 - .2, z1 = (Math.max(...cells.map(c => c[1])) + 1) * 2 + .2;
@@ -40,7 +45,7 @@ export class BuildingSelection {
     const position = this.geometry.getAttribute('position') as BufferAttribute;
     corners.forEach(([x, z], index) => position.setXYZ(index, x!, .025, z!)); position.needsUpdate = true;
     this.floor.scale.set(x1 - x0, z1 - z0, 1); this.group.visible = true;
-    if (this.selected !== id) { this.selected = id; this.began = performance.now(); cancelAnimationFrame(this.frame); this.animate(); }
+    if (this.selected !== key) { this.selected = key; this.began = performance.now(); cancelAnimationFrame(this.frame); this.animate(); }
   }
   private animate = (): void => {
     if (!this.group.visible) return;

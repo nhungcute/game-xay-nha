@@ -6,9 +6,11 @@ import { Surface } from '@xay-nha/contracts';
 import { WorldStore, type ToolPreview } from './WorldStore';
 import { errorText, t } from '../i18n';
 
+/** A non-building map object picked in explore mode (D033): its panel offers the tools that act on it. */
+export type Focus={kind:'env';id:string;cell:Cell}|{kind:'road'|'crop'|'tilled';cell:Cell};
 export type Tool='explore'|'clear'|'terraform'|'till'|'road'|'embank'|'bridge'|'build'|'plant'|'harvest'|'demolish'|'zone';
-interface ToolState {tool:Tool;mode:'RAISE'|'LOWER'|'FLATTEN';remove:boolean;tier:1|2|3;bridgeId:string;buildingId:string;cropId:string;rotation:Rotation;selection:string|null;preview:ToolPreview|null;cell:Cell|null;autoFlatten:boolean}
-export const useTools=create<ToolState>(()=>({tool:'explore',mode:'FLATTEN',remove:false,tier:1,bridgeId:'bridge_wood',buildingId:'farmhouse',cropId:'veg_greens',rotation:0,selection:null,preview:null,cell:null,autoFlatten:false}));
+interface ToolState {tool:Tool;mode:'RAISE'|'LOWER'|'FLATTEN';remove:boolean;tier:1|2|3;bridgeId:string;buildingId:string;cropId:string;rotation:Rotation;selection:string|null;focus:Focus|null;preview:ToolPreview|null;cell:Cell|null;autoFlatten:boolean}
+export const useTools=create<ToolState>(()=>({tool:'explore',mode:'FLATTEN',remove:false,tier:1,bridgeId:'bridge_wood',buildingId:'farmhouse',cropId:'veg_greens',rotation:0,selection:null,focus:null,preview:null,cell:null,autoFlatten:false}));
 
 /**
  * Auto-flatten target for a footprint: flush with an adjacent road when there is one (so flattening
@@ -20,19 +22,31 @@ export function flattenTarget(s:WorldStore['state'],cells:Cell[]):number{
   const source=road.length?road:cells.map(c=>meanHeight(s,c));
   return Math.round(source.reduce((a,b)=>a+b,0)/source.length/5)*5;
 }
+/** What a click at `cell` picks besides buildings and bridge ends: scenery, a crop, a road or tilled soil. */
+export function focusAt(s:WorldStore['state'],cell:Cell):Focus|null{
+  if(!inBounds(cell))return null;
+  const i=cellIndex(...cell),id=s.occupancy.get(i),removed=s.snapshot.delta.removedEnvIds;
+  const env=id?s.env.find(e=>e.id===id&&!removed.includes(e.id)):undefined;
+  if(env)return {kind:'env',id:env.id,cell:env.cell};
+  if(s.snapshot.crops.some(c=>cellIndex(...c.cell)===i))return {kind:'crop',cell};
+  if(s.roadTier[i])return {kind:'road',cell};
+  if(s.surface[i]===Surface.TILLED)return {kind:'tilled',cell};
+  return null;
+}
 export class ToolController {
   private start:Cell|null=null;
   private bridgeStart:Cell|null=null;
   private path:Cell[]=[];
   constructor(readonly world:WorldStore){}
-  choose(tool:Tool):void {this.cancel();useTools.setState({tool,remove:false,selection:null});}
+  choose(tool:Tool):void {this.cancel();useTools.setState({tool,remove:false,selection:null,focus:null});}
   rotate(direction=1):void {const rotation=((useTools.getState().rotation+direction+4)%4) as Rotation;useTools.setState({rotation});this.refresh();}
   cancel():void {this.start=null;this.bridgeStart=null;this.path=[];useTools.setState({preview:null});}
   /** Escape: first abandons a drag/bridge in progress, otherwise leaves the tool for explore mode. */
   escape():void {if(this.start||this.bridgeStart){this.cancel();return;}this.choose('explore');}
   down(cell:Cell):void {
     if(!inBounds(cell))return;
-    if(useTools.getState().tool==='explore') {const id=buildingAtCell(this.world.state,...cell)??this.world.state.snapshot.bridges.find(b=>b.a.toString()===cell.toString()||b.b.toString()===cell.toString())?.id;useTools.setState({selection:id??null,cell});return;}
+    // Explore picks on release (up), so a camera drag that starts on a tree or road does not open its panel.
+    if(useTools.getState().tool==='explore') {useTools.setState({cell});return;}
     this.start=cell;this.path=[cell];this.move(cell,true);
   }
   move(cell:Cell,drag=false):void {
@@ -48,8 +62,13 @@ export class ToolController {
     }
     this.preview(cell);
   }
-  up(cell:Cell,touch:boolean):void {
-    if(useTools.getState().tool==='explore')return;
+  /** Explore click: a building or bridge end opens its panel; otherwise the scenery/crop/road/soil under the cursor. */
+  select(cell:Cell):void {
+    const s=this.world.state,id=buildingAtCell(s,...cell)??s.snapshot.bridges.find(b=>b.a.toString()===cell.toString()||b.b.toString()===cell.toString())?.id;
+    useTools.setState({selection:id??null,focus:id?null:focusAt(s,cell),cell});
+  }
+  up(cell:Cell,touch:boolean,dragged=false):void {
+    if(useTools.getState().tool==='explore'){if(!dragged)this.select(cell);return;}
     if(useTools.getState().tool==='bridge'&&!this.bridgeStart){this.bridgeStart=cell;this.start=null;this.world.message(t('selectEnd'));return;}
     // Desktop confirms on release, except demolition: destructive, it always waits for the ✓ button.
     this.preview(cell);if(!touch&&useTools.getState().tool!=='demolish')this.confirm();this.start=null;this.path=[];

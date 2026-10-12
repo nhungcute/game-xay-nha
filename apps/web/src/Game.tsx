@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
 import type { Cell, CommandType } from '@xay-nha/contracts';
 import { builderCapacity, fieldQuota, populationAndJobs } from '@xay-nha/sim';
@@ -17,6 +17,7 @@ import { MissionPanel } from './ui/MissionPanel';
 import { CategoryBar, CategoryTray, categoryOf, type Category } from './ui/CategoryBar';
 import type { GamePanel } from './ui/panels';
 import { BuildingPanel } from './ui/BuildingPanel';
+import { ObjectPanel } from './ui/ObjectPanel';
 import { LevelUpCard } from './ui/LevelUp';
 import { type TimeOfDayMode } from './game/dayCycle';
 
@@ -126,8 +127,8 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
     return()=>{cancelled=true;selection?.dispose();game?.dispose();gameRef.current=null;};
   },[attempt]);
   useEffect(()=>{if(!ready)return;const id=window.setInterval(()=>setStats(gameRef.current?.metrics()??null),1000);return()=>window.clearInterval(id);},[ready]);
-  useEffect(()=>{if(ui.selection)setPanel(null);},[ui.selection]);
-  useEffect(()=>{const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){setPanel(null);useTools.setState({selection:null});setCategory(null);}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape);},[]);
+  useEffect(()=>{if(ui.selection||ui.focus)setPanel(null);},[ui.selection,ui.focus]);
+  useEffect(()=>{const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){setPanel(null);useTools.setState({selection:null,focus:null});setCategory(null);}};window.addEventListener('keydown',escape);return()=>window.removeEventListener('keydown',escape);},[]);
   // Keep the bar's highlighted category in step with tools chosen elsewhere (hints, keyboard).
   useEffect(()=>{if(ui.tool!=='explore'){const next=categoryOf(ui.tool,ui.buildingId);if(next)setCategory(next);}},[ui.tool,ui.buildingId]);
   const apply=(type:CommandType,payload:unknown)=>gameRef.current?.world.apply(type,payload);
@@ -153,11 +154,14 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
     finally{setSwitchingMap(false);}
   };
   const pickCategory=(next:Category)=>{
-    setPanel(null);useTools.setState({selection:null});
+    setPanel(null);useTools.setState({selection:null,focus:null});
     if(next===category){setCategory(null);gameRef.current?.tools.choose('explore');return;}
     setCategory(next);if(categoryOf(ui.tool,ui.buildingId)!==next)gameRef.current?.tools.choose('explore');
   };
   const pickBuilding=(defId:string,cell?:Cell)=>{gameRef.current?.tools.choose('build');useTools.setState({buildingId:defId,...(cell?{cell}:{})});gameRef.current?.tools.refresh();};
+  const closeFocus=useCallback(()=>useTools.setState({focus:null}),[]);
+  // Object panel shortcut: switch to the tool on the picked cell, its category open, ready to drag from there.
+  const focusTool=(tool:Tool)=>{const cell=ui.focus?.cell;choose(tool);if(cell){useTools.setState({cell});gameRef.current?.tools.refresh();}};
   const status=connection==='local'?t('offline'):connection==='online'?t('connected'):connection==='syncing'?`${t('syncing')} (${pending})`:`${t('disconnected')} (${pending})`;
   const preview=ui.preview;
   return <main className={`game-shell hud3-shell game-${kind}`}>
@@ -191,6 +195,9 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
           :Object.keys(state.snapshot.inventory).length?Object.entries(state.snapshot.inventory).filter(([,count])=>count>0).map(([id,count])=>{const price=catalog.items[id]?.sellPrice??0;return <div className="item" key={id}><span>{t(catalog.items[id]?.nameKey??id)} × {count}</span>{[1,10].filter(n=>n<count).map(n=><button key={n} onClick={()=>apply('SELL',{items:{[id]:n}})}>{t('sell')} {n}</button>)}<button onClick={()=>apply('SELL',{items:{[id]:count}})}>{t('sell')} hết · {money(count*price)}</button></div>;})
           :<p className="empty-inventory"><GameIcon name="inventory"/>Kho đang trống. Thu hoạch hoặc thu sản phẩm để thêm hàng vào kho.</p>}
       </aside>}
+      {!object&&!panel&&ui.focus&&gameRef.current&&<ObjectPanel key={`${ui.focus.kind}:${ui.focus.cell.join(',')}`} state={state} focus={ui.focus}
+        makeCommand={(type,payload)=>gameRef.current!.world.command(type,payload)} now={gameRef.current.world.now()}
+        apply={(type,payload)=>{apply(type,payload);}} onTool={focusTool} onClose={closeFocus}/>}
       {object&&!panel&&<BuildingPanel key={object.id} state={state} building={selected} bridge={bridge} apply={(type,payload)=>{apply(type,payload);}} onClose={()=>update({selection:null})}/>}
       <footer className="hud3-dock" ref={dockRef}>
         <div className="feedback"><span className={error?'error':''} role="status">{message||t('select')}</span><small>{cacheStatus}</small></div>
