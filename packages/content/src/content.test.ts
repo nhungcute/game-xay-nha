@@ -47,7 +47,18 @@ describe('docs/16 generated economy content', () => {
     expect(def?.unlockLevel).toBe(num(level ?? ''));
     if (population !== '—') expect(def?.population).toBe(num(population ?? ''));
     if (jobs !== '—') expect(def?.jobs).toBe(num(jobs ?? ''));
-    if (!rate?.includes('bán kính')) expect(def?.baseRatePerHour).toBe(num(rate ?? ''));
+    if (rate !== '—' && !rate?.includes('bán kính')) expect(def?.baseRatePerHour).toBe(num(rate ?? ''));
+  });
+  it('configures deco_streetlight on both maps without decor bonus', () => {
+    const def = catalog.buildings.deco_streetlight;
+    expect(def).toBeDefined();
+    expect(def?.mapKinds).toEqual(['city', 'farm']);
+    expect(def?.unlockLevel).toBe(2);
+    expect(def?.cost).toEqual({ cash: 150, wood: 0, stone: 2 });
+    expect(def?.limit).toEqual([6, 3, 80]);
+    expect(def?.decor).toBeUndefined();
+    expect(def?.size).toEqual([1, 1]);
+    expect(def?.buildSeconds).toBe(15);
   });
   it.each(cropRows)('matches crop table %s', (id, _name, level, seed, _time, yieldCount, price, _profit, _perHour, xp) => {
     const def = catalog.crops[id ?? ''];

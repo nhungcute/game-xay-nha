@@ -62,6 +62,11 @@ const rocksConfig = JSON.parse(await readFile(new URL('../../../../../scripts/ro
   models: Record<string, { file: string; sourceMesh: string; family: 'rock' | 'rock_large'; triangles: number; triangleCap: number; bounds: { min: number[]; max: number[] }; sink: number; texture: { width: number; height: number }; bytes: number }>;
 };
 const ROCK_IDS = Object.keys(rocksConfig.models).sort();
+// D035: streetlight imported from map/street_light.glb by scripts/import-streetlight.mjs.
+const streetlightConfig = JSON.parse(await readFile(new URL('../../../../../scripts/streetlight.config.json', import.meta.url), 'utf8')) as {
+  credits: { author: string; license: string; url: string };
+  triangleCap: number; triangles: number; bounds: { span: number[] }; lampVertices: number;
+};
 
 /** PNG IHDR dimensions of the first embedded image of a GLB (textures are committed, Node cannot decode pixels). */
 async function glbTextureSize(manifestFile: string): Promise<{ width: number; height: number }> {
@@ -118,9 +123,9 @@ async function farTextureCoverage(manifestFile: string): Promise<number[]> {
 describe('actual placeholder GLB artifacts', () => {
   it('loads every model with valid triangles, bottom pivot, footprint bounds and explicit provenance', async () => {
     const manager = await setup();
-    expect(manager.manifest).toHaveLength(74 + TREE_IDS.length); // tree far LODs add entries; rocks replace in place
+    expect(manager.manifest).toHaveLength(75 + TREE_IDS.length); // tree far LODs add entries; rocks replace in place
     expect(manager.manifest.filter(entry => !entry.placeholder).map(entry => entry.id).sort())
-      .toEqual([...AUTHORED_IDS, ...TREE_IDS, ...TREE_IDS.map(id => `${id}_far`), ...ROCK_IDS].sort());
+      .toEqual([...AUTHORED_IDS, ...TREE_IDS, ...TREE_IDS.map(id => `${id}_far`), ...ROCK_IDS, 'deco_streetlight'].sort());
     for (const entry of manager.manifest) {
       // Imported models (D029/D030) arrive pre-fitted; everything else is a generated placeholder.
       expect(entry.license).toBeTruthy(); expect(entry.source).toBeTruthy();
@@ -146,13 +151,21 @@ describe('actual placeholder GLB artifacts', () => {
         if (tree || rock) expect(part.geometry.getAttribute('uv').count).toBe(positions.count); // textured foliage / rocks
         else expect(part.geometry.getAttribute('color').count).toBe(positions.count);
         if (!entry.placeholder && building) {
-          const windows = part.geometry.getAttribute('_window');
-          expect(windows).toBeDefined();
-          expect(windows.count).toBe(positions.count);
-          for (const value of windows.array) expect(value).toBeGreaterThanOrEqual(0);
-          const expectedWindows = modelPackConfig.models[entry.id]?.windowCount ?? 0;
-          if (expectedWindows) expect([...windows.array].some(value => value > 0)).toBe(true);
-          else expect([...windows.array].every(value => value === 0)).toBe(true);
+          if (entry.id === 'deco_streetlight') {
+            const lamp = part.geometry.getAttribute('_lamp');
+            expect(lamp).toBeDefined();
+            expect(lamp.count).toBe(positions.count);
+            for (const value of lamp.array) expect(value).toBeGreaterThanOrEqual(0);
+            expect([...lamp.array].some(value => value > 0)).toBe(true);
+          } else {
+            const windows = part.geometry.getAttribute('_window');
+            expect(windows).toBeDefined();
+            expect(windows.count).toBe(positions.count);
+            for (const value of windows.array) expect(value).toBeGreaterThanOrEqual(0);
+            const expectedWindows = modelPackConfig.models[entry.id]?.windowCount ?? 0;
+            if (expectedWindows) expect([...windows.array].some(value => value > 0)).toBe(true);
+            else expect([...windows.array].every(value => value === 0)).toBe(true);
+          }
         }
         for (const number of positions.array) expect(Number.isFinite(number)).toBe(true);
       }
@@ -166,7 +179,7 @@ describe('actual placeholder GLB artifacts', () => {
         : entry.id.startsWith('tree') ? 800 : building ? 5000 : 300;
       expect(triangles).toBeLessThanOrEqual(cap);
       if (!entry.placeholder && catalog.buildings[entry.id]) {
-        const modelCap = modelPackConfig.models[entry.id]?.triangleCap;
+        const modelCap = entry.id === 'deco_streetlight' ? streetlightConfig.triangleCap : modelPackConfig.models[entry.id]?.triangleCap;
         expect(modelCap).toBeDefined();
         expect(triangles).toBeLessThanOrEqual(modelCap!);
       }
@@ -247,6 +260,34 @@ describe('actual placeholder GLB artifacts', () => {
       expect(alignedTriangles / nonDegenerateTriangles).toBeGreaterThanOrEqual(0.9);
       asset.release();
     }
+    manager.dispose();
+  });
+  it('keeps D035 deco_streetlight inside its footprint with one part, lamp attribute and CC-BY provenance', async () => {
+    const manager = await setup();
+    const entry = manager.manifest.find(candidate => candidate.id === 'deco_streetlight')!;
+    expect(entry).toBeDefined();
+    expect(entry.placeholder).toBe(false);
+    expect(entry.modified).toBe(true);
+    expect(entry.license).toBe('CC-BY-4.0');
+    expect(entry.author).toBe('dodotcreatives');
+    expect(entry.triangles).toBe(streetlightConfig.triangles);
+    expect(entry.triangles).toBeLessThanOrEqual(streetlightConfig.triangleCap);
+
+    const asset = manager.get('deco_streetlight');
+    expect(asset.parts).toHaveLength(1);
+    const part = asset.parts[0]!;
+    const pos = part.geometry.getAttribute('position');
+    const lamp = part.geometry.getAttribute('_lamp');
+    expect(lamp).toBeDefined();
+    expect(lamp.count).toBe(pos.count);
+    expect([...lamp.array].filter(v => v > 0).length).toBeGreaterThan(0);
+    expect(asset.bounds.min.y).toBeCloseTo(0);
+    expect(asset.bounds.max.x - asset.bounds.min.x).toBeLessThanOrEqual(2 * 0.92);
+    expect(asset.bounds.max.z - asset.bounds.min.z).toBeLessThanOrEqual(2 * 0.92);
+    asset.release();
+
+    const output = execFileSync('node', ['scripts/import-streetlight.mjs', '--check'], { encoding: 'utf8', timeout: 25_000 });
+    expect(output).toMatch(/--check PASS|skipping/);
     manager.dispose();
   });
   it('keeps the imported models byte-identical to what the deterministic import script generates', async () => {
