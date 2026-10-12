@@ -54,6 +54,13 @@ const treesConfig = JSON.parse(await readFile(new URL('../../../../../scripts/tr
   models: Record<string, { family: string; nearTriangles: number; farTriangles: number; file: string; farFile: string; farBytes: number }>;
 };
 const TREE_IDS = Object.keys(treesConfig.models).filter(id => !id.endsWith('_far')).sort();
+// D032: six rock ids imported from map/hon_da by scripts/import-rocks.mjs; no far LOD is added.
+const rocksConfig = JSON.parse(await readFile(new URL('../../../../../scripts/rocks.config.json', import.meta.url), 'utf8')) as {
+  credits: { author: string; license: string; url: string };
+  parameters: { triangleCaps: { rock: number; rock_large: number }; footprintM: { rock: number; rock_large: number }; footprintMargin: { rock: number; rock_large: number } };
+  models: Record<string, { file: string; sourceMesh: string; family: 'rock' | 'rock_large'; triangles: number; triangleCap: number; bounds: { min: number[]; max: number[] }; sink: number; texture: { width: number; height: number }; bytes: number }>;
+};
+const ROCK_IDS = Object.keys(rocksConfig.models).sort();
 
 /** PNG IHDR dimensions of the first embedded image of a GLB (textures are committed, Node cannot decode pixels). */
 async function glbTextureSize(manifestFile: string): Promise<{ width: number; height: number }> {
@@ -110,9 +117,9 @@ async function farTextureCoverage(manifestFile: string): Promise<number[]> {
 describe('actual placeholder GLB artifacts', () => {
   it('loads every model with valid triangles, bottom pivot, footprint bounds and explicit provenance', async () => {
     const manager = await setup();
-    expect(manager.manifest).toHaveLength(74 + TREE_IDS.length); // near entries replace placeholders, far ones are added
+    expect(manager.manifest).toHaveLength(74 + TREE_IDS.length); // tree far LODs add entries; rocks replace in place
     expect(manager.manifest.filter(entry => !entry.placeholder).map(entry => entry.id).sort())
-      .toEqual([...AUTHORED_IDS, ...TREE_IDS, ...TREE_IDS.map(id => `${id}_far`)].sort());
+      .toEqual([...AUTHORED_IDS, ...TREE_IDS, ...TREE_IDS.map(id => `${id}_far`), ...ROCK_IDS].sort());
     for (const entry of manager.manifest) {
       // Imported models (D029/D030) arrive pre-fitted; everything else is a generated placeholder.
       expect(entry.license).toBeTruthy(); expect(entry.source).toBeTruthy();
@@ -122,7 +129,11 @@ describe('actual placeholder GLB artifacts', () => {
         if (catalog.buildings[entry.id]) expect(entry.footprint).toBeTruthy();
         else expect(asset.parts).toHaveLength(1); // one draw call per imported building / tree LOD level
       }
-      expect(asset.bounds.min.y).toBeCloseTo(0);
+      const rock = rocksConfig.models[entry.id];
+      if (rock) {
+        expect(asset.bounds.min.y).toBeGreaterThanOrEqual(-rock.sink - 1e-6);
+        expect(asset.bounds.min.y).toBeLessThanOrEqual(0);
+      } else expect(asset.bounds.min.y).toBeCloseTo(0);
       const tree = treesConfig.models[entry.id.replace(/_far$/, '')];
       let triangles = 0;
       for (const part of asset.parts) {
@@ -130,7 +141,7 @@ describe('actual placeholder GLB artifacts', () => {
         const index = part.geometry.getIndex();
         triangles += (index ? index.count : positions.count) / 3; // D030 foliage is indexed; D029 buildings are not
         expect(part.geometry.getAttribute('normal').count).toBe(positions.count);
-        if (tree) expect(part.geometry.getAttribute('uv').count).toBe(positions.count); // textured foliage
+        if (tree || rock) expect(part.geometry.getAttribute('uv').count).toBe(positions.count); // textured foliage / rocks
         else expect(part.geometry.getAttribute('color').count).toBe(positions.count);
         for (const number of positions.array) expect(Number.isFinite(number)).toBe(true);
       }
@@ -140,7 +151,7 @@ describe('actual placeholder GLB artifacts', () => {
         expect(asset.bounds.max.x - asset.bounds.min.x).toBeLessThanOrEqual(building.size[0] * 2);
         expect(asset.bounds.max.z - asset.bounds.min.z).toBeLessThanOrEqual(building.size[1] * 2);
       }
-      const cap = tree
+      const cap = rock ? rock.triangleCap : tree
         ? entry.id.endsWith('_far') ? treesConfig.parameters.triangleCaps[tree.family]!.far : treesConfig.parameters.triangleCaps[tree.family]!.near
         : entry.id.startsWith('tree') ? 800 : building ? 5000 : 300;
       expect(triangles).toBeLessThanOrEqual(cap);
@@ -185,10 +196,57 @@ describe('actual placeholder GLB artifacts', () => {
     await expect(readFile(new URL('models/env-by-sa/LICENSE.md', assetRoot), 'utf8')).resolves.toMatch(/CC-BY-SA 4\.0/);
     manager.dispose();
   });
+  it('keeps D032 rocks inside their footprints with one textured material and CC-BY provenance', async () => {
+    const manager = await setup();
+    expect(ROCK_IDS).toEqual(['rock_01', 'rock_02', 'rock_03', 'rock_04', 'rock_large_01', 'rock_large_02']);
+    for (const id of ROCK_IDS) {
+      const model = rocksConfig.models[id]!, entry = manager.manifest.find(candidate => candidate.id === id)!;
+      const asset = manager.get(id), horizontalLimit = rocksConfig.parameters.footprintM[model.family] * rocksConfig.parameters.footprintMargin[model.family];
+      expect(entry.file).toBe(model.file.replace(/^apps\/web\/public\/assets\//, ''));
+      expect(entry.triangles).toBe(model.triangles);
+      expect(entry.placeholder).toBe(false); expect(entry.modified).toBe(true);
+      expect(entry.author).toBe(rocksConfig.credits.author); expect(entry.license).toBe('CC-BY-4.0');
+      expect(entry.source).toBe(rocksConfig.credits.url); expect(entry.url).toBe(rocksConfig.credits.url);
+      expect(asset.parts).toHaveLength(1);
+      const part = asset.parts[0]!, index = part.geometry.getIndex();
+      expect(index).not.toBeNull(); expect(Array.isArray(part.material)).toBe(false);
+      expect((index?.count ?? 0) / 3).toBe(model.triangles);
+      expect(model.triangles).toBeLessThanOrEqual(rocksConfig.parameters.triangleCaps[model.family]);
+      expect(asset.bounds.min.y).toBeGreaterThanOrEqual(-model.sink - 1e-6);
+      expect(asset.bounds.min.y).toBeLessThanOrEqual(0);
+      expect(asset.bounds.max.x - asset.bounds.min.x).toBeLessThanOrEqual(horizontalLimit + 1e-6);
+      expect(asset.bounds.max.z - asset.bounds.min.z).toBeLessThanOrEqual(horizontalLimit + 1e-6);
+      expect(model.texture.width).toBe(model.family === 'rock' ? 256 : 512);
+      expect(model.texture.height).toBe(model.texture.width);
+      expect(model.bytes).toBeLessThan(150 * 1024);
+      const positions = part.geometry.getAttribute('position'), normals = part.geometry.getAttribute('normal');
+      let alignedTriangles = 0, nonDegenerateTriangles = 0;
+      for (let offset = 0; offset < (index?.count ?? 0); offset += 3) {
+        const a = index!.getX(offset), b = index!.getX(offset + 1), c = index!.getX(offset + 2);
+        const abX = positions.getX(b) - positions.getX(a), abY = positions.getY(b) - positions.getY(a), abZ = positions.getZ(b) - positions.getZ(a);
+        const acX = positions.getX(c) - positions.getX(a), acY = positions.getY(c) - positions.getY(a), acZ = positions.getZ(c) - positions.getZ(a);
+        const faceX = abY * acZ - abZ * acY, faceY = abZ * acX - abX * acZ, faceZ = abX * acY - abY * acX;
+        if (Math.hypot(faceX, faceY, faceZ) < 1e-8) continue;
+        nonDegenerateTriangles++;
+        const normalX = normals.getX(a) + normals.getX(b) + normals.getX(c);
+        const normalY = normals.getY(a) + normals.getY(b) + normals.getY(c);
+        const normalZ = normals.getZ(a) + normals.getZ(b) + normals.getZ(c);
+        if (faceX * normalX + faceY * normalY + faceZ * normalZ > 0) alignedTriangles++;
+      }
+      expect(nonDegenerateTriangles).toBe(model.triangles);
+      expect(alignedTriangles / nonDegenerateTriangles).toBeGreaterThanOrEqual(0.9);
+      asset.release();
+    }
+    manager.dispose();
+  });
   it('keeps the imported models byte-identical to what the deterministic import script generates', async () => {
     // Skips with a notice (exit 0) when the 283 MB source pack is absent, e.g. in CI.
     const output = execFileSync('node', ['scripts/import-model-pack.mjs', '--check'], { encoding: 'utf8', timeout: 25_000 });
     expect(output).toMatch(/--check PASS|bỏ qua/);
+  });
+  it('keeps the imported D032 rocks byte-identical to the deterministic import script', () => {
+    const output = execFileSync('node', ['scripts/import-rocks.mjs', '--check'], { encoding: 'utf8', timeout: 25_000 });
+    expect(output).toMatch(/--check PASS|skipping/);
   });
   it('does not dispose shared GLB resources while retained handles exist', async () => {
     const manager = await setup(), first = manager.get('farmhouse'), second = manager.get('farmhouse');
