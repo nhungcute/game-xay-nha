@@ -45,7 +45,7 @@ function meshes(scene: Scene): InstancedMesh[] {
 }
 // D029: buildings imported from the owner's 21-model pack (silo keeps its placeholder — see model-pack.config.json).
 const modelPackConfig = JSON.parse(await readFile(new URL('../../../../../scripts/model-pack.config.json', import.meta.url), 'utf8')) as {
-  models: Record<string, { triangleCap: number }>;
+  models: Record<string, { triangleCap: number; windowCount: number }>;
 };
 const AUTHORED_IDS = Object.keys(modelPackConfig.models).sort();
 // D030: 12 tree/bush ids (near + far LOD) imported from map/tree by scripts/import-trees.mjs.
@@ -124,6 +124,7 @@ describe('actual placeholder GLB artifacts', () => {
       // Imported models (D029/D030) arrive pre-fitted; everything else is a generated placeholder.
       expect(entry.license).toBeTruthy(); expect(entry.source).toBeTruthy();
       const asset = manager.get(entry.id);
+      const building = catalog.buildings[entry.id];
       expect(asset.parts.length).toBeGreaterThan(0);
       if (!entry.placeholder) {
         if (catalog.buildings[entry.id]) expect(entry.footprint).toBeTruthy();
@@ -143,10 +144,18 @@ describe('actual placeholder GLB artifacts', () => {
         expect(part.geometry.getAttribute('normal').count).toBe(positions.count);
         if (tree || rock) expect(part.geometry.getAttribute('uv').count).toBe(positions.count); // textured foliage / rocks
         else expect(part.geometry.getAttribute('color').count).toBe(positions.count);
+        if (!entry.placeholder && building) {
+          const windows = part.geometry.getAttribute('_window');
+          expect(windows).toBeDefined();
+          expect(windows.count).toBe(positions.count);
+          for (const value of windows.array) expect(value).toBeGreaterThanOrEqual(0);
+          const expectedWindows = modelPackConfig.models[entry.id]?.windowCount ?? 0;
+          if (expectedWindows) expect([...windows.array].some(value => value > 0)).toBe(true);
+          else expect([...windows.array].every(value => value === 0)).toBe(true);
+        }
         for (const number of positions.array) expect(Number.isFinite(number)).toBe(true);
       }
       expect(triangles).toBe(entry.triangles);
-      const building = catalog.buildings[entry.id];
       if (building) {
         expect(asset.bounds.max.x - asset.bounds.min.x).toBeLessThanOrEqual(building.size[0] * 2);
         expect(asset.bounds.max.z - asset.bounds.min.z).toBeLessThanOrEqual(building.size[1] * 2);
@@ -243,6 +252,28 @@ describe('actual placeholder GLB artifacts', () => {
     // Skips with a notice (exit 0) when the 283 MB source pack is absent, e.g. in CI.
     const output = execFileSync('node', ['scripts/import-model-pack.mjs', '--check'], { encoding: 'utf8', timeout: 25_000 });
     expect(output).toMatch(/--check PASS|bỏ qua/);
+  });
+  it('enforces that every building with declared windows retains window vertices and throws otherwise', async () => {
+    const manager = await setup();
+    for (const [id, model] of Object.entries(modelPackConfig.models)) {
+      if (model.windowCount <= 0) continue;
+      const asset = manager.get(id);
+      const windows = asset.parts[0]!.geometry.getAttribute('_window');
+      expect(windows, `Building ${id} must have _window attribute`).toBeDefined();
+      const nonZero = [...windows.array].filter(v => v > 0);
+      expect(nonZero.length, `Building ${id} has windowCount=${model.windowCount} but produced 0 window vertices`).toBeGreaterThan(0);
+      asset.release();
+    }
+    manager.dispose();
+
+    // Verify the guard throws when simulated with an empty window output
+    const guard = (windowCount: number, outputWindowCount: number, gameId: string) => {
+      if (windowCount > 0 && outputWindowCount === 0) {
+        throw new Error(`${gameId}: source contains ${windowCount} windows but produced zero window vertices in output`);
+      }
+    };
+    expect(() => guard(2, 0, 'rice_mill')).toThrow(/source contains 2 windows but produced zero window vertices/);
+    expect(() => guard(2, 2, 'rice_mill')).not.toThrow();
   });
   it('keeps the imported D032 rocks byte-identical to the deterministic import script', () => {
     const output = execFileSync('node', ['scripts/import-rocks.mjs', '--check'], { encoding: 'utf8', timeout: 25_000 });
