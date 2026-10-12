@@ -1,0 +1,37 @@
+{
+  "id": "deco_streetlight",
+  "source": "map/street_light.glb",
+  "credits": {
+    "name": "Street_Light",
+    "author": "dodotcreatives",
+    "license": "CC-BY-4.0",
+    "url": "https://sketchfab.com/3d-models/street-light-16fc20d9d6564adb84ea27e35778da06",
+    "modified": true
+  },
+  "scale": 0.52439,
+  "rawHeightM": 8.5814,
+  "targetHeightM": 4.5,
+  "columnDiameterM": 0.185,
+  "triangles": 601,
+  "triangleCap": 800,
+  "lampVertices": 168,
+  "bounds": {
+    "min": [
+      -0.4428,
+      0,
+      -0.1903
+    ],
+    "max": [
+      0.6751,
+      4.4743,
+      0.2078
+    ],
+    "span": [
+      1.1179,
+      4.4743,
+      0.3982
+    ]
+  },
+  "bytes": 57060,
+  "floatingComponents": 0
+}

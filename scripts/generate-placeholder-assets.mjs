@@ -171,6 +171,19 @@ if (existsSync(ROCKS_CONFIG)) {
     delete entry.bounds;
   }
 }
+// D035: streetlight imported from map/street_light.glb (Street_Light by dodotcreatives, CC-BY-4.0)
+// by scripts/import-streetlight.mjs
+const STREETLIGHT_CONFIG = new URL('../scripts/streetlight.config.json', import.meta.url);
+if (existsSync(STREETLIGHT_CONFIG)) {
+  const streetlight = JSON.parse(await readFile(STREETLIGHT_CONFIG, 'utf8'));
+  const entry = assets.find(asset => asset.id === 'deco_streetlight');
+  if (entry) {
+    const credits = { source: streetlight.credits.url, author: streetlight.credits.author, license: streetlight.credits.license,
+      url: streetlight.credits.url, modified: true, placeholder: false };
+    Object.assign(entry, { file: 'models/authored/deco_streetlight.glb', ...credits, triangles: streetlight.triangles });
+    delete entry.bounds;
+  }
+}
 // Content version per file: the client requests `file?v=<hash>`, so a re-imported model is fetched again even when a
 // browser still holds the old bytes under the same path (models are cached for a day; D031 windows were missed so).
 for (const asset of assets) asset.hash=createHash('sha256').update(await readFile(new URL(asset.file,directory))).digest('hex').slice(0,12);

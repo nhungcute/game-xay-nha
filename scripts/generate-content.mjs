@@ -96,6 +96,13 @@ const flower = findRow(farmSource, 'deco_flowerbed');
 building({ id: flower[0], w: number(flower[2].split('×')[0]), d: number(flower[2].split('×')[1]),
   cost: { cash: number(flower[3]), wood: number(flower[4]), stone: number(flower[5]) },
   L: number(flower[6]), build: seconds(flower[7]) / 60 }, farmSource, 'farm');
+const streetlightLimit = findRow(section('### 6.2', '### 6.3'), 'Cột đèn');
+const streetlight = findRow(citySource, 'deco_streetlight');
+building({ id: streetlight[0], w: number(streetlight[2].split('×')[0]), d: number(streetlight[2].split('×')[1]),
+  cost: { cash: number(streetlight[3]), wood: number(streetlight[4]), stone: number(streetlight[5]) },
+  L: number(streetlight[7]), build: seconds(streetlight[13]) / 60,
+  limit: [number(streetlightLimit[1]), number(streetlightLimit[2]), number(streetlightLimit[3])] }, citySource, 'city');
+buildings.deco_streetlight.mapKinds = ['city', 'farm'];
 const crops = Object.fromEntries(CROPS.map(def => [def.id, {
   id: def.id, nameKey: name('crop', def.id, findRow(cropSource, def.id)[1]),
   unlockLevel: def.L, seedCost: def.seed, growSeconds: def.cycleMin * 60,

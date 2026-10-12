@@ -6,13 +6,18 @@ import { AssetManager } from '../assets/AssetManager';
 import { InstanceBatches, type InstancePlacement } from '../assets/InstanceBatches';
 import { addInstance, matrix, terrainHeight } from '../assets/placement';
 import { applyWindowLights } from './windowLights';
+import { applyStreetLampLight } from './StreetLightRenderer';
 
 export class BuildingRenderer {
   private readonly batches: InstanceBatches;
   constructor(scene: Scene, assets: AssetManager) {
-    this.batches = new InstanceBatches(scene, assets, () => true, (mesh: InstancedMesh) => {
-      if (!mesh.geometry.getAttribute('_window')) return;
-      for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) applyWindowLights(material);
+    this.batches = new InstanceBatches(scene, assets, handle => handle.id !== 'deco_streetlight', (mesh: InstancedMesh) => {
+      if (mesh.geometry.getAttribute('_window')) {
+        for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) applyWindowLights(material);
+      }
+      if (mesh.geometry.getAttribute('_lamp')) {
+        for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) applyStreetLampLight(material);
+      }
     });
   }
   update(s: SimState): void {

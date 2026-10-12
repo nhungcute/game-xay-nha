@@ -922,6 +922,33 @@
         "buildSeconds": 15,
         "buildXp": 18,
         "modelId": "deco_flowerbed"
+      },
+      "deco_streetlight": {
+        "id": "deco_streetlight",
+        "mapKinds": [
+          "city",
+          "farm"
+        ],
+        "nameKey": "building.deco_streetlight",
+        "size": [
+          1,
+          1
+        ],
+        "entranceSide": "S",
+        "cost": {
+          "cash": 150,
+          "wood": 0,
+          "stone": 2
+        },
+        "unlockLevel": 2,
+        "buildSeconds": 15,
+        "buildXp": 28,
+        "modelId": "deco_streetlight",
+        "limit": [
+          6,
+          3,
+          80
+        ]
       }
     },
     "crops": {

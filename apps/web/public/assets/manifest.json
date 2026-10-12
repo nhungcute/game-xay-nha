@@ -892,6 +892,23 @@
       "hash": "f93985f2643a"
     },
     {
+      "id": "deco_streetlight",
+      "file": "models/authored/deco_streetlight.glb",
+      "source": "https://sketchfab.com/3d-models/street-light-16fc20d9d6564adb84ea27e35778da06",
+      "author": "dodotcreatives",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/street-light-16fc20d9d6564adb84ea27e35778da06",
+      "modified": true,
+      "placeholder": false,
+      "category": "building",
+      "footprint": [
+        1,
+        1
+      ],
+      "triangles": 601,
+      "hash": "683eb286eb5e"
+    },
+    {
       "id": "veg_greens_seed",
       "file": "models/veg_greens_seed.glb",
       "source": "Procedural low-poly placeholder generated in this repository",
