@@ -1,0 +1,78 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-12T11:25:35.751Z",
+  "picks": [
+    {
+      "label": "tree",
+      "cell": [
+        48,
+        32
+      ],
+      "file": "pick-tree.jpg",
+      "panel": "ĐANG CHỌN\nCây lá rộng\nChiếm 1 ô\nChặt cây\n−$10 · +3 gỗ\nDọn nhiều (công cụ Dọn)"
+    },
+    {
+      "label": "conifer",
+      "cell": [
+        50,
+        33
+      ],
+      "file": "pick-conifer.jpg",
+      "panel": "ĐANG CHỌN\nCây thông\nChiếm 1 ô\nChặt cây\n−$10 · +3 gỗ\nDọn nhiều (công cụ Dọn)"
+    },
+    {
+      "label": "rock",
+      "cell": [
+        62,
+        40
+      ],
+      "file": "pick-rock.jpg",
+      "panel": "ĐANG CHỌN\nĐá tảng\nChiếm 1 ô\nĐập đá\n−$20 · +4 đá\nDọn nhiều (công cụ Dọn)"
+    },
+    {
+      "label": "bush",
+      "cell": [
+        53,
+        33
+      ],
+      "file": "pick-bush.jpg",
+      "panel": "ĐANG CHỌN\nBụi cây\nChiếm 1 ô\nPhát dọn\n−$2\nDọn nhiều (công cụ Dọn)"
+    },
+    {
+      "label": "crop",
+      "cell": [
+        71,
+        54
+      ],
+      "file": "pick-crop.jpg",
+      "panel": "ĐANG CHỌN\nNgô\nĐã chín, thu hoạch được\nThu hoạch\n+3 Ngô\nThu hoạch cả ruộng (kéo)"
+    },
+    {
+      "label": "road-entry",
+      "cell": [
+        72,
+        79
+      ],
+      "file": "pick-road-entry.jpg",
+      "panel": "ĐANG CHỌN\nĐường đất\nCấp 1/3 · nối với đường làng\nNâng lên Đường lát đá\nKhông đủ tiền hoặc vật liệu.\nNâng lên Đường nhựa\nKhông đủ tiền hoặc vật liệu.\nXóa đường\nKhu vực được bảo vệ.\nSửa nhiều ô (công cụ Đường)"
+    }
+  ],
+  "drag": {
+    "opened": false
+  },
+  "shots": [
+    "city-glass-day.jpg",
+    "city-coins-day.jpg",
+    "city-coins-night.jpg"
+  ],
+  "notes": [
+    "farm: no rock_large in unlocked zones",
+    "city: no rock_large in unlocked zones"
+  ],
+  "errors": [],
+  "clearTree": {
+    "woodGained": 3,
+    "cashSpent": 10,
+    "panelClosed": true
+  }
+}

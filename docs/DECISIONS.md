@@ -425,3 +425,22 @@ Validation: `node scripts/import-rocks.mjs --check`, `node scripts/import-trees.
 cleanly). The full `assets.test.ts` suite retains the pre-existing D031 `_WINDOW` assertion failure for authored
 building GLBs; the D032-specific asset test and typecheck pass. Reverting the D032 generator block, six generated
 GLBs, config, manifest entries, evidence and docs restores the placeholder rocks without changing world data.
+
+## D033 - 2026-10-12 - Click a map object to get its tools; coins match the cash icon; light glass by day
+
+Owner request. In explore mode a click (pointer released without a drag, so camera orbits/pans that start on an object
+open nothing) still opens the building/bridge panel; otherwise it now picks the scenery, crop, road or tilled cell under
+the cursor (`focusAt` in `ToolController.ts`) and opens `ui/ObjectPanel.tsx` with the actions that apply to it:
+tree / rock / large rock / bush → clear ("Chặt cây", "Đập đá", "Đập đá lớn", "Phát dọn"); crop → harvest; road →
+upgrade to each higher tier available on the map, or remove (asks once more); tilled soil → plant (tool shortcut) or
+untill. Each action shows its outcome computed by running the command on a copy of the state in the sim
+(`actionOutcome`), e.g. "−$10 · +3 gỗ", or the rule error ("Khu vực được bảo vệ."), so the panel never drifts from the
+rules. A dashed row switches to the matching drag tool (Dọn / Đường / Thu hoạch / Gieo) on that cell. The selection
+outline covers the object's footprint. Evidence: `scripts/object-panel-qa.mjs` → `docs/evidence/g4/object-panel/`.
+
+Income coins (`CoinRenderer.ts`) carry the HUD cash icon on both faces (rings + white "$", drawn from the same SVG
+path), glow with it through `emissiveMap`, and are ~30% larger, so they read as money on shaded facades and at night.
+
+Building glass (`windowLights.ts`): the imported pane colour (`GLASS_SRGB`, dark blue-grey) read as black holes by
+day. Panes now blend to a light sky blue plus a faint sky reflection by `1 − night`; night keeps the dark glass under
+the warm per-pane lights.
