@@ -8,6 +8,8 @@ export interface AssetManifestEntry {
   footprint?: [number, number];
   /** D030: far-LOD companion id (a crossed-plane billboard GLB) rendered beyond the near radius. */
   lod?: { far: string };
+  /** Content hash of `file` (generate-placeholder-assets.mjs); requested as `?v=` so changed bytes bypass browser caches. */
+  hash?: string;
 }
 export interface AssetPart { geometry: BufferGeometry; material: Material | Material[]; matrix: Matrix4 }
 interface LoadedAsset { parts: AssetPart[]; bounds: Box3; refs: number }
@@ -39,7 +41,7 @@ export class AssetManager {
     const loader = new GLTFLoader();
     const results = await Promise.allSettled(document.assets.map(async entry => {
       if (!entry.id || !entry.license || this.assets.has(entry.id)) throw new Error(`Invalid asset entry: ${entry.id}`);
-      const gltf = await loader.loadAsync(`${this.baseUrl}${entry.file}`);
+      const gltf = await loader.loadAsync(`${this.baseUrl}${entry.file}${entry.hash ? `?v=${entry.hash}` : ''}`);
       gltf.scene.updateMatrixWorld(true);
       const parts: AssetPart[] = [];
       gltf.scene.traverse((object: Object3D) => {

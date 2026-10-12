@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 const directory = new URL('../apps/web/public/assets/', import.meta.url);
 const catalog = JSON.parse(await readFile(new URL('../packages/content/catalog.v1.json', import.meta.url), 'utf8'));
@@ -170,5 +171,8 @@ if (existsSync(ROCKS_CONFIG)) {
     delete entry.bounds;
   }
 }
+// Content version per file: the client requests `file?v=<hash>`, so a re-imported model is fetched again even when a
+// browser still holds the old bytes under the same path (models are cached for a day; D031 windows were missed so).
+for (const asset of assets) asset.hash=createHash('sha256').update(await readFile(new URL(asset.file,directory))).digest('hex').slice(0,12);
 await writeFile(new URL('manifest.json',directory),`${JSON.stringify({version:1,placeholder:assets.every(asset=>asset.placeholder),assets},null,2)}\n`);
 console.log(`Generated ${assets.length} actual GLB placeholder assets; every source/license is recorded in assets/manifest.json.`);

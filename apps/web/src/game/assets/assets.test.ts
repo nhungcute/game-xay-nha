@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { inflateSync } from 'node:zlib';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { describe, expect, it, vi } from 'vitest';
 import { Box3, InstancedMesh, Scene } from 'three';
 import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
@@ -30,7 +31,7 @@ async function setup() {
   const document = JSON.parse(await readFile(new URL('manifest.json', assetRoot), 'utf8')) as { assets: AssetManifestEntry[] };
   const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify(document)));
   const loaderSpy = vi.spyOn(GLTFLoader.prototype, 'loadAsync').mockImplementation(url => {
-    const entry = document.assets.find(asset => url.endsWith(asset.file));
+    const entry = document.assets.find(asset => url === `/assets/${asset.file}?v=${asset.hash}`);
     if (!entry) throw new Error(`Missing manifest file ${url}`);
     return parse(entry);
   });
@@ -274,6 +275,13 @@ describe('actual placeholder GLB artifacts', () => {
     };
     expect(() => guard(2, 0, 'rice_mill')).toThrow(/source contains 2 windows but produced zero window vertices/);
     expect(() => guard(2, 2, 'rice_mill')).not.toThrow();
+  });
+  it('versions every model URL by its content hash, so re-imported bytes bypass day-long browser caches', async () => {
+    const document = JSON.parse(await readFile(new URL('manifest.json', assetRoot), 'utf8')) as { assets: AssetManifestEntry[] };
+    for (const entry of document.assets) {
+      const bytes = await readFile(new URL(entry.file, assetRoot));
+      expect(entry.hash, entry.id).toBe(createHash('sha256').update(bytes).digest('hex').slice(0, 12));
+    }
   });
   it('keeps the imported D032 rocks byte-identical to the deterministic import script', () => {
     const output = execFileSync('node', ['scripts/import-rocks.mjs', '--check'], { encoding: 'utf8', timeout: 25_000 });

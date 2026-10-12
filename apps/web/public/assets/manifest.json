@@ -15,7 +15,8 @@
       "triangles": 1500,
       "lod": {
         "far": "tree_deciduous_01_far"
-      }
+      },
+      "hash": "d6cd38daed46"
     },
     {
       "id": "tree_deciduous_02",
@@ -30,7 +31,8 @@
       "triangles": 1500,
       "lod": {
         "far": "tree_deciduous_02_far"
-      }
+      },
+      "hash": "36aa86224519"
     },
     {
       "id": "tree_deciduous_03",
@@ -45,7 +47,8 @@
       "triangles": 1500,
       "lod": {
         "far": "tree_deciduous_03_far"
-      }
+      },
+      "hash": "5bd9703d1f42"
     },
     {
       "id": "tree_deciduous_04",
@@ -60,7 +63,8 @@
       "triangles": 1500,
       "lod": {
         "far": "tree_deciduous_04_far"
-      }
+      },
+      "hash": "13d2caefdbf0"
     },
     {
       "id": "tree_conifer_01",
@@ -75,7 +79,8 @@
       "triangles": 1456,
       "lod": {
         "far": "tree_conifer_01_far"
-      }
+      },
+      "hash": "47cfc6a76b57"
     },
     {
       "id": "tree_conifer_02",
@@ -90,7 +95,8 @@
       "triangles": 1456,
       "lod": {
         "far": "tree_conifer_02_far"
-      }
+      },
+      "hash": "ffea896975cb"
     },
     {
       "id": "tree_conifer_03",
@@ -105,7 +111,8 @@
       "triangles": 1456,
       "lod": {
         "far": "tree_conifer_03_far"
-      }
+      },
+      "hash": "4aaf686f4401"
     },
     {
       "id": "tree_conifer_04",
@@ -120,7 +127,8 @@
       "triangles": 1456,
       "lod": {
         "far": "tree_conifer_04_far"
-      }
+      },
+      "hash": "1fceace96d24"
     },
     {
       "id": "bush_01",
@@ -135,7 +143,8 @@
       "triangles": 320,
       "lod": {
         "far": "bush_01_far"
-      }
+      },
+      "hash": "2902c533cd66"
     },
     {
       "id": "bush_02",
@@ -150,7 +159,8 @@
       "triangles": 320,
       "lod": {
         "far": "bush_02_far"
-      }
+      },
+      "hash": "8832d9cd065f"
     },
     {
       "id": "bush_03",
@@ -165,7 +175,8 @@
       "triangles": 320,
       "lod": {
         "far": "bush_03_far"
-      }
+      },
+      "hash": "91c9a9604a59"
     },
     {
       "id": "bush_04",
@@ -180,7 +191,8 @@
       "triangles": 320,
       "lod": {
         "far": "bush_04_far"
-      }
+      },
+      "hash": "378ce348caf3"
     },
     {
       "id": "rock_01",
@@ -192,7 +204,8 @@
       "modified": true,
       "placeholder": false,
       "category": "environment",
-      "triangles": 300
+      "triangles": 300,
+      "hash": "b0e94df51cd6"
     },
     {
       "id": "rock_02",
@@ -204,7 +217,8 @@
       "modified": true,
       "placeholder": false,
       "category": "environment",
-      "triangles": 300
+      "triangles": 300,
+      "hash": "a4f6ad42e90b"
     },
     {
       "id": "rock_03",
@@ -216,7 +230,8 @@
       "modified": true,
       "placeholder": false,
       "category": "environment",
-      "triangles": 300
+      "triangles": 300,
+      "hash": "1f95cb8b4c13"
     },
     {
       "id": "rock_04",
@@ -228,7 +243,8 @@
       "modified": true,
       "placeholder": false,
       "category": "environment",
-      "triangles": 300
+      "triangles": 300,
+      "hash": "4597ffb7c49d"
     },
     {
       "id": "rock_large_01",
@@ -240,7 +256,8 @@
       "modified": true,
       "placeholder": false,
       "category": "environment",
-      "triangles": 1000
+      "triangles": 1000,
+      "hash": "874e5bfa4c14"
     },
     {
       "id": "rock_large_02",
@@ -252,7 +269,8 @@
       "modified": true,
       "placeholder": false,
       "category": "environment",
-      "triangles": 1000
+      "triangles": 1000,
+      "hash": "f17ef98f60f5"
     },
     {
       "id": "reed_01",
@@ -276,7 +294,8 @@
           0.29000000000000004
         ]
       },
-      "triangles": 24
+      "triangles": 24,
+      "hash": "b5c16b230ed8"
     },
     {
       "id": "reed_02",
@@ -300,7 +319,8 @@
           0.29000000000000004
         ]
       },
-      "triangles": 24
+      "triangles": 24,
+      "hash": "b5c16b230ed8"
     },
     {
       "id": "reed_03",
@@ -324,7 +344,8 @@
           0.29000000000000004
         ]
       },
-      "triangles": 24
+      "triangles": 24,
+      "hash": "b5c16b230ed8"
     },
     {
       "id": "flower_01",
@@ -348,7 +369,8 @@
           0.36265847744427304
         ]
       },
-      "triangles": 54
+      "triangles": 54,
+      "hash": "258112c8877b"
     },
     {
       "id": "flower_02",
@@ -372,7 +394,8 @@
           0.36265847744427304
         ]
       },
-      "triangles": 54
+      "triangles": 54,
+      "hash": "d8a12a4d1fb9"
     },
     {
       "id": "flower_03",
@@ -396,7 +419,8 @@
           0.36265847744427304
         ]
       },
-      "triangles": 54
+      "triangles": 54,
+      "hash": "258112c8877b"
     },
     {
       "id": "flower_04",
@@ -420,7 +444,8 @@
           0.36265847744427304
         ]
       },
-      "triangles": 54
+      "triangles": 54,
+      "hash": "d8a12a4d1fb9"
     },
     {
       "id": "grass_tuft_01",
@@ -444,7 +469,8 @@
           0.29000000000000004
         ]
       },
-      "triangles": 24
+      "triangles": 24,
+      "hash": "74173d6aaac1"
     },
     {
       "id": "grass_tuft_02",
@@ -468,7 +494,8 @@
           0.29000000000000004
         ]
       },
-      "triangles": 24
+      "triangles": 24,
+      "hash": "74173d6aaac1"
     },
     {
       "id": "grass_tuft_03",
@@ -492,7 +519,8 @@
           0.29000000000000004
         ]
       },
-      "triangles": 24
+      "triangles": 24,
+      "hash": "74173d6aaac1"
     },
     {
       "id": "house_small",
@@ -508,7 +536,8 @@
         2,
         2
       ],
-      "triangles": 1186
+      "triangles": 1186,
+      "hash": "e6eed3053982"
     },
     {
       "id": "shop_grocery",
@@ -524,7 +553,8 @@
         2,
         2
       ],
-      "triangles": 1260
+      "triangles": 1260,
+      "hash": "14a66e677046"
     },
     {
       "id": "deco_garden",
@@ -540,7 +570,8 @@
         1,
         1
       ],
-      "triangles": 792
+      "triangles": 792,
+      "hash": "d65b43eab401"
     },
     {
       "id": "house_town",
@@ -556,7 +587,8 @@
         2,
         3
       ],
-      "triangles": 1766
+      "triangles": 1766,
+      "hash": "f57b490d62d3"
     },
     {
       "id": "shop_cafe",
@@ -572,7 +604,8 @@
         2,
         2
       ],
-      "triangles": 1256
+      "triangles": 1256,
+      "hash": "7bdf24441f59"
     },
     {
       "id": "shop_restaurant",
@@ -588,7 +621,8 @@
         3,
         3
       ],
-      "triangles": 1406
+      "triangles": 1406,
+      "hash": "d57c239f9883"
     },
     {
       "id": "deco_park",
@@ -604,7 +638,8 @@
         3,
         3
       ],
-      "triangles": 2472
+      "triangles": 2472,
+      "hash": "21ca322e2cae"
     },
     {
       "id": "bank",
@@ -620,7 +655,8 @@
         3,
         3
       ],
-      "triangles": 1750
+      "triangles": 1750,
+      "hash": "fd27c9e6814e"
     },
     {
       "id": "house_apartment",
@@ -636,7 +672,8 @@
         4,
         4
       ],
-      "triangles": 1814
+      "triangles": 1814,
+      "hash": "fee4b3bd4044"
     },
     {
       "id": "shop_supermarket",
@@ -652,7 +689,8 @@
         4,
         4
       ],
-      "triangles": 2450
+      "triangles": 2450,
+      "hash": "e3004a56a2d2"
     },
     {
       "id": "hotel",
@@ -668,7 +706,8 @@
         4,
         5
       ],
-      "triangles": 1598
+      "triangles": 1598,
+      "hash": "545eff167515"
     },
     {
       "id": "office_tower",
@@ -684,7 +723,8 @@
         4,
         4
       ],
-      "triangles": 2986
+      "triangles": 2986,
+      "hash": "f8e1a71544ee"
     },
     {
       "id": "market",
@@ -700,7 +740,8 @@
         3,
         3
       ],
-      "triangles": 1750
+      "triangles": 1750,
+      "hash": "6c44d926d052"
     },
     {
       "id": "farmhouse",
@@ -716,7 +757,8 @@
         3,
         3
       ],
-      "triangles": 1652
+      "triangles": 1652,
+      "hash": "a7598b898d87"
     },
     {
       "id": "well",
@@ -732,7 +774,8 @@
         1,
         1
       ],
-      "triangles": 1078
+      "triangles": 1078,
+      "hash": "360a3aa75b43"
     },
     {
       "id": "silo",
@@ -760,7 +803,8 @@
           1.3390875749435764
         ]
       },
-      "triangles": 60
+      "triangles": 60,
+      "hash": "8ed0f8d8110f"
     },
     {
       "id": "chicken_coop",
@@ -776,7 +820,8 @@
         3,
         3
       ],
-      "triangles": 1656
+      "triangles": 1656,
+      "hash": "e0d0e871f314"
     },
     {
       "id": "rice_mill",
@@ -792,7 +837,8 @@
         3,
         3
       ],
-      "triangles": 2340
+      "triangles": 2340,
+      "hash": "1b49ad814b62"
     },
     {
       "id": "cow_barn",
@@ -808,7 +854,8 @@
         4,
         4
       ],
-      "triangles": 2424
+      "triangles": 2424,
+      "hash": "6f5c953b2add"
     },
     {
       "id": "bakery",
@@ -824,7 +871,8 @@
         3,
         3
       ],
-      "triangles": 1622
+      "triangles": 1622,
+      "hash": "c4c0f28f0f7c"
     },
     {
       "id": "deco_flowerbed",
@@ -840,7 +888,8 @@
         1,
         1
       ],
-      "triangles": 798
+      "triangles": 798,
+      "hash": "f93985f2643a"
     },
     {
       "id": "veg_greens_seed",
@@ -864,7 +913,8 @@
           0.5331479122813215
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "84884e2d5f07"
     },
     {
       "id": "veg_greens_growing",
@@ -888,7 +938,8 @@
           0.5711901729331277
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "ca2053b2d638"
     },
     {
       "id": "veg_greens_ripe",
@@ -912,7 +963,8 @@
           0.6092324335849338
         ]
       },
-      "triangles": 88
+      "triangles": 88,
+      "hash": "3a3592a95f2a"
     },
     {
       "id": "rice_seed",
@@ -936,7 +988,8 @@
           0.5331479122813215
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "84884e2d5f07"
     },
     {
       "id": "rice_growing",
@@ -960,7 +1013,8 @@
           0.5711901729331277
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "ca2053b2d638"
     },
     {
       "id": "rice_ripe",
@@ -984,7 +1038,8 @@
           0.6092324335849338
         ]
       },
-      "triangles": 88
+      "triangles": 88,
+      "hash": "3a3592a95f2a"
     },
     {
       "id": "corn_seed",
@@ -1008,7 +1063,8 @@
           0.5331479122813215
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "84884e2d5f07"
     },
     {
       "id": "corn_growing",
@@ -1032,7 +1088,8 @@
           0.5711901729331277
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "ca2053b2d638"
     },
     {
       "id": "corn_ripe",
@@ -1056,7 +1113,8 @@
           0.6092324335849338
         ]
       },
-      "triangles": 88
+      "triangles": 88,
+      "hash": "3a3592a95f2a"
     },
     {
       "id": "tomato_seed",
@@ -1080,7 +1138,8 @@
           0.5331479122813215
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "84884e2d5f07"
     },
     {
       "id": "tomato_growing",
@@ -1104,7 +1163,8 @@
           0.5711901729331277
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "ca2053b2d638"
     },
     {
       "id": "tomato_ripe",
@@ -1128,7 +1188,8 @@
           0.6092324335849338
         ]
       },
-      "triangles": 88
+      "triangles": 88,
+      "hash": "bca432cb5f22"
     },
     {
       "id": "sugarcane_seed",
@@ -1152,7 +1213,8 @@
           0.5331479122813215
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "84884e2d5f07"
     },
     {
       "id": "sugarcane_growing",
@@ -1176,7 +1238,8 @@
           0.5711901729331277
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "ca2053b2d638"
     },
     {
       "id": "sugarcane_ripe",
@@ -1200,7 +1263,8 @@
           0.6092324335849338
         ]
       },
-      "triangles": 88
+      "triangles": 88,
+      "hash": "3a3592a95f2a"
     },
     {
       "id": "watermelon_seed",
@@ -1224,7 +1288,8 @@
           0.5331479122813215
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "84884e2d5f07"
     },
     {
       "id": "watermelon_growing",
@@ -1248,7 +1313,8 @@
           0.5711901729331277
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "ca2053b2d638"
     },
     {
       "id": "watermelon_ripe",
@@ -1272,7 +1338,8 @@
           0.6092324335849338
         ]
       },
-      "triangles": 88
+      "triangles": 88,
+      "hash": "3a3592a95f2a"
     },
     {
       "id": "pumpkin_seed",
@@ -1296,7 +1363,8 @@
           0.5331479122813215
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "84884e2d5f07"
     },
     {
       "id": "pumpkin_growing",
@@ -1320,7 +1388,8 @@
           0.5711901729331277
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "ca2053b2d638"
     },
     {
       "id": "pumpkin_ripe",
@@ -1344,7 +1413,8 @@
           0.6092324335849338
         ]
       },
-      "triangles": 88
+      "triangles": 88,
+      "hash": "3a3592a95f2a"
     },
     {
       "id": "coffee_seed",
@@ -1368,7 +1438,8 @@
           0.5331479122813215
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "84884e2d5f07"
     },
     {
       "id": "coffee_growing",
@@ -1392,7 +1463,8 @@
           0.5711901729331277
         ]
       },
-      "triangles": 40
+      "triangles": 40,
+      "hash": "ca2053b2d638"
     },
     {
       "id": "coffee_ripe",
@@ -1416,7 +1488,8 @@
           0.6092324335849338
         ]
       },
-      "triangles": 88
+      "triangles": 88,
+      "hash": "3a3592a95f2a"
     },
     {
       "id": "construction_scaffold",
@@ -1440,7 +1513,8 @@
           0.5
         ]
       },
-      "triangles": 144
+      "triangles": 144,
+      "hash": "8b969155cab2"
     },
     {
       "id": "tree_deciduous_01_far",
@@ -1452,7 +1526,8 @@
       "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "66dcb51e0999"
     },
     {
       "id": "tree_deciduous_02_far",
@@ -1464,7 +1539,8 @@
       "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "7df7b677d3c8"
     },
     {
       "id": "tree_deciduous_03_far",
@@ -1476,7 +1552,8 @@
       "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "f68d8e85d7a1"
     },
     {
       "id": "tree_deciduous_04_far",
@@ -1488,7 +1565,8 @@
       "url": "https://sketchfab.com/3d-models/stylized-tree-eb71371ebebd482e804b0f8b5a9b6b40",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "f001578af5ee"
     },
     {
       "id": "tree_conifer_01_far",
@@ -1500,7 +1578,8 @@
       "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "a186a2ae6932"
     },
     {
       "id": "tree_conifer_02_far",
@@ -1512,7 +1591,8 @@
       "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "9a4af3e421bb"
     },
     {
       "id": "tree_conifer_03_far",
@@ -1524,7 +1604,8 @@
       "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "84e6f94b7162"
     },
     {
       "id": "tree_conifer_04_far",
@@ -1536,7 +1617,8 @@
       "url": "https://sketchfab.com/3d-models/fur-tree-41fa3210e50944eaa489c148e5e2ccc7",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "72c2cdab0eee"
     },
     {
       "id": "bush_01_far",
@@ -1548,7 +1630,8 @@
       "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "d2a927a8652e"
     },
     {
       "id": "bush_02_far",
@@ -1560,7 +1643,8 @@
       "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "34510d990b46"
     },
     {
       "id": "bush_03_far",
@@ -1572,7 +1656,8 @@
       "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "de537a6f5bf8"
     },
     {
       "id": "bush_04_far",
@@ -1584,7 +1669,8 @@
       "url": "https://sketchfab.com/3d-models/small-bush-f6ed4c70fc024ac88e8e6a19991695af",
       "modified": true,
       "placeholder": false,
-      "triangles": 8
+      "triangles": 8,
+      "hash": "9a1cd129d843"
     }
   ]
 }
