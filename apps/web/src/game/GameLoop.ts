@@ -117,7 +117,7 @@ export class GameLoop {
   private resize():void {
     const rect=this.canvas.getBoundingClientRect();this.renderer.setSize(rect.width,rect.height,false);this.composer.setPixelRatio(this.renderer.getPixelRatio());this.composer.setSize(rect.width,rect.height);this.bloom.setSize(Math.max(1,Math.round(rect.width*this.renderer.getPixelRatio()/2)),Math.max(1,Math.round(rect.height*this.renderer.getPixelRatio()/2)));this.rig.resize(rect.width,rect.height);
   }
-  private currentHour():number { return this.forcedHour ?? (this.timeOfDay==='day'?13:this.timeOfDay==='night'?22:hourFromTimestamp(Date.now())); }
+  private currentHour():number { return this.forcedHour ?? (this.timeOfDay==='day'?13:this.timeOfDay==='night'?23:hourFromTimestamp(Date.now())); }
   private updateLighting(force=false):void {
     const now=performance.now();if(!force&&now-this.lastLighting<1000)return;this.lastLighting=now;
     const state=lighting(this.currentHour(),this.timeOfDay);setNight(state.night,state.unlitTint);setWindowTime(state.hour,state.night);

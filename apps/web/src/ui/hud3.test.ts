@@ -10,7 +10,7 @@ describe('reference HUD logic', () => {
     expect(clockIcon(13, 1)).toBe('moon'); // "Luôn ban đêm" at 13:00
     expect(clockIcon(22, 0)).toBe('sun');  // "Luôn ban ngày" at 22:00
     expect(clockIcon(18, 0.4)).toBe('sun'); expect(clockIcon(18, 0.6)).toBe('moon');
-    expect(clockIcon(13)).toBe('sun'); expect(clockIcon(22)).toBe('moon'); expect(clockIcon(5)).toBe('moon');
+    expect(clockIcon(13)).toBe('sun'); expect(clockIcon(23)).toBe('moon'); expect(clockIcon(20)).toBe('sun'); expect(clockIcon(5)).toBe('moon');
   });
   it('player titles climb with level, per map', () => {
     expect(playerTitle('city', 1)).toBe('Người lập làng');

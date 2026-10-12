@@ -42,12 +42,15 @@ function smoothstep(value: number): number {
   return t * t * (3 - 2 * t);
 }
 
+/** Full night 23:00–05:00 (owner request, D036); 2 h dusk 21–23 and dawn 05–07; day 07–21. */
+export const NIGHT_PHASES = { duskStart: 21, nightStart: 23, nightEnd: 5, dawnEnd: 7 } as const;
+
 function nightAt(hour: number): number {
-  const h = ((hour % 24) + 24) % 24;
-  if (h >= 7 && h < 17) return 0;
-  if (h >= 19 || h < 5) return 1;
-  if (h < 7) return 1 - smoothstep((h - 5) / 2);
-  return smoothstep((h - 17) / 2);
+  const h = ((hour % 24) + 24) % 24, { duskStart, nightStart, nightEnd, dawnEnd } = NIGHT_PHASES;
+  if (h >= dawnEnd && h < duskStart) return 0;
+  if (h >= nightStart || h < nightEnd) return 1;
+  if (h < dawnEnd) return 1 - smoothstep((h - nightEnd) / (dawnEnd - nightEnd));
+  return smoothstep((h - duskStart) / (nightStart - duskStart));
 }
 
 function mixHex(a: string, b: string, amount: number): string {

@@ -5,16 +5,18 @@ describe('day/night lighting', () => {
   it('uses the requested phase boundaries', () => {
     expect(lighting(5).night).toBe(1);
     expect(lighting(7).night).toBe(0);
-    expect(lighting(17).night).toBe(0);
-    expect(lighting(19).night).toBe(1);
+    expect(lighting(21).night).toBe(0);
+    expect(lighting(23).night).toBe(1);
+    expect(lighting(19).night).toBe(0); // D036: evenings stay daylight until 21:00
+    expect(lighting(2).night).toBe(1);
   });
   it('transitions continuously through dawn and dusk', () => {
-    for (const boundary of [5, 7, 17, 19]) {
+    for (const boundary of [5, 7, 21, 23]) {
       const before = lighting(boundary - 0.001).night, after = lighting(boundary + 0.001).night;
       expect(Math.abs(after - before)).toBeLessThan(0.01);
     }
     expect(lighting(6).night).toBeCloseTo(0.5, 3);
-    expect(lighting(18).night).toBeCloseTo(0.5, 3);
+    expect(lighting(22).night).toBeCloseTo(0.5, 3);
   });
   it('matches day/night physical parameters at boundaries', () => {
     const nightState = lighting(5);
@@ -29,11 +31,11 @@ describe('day/night lighting', () => {
     expect(dayState.hemisphereIntensity).toBeCloseTo(1.25, 2);
     expect(dayState.exposure).toBeCloseTo(0.85, 2);
 
-    const duskStart = lighting(17);
+    const duskStart = lighting(21);
     expect(duskStart.night).toBe(0);
     expect(duskStart.sunIntensity).toBeCloseTo(2.1, 2);
 
-    const nightSettled = lighting(19);
+    const nightSettled = lighting(23);
     expect(nightSettled.night).toBe(1);
     expect(nightSettled.sunIntensity).toBeCloseTo(0.62, 2);
   });
@@ -53,14 +55,14 @@ describe('day/night lighting', () => {
   it('tints unlit materials like lit surfaces: neutral by day, dark moonlit blue at night, monotonic at dusk', () => {
     expect(lighting(13).unlitTint).toEqual([1, 1, 1]);
     expect(lighting(22, 'day').unlitTint).toEqual([1, 1, 1]);
-    const [red, green, blue] = lighting(22).unlitTint;
-    // Lit terrain measured ~11% of its 13:00 luminance at 22:00; unlit foliage must follow, not stay at ~57%.
+    const [red, green, blue] = lighting(23).unlitTint;
+    // Lit terrain measured ~11% of its 13:00 luminance at full night; unlit foliage must follow, not stay at ~57%.
     expect(0.2126 * red + 0.7152 * green + 0.0722 * blue).toBeGreaterThan(0.05);
     expect(0.2126 * red + 0.7152 * green + 0.0722 * blue).toBeLessThan(0.2);
     expect(blue).toBeGreaterThan(green); expect(green).toBeGreaterThan(red);
-    expect(lighting(12, 'night').unlitTint).toEqual(lighting(22).unlitTint);
+    expect(lighting(12, 'night').unlitTint).toEqual(lighting(23).unlitTint);
     let previous = 1;
-    for (let hour = 17; hour <= 19; hour += 0.25) {
+    for (let hour = 21; hour <= 23; hour += 0.25) {
       const luma = lighting(hour).unlitTint[1];
       expect(luma).toBeLessThanOrEqual(previous + 1e-9);
       previous = luma;

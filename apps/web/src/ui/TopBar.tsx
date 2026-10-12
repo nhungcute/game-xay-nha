@@ -40,7 +40,7 @@ export function notifications(state: State): string[] {
 /** HUD clock icon: follows the scene's time-of-day lighting when known (forced day/night modes included),
  *  else the server hour. */
 export function clockIcon(hour: number, night?: number): 'sun' | 'moon' {
-  return (night === undefined ? hour < 6 || hour >= 18 : night > 0.5) ? 'moon' : 'sun';
+  return (night === undefined ? hour < 6 || hour >= 22 : night > 0.5) ? 'moon' : 'sun';
 }
 interface TopBarProps {
   state: State; panel: GamePanel | null; status: string; connected: boolean; unread: boolean; canCollect: boolean;
