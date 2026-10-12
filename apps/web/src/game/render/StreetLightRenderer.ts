@@ -5,7 +5,13 @@ import { cornerHeights } from './geometry';
 import { nightUniform } from './night';
 import { patchMaterial } from './shaderPatches';
 
-const LAMP_LIGHT = 0.95; // Warm emissive k under bloom threshold 1.15
+/** Bulb glow. Above the 1.15 bloom threshold on purpose (D036 review): the bulbs are a few pixels under their hoods,
+ *  so at 0.95 they read as unlit; a small bloom halo is what makes a lit lamp visible from the game camera. */
+const LAMP_LIGHT = 1.8;
+/** Ground pool strength (linear, before tone mapping): a warm amber pool, not a white disc. */
+const POOL_LIGHT = 0.65;
+/** Pool shape across the cell: full strength out to PLATEAU of the half-cell, then a soft fade to the cell edge. */
+const POOL_PLATEAU = 0.45;
 
 /** Emissive glow on streetlight bulb geometry when uNight > 0. */
 export function applyStreetLampLight(material: THREE.Material): void {
@@ -35,19 +41,21 @@ function createGroundLightTexture(): THREE.DataTexture {
     for (let x = 0; x < size; x++) {
       const idx = (y * size + x) * 4;
       const dist = Math.hypot(x - center, y - center);
-      const t = Math.min(1, dist / maxRadius);
-      // Smooth cubic falloff to 0 at edge
-      const falloff = (1 - t * t) ** 2;
+      // Soft square-ish pool: covers most of the cell (corners fade), instead of a ~1 m hot spot at the centre.
+      const t = Math.min(1, Math.max(Math.abs(x - center), Math.abs(y - center)) * 0.35 / maxRadius + dist * 0.65 / maxRadius);
+      const edge = Math.min(1, Math.max(0, (t - POOL_PLATEAU) / (1 - POOL_PLATEAU)));
+      const falloff = 1 - edge * edge * (3 - 2 * edge);
 
-      // Warm golden light: rgb(255, 210, 130)
-      data[idx] = Math.round(255 * falloff);
-      data[idx + 1] = Math.round(210 * falloff);
-      data[idx + 2] = Math.round(130 * falloff);
+      // Warm amber (sRGB #ffc46e); alpha carries the falloff.
+      data[idx] = 255;
+      data[idx + 1] = 196;
+      data[idx + 2] = 110;
       data[idx + 3] = Math.round(255 * falloff);
     }
   }
 
   const texture = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+  texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.ClampToEdgeWrapping;
   texture.wrapT = THREE.ClampToEdgeWrapping;
   texture.needsUpdate = true;
@@ -84,10 +92,9 @@ export class StreetLightRenderer {
 
     this.material.onBeforeCompile = shader => {
       shader.uniforms.uNight = nightUniform;
-      shader.vertexShader = `attribute vec4 roadCorners; varying vec2 vLightUv;\n${shader.vertexShader}`.replace(
+      shader.vertexShader = `attribute vec4 roadCorners;\n${shader.vertexShader}`.replace(
         '#include <begin_vertex>',
         `#include <begin_vertex>
-        vLightUv = uv;
         float a = roadCorners.x, b = roadCorners.y, c = roadCorners.z, d = roadCorners.w;
         float u = clamp((position.x + 1.0) * 0.5, 0.0, 1.0);
         float v = clamp((position.z + 1.0) * 0.5, 0.0, 1.0);
@@ -98,10 +105,10 @@ export class StreetLightRenderer {
         }
         transformed.y += 0.015;`,
       );
-      shader.fragmentShader = `uniform float uNight; varying vec2 vLightUv;\n${shader.fragmentShader}`.replace(
+      shader.fragmentShader = `uniform float uNight;\n${shader.fragmentShader}`.replace(
         '#include <color_fragment>',
         `#include <color_fragment>
-        diffuseColor.rgb *= uNight;`,
+        diffuseColor.rgb *= uNight * ${POOL_LIGHT.toFixed(2)};`,
       );
     };
 
