@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:5190",
-  "at": "2026-10-12T16:27:52.594Z",
+  "at": "2026-10-12T16:59:28.549Z",
   "shots": [
     {
       "kind": "farm",
@@ -19,16 +19,16 @@
     {
       "kind": "farm",
       "distName": "close",
-      "hourName": "22h",
+      "hourName": "23h",
       "quality": "high",
-      "file": "docs/evidence/g4/streetlight/farm-close-22h-high.jpg"
+      "file": "docs/evidence/g4/streetlight/farm-close-23h-high.jpg"
     },
     {
       "kind": "farm",
       "distName": "close",
-      "hourName": "22h",
+      "hourName": "23h",
       "quality": "low",
-      "file": "docs/evidence/g4/streetlight/farm-close-22h-low.jpg"
+      "file": "docs/evidence/g4/streetlight/farm-close-23h-low.jpg"
     },
     {
       "kind": "farm",
@@ -47,21 +47,21 @@
     {
       "kind": "farm",
       "distName": "mid",
-      "hourName": "22h",
+      "hourName": "23h",
       "quality": "high",
-      "file": "docs/evidence/g4/streetlight/farm-mid-22h-high.jpg"
+      "file": "docs/evidence/g4/streetlight/farm-mid-23h-high.jpg"
     },
     {
       "kind": "farm",
       "distName": "mid",
-      "hourName": "22h",
+      "hourName": "23h",
       "quality": "low",
-      "file": "docs/evidence/g4/streetlight/farm-mid-22h-low.jpg"
+      "file": "docs/evidence/g4/streetlight/farm-mid-23h-low.jpg"
     },
     {
       "kind": "farm",
       "device": "Pixel 7",
-      "file": "docs/evidence/g4/streetlight/farm-pixel7-22h.jpg"
+      "file": "docs/evidence/g4/streetlight/farm-pixel7-23h.jpg"
     },
     {
       "kind": "city",
@@ -80,16 +80,16 @@
     {
       "kind": "city",
       "distName": "close",
-      "hourName": "22h",
+      "hourName": "23h",
       "quality": "high",
-      "file": "docs/evidence/g4/streetlight/city-close-22h-high.jpg"
+      "file": "docs/evidence/g4/streetlight/city-close-23h-high.jpg"
     },
     {
       "kind": "city",
       "distName": "close",
-      "hourName": "22h",
+      "hourName": "23h",
       "quality": "low",
-      "file": "docs/evidence/g4/streetlight/city-close-22h-low.jpg"
+      "file": "docs/evidence/g4/streetlight/city-close-23h-low.jpg"
     },
     {
       "kind": "city",
@@ -108,21 +108,21 @@
     {
       "kind": "city",
       "distName": "mid",
-      "hourName": "22h",
+      "hourName": "23h",
       "quality": "high",
-      "file": "docs/evidence/g4/streetlight/city-mid-22h-high.jpg"
+      "file": "docs/evidence/g4/streetlight/city-mid-23h-high.jpg"
     },
     {
       "kind": "city",
       "distName": "mid",
-      "hourName": "22h",
+      "hourName": "23h",
       "quality": "low",
-      "file": "docs/evidence/g4/streetlight/city-mid-22h-low.jpg"
+      "file": "docs/evidence/g4/streetlight/city-mid-23h-low.jpg"
     },
     {
       "kind": "city",
       "device": "Pixel 7",
-      "file": "docs/evidence/g4/streetlight/city-pixel7-22h.jpg"
+      "file": "docs/evidence/g4/streetlight/city-pixel7-23h.jpg"
     }
   ],
   "gates": {
@@ -156,12 +156,12 @@
           67
         ]
       ],
-      "nightRatio": 9.21,
+      "nightRatio": 13.97,
       "dayDiffPct": 2.33,
       "drawCallDiff": 2,
       "farBrightened": false,
-      "litLuma22": 115.4,
-      "adjLuma22": 12.5,
+      "litLuma23": 163.8,
+      "adjLuma23": 11.7,
       "litLuma13": 155.8,
       "adjLuma13": 152.3
     },
@@ -184,14 +184,14 @@
           82
         ]
       ],
-      "nightRatio": 70.58,
-      "dayDiffPct": 0.23,
+      "nightRatio": 101.4,
+      "dayDiffPct": 0.61,
       "drawCallDiff": 1,
       "farBrightened": false,
-      "litLuma22": 113.7,
-      "adjLuma22": 1.6,
+      "litLuma23": 163.3,
+      "adjLuma23": 1.6,
       "litLuma13": 152.3,
-      "adjLuma13": 151.9
+      "adjLuma13": 153.2
     }
   },
   "errors": []

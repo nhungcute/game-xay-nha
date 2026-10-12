@@ -472,3 +472,12 @@ Rendering & Night Lighting:
 
 Validation: `assets.test.ts` asserts 1 part, ≤ 800 triangles, footprint bounds, `_lamp` vertex attribute > 0, and CC-BY provenance. All 9 automated gates in `scripts/streetlight-qa.mjs` pass (night brightness ratio > 2×, day difference < 5%, far cell unaffected, draw call increase ≤ 2, 0 console errors) across 18 screenshots in `docs/evidence/g4/streetlight/`. Baseline `scripts/g4-night-qa.mjs` remains fully passing.
 
+
+## D036 - 2026-10-13 - Full night 23:00–05:00; brighter lamp bulbs, warm cell-wide lamp pools
+
+Owner request: full night runs 23:00–05:00. `NIGHT_PHASES` in `dayCycle.ts`: day 07–21, 2 h dusk 21–23, night 23–05,
+2 h dawn 05–07 (was day 07–17, dusk 17–19, night 19–05). "Luôn ban đêm" forces hour 23; the HUD's fallback icon uses
+the same hours. Night QA (`g4-night-qa`, `streetlight-qa`, `object-panel-qa`) now captures at 23:00; 22:00 is the
+dusk frame of the time comparison. Streetlight review: the ground pool is sRGB warm amber over most of the lamp's
+cell (was a ~1 m near-white hot spot) and the bulbs glow at 1.8 so a small bloom halo marks a lit lamp (at 0.95 they
+read as unlit). All night gates pass (foliage/scene 0.97–1.20, lamp cell vs neighbour 14×–101× at 23:00, ≤ 2.3 % by day).

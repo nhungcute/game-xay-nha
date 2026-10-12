@@ -1,10 +1,10 @@
 // D035 visual QA: Streetlight (deco_streetlight) verification.
 // Places 4-6 streetlights along a road in farm and city via __debug PLACE_BUILDING.
-// Measures close-up (25 m) and mid-range (70 m) views at 13:00 and 22:00 in high and low quality, plus Pixel 7 at 22:00.
+// Measures close-up (25 m) and mid-range (70 m) views at 13:00 and 23:00 in high and low quality, plus Pixel 7 at 23:00.
 // Gates:
-//   1. At 22:00, average brightness on lit cell is at least 2x higher than adjacent cell without light.
+//   1. At 23:00, average brightness on lit cell is at least 2x higher than adjacent cell without light.
 //   2. At 13:00, difference between lit cell and adjacent cell is <= 5%.
-//   3. Cell >= 2 cells away does not brighten at 22:00.
+//   3. Cell >= 2 cells away does not brighten at 23:00.
 //   4. Draw calls increase <= 2 compared to without streetlights.
 //   5. No console errors.
 // Exits non-zero on any gate failure.
@@ -112,10 +112,10 @@ try {
     await page.waitForTimeout(1000);
     const _baseCalls13 = (await page.evaluate(() => window.__debug.metrics())).drawCalls;
 
-    await page.evaluate(() => window.__debug.timeOfDay(22));
+    await page.evaluate(() => window.__debug.timeOfDay(23));
     await page.waitForTimeout(1000);
-    const baseCalls22 = (await page.evaluate(() => window.__debug.metrics())).drawCalls;
-    const baseFarLuma22 = await sampleGroundLuma(page, farSpot[0], farSpot[1]);
+    const baseCalls23 = (await page.evaluate(() => window.__debug.metrics())).drawCalls;
+    const baseFarLuma23 = await sampleGroundLuma(page, farSpot[0], farSpot[1]);
 
     // 2. Place streetlights via __debug command PLACE_BUILDING and advance
     const placed = await page.evaluate((cells) => {
@@ -132,10 +132,10 @@ try {
     await page.waitForTimeout(1500);
 
     // 3. Measure metrics with streetlights
-    const afterCalls22 = (await page.evaluate(() => window.__debug.metrics())).drawCalls;
-    const litLuma22 = await sampleGroundLuma(page, focusSpot[0], focusSpot[1]);
-    const adjLuma22 = await sampleGroundLuma(page, adjSpot[0], adjSpot[1]);
-    const farLuma22 = await sampleGroundLuma(page, farSpot[0], farSpot[1]);
+    const afterCalls23 = (await page.evaluate(() => window.__debug.metrics())).drawCalls;
+    const litLuma23 = await sampleGroundLuma(page, focusSpot[0], focusSpot[1]);
+    const adjLuma23 = await sampleGroundLuma(page, adjSpot[0], adjSpot[1]);
+    const farLuma23 = await sampleGroundLuma(page, farSpot[0], farSpot[1]);
 
     await page.evaluate(() => window.__debug.timeOfDay(13));
     await page.waitForTimeout(1000);
@@ -143,15 +143,15 @@ try {
     const litLuma13 = await sampleGroundLuma(page, focusSpot[0], focusSpot[1]);
     const adjLuma13 = await sampleGroundLuma(page, adjSpot[0], adjSpot[1]);
 
-    const drawCallDiff = afterCalls22 - baseCalls22;
-    const nightRatio = litLuma22 / adjLuma22;
+    const drawCallDiff = afterCalls23 - baseCalls23;
+    const nightRatio = litLuma23 / adjLuma23;
     const dayDiffPct = (Math.abs(litLuma13 - adjLuma13) / adjLuma13) * 100;
-    const farBrightened = (farLuma22 - baseFarLuma22) > 2.0;
+    const farBrightened = (farLuma23 - baseFarLuma23) > 2.0;
 
-    console.log(`  22h: lit=${litLuma22.toFixed(1)}, adj=${adjLuma22.toFixed(1)}, ratio=${nightRatio.toFixed(2)}x (need >= 2x)`);
+    console.log(`  23h: lit=${litLuma23.toFixed(1)}, adj=${adjLuma23.toFixed(1)}, ratio=${nightRatio.toFixed(2)}x (need >= 2x)`);
     console.log(`  13h: lit=${litLuma13.toFixed(1)}, adj=${adjLuma13.toFixed(1)}, diff=${dayDiffPct.toFixed(2)}% (need <= 5%)`);
-    console.log(`  Far (2 cells away): before=${baseFarLuma22.toFixed(1)}, after=${farLuma22.toFixed(1)}`);
-    console.log(`  Draw calls: before=${baseCalls22}, after=${afterCalls22}, diff=${drawCallDiff} (need <= 2)`);
+    console.log(`  Far (2 cells away): before=${baseFarLuma23.toFixed(1)}, after=${farLuma23.toFixed(1)}`);
+    console.log(`  Draw calls: before=${baseCalls23}, after=${afterCalls23}, diff=${drawCallDiff} (need <= 2)`);
 
     report.measurements[kind] = {
       spots: placed,
@@ -159,16 +159,16 @@ try {
       dayDiffPct: +dayDiffPct.toFixed(2),
       drawCallDiff,
       farBrightened,
-      litLuma22: +litLuma22.toFixed(1),
-      adjLuma22: +adjLuma22.toFixed(1),
+      litLuma23: +litLuma23.toFixed(1),
+      adjLuma23: +adjLuma23.toFixed(1),
       litLuma13: +litLuma13.toFixed(1),
       adjLuma13: +adjLuma13.toFixed(1),
     };
 
-    // 4. Capture shots: close (25m) and mid (70m), high and low, 13h and 22h
+    // 4. Capture shots: close (25m) and mid (70m), high and low, 13h and 23h
     for (const [distName, dist] of [['close', 25], ['mid', 70]]) {
       await page.evaluate(([fx, fz, d]) => window.__debug.camera(fx * 2 + 1, fz * 2 + 1, d, 30, 45), [...focusSpot, dist]);
-      for (const [hourName, hour] of [['13h', 13], ['22h', 22]]) {
+      for (const [hourName, hour] of [['13h', 13], ['23h', 23]]) {
         await page.evaluate(h => window.__debug.timeOfDay(h), hour);
         for (const quality of ['high', 'low']) {
           await page.evaluate(q => window.__debug.setQuality(q), quality);
@@ -182,7 +182,7 @@ try {
       }
     }
 
-    // 5. Pixel 7 at 22:00
+    // 5. Pixel 7 at 23:00
     await context.close();
 
     const mobileContext = await browser.newContext({
@@ -198,9 +198,9 @@ try {
       window.__debug.advance(16000);
     }, spots);
     await mobilePage.evaluate(([fx, fz]) => window.__debug.camera(fx * 2 + 1, fz * 2 + 1, 35, 30, 45), focusSpot);
-    await mobilePage.evaluate(() => window.__debug.timeOfDay(22));
+    await mobilePage.evaluate(() => window.__debug.timeOfDay(23));
     await mobilePage.waitForTimeout(1500);
-    const pixel7File = `${OUT}/${kind}-pixel7-22h.jpg`;
+    const pixel7File = `${OUT}/${kind}-pixel7-23h.jpg`;
     await mobilePage.screenshot({ path: pixel7File, type: 'jpeg', quality: 85 });
     report.shots.push({ kind, device: 'Pixel 7', file: pixel7File });
     console.log(`  Captured ${pixel7File}`);

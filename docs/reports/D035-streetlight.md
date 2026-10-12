@@ -61,27 +61,33 @@ All 9 automated QA gates pass (`scripts/streetlight-qa.mjs`), all 10 night QA ga
 
 ## 5. Automated QA Evidence & Gates
 
+**D036 review update.** The first pool was a ~1 m near-white hot spot (texture without a colour space, values added as
+linear, fast cubic falloff) and the bulbs read as unlit (emissive 0.95 on bulbs a few pixels under their hoods). Now:
+the pool texture is sRGB warm amber `#ffc46e` at `POOL_LIGHT = 0.65`, full strength over ~45% of the half-cell then a
+smooth fade to the cell edge, so it covers the lamp's cell; bulbs glow at `LAMP_LIGHT = 1.8`, deliberately above the
+1.15 bloom threshold so a small halo marks a lit lamp. Night captures moved to 23:00 (full night since D036).
+
 Run via `node scripts/streetlight-qa.mjs` against offline full-world snapshots in headless Chrome:
 
 | Gate | Requirement | Farm | City | Verdict |
 |---|---|---:|---:|:---:|
-| 22:00 lit vs adjacent brightness | ≥ 2.0× | **9.21×** | **70.58×** | **PASS** |
-| 13:00 lit vs adjacent difference | ≤ 5.0% | **2.33%** | **0.23%** | **PASS** |
-| Cell 2 away unlit at 22:00 | No increase | **+0.0** | **+0.4** | **PASS** |
+| 23:00 lit vs adjacent brightness | ≥ 2.0× | **13.97×** | **101.40×** | **PASS** |
+| 13:00 lit vs adjacent difference | ≤ 5.0% | **2.33%** | **0.61%** | **PASS** |
+| Cell 2 away unlit at 23:00 | No increase | **+0.0** | **+0.4** | **PASS** |
 | Draw calls increase | ≤ 2 | **+2** (142 → 144) | **+1** (108 → 109) | **PASS** |
 | Console errors | 0 | **0** | **0** | **PASS** |
 
 ### Captured Screenshots (`docs/evidence/g4/streetlight/`)
 - `farm-close-13h-high.jpg`, `farm-close-13h-low.jpg`
-- `farm-close-22h-high.jpg`, `farm-close-22h-low.jpg`
+- `farm-close-23h-high.jpg`, `farm-close-23h-low.jpg`
 - `farm-mid-13h-high.jpg`, `farm-mid-13h-low.jpg`
-- `farm-mid-22h-high.jpg`, `farm-mid-22h-low.jpg`
-- `farm-pixel7-22h.jpg`
+- `farm-mid-23h-high.jpg`, `farm-mid-23h-low.jpg`
+- `farm-pixel7-23h.jpg`
 - `city-close-13h-high.jpg`, `city-close-13h-low.jpg`
-- `city-close-22h-high.jpg`, `city-close-22h-low.jpg`
+- `city-close-23h-high.jpg`, `city-close-23h-low.jpg`
 - `city-mid-13h-high.jpg`, `city-mid-13h-low.jpg`
-- `city-mid-22h-high.jpg`, `city-mid-22h-low.jpg`
-- `city-pixel7-22h.jpg`
+- `city-mid-23h-high.jpg`, `city-mid-23h-low.jpg`
+- `city-pixel7-23h.jpg`
 - `report.json`
 
 ## 6. Regression Testing

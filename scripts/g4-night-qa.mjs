@@ -1,7 +1,7 @@
 // D031 visual QA: Night time of day & window lights verification.
-// Measures city and farm under 22:00 night conditions, high/low graphics, bloom pass on/off,
+// Measures city and farm under 23:00 night conditions, high/low graphics, bloom pass on/off,
 // closeups of rice_mill, office_tower and house_apartment with lighted windows,
-// time comparison across 13:00 / 18:00 / 22:00 / 03:00, Pixel 7 mobile, and Settings toggles.
+// time comparison across 13:00 / 23:00 (dusk) / 23:00 / 03:00, Pixel 7 mobile, and Settings toggles.
 
 import { chromium, devices } from '@playwright/test';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -33,7 +33,7 @@ const report = {
   errors: [],
 };
 
-async function loadWorld(page, kind, hour = 22) {
+async function loadWorld(page, kind, hour = 23) {
   const mapId = kind === 'city' ? 'city-coast-01' : 'farm-valley-01';
   const template = await readFile(`apps/web/public/worlds/${mapId}/template.v2.json`, 'utf8');
   const snapshot = JSON.parse(await readFile(`${FULL_WORLD}/${kind}-snapshot.json`, 'utf8'));
@@ -83,7 +83,7 @@ const SCENE_CLIP = { x: 320, y: 120, width: 1020, height: 580 };
 
 /**
  * Foliage-vs-scene night gate: unlit foliage (KHR_materials_unlit far trees and bushes) must darken like lit
- * surfaces. Foliage pixels are the vivid-green ones of the same view at 13:00; at 22:00 their mean luminance
+ * surfaces. Foliage pixels are the vivid-green ones of the same view at 13:00; at 23:00 their mean luminance
  * must stay within FOLIAGE_RATIO_MAX of the rest of the scene (before the D031 fix it was ~5×).
  */
 const FOLIAGE_RATIO_MAX = 1.5;
@@ -115,15 +115,15 @@ async function warmWindowPixels(page) {
   return count;
 }
 
-// ---------------- 1. Overviews at 22:00 (City & Farm, High & Low) ----------------
-console.log('--- 1. Overviews at 22:00 ---');
+// ---------------- 1. Overviews at 23:00 (City & Farm, High & Low) ----------------
+console.log('--- 1. Overviews at 23:00 ---');
 for (const kind of ['city', 'farm']) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
   page.on('pageerror', e => report.errors.push(`${kind}: ${e.message}`));
   page.on('console', m => { if (m.type() === 'error') report.errors.push(`${kind}: ${m.text()}`); });
 
-  await loadWorld(page, kind, 22);
+  await loadWorld(page, kind, 23);
 
   for (const quality of ['high', 'low']) {
     if (quality === 'low') {
@@ -135,29 +135,29 @@ for (const kind of ['city', 'farm']) {
     await page.evaluate(() => window.__debug.camera(128, 128, 220, 45, 75));
     await page.waitForTimeout(2000);
 
-    const foliage = await foliageGate(page, 22);
+    const foliage = await foliageGate(page, 23);
     const perf = await measureFps(page);
     const m = await page.evaluate(() => window.__debug.metrics());
-    const fileName = `${kind}-${quality}-overview-22h.jpg`;
+    const fileName = `${kind}-${quality}-overview-23h.jpg`;
     await page.screenshot({ path: `${OUT}/${fileName}`, type: 'jpeg', quality: 82 });
 
     report.overviews[`${kind}_${quality}`] = {
-      kind, quality, hour: 22, file: fileName,
+      kind, quality, hour: 23, file: fileName,
       drawCalls: m.drawCalls, triangles: m.triangles, fps: perf.fps, p95Ms: perf.p95Ms,
       bloom: m.bloom, night: m.night, foliage,
     };
-    console.log(`  ${kind} ${quality} 22h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}, foliage/scene ${foliage.ratio}`);
+    console.log(`  ${kind} ${quality} 23h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}, foliage/scene ${foliage.ratio}`);
   }
   await context.close();
 }
 
-// ---------------- 2. Closeups at 22:00 (rice_mill, office_tower, house_apartment) ----------------
-console.log('--- 2. Closeups at 22:00 ---');
+// ---------------- 2. Closeups at 23:00 (rice_mill, office_tower, house_apartment) ----------------
+console.log('--- 2. Closeups at 23:00 ---');
 {
   // Farm: rice_mill closeup
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
-  await loadWorld(page, 'farm', 22);
+  await loadWorld(page, 'farm', 23);
 
   // Focus on rice_mill at anchor [63, 72] -> world x=129, z=147
   await page.evaluate(() => window.__debug.camera(129, 147, 32, 40, 25));
@@ -165,14 +165,14 @@ console.log('--- 2. Closeups at 22:00 ---');
   const perf = await measureFps(page);
   const m = await page.evaluate(() => window.__debug.metrics());
   const warmPixels22h = await warmWindowPixels(page);
-  await page.screenshot({ path: `${OUT}/closeup-rice_mill-22h.jpg`, type: 'jpeg', quality: 85 });
+  await page.screenshot({ path: `${OUT}/closeup-rice_mill-23h.jpg`, type: 'jpeg', quality: 85 });
   await page.evaluate(() => window.__debug.timeOfDay(13)); await page.waitForTimeout(1500);
   const warmPixels13h = await warmWindowPixels(page);
   report.closeups.rice_mill = {
-    target: 'rice_mill', hour: 22, file: 'closeup-rice_mill-22h.jpg',
+    target: 'rice_mill', hour: 23, file: 'closeup-rice_mill-23h.jpg',
     drawCalls: m.drawCalls, triangles: m.triangles, fps: perf.fps, bloom: m.bloom, warmPixels22h, warmPixels13h,
   };
-  console.log(`  rice_mill closeup 22h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
+  console.log(`  rice_mill closeup 23h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
   await context.close();
 }
 
@@ -180,36 +180,36 @@ console.log('--- 2. Closeups at 22:00 ---');
   // City: office_tower & house_apartment closeups
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
-  await loadWorld(page, 'city', 22);
+  await loadWorld(page, 'city', 23);
 
   // Focus on office_tower at anchor [64, 47] -> world x=132, z=98
   await page.evaluate(() => window.__debug.camera(132, 98, 42, 35, 22));
   await page.waitForTimeout(2000);
   let perf = await measureFps(page);
   let m = await page.evaluate(() => window.__debug.metrics());
-  await page.screenshot({ path: `${OUT}/closeup-office_tower-22h.jpg`, type: 'jpeg', quality: 85 });
+  await page.screenshot({ path: `${OUT}/closeup-office_tower-23h.jpg`, type: 'jpeg', quality: 85 });
   report.closeups.office_tower = {
-    target: 'office_tower', hour: 22, file: 'closeup-office_tower-22h.jpg',
+    target: 'office_tower', hour: 23, file: 'closeup-office_tower-23h.jpg',
     drawCalls: m.drawCalls, triangles: m.triangles, fps: perf.fps, bloom: m.bloom,
   };
-  console.log(`  office_tower closeup 22h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
+  console.log(`  office_tower closeup 23h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
 
   // Focus on house_apartment at anchor [60, 55] -> world x=124, z=114
   await page.evaluate(() => window.__debug.camera(124, 114, 38, 210, 24));
   await page.waitForTimeout(2000);
   perf = await measureFps(page);
   m = await page.evaluate(() => window.__debug.metrics());
-  await page.screenshot({ path: `${OUT}/closeup-house_apartment-22h.jpg`, type: 'jpeg', quality: 85 });
+  await page.screenshot({ path: `${OUT}/closeup-house_apartment-23h.jpg`, type: 'jpeg', quality: 85 });
   report.closeups.house_apartment = {
-    target: 'house_apartment', hour: 22, file: 'closeup-house_apartment-22h.jpg',
+    target: 'house_apartment', hour: 23, file: 'closeup-house_apartment-23h.jpg',
     drawCalls: m.drawCalls, triangles: m.triangles, fps: perf.fps, bloom: m.bloom,
   };
-  console.log(`  house_apartment closeup 22h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
+  console.log(`  house_apartment closeup 23h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
   await context.close();
 }
 
-// ---------------- 3. Time comparison (13h, 18h, 22h, 3h) ----------------
-console.log('--- 3. Time comparison (13h, 18h, 22h, 3h) ---');
+// ---------------- 3. Time comparison (13h, 23h dusk, 23h, 3h) ----------------
+console.log('--- 3. Time comparison (13h, 23h dusk, 23h, 3h) ---');
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
@@ -217,7 +217,7 @@ console.log('--- 3. Time comparison (13h, 18h, 22h, 3h) ---');
   // Oblique view showing both towers, apartments and street
   await page.evaluate(() => window.__debug.camera(128, 128, 110, 50, 35));
 
-  for (const hour of [13, 18, 22, 3]) {
+  for (const hour of [13, 22, 23, 3]) {
     await page.evaluate(h => window.__debug.timeOfDay(h), hour);
     await page.waitForTimeout(2000);
     const perf = await measureFps(page);
@@ -233,23 +233,23 @@ console.log('--- 3. Time comparison (13h, 18h, 22h, 3h) ---');
   await context.close();
 }
 
-// ---------------- 4. Mobile Pixel 7 at Night (22:00) ----------------
+// ---------------- 4. Mobile Pixel 7 at Night (23:00) ----------------
 console.log('--- 4. Mobile Pixel 7 at Night ---');
 {
   const pixel7 = devices['Pixel 7'];
   const context = await browser.newContext({ ...pixel7 });
   const page = await context.newPage();
-  await loadWorld(page, 'city', 22);
+  await loadWorld(page, 'city', 23);
   await page.evaluate(() => window.__debug.camera(128, 128, 130, 45, 55));
   await page.waitForTimeout(2000);
   const perf = await measureFps(page);
   const m = await page.evaluate(() => window.__debug.metrics());
   await page.screenshot({ path: `${OUT}/mobile-pixel7-night.jpg`, type: 'jpeg', quality: 82 });
   report.mobile.pixel7 = {
-    device: 'Pixel 7', viewport: pixel7.viewport, hour: 22, file: 'mobile-pixel7-night.jpg',
+    device: 'Pixel 7', viewport: pixel7.viewport, hour: 23, file: 'mobile-pixel7-night.jpg',
     drawCalls: m.drawCalls, triangles: m.triangles, fps: perf.fps, p95Ms: perf.p95Ms, bloom: m.bloom,
   };
-  console.log(`  Pixel 7 night 22h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
+  console.log(`  Pixel 7 night 23h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
   await context.close();
 }
 

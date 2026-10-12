@@ -10,9 +10,8 @@ Lỗi `rice_mill` mất cửa sổ đã được sửa triệt để bằng cơ 
 ## 2. Phạm vi tính năng (Scope)
 
 - **Chu kỳ ánh sáng tự nhiên (`dayCycle.ts`)**: Hàm thuần `lighting(hour, mode)` tính toán liên tục các thông số ánh sáng:
-  - 07:00 – 17:00: Ban ngày đầy đủ (`night = 0`).
-  - 17:00 – 19:00: Hoàng hôn chuyển tiếp mượt mà qua hàm `smoothstep` (`night` từ 0 lên 1).
-  - 19:00 – 05:00: Ban đêm tối hoàn toàn (`night = 1`).
+  - **D036 (lịch hiện hành):** 07:00 – 21:00 ngày; 21:00 – 23:00 hoàng hôn; 23:00 – 05:00 đêm hẳn; 05:00 – 07:00 bình minh. Ảnh QA ban đêm chụp lúc 23:00 (`*-23h.jpg`), so sánh 13h / 22h (hoàng hôn) / 23h / 3h. Các số đo bên dưới chụp theo lịch cũ lúc 22:00.
+  - Lịch cũ (bản đầu D031): 07:00 – 17:00 ngày, 17:00 – 19:00 hoàng hôn, 19:00 – 05:00 đêm.
   - 05:00 – 07:00: Bình minh chuyển tiếp mượt mà từ đêm sang ngày (`night` từ 1 về 0).
   - Hỗ trợ 3 chế độ: `auto` (mặc định, tự động theo giờ máy người chơi), `day` (ép luôn ban ngày), `night` (ép luôn ban đêm).
 - **Hệ thống đèn cửa sổ (`windowLights.ts`)**:
@@ -155,16 +154,16 @@ Tất cả các hình ảnh minh chứng và số liệu json được lưu tr�
   - `farm-low-overview.jpg`: Toàn cảnh Farm low graphics lúc 13:00.
   - `render.json`: Báo cáo đo kiểm tự động của `g4-full-world.mjs --hour 13`.
 - `docs/evidence/g4/night/`:
-  - `city-high-overview-22h.jpg`: Toàn cảnh City high ban đêm lúc 22h kèm bloom.
-  - `city-low-overview-22h.jpg`: Toàn cảnh City low ban đêm lúc 22h.
-  - `farm-high-overview-22h.jpg`: Toàn cảnh Farm high ban đêm lúc 22h kèm bloom.
-  - `farm-low-overview-22h.jpg`: Toàn cảnh Farm low ban đêm lúc 22h.
-  - `closeup-rice_mill-22h.jpg`: Cận cảnh cối xay gió `rice_mill` ban đêm, sáng đèn cửa sổ.
-  - `closeup-office_tower-22h.jpg`: Cận cảnh tháp văn phòng `office_tower` ban đêm.
-  - `closeup-house_apartment-22h.jpg`: Cận cảnh chung cư `house_apartment` ban đêm.
+  - `city-high-overview-23h.jpg`: Toàn cảnh City high ban đêm lúc 22h kèm bloom.
+  - `city-low-overview-23h.jpg`: Toàn cảnh City low ban đêm lúc 22h.
+  - `farm-high-overview-23h.jpg`: Toàn cảnh Farm high ban đêm lúc 22h kèm bloom.
+  - `farm-low-overview-23h.jpg`: Toàn cảnh Farm low ban đêm lúc 22h.
+  - `closeup-rice_mill-23h.jpg`: Cận cảnh cối xay gió `rice_mill` ban đêm, sáng đèn cửa sổ.
+  - `closeup-office_tower-23h.jpg`: Cận cảnh tháp văn phòng `office_tower` ban đêm.
+  - `closeup-house_apartment-23h.jpg`: Cận cảnh chung cư `house_apartment` ban đêm.
   - `compare-13h.jpg`: So sánh góc nhìn City lúc 13:00 (ngày).
-  - `compare-18h.jpg`: So sánh góc nhìn City lúc 18:00 (hoàng hôn).
-  - `compare-22h.jpg`: So sánh góc nhìn City lúc 22:00 (đêm).
+  - `compare-22h.jpg`: So sánh góc nhìn City lúc 22:00 (hoàng hôn, D036).
+  - `compare-23h.jpg`: So sánh góc nhìn City lúc 23:00 (đêm).
   - `compare-3h.jpg`: So sánh góc nhìn City lúc 03:00 (đêm khuya).
   - `mobile-pixel7-night.jpg`: Khung nhìn trên Google Pixel 7 ban đêm.
   - `metrics.json`: Báo cáo số liệu toàn diện (draw calls, triangles, fps, bloom status, budget checks).

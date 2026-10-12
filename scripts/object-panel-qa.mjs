@@ -115,7 +115,7 @@ for (const [file, x, z, d, yaw, pitch] of [['city-glass-day.jpg', 132, 98, 42, 3
   await cityPage.screenshot({ path: `${OUT}/${file}`, type: 'jpeg', quality: 86 });
   report.shots.push(file);
 }
-await cityPage.evaluate(() => window.__debug.timeOfDay(22)); await cityPage.waitForTimeout(1500);
+await cityPage.evaluate(() => window.__debug.timeOfDay(23)); await cityPage.waitForTimeout(1500);
 await cityPage.screenshot({ path: `${OUT}/city-coins-night.jpg`, type: 'jpeg', quality: 86 });
 report.shots.push('city-coins-night.jpg');
 
