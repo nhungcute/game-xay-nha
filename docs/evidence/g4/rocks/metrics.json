@@ -1,0 +1,451 @@
+{
+  "base": "http://127.0.0.1:5195",
+  "at": "2026-10-12T07:38:36.052Z",
+  "shots": [
+    {
+      "file": "before-farm-high-overview.jpg",
+      "label": "placeholder farm high overview",
+      "kind": "farm",
+      "quality": "high",
+      "variant": "placeholder",
+      "drawCalls": 251,
+      "triangles": 271914,
+      "fps": 43
+    },
+    {
+      "file": "before-farm-low-overview.jpg",
+      "label": "placeholder farm low overview",
+      "kind": "farm",
+      "quality": "low",
+      "variant": "placeholder",
+      "drawCalls": 104,
+      "triangles": 137478,
+      "fps": 60
+    },
+    {
+      "file": "before-city-high-overview.jpg",
+      "label": "placeholder city high overview",
+      "kind": "city",
+      "quality": "high",
+      "variant": "placeholder",
+      "drawCalls": 241,
+      "triangles": 538058,
+      "fps": 33
+    },
+    {
+      "file": "before-city-low-overview.jpg",
+      "label": "placeholder city low overview",
+      "kind": "city",
+      "quality": "low",
+      "variant": "placeholder",
+      "drawCalls": 108,
+      "triangles": 413708,
+      "fps": 58
+    },
+    {
+      "file": "after-farm-high-overview.jpg",
+      "label": "imported farm high overview",
+      "kind": "farm",
+      "quality": "high",
+      "variant": "imported",
+      "drawCalls": 251,
+      "triangles": 345750,
+      "fps": 49
+    },
+    {
+      "file": "after-farm-low-overview.jpg",
+      "label": "imported farm low overview",
+      "kind": "farm",
+      "quality": "low",
+      "variant": "imported",
+      "drawCalls": 104,
+      "triangles": 216074,
+      "fps": 60
+    },
+    {
+      "file": "after-city-high-overview.jpg",
+      "label": "imported city high overview",
+      "kind": "city",
+      "quality": "high",
+      "variant": "imported",
+      "drawCalls": 241,
+      "triangles": 574626,
+      "fps": 35
+    },
+    {
+      "file": "after-city-low-overview.jpg",
+      "label": "imported city low overview",
+      "kind": "city",
+      "quality": "low",
+      "variant": "imported",
+      "drawCalls": 108,
+      "triangles": 450276,
+      "fps": 58
+    },
+    {
+      "file": "variant-rock_01.jpg",
+      "label": "imported rock close-up",
+      "assetId": "rock_01",
+      "targetId": "A-0",
+      "projected": {
+        "x": 720.0000000000007,
+        "y": 450
+      },
+      "drawCalls": 121,
+      "triangles": 180320,
+      "fps": 59,
+      "rockColor": {
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 1279,
+        "meanRgb": [
+          101,
+          102,
+          90
+        ],
+        "meanHex": "#65665a"
+      }
+    },
+    {
+      "file": "variant-rock_02.jpg",
+      "label": "imported rock close-up",
+      "assetId": "rock_02",
+      "targetId": "A-1",
+      "projected": {
+        "x": 720,
+        "y": 450
+      },
+      "drawCalls": 132,
+      "triangles": 194122,
+      "fps": 60,
+      "rockColor": {
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 1420,
+        "meanRgb": [
+          103,
+          104,
+          92
+        ],
+        "meanHex": "#67685c"
+      }
+    },
+    {
+      "file": "variant-rock_03.jpg",
+      "label": "imported rock close-up",
+      "assetId": "rock_03",
+      "targetId": "A-2",
+      "projected": {
+        "x": 720.0000000000005,
+        "y": 450
+      },
+      "drawCalls": 153,
+      "triangles": 208226,
+      "fps": 60,
+      "rockColor": {
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 1243,
+        "meanRgb": [
+          122,
+          121,
+          108
+        ],
+        "meanHex": "#7a796c"
+      }
+    },
+    {
+      "file": "variant-rock_04.jpg",
+      "label": "imported rock close-up",
+      "assetId": "rock_04",
+      "targetId": "A-3",
+      "projected": {
+        "x": 720.0000000000007,
+        "y": 450
+      },
+      "drawCalls": 156,
+      "triangles": 219784,
+      "fps": 57,
+      "rockColor": {
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 1494,
+        "meanRgb": [
+          122,
+          121,
+          109
+        ],
+        "meanHex": "#7a796d"
+      }
+    },
+    {
+      "file": "variant-rock_large_01.jpg",
+      "label": "imported rock close-up",
+      "assetId": "rock_large_01",
+      "targetId": "A-4",
+      "projected": {
+        "x": 720.0000000000001,
+        "y": 450
+      },
+      "drawCalls": 164,
+      "triangles": 227294,
+      "fps": 60,
+      "rockColor": {
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 15716,
+        "meanRgb": [
+          112,
+          115,
+          109
+        ],
+        "meanHex": "#70736d"
+      }
+    },
+    {
+      "file": "variant-rock_large_02.jpg",
+      "label": "imported rock close-up",
+      "assetId": "rock_large_02",
+      "targetId": "A-5",
+      "projected": {
+        "x": 719.9999999999994,
+        "y": 450
+      },
+      "drawCalls": 163,
+      "triangles": 254982,
+      "fps": 60,
+      "rockColor": {
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 14248,
+        "meanRgb": [
+          101,
+          101,
+          92
+        ],
+        "meanHex": "#65655c"
+      }
+    },
+    {
+      "file": "clear-rock-before.jpg",
+      "label": "before CLEAR_ENV (rock)",
+      "family": "rock",
+      "targetId": "A-0",
+      "assetId": "rock_01",
+      "drawCalls": 122,
+      "triangles": 180832,
+      "fps": 60
+    },
+    {
+      "file": "clear-rock-after.jpg",
+      "label": "after CLEAR_ENV (rock, accepted)",
+      "family": "rock",
+      "targetId": "A-0",
+      "assetId": "rock_01",
+      "command": {
+        "accepted": true,
+        "code": null
+      },
+      "drawCalls": 122,
+      "triangles": 182024,
+      "fps": 60
+    },
+    {
+      "file": "clear-rock_large-before.jpg",
+      "label": "before CLEAR_ENV (rock_large)",
+      "family": "rock_large",
+      "targetId": "A-4",
+      "assetId": "rock_large_01",
+      "drawCalls": 174,
+      "triangles": 232456,
+      "fps": 60
+    },
+    {
+      "file": "clear-rock_large-after.jpg",
+      "label": "after CLEAR_ENV (rock_large, accepted)",
+      "family": "rock_large",
+      "targetId": "A-4",
+      "assetId": "rock_large_01",
+      "command": {
+        "accepted": true,
+        "code": null
+      },
+      "drawCalls": 173,
+      "triangles": 231456,
+      "fps": 59
+    },
+    {
+      "file": "mobile/pixel7-rock.jpg",
+      "label": "imported rock on pixel7",
+      "device": "pixel7",
+      "targetId": "A-0",
+      "assetId": "rock_01",
+      "drawCalls": 34,
+      "triangles": 118322,
+      "fps": 60
+    },
+    {
+      "file": "mobile/iphone13-rock.jpg",
+      "label": "imported rock on iphone13",
+      "device": "iphone13",
+      "targetId": "A-0",
+      "assetId": "rock_01",
+      "drawCalls": 38,
+      "triangles": 120370,
+      "fps": 60
+    }
+  ],
+  "metrics": {
+    "placeholder": [
+      {
+        "kind": "farm",
+        "quality": "high",
+        "drawCalls": 251,
+        "triangles": 271914
+      },
+      {
+        "kind": "farm",
+        "quality": "low",
+        "drawCalls": 104,
+        "triangles": 137478
+      },
+      {
+        "kind": "city",
+        "quality": "high",
+        "drawCalls": 241,
+        "triangles": 538058
+      },
+      {
+        "kind": "city",
+        "quality": "low",
+        "drawCalls": 108,
+        "triangles": 413708
+      }
+    ],
+    "imported": [
+      {
+        "kind": "farm",
+        "quality": "high",
+        "drawCalls": 251,
+        "triangles": 345750
+      },
+      {
+        "kind": "farm",
+        "quality": "low",
+        "drawCalls": 104,
+        "triangles": 216074
+      },
+      {
+        "kind": "city",
+        "quality": "high",
+        "drawCalls": 241,
+        "triangles": 574626
+      },
+      {
+        "kind": "city",
+        "quality": "low",
+        "drawCalls": 108,
+        "triangles": 450276
+      }
+    ],
+    "clearActions": [
+      {
+        "family": "rock",
+        "assetId": "rock_01",
+        "targetId": "A-0",
+        "command": {
+          "accepted": true,
+          "code": null
+        },
+        "before": {
+          "drawCalls": 122,
+          "triangles": 180832
+        },
+        "after": {
+          "drawCalls": 122,
+          "triangles": 182024
+        }
+      },
+      {
+        "family": "rock_large",
+        "assetId": "rock_large_01",
+        "targetId": "A-4",
+        "command": {
+          "accepted": true,
+          "code": null
+        },
+        "before": {
+          "drawCalls": 174,
+          "triangles": 232456
+        },
+        "after": {
+          "drawCalls": 173,
+          "triangles": 231456
+        }
+      }
+    ],
+    "variantRockColors": [
+      {
+        "assetId": "rock_01",
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 1279,
+        "meanRgb": [
+          101,
+          102,
+          90
+        ],
+        "meanHex": "#65665a"
+      },
+      {
+        "assetId": "rock_02",
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 1420,
+        "meanRgb": [
+          103,
+          104,
+          92
+        ],
+        "meanHex": "#67685c"
+      },
+      {
+        "assetId": "rock_03",
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 1243,
+        "meanRgb": [
+          122,
+          121,
+          108
+        ],
+        "meanHex": "#7a796c"
+      },
+      {
+        "assetId": "rock_04",
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 1494,
+        "meanRgb": [
+          122,
+          121,
+          109
+        ],
+        "meanHex": "#7a796d"
+      },
+      {
+        "assetId": "rock_large_01",
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 15716,
+        "meanRgb": [
+          112,
+          115,
+          109
+        ],
+        "meanHex": "#70736d"
+      },
+      {
+        "assetId": "rock_large_02",
+        "method": "clear-difference warm-neutral mask (delta >= 24)",
+        "pixelCount": 14248,
+        "meanRgb": [
+          101,
+          101,
+          92
+        ],
+        "meanHex": "#65655c"
+      }
+    ]
+  },
+  "errors": []
+}

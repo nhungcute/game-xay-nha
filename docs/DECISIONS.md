@@ -363,3 +363,34 @@ source value clipped the canopy to bare branches).
 - Evidence: `docs/evidence/g4/trees/` (34 in-game shots: 12 variant close-ups, LOD zoom-outs, dense conifer forest,
   clear before/after, city/farm high+low, Pixel 7 + iPhone 13, credits panel desktop+mobile; `report.json` with
   per-shot draw calls/triangles/fps).
+
+## D032 - 2026-10-12 - Replace six placeholder rocks with the Stone Pack
+
+The six existing rock ids remain unchanged in world templates, scatter rules, occupancy and gameplay. The source
+is the owner-supplied `map/hon_da/stone_pack.glb` (Stone Pack by ashkan.fancy, CC-BY-4.0); the source directory is
+not committed. `scripts/import-rocks.mjs` deterministically selects the reviewed parent nodes, bakes world
+transforms and normals, welds and meshoptimizer-simplifies indexed geometry, fits each family to its footprint,
+re-centers the bottom pivot and applies a small recorded sink, composites ORM ambient occlusion into base color,
+tones it (chroma pulled toward the `GROUND.rock` tint `#8e877a`, gain, soft highlight shoulder: no clipped texels)
+and writes one textured metal-rough GLB per id. Small rocks use a 300-triangle cap and 256 px texture; large rocks
+use a 1000-triangle cap and 512 px texture (median-cut palettes of 256 and 64 colours). All outputs are under 150 KB and are recorded in
+`scripts/rocks.config.json`.
+
+Mapping: `rock_01..04` use `Small_1..4`; `rock_large_01` uses `Mid_1`; `rock_large_02` uses `Mid_2`. The manifest
+replaces only these six entries, marks them `placeholder: false`, and carries the CC-BY provenance. Settings reads
+the manifest's CC entries, so no UI or renderer schema change is needed.
+
+QA evidence is in `docs/evidence/g4/rocks/`: six imported close-ups, farm/city high and low before/after views,
+small and large `CLEAR_ENV` before/after shots, and Pixel 7/iPhone 13 views. The script uses six temporary
+`A-*` anchors in an in-memory farm template only to frame variants; no committed template is modified. Across the
+before/after overview runs, draw calls stay constant (farm 251/104 and city 241/108 high/low); imported triangles
+are 345,750/216,074 (farm high/low) and 574,626/450,276 (city high/low): within the desktop 1.5M budget; city
+high exceeds the 500k mobile figure, as its placeholder baseline (538,058) already did. Both clear commands were accepted; the small-rock run kept its visible batch count stable because other
+instances shared that batch, while the large-rock run reduced the visible batch count by one.
+The existing 1.5 m shadow threshold means the small rocks do not cast shadows, while both large variants do.
+
+Validation: `node scripts/import-rocks.mjs --check`, `node scripts/import-trees.mjs --check`, and
+`node scripts/import-model-pack.mjs --check` pass when their sources are present (source-absent importers skip
+cleanly). The full `assets.test.ts` suite retains the pre-existing D031 `_WINDOW` assertion failure for authored
+building GLBs; the D032-specific asset test and typecheck pass. Reverting the D032 generator block, six generated
+GLBs, config, manifest entries, evidence and docs restores the placeholder rocks without changing world data.
