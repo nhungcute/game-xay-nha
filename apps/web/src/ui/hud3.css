@@ -203,3 +203,12 @@
 .hud3-shell .object-detail>button .object-outcome{font-size:11px;font-weight:500;opacity:.85}
 .hud3-shell .object-detail>button.object-tool{flex-direction:row;align-items:center;gap:8px;background:transparent;color:#5d7046;border:1px dashed #c9d6b4}
 .hud3-shell .object-detail>button.demolish{color:#ad5a3c}
+/* D034 HUD scale: the blocks were sized for ~1440×900 and read oversized on laptop/desktop screens. One zoom factor
+   per screen height scales every HUD block; useOverlayEdge publishes --hud-bottom/--dock-top divided by it, so the
+   calc()-placed missions/panels (themselves zoomed) still line up. Phones and short landscape keep their own layout. */
+:root{--hud-zoom:.8}
+@media(max-height:820px){:root{--hud-zoom:.72}}
+@media(min-height:1150px){:root{--hud-zoom:.92}}
+@media(max-width:700px),(max-height:500px) and (orientation:landscape){:root{--hud-zoom:1}}
+.hud3-shell .hud3-top,.hud3-shell .hud3-missions,.hud3-shell .hud3-minimap,.hud3-shell .hud3-controls,
+.hud3-shell .hud3-dock,.hud3-shell .side,.hud3-shell .debug{zoom:var(--hud-zoom)}

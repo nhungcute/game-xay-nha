@@ -444,3 +444,17 @@ path), glow with it through `emissiveMap`, and are ~30% larger, so they read as 
 Building glass (`windowLights.ts`): the imported pane colour (`GLASS_SRGB`, dark blue-grey) read as black holes by
 day. Panes now blend to a light sky blue plus a faint sky reflection by `1 − night`; night keeps the dark glass under
 the warm per-pane lights.
+
+## D034 - 2026-10-12 - Content-versioned model URLs; HUD scaled to the screen
+
+Night windows stayed dark for players who had opened the game before the D031 rebuild: `/assets/models/` is cached
+for a day under unchanged paths, so browsers kept building GLBs without the `_WINDOW` attribute (no night lights, no
+light day glass). `generate-placeholder-assets.mjs` now records a 12-hex SHA-256 `hash` per manifest entry and
+`AssetManager` requests `file?v=<hash>`: changed bytes get a new URL, unchanged ones stay cached. The manifest itself
+is `no-cache`. A test keeps every hash equal to its file.
+
+The HUD blocks were sized for ~1440×900 and read oversized on laptops and desktops. `--hud-zoom` (0.8 by default,
+0.72 at ≤ 820 px tall, 0.92 at ≥ 1150 px tall, 1 on phones and short landscape) zooms the top bar, missions, minimap,
+camera controls, tool dock and side panels; `useOverlayEdge` publishes `--hud-bottom`/`--dock-top` divided by it so
+the calc()-placed blocks still line up. `scripts/hud-scale-qa.mjs` checks five viewports for overlaps
+(`docs/evidence/g4/hud-scale/`, before/after).

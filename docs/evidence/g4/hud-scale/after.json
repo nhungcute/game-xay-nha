@@ -1,0 +1,303 @@
+{
+  "label": "after",
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-12T11:54:20.551Z",
+  "viewports": {
+    "1920x909": {
+      "size": {
+        "width": 1920,
+        "height": 909
+      },
+      "zoom": ".8",
+      "topBarBottom": 64,
+      "boxes": {
+        "top": {
+          "x": 19,
+          "y": 11,
+          "w": 1882,
+          "h": 53,
+          "bottom": 64,
+          "right": 1901
+        },
+        "missions": {
+          "x": 19,
+          "y": 75,
+          "w": 224,
+          "h": 347,
+          "bottom": 423,
+          "right": 243
+        },
+        "minimap": {
+          "x": 19,
+          "y": 707,
+          "w": 157,
+          "h": 157,
+          "bottom": 864,
+          "right": 176
+        },
+        "controls": {
+          "x": 1854,
+          "y": 376,
+          "w": 46,
+          "h": 195,
+          "bottom": 572,
+          "right": 1901
+        },
+        "dock": {
+          "x": 648,
+          "y": 760,
+          "w": 624,
+          "h": 125,
+          "bottom": 885,
+          "right": 1272
+        },
+        "panel": {
+          "x": 1653,
+          "y": 75,
+          "w": 248,
+          "h": 202,
+          "bottom": 277,
+          "right": 1901
+        }
+      },
+      "panelOpen": true
+    },
+    "1440x900": {
+      "size": {
+        "width": 1440,
+        "height": 900
+      },
+      "zoom": ".8",
+      "topBarBottom": 64,
+      "boxes": {
+        "top": {
+          "x": 19,
+          "y": 11,
+          "w": 1402,
+          "h": 53,
+          "bottom": 64,
+          "right": 1421
+        },
+        "missions": {
+          "x": 19,
+          "y": 75,
+          "w": 224,
+          "h": 347,
+          "bottom": 423,
+          "right": 243
+        },
+        "minimap": {
+          "x": 19,
+          "y": 698,
+          "w": 157,
+          "h": 157,
+          "bottom": 855,
+          "right": 176
+        },
+        "controls": {
+          "x": 1374,
+          "y": 372,
+          "w": 46,
+          "h": 195,
+          "bottom": 567,
+          "right": 1421
+        },
+        "dock": {
+          "x": 408,
+          "y": 751,
+          "w": 624,
+          "h": 125,
+          "bottom": 876,
+          "right": 1032
+        },
+        "panel": {
+          "x": 1173,
+          "y": 75,
+          "w": 248,
+          "h": 202,
+          "bottom": 277,
+          "right": 1421
+        }
+      },
+      "panelOpen": true
+    },
+    "1366x768": {
+      "size": {
+        "width": 1366,
+        "height": 768
+      },
+      "zoom": ".72",
+      "topBarBottom": 58,
+      "boxes": {
+        "top": {
+          "x": 17,
+          "y": 10,
+          "w": 1331,
+          "h": 48,
+          "bottom": 58,
+          "right": 1349
+        },
+        "missions": {
+          "x": 17,
+          "y": 68,
+          "w": 202,
+          "h": 314,
+          "bottom": 382,
+          "right": 219
+        },
+        "minimap": {
+          "x": 17,
+          "y": 587,
+          "w": 141,
+          "h": 141,
+          "bottom": 728,
+          "right": 158
+        },
+        "controls": {
+          "x": 1307,
+          "y": 314,
+          "w": 42,
+          "h": 176,
+          "bottom": 489,
+          "right": 1349
+        },
+        "dock": {
+          "x": 402,
+          "y": 634,
+          "w": 562,
+          "h": 112,
+          "bottom": 746,
+          "right": 964
+        },
+        "panel": {
+          "x": 1126,
+          "y": 68,
+          "w": 223,
+          "h": 183,
+          "bottom": 250,
+          "right": 1349
+        }
+      },
+      "panelOpen": true
+    },
+    "2560x1305": {
+      "size": {
+        "width": 2560,
+        "height": 1305
+      },
+      "zoom": ".92",
+      "topBarBottom": 74,
+      "boxes": {
+        "top": {
+          "x": 22,
+          "y": 13,
+          "w": 2516,
+          "h": 61,
+          "bottom": 74,
+          "right": 2538
+        },
+        "missions": {
+          "x": 22,
+          "y": 86,
+          "w": 258,
+          "h": 402,
+          "bottom": 489,
+          "right": 280
+        },
+        "minimap": {
+          "x": 22,
+          "y": 1073,
+          "w": 180,
+          "h": 180,
+          "bottom": 1253,
+          "right": 202
+        },
+        "controls": {
+          "x": 2485,
+          "y": 563,
+          "w": 53,
+          "h": 224,
+          "bottom": 787,
+          "right": 2538
+        },
+        "dock": {
+          "x": 921,
+          "y": 1134,
+          "w": 718,
+          "h": 143,
+          "bottom": 1277,
+          "right": 1639
+        },
+        "panel": {
+          "x": 2253,
+          "y": 86,
+          "w": 285,
+          "h": 233,
+          "bottom": 319,
+          "right": 2538
+        }
+      },
+      "panelOpen": true
+    },
+    "pixel7": {
+      "size": {
+        "width": 412,
+        "height": 839
+      },
+      "zoom": "1",
+      "topBarBottom": 120,
+      "boxes": {
+        "top": {
+          "x": 8,
+          "y": 8,
+          "w": 396,
+          "h": 112,
+          "bottom": 120,
+          "right": 404
+        },
+        "missions": {
+          "x": 8,
+          "y": 132,
+          "w": 250,
+          "h": 44,
+          "bottom": 176,
+          "right": 258
+        },
+        "minimap": {
+          "x": 8,
+          "y": 601,
+          "w": 104,
+          "h": 104,
+          "bottom": 705,
+          "right": 112
+        },
+        "controls": {
+          "x": 360,
+          "y": 134,
+          "w": 44,
+          "h": 184,
+          "bottom": 318,
+          "right": 404
+        },
+        "dock": {
+          "x": 8,
+          "y": 715,
+          "w": 396,
+          "h": 116,
+          "bottom": 831,
+          "right": 404
+        },
+        "panel": {
+          "x": 114,
+          "y": 132,
+          "w": 290,
+          "h": 250,
+          "bottom": 382,
+          "right": 404
+        }
+      },
+      "panelOpen": true
+    }
+  },
+  "failures": []
+}

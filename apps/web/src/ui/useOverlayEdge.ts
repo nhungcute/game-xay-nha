@@ -1,10 +1,18 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-/** Publish measured overlay edges so panels fit between the HUD and the actual tool dock. */
+/** HUD zoom factor (hud3.css `--hud-zoom`, D034); 1 when unset. */
+export function hudZoom(): number {
+  return Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hud-zoom')) || 1;
+}
+
+/**
+ * Publish measured overlay edges so panels fit between the HUD and the actual tool dock. The value is in HUD-zoomed
+ * CSS px (screen px ÷ --hud-zoom): its consumers are zoomed HUD blocks, whose own lengths the zoom multiplies again.
+ */
 export function useOverlayEdge(property: '--hud-bottom' | '--dock-top', edge: 'top' | 'bottom') {
   const observer = useRef<ResizeObserver | null>(null), element = useRef<HTMLElement | null>(null);
   const publish = useCallback(() => {
-    if (element.current) document.documentElement.style.setProperty(property, `${Math.ceil(element.current.getBoundingClientRect()[edge])}px`);
+    if (element.current) document.documentElement.style.setProperty(property, `${Math.ceil(element.current.getBoundingClientRect()[edge] / hudZoom())}px`);
   }, [property, edge]);
   useEffect(() => {
     window.addEventListener('resize', publish);
