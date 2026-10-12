@@ -11,6 +11,8 @@ const windowRateUniform = { value: 0.6 };
  */
 const glassDayUniform = { value: new Color('#bcd9ea') };
 const GLASS_REFLECTION = 0.22;
+/** Night pane light (warm emissive). Halved from 2.0 (owner request): at 2.0 close city views drowned in bloom. */
+const WINDOW_LIGHT = 1.0;
 
 function litRate(hour: number, night: number): number {
   if (night <= 0.01) return 0;
@@ -45,7 +47,7 @@ export function applyWindowLights(material: Material): void {
         float roundedHour = floor(uWindowHour * 2.0 + 0.5) * 0.5;
         float paneHash = fract(sin(dot(vec3(vWindow, vInstanceSeed.x, vInstanceSeed.y + roundedHour), vec3(17.13, 41.71, 29.53))) * 43758.5453);
         float lit = step(paneHash, uWindowRate);
-        totalEmissiveRadiance += vec3(1.0, 0.56, 0.16) * lit * uNight * 2.0;
+        totalEmissiveRadiance += vec3(1.0, 0.56, 0.16) * lit * uNight * ${WINDOW_LIGHT.toFixed(2)};
       }`,
     );
   });

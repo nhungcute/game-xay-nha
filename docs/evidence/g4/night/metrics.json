@@ -1,25 +1,25 @@
 {
   "base": "http://127.0.0.1:5190",
-  "at": "2026-10-12T10:34:09.746Z",
+  "at": "2026-10-12T12:03:28.529Z",
   "overviews": {
     "city_high": {
       "kind": "city",
       "quality": "high",
       "hour": 22,
       "file": "city-high-overview-22h.jpg",
-      "drawCalls": 241,
-      "triangles": 574626,
-      "fps": 44,
-      "p95Ms": 31.5,
+      "drawCalls": 243,
+      "triangles": 582930,
+      "fps": 43,
+      "p95Ms": 33.2,
       "bloom": true,
       "night": 1,
       "foliage": {
         "hour": 22,
-        "foliagePixelShare": 0.424,
-        "dayFoliageLuma": 134.7,
-        "nightFoliageLuma": 11.9,
-        "nightSceneLuma": 10.8,
-        "ratio": 1.11,
+        "foliagePixelShare": 0.442,
+        "dayFoliageLuma": 134.8,
+        "nightFoliageLuma": 11.7,
+        "nightSceneLuma": 9.1,
+        "ratio": 1.29,
         "max": 1.5
       }
     },
@@ -28,19 +28,19 @@
       "quality": "low",
       "hour": 22,
       "file": "city-low-overview-22h.jpg",
-      "drawCalls": 108,
-      "triangles": 450276,
+      "drawCalls": 110,
+      "triangles": 458580,
       "fps": 60,
-      "p95Ms": 17.2,
+      "p95Ms": 17.4,
       "bloom": false,
       "night": 1,
       "foliage": {
         "hour": 22,
-        "foliagePixelShare": 0.423,
-        "dayFoliageLuma": 136.5,
-        "nightFoliageLuma": 13.8,
-        "nightSceneLuma": 13.8,
-        "ratio": 1,
+        "foliagePixelShare": 0.441,
+        "dayFoliageLuma": 136.6,
+        "nightFoliageLuma": 13.6,
+        "nightSceneLuma": 13.7,
+        "ratio": 0.99,
         "max": 1.5
       }
     },
@@ -52,16 +52,16 @@
       "drawCalls": 251,
       "triangles": 345814,
       "fps": 60,
-      "p95Ms": 18.5,
+      "p95Ms": 17.7,
       "bloom": true,
       "night": 1,
       "foliage": {
         "hour": 22,
         "foliagePixelShare": 0.545,
-        "dayFoliageLuma": 136.1,
-        "nightFoliageLuma": 11.5,
-        "nightSceneLuma": 10.8,
-        "ratio": 1.07,
+        "dayFoliageLuma": 135.8,
+        "nightFoliageLuma": 10.3,
+        "nightSceneLuma": 9.9,
+        "ratio": 1.05,
         "max": 1.5
       }
     },
@@ -73,16 +73,16 @@
       "drawCalls": 104,
       "triangles": 216138,
       "fps": 60,
-      "p95Ms": 17.1,
+      "p95Ms": 17.4,
       "bloom": false,
       "night": 1,
       "foliage": {
         "hour": 22,
         "foliagePixelShare": 0.548,
-        "dayFoliageLuma": 136.2,
-        "nightFoliageLuma": 13.3,
-        "nightSceneLuma": 12.5,
-        "ratio": 1.06,
+        "dayFoliageLuma": 135.9,
+        "nightFoliageLuma": 12.2,
+        "nightSceneLuma": 11.8,
+        "ratio": 1.03,
         "max": 1.5
       }
     }
@@ -96,25 +96,25 @@
       "triangles": 311638,
       "fps": 60,
       "bloom": true,
-      "warmPixels22h": 3839,
-      "warmPixels13h": 953
+      "warmPixels22h": 9627,
+      "warmPixels13h": 954
     },
     "office_tower": {
       "target": "office_tower",
       "hour": 22,
       "file": "closeup-office_tower-22h.jpg",
-      "drawCalls": 142,
-      "triangles": 471916,
-      "fps": 44,
+      "drawCalls": 144,
+      "triangles": 480220,
+      "fps": 43,
       "bloom": true
     },
     "house_apartment": {
       "target": "house_apartment",
       "hour": 22,
       "file": "closeup-house_apartment-22h.jpg",
-      "drawCalls": 163,
-      "triangles": 499812,
-      "fps": 45,
+      "drawCalls": 165,
+      "triangles": 508116,
+      "fps": 44,
       "bloom": true
     }
   },
@@ -122,36 +122,36 @@
     "13h": {
       "hour": 13,
       "file": "compare-13h.jpg",
-      "drawCalls": 208,
-      "triangles": 557702,
-      "fps": 40,
+      "drawCalls": 210,
+      "triangles": 566006,
+      "fps": 38,
       "bloom": false,
       "night": 0
     },
     "18h": {
       "hour": 18,
       "file": "compare-18h.jpg",
-      "drawCalls": 208,
-      "triangles": 557702,
-      "fps": 43,
+      "drawCalls": 210,
+      "triangles": 566006,
+      "fps": 41,
       "bloom": true,
       "night": 0.5
     },
     "22h": {
       "hour": 22,
       "file": "compare-22h.jpg",
-      "drawCalls": 208,
-      "triangles": 557702,
-      "fps": 42,
+      "drawCalls": 210,
+      "triangles": 566006,
+      "fps": 40,
       "bloom": true,
       "night": 1
     },
     "3h": {
       "hour": 3,
       "file": "compare-3h.jpg",
-      "drawCalls": 208,
-      "triangles": 557702,
-      "fps": 43,
+      "drawCalls": 210,
+      "triangles": 566006,
+      "fps": 42,
       "bloom": true,
       "night": 1
     }
@@ -165,10 +165,10 @@
       },
       "hour": 22,
       "file": "mobile-pixel7-night.jpg",
-      "drawCalls": 64,
-      "triangles": 428312,
+      "drawCalls": 66,
+      "triangles": 436616,
       "fps": 60,
-      "p95Ms": 17.2,
+      "p95Ms": 17.3,
       "bloom": false
     }
   },

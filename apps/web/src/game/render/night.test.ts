@@ -38,6 +38,7 @@ describe('building glass', () => {
     const source = shader.fragmentShader;
     expect(source.indexOf('diffuseColor.rgb = mix(diffuseColor.rgb, uGlassDay, 1.0 - uNight)')).toBeGreaterThan(source.indexOf('#include <color_fragment>'));
     expect(source).toContain('totalEmissiveRadiance += uGlassDay * 0.22 * (1.0 - uNight);');
+    expect(source).toContain('vec3(1.0, 0.56, 0.16) * lit * uNight * 1.00;'); // night panes at half the original 2.0
     const glass = (shader.uniforms.uGlassDay!.value as { r: number; g: number; b: number });
     expect(Math.min(glass.r, glass.g, glass.b)).toBeGreaterThan(0.3); // linear: a light pane, not the dark import glass
   });
