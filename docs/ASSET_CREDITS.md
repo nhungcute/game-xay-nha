@@ -50,6 +50,19 @@ into base color, and downsizes textures to 256x256 (small) or 512x512 (large). E
 one opaque metal-rough material and one base-color texture; the existing game ids and scatter/template data
 remain unchanged. All six outputs are marked modified in the manifest and the Settings attribution panel.
 
+## Street Light (D035)
+
+The `deco_streetlight` building ("Cột đèn") uses **[Street_Light](https://sketchfab.com/3d-models/street-light-16fc20d9d6564adb84ea27e35778da06)**
+by **dodotcreatives**, licensed **[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)**.
+The source file is owner-supplied at `map/street_light.glb` and is not committed.
+
+`scripts/import-streetlight.mjs` bakes source node transforms, centers the pivot at the base of the column (y = 0),
+scales uniformly to 4.5 m height, thickens the column shaft (`pCylinder1_*`) XZ around the column center to ≥ 0.18 m,
+applies vertex palette colors (antique gold `#c8962e`, charcoal grey `#2b3038`, opaque bulb `#fff3d6`, and ivory cream `#fcecc5`),
+assigns the `_LAMP` vertex attribute (1.0 on bulb vertices), and simplifies with meshoptimizer to ≤ 800 triangles (601 triangles).
+The output is one mesh with one flat-shaded material in `apps/web/public/assets/models/authored/deco_streetlight.glb`.
+It is marked modified (`modified: true`) with CC-BY-4.0 in `assets/manifest.json`.
+
 ## Buildings (D029, unchanged)
 
 The 20 building models imported in D029 keep their recorded provenance: source pack

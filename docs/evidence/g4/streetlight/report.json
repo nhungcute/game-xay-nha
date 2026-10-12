@@ -1,0 +1,198 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-12T16:27:52.594Z",
+  "shots": [
+    {
+      "kind": "farm",
+      "distName": "close",
+      "hourName": "13h",
+      "quality": "high",
+      "file": "docs/evidence/g4/streetlight/farm-close-13h-high.jpg"
+    },
+    {
+      "kind": "farm",
+      "distName": "close",
+      "hourName": "13h",
+      "quality": "low",
+      "file": "docs/evidence/g4/streetlight/farm-close-13h-low.jpg"
+    },
+    {
+      "kind": "farm",
+      "distName": "close",
+      "hourName": "22h",
+      "quality": "high",
+      "file": "docs/evidence/g4/streetlight/farm-close-22h-high.jpg"
+    },
+    {
+      "kind": "farm",
+      "distName": "close",
+      "hourName": "22h",
+      "quality": "low",
+      "file": "docs/evidence/g4/streetlight/farm-close-22h-low.jpg"
+    },
+    {
+      "kind": "farm",
+      "distName": "mid",
+      "hourName": "13h",
+      "quality": "high",
+      "file": "docs/evidence/g4/streetlight/farm-mid-13h-high.jpg"
+    },
+    {
+      "kind": "farm",
+      "distName": "mid",
+      "hourName": "13h",
+      "quality": "low",
+      "file": "docs/evidence/g4/streetlight/farm-mid-13h-low.jpg"
+    },
+    {
+      "kind": "farm",
+      "distName": "mid",
+      "hourName": "22h",
+      "quality": "high",
+      "file": "docs/evidence/g4/streetlight/farm-mid-22h-high.jpg"
+    },
+    {
+      "kind": "farm",
+      "distName": "mid",
+      "hourName": "22h",
+      "quality": "low",
+      "file": "docs/evidence/g4/streetlight/farm-mid-22h-low.jpg"
+    },
+    {
+      "kind": "farm",
+      "device": "Pixel 7",
+      "file": "docs/evidence/g4/streetlight/farm-pixel7-22h.jpg"
+    },
+    {
+      "kind": "city",
+      "distName": "close",
+      "hourName": "13h",
+      "quality": "high",
+      "file": "docs/evidence/g4/streetlight/city-close-13h-high.jpg"
+    },
+    {
+      "kind": "city",
+      "distName": "close",
+      "hourName": "13h",
+      "quality": "low",
+      "file": "docs/evidence/g4/streetlight/city-close-13h-low.jpg"
+    },
+    {
+      "kind": "city",
+      "distName": "close",
+      "hourName": "22h",
+      "quality": "high",
+      "file": "docs/evidence/g4/streetlight/city-close-22h-high.jpg"
+    },
+    {
+      "kind": "city",
+      "distName": "close",
+      "hourName": "22h",
+      "quality": "low",
+      "file": "docs/evidence/g4/streetlight/city-close-22h-low.jpg"
+    },
+    {
+      "kind": "city",
+      "distName": "mid",
+      "hourName": "13h",
+      "quality": "high",
+      "file": "docs/evidence/g4/streetlight/city-mid-13h-high.jpg"
+    },
+    {
+      "kind": "city",
+      "distName": "mid",
+      "hourName": "13h",
+      "quality": "low",
+      "file": "docs/evidence/g4/streetlight/city-mid-13h-low.jpg"
+    },
+    {
+      "kind": "city",
+      "distName": "mid",
+      "hourName": "22h",
+      "quality": "high",
+      "file": "docs/evidence/g4/streetlight/city-mid-22h-high.jpg"
+    },
+    {
+      "kind": "city",
+      "distName": "mid",
+      "hourName": "22h",
+      "quality": "low",
+      "file": "docs/evidence/g4/streetlight/city-mid-22h-low.jpg"
+    },
+    {
+      "kind": "city",
+      "device": "Pixel 7",
+      "file": "docs/evidence/g4/streetlight/city-pixel7-22h.jpg"
+    }
+  ],
+  "gates": {
+    "farmNightBrightness2x": true,
+    "cityNightBrightness2x": true,
+    "farmDayDiffUnder5Pct": true,
+    "cityDayDiffUnder5Pct": true,
+    "farmFarUnlit": true,
+    "cityFarUnlit": true,
+    "farmDrawCallsOk": true,
+    "cityDrawCallsOk": true,
+    "noConsoleErrors": true
+  },
+  "measurements": {
+    "farm": {
+      "spots": [
+        [
+          48,
+          64
+        ],
+        [
+          48,
+          65
+        ],
+        [
+          48,
+          66
+        ],
+        [
+          48,
+          67
+        ]
+      ],
+      "nightRatio": 9.21,
+      "dayDiffPct": 2.33,
+      "drawCallDiff": 2,
+      "farBrightened": false,
+      "litLuma22": 115.4,
+      "adjLuma22": 12.5,
+      "litLuma13": 155.8,
+      "adjLuma13": 152.3
+    },
+    "city": {
+      "spots": [
+        [
+          60,
+          42
+        ],
+        [
+          62,
+          41
+        ],
+        [
+          62,
+          42
+        ],
+        [
+          61,
+          82
+        ]
+      ],
+      "nightRatio": 70.58,
+      "dayDiffPct": 0.23,
+      "drawCallDiff": 1,
+      "farBrightened": false,
+      "litLuma22": 113.7,
+      "adjLuma22": 1.6,
+      "litLuma13": 152.3,
+      "adjLuma13": 151.9
+    }
+  },
+  "errors": []
+}

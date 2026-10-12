@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:5190",
-  "at": "2026-10-12T12:03:28.529Z",
+  "at": "2026-10-12T16:21:23.107Z",
   "overviews": {
     "city_high": {
       "kind": "city",
@@ -10,16 +10,16 @@
       "drawCalls": 243,
       "triangles": 582930,
       "fps": 43,
-      "p95Ms": 33.2,
+      "p95Ms": 41.7,
       "bloom": true,
       "night": 1,
       "foliage": {
         "hour": 22,
         "foliagePixelShare": 0.442,
         "dayFoliageLuma": 134.8,
-        "nightFoliageLuma": 11.7,
+        "nightFoliageLuma": 11.6,
         "nightSceneLuma": 9.1,
-        "ratio": 1.29,
+        "ratio": 1.27,
         "max": 1.5
       }
     },
@@ -30,8 +30,8 @@
       "file": "city-low-overview-22h.jpg",
       "drawCalls": 110,
       "triangles": 458580,
-      "fps": 60,
-      "p95Ms": 17.4,
+      "fps": 59,
+      "p95Ms": 19.1,
       "bloom": false,
       "night": 1,
       "foliage": {
@@ -51,8 +51,8 @@
       "file": "farm-high-overview-22h.jpg",
       "drawCalls": 251,
       "triangles": 345814,
-      "fps": 60,
-      "p95Ms": 17.7,
+      "fps": 59,
+      "p95Ms": 19.6,
       "bloom": true,
       "night": 1,
       "foliage": {
@@ -72,8 +72,8 @@
       "file": "farm-low-overview-22h.jpg",
       "drawCalls": 104,
       "triangles": 216138,
-      "fps": 60,
-      "p95Ms": 17.4,
+      "fps": 59,
+      "p95Ms": 17.7,
       "bloom": false,
       "night": 1,
       "foliage": {
@@ -94,10 +94,10 @@
       "file": "closeup-rice_mill-22h.jpg",
       "drawCalls": 171,
       "triangles": 311638,
-      "fps": 60,
+      "fps": 59,
       "bloom": true,
       "warmPixels22h": 9627,
-      "warmPixels13h": 954
+      "warmPixels13h": 955
     },
     "office_tower": {
       "target": "office_tower",
@@ -105,7 +105,7 @@
       "file": "closeup-office_tower-22h.jpg",
       "drawCalls": 144,
       "triangles": 480220,
-      "fps": 43,
+      "fps": 40,
       "bloom": true
     },
     "house_apartment": {
@@ -114,7 +114,7 @@
       "file": "closeup-house_apartment-22h.jpg",
       "drawCalls": 165,
       "triangles": 508116,
-      "fps": 44,
+      "fps": 42,
       "bloom": true
     }
   },
@@ -124,7 +124,7 @@
       "file": "compare-13h.jpg",
       "drawCalls": 210,
       "triangles": 566006,
-      "fps": 38,
+      "fps": 37,
       "bloom": false,
       "night": 0
     },
@@ -142,7 +142,7 @@
       "file": "compare-22h.jpg",
       "drawCalls": 210,
       "triangles": 566006,
-      "fps": 40,
+      "fps": 42,
       "bloom": true,
       "night": 1
     },
@@ -151,7 +151,7 @@
       "file": "compare-3h.jpg",
       "drawCalls": 210,
       "triangles": 566006,
-      "fps": 42,
+      "fps": 40,
       "bloom": true,
       "night": 1
     }
@@ -167,8 +167,8 @@
       "file": "mobile-pixel7-night.jpg",
       "drawCalls": 66,
       "triangles": 436616,
-      "fps": 60,
-      "p95Ms": 17.3,
+      "fps": 59,
+      "p95Ms": 17.5,
       "bloom": false
     }
   },

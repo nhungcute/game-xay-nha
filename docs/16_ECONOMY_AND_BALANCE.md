@@ -106,6 +106,7 @@ Nâng cấp đường = trả chênh lệch giữa hai tier. Gỡ bất kỳ h�
 | `house_small` | Nhà nhỏ | 2×2 | 300 | 5 | 0 | 375 | 1 | +4 | — | **170** | 2,2 h | 43 | 30 giây |
 | `shop_grocery` | Tạp hóa | 2×2 | 500 | 5 | 0 | 575 | 1 | — | 3 | **380** | 1,5 h | 95 | 1 phút |
 | `deco_garden` | Vườn hoa | 1×1 | 100 | 0 | 0 | 100 | 2 | — | — | +5% bán kính 5 ô | — | — | 15 giây |
+| `deco_streetlight` | Cột đèn | 1×1 | 150 | 0 | 2 | 190 | 2 | — | — | — | — | — | 15 giây |
 | `house_town` | Nhà phố | 2×3 | 1 200 | 10 | 5 | 1 450 | 3 | +10 | — | **490** | 3,0 h | 82 | 3 phút |
 | `shop_cafe` | Cà phê | 2×2 | 1 500 | 10 | 5 | 1 750 | 3 | — | 5 | **880** | 2,0 h | 220 | 5 phút |
 | `shop_restaurant` | Nhà hàng | 3×3 | 4 000 | 20 | 15 | 4 600 | 5 | — | 10 | **1 750** | 2,6 h | 194 | 15 phút |
@@ -127,6 +128,7 @@ Ngân hàng: ngoài thu nhập, mỗi ngân hàng (tối đa 4 có hiệu lực)
 | Nhà nhỏ | 4 | 2 | 40 | 8 | 12 | 18 | 22 | 26 | 32 | 40 |
 | Tạp hóa | 3 | 1 | 25 | 5 | 7 | 10 | 12 | 14 | 17 | 22 |
 | Vườn hoa | 4 | 2 | 60 | 6 | 10 | 16 | 20 | 24 | 30 | 40 |
+| Cột đèn | 6 | 3 | 80 | 9 | 15 | 24 | 30 | 36 | 45 | 60 |
 | Nhà phố | 3 | 2 | 50 | 3 | 7 | 13 | 17 | 21 | 27 | 37 |
 | Cà phê | 2 | 1 | 25 | 2 | 4 | 7 | 9 | 11 | 14 | 19 |
 | Nhà hàng | 2 | 1 | 20 | — | 2 | 5 | 7 | 9 | 12 | 17 |
@@ -237,6 +239,7 @@ Hạt mua bằng $ khi gieo. Sản lượng tính trên mỗi ô. **Giá bán đ
 | `well` | Giếng | 1×1 | 300 | 0 | 5 | 2 | 2 phút | Tưới bán kính 6 ô |
 | `silo` | Kho | 2×2 | 800 | 10 | 10 | 2 | 5 phút | +100 sức chứa |
 | `deco_flowerbed` | Luống hoa | 1×1 | 80 | 0 | 0 | 2 | 15 giây | Trang trí |
+| `deco_streetlight` | Cột đèn | 1×1 | 150 | 0 | 2 | 2 | 15 giây | Trang trí |
 
 **Nhà nông** (giá tăng dần, cấp yêu cầu):
 

@@ -458,3 +458,17 @@ The HUD blocks were sized for ~1440×900 and read oversized on laptops and deskt
 camera controls, tool dock and side panels; `useOverlayEdge` publishes `--hud-bottom`/`--dock-top` divided by it so
 the calc()-placed blocks still line up. `scripts/hud-scale-qa.mjs` checks five viewports for overlaps
 (`docs/evidence/g4/hud-scale/`, before/after).
+
+## D035 — 2026-10-12 — "Cột đèn" (`deco_streetlight`) decoration with night illumination
+
+Owner request. "Cột đèn" added to the Decorations category on both `city` and `farm` maps (1×1 cell, $150 + 0 wood + 2 stone, unlocks at level 2, builds in 15 seconds, level limits: floor 6, step 3/level, cap 80; no economic bonus, like `deco_flowerbed`).
+
+Import pipeline (`scripts/import-streetlight.mjs`, deterministic with `--check`): imported from owner-supplied untracked `map/street_light.glb` (Street_Light by dodotcreatives, CC-BY-4.0). Node transforms are baked, pivot placed at the bottom-center of the post at y=0, scaled uniformly to 4.5 m height, post shaft thickened XZ to 0.185 m diameter (≥ 0.18 m), vertex colors mapped (God `#c8962e`, Grey `#2b3038`, Bulb `#fff3d6`, Elephant `#fcecc5`), `_LAMP` vertex attribute assigned (1.0 on bulb vertices), and simplified with meshoptimizer to 601 triangles (cap ≤ 800) in a single-mesh, single-primitive, flat-shaded GLB (55.7 KB). 0 floating components detected.
+
+Rendering & Night Lighting:
+- Lamp head glow: shader patch `d035-lamp-light` adds warm emissive radiance `vec3(1.0, 0.82, 0.48) * uNight * 0.95` when `_lamp > 0`, staying under UnrealBloomPass threshold 1.15.
+- Ground light pool (`StreetLightRenderer`): 1 `InstancedMesh` draw call across all active streetlights. Projects a 2×2 m mesh grid (4×4 quads) matching terrain height via `roadCorners`, textured with a smooth radial gradient, `AdditiveBlending`, `depthWrite: false`, `polygonOffset`, and `FrontSide`.
+- Draw call budget: `deco_streetlight` does not cast shadows in `BuildingRenderer`, so total scene draw call increase is ≤ 2 (+1 building batch, +1 ground pool batch).
+
+Validation: `assets.test.ts` asserts 1 part, ≤ 800 triangles, footprint bounds, `_lamp` vertex attribute > 0, and CC-BY provenance. All 9 automated gates in `scripts/streetlight-qa.mjs` pass (night brightness ratio > 2×, day difference < 5%, far cell unaffected, draw call increase ≤ 2, 0 console errors) across 18 screenshots in `docs/evidence/g4/streetlight/`. Baseline `scripts/g4-night-qa.mjs` remains fully passing.
+
