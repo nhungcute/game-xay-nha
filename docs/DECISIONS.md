@@ -376,8 +376,12 @@ Window lights system (`windowLights.ts`): utilizes vertex attribute `_WINDOW` on
 instance position seed (`vInstanceSeed`) and window ID to illuminate a stable subset of windows (0% at day, 60–70% at night,
 ~42% between 00:00–05:00) with warm orange emissive radiance (`vec3(1.0, 0.56, 0.16) * 2.0`). Shader hook composition
 (`shaderPatches.ts`) chains multiple `onBeforeCompile` patches across shared GLTF materials without collision and maintains
-a stable `customProgramCacheKey`. `night.ts` tints unlit materials (terrain, water, coins, distant billboards) so nothing stays
-daylight-bright at night.
+a stable `customProgramCacheKey`. `night.ts` tints only unlit (MeshBasic) materials: far-LOD billboards, unlit bushes and
+water foam. The tint is `lighting().unlitTint`, the per-channel ratio of night to day irradiance a lit surface receives
+(exactly 1 by day), multiplied into `outgoingLight` before `opaque_fragment`. Lit materials (terrain, buildings, water,
+coins) darken through the lights and take no tint. The HUD sun/moon icon follows the scene's night factor, not the server
+clock. `scripts/g4-night-qa.mjs` gates foliage vs scene brightness at 22:00 (≤ 1.5×) and lit rice_mill windows, and
+exits non-zero on any failed check.
 
 Bloom post-processing (`GameLoop.ts`): `EffectComposer` with `UnrealBloomPass` activates only on `quality === 'high'` when
 night settles (`night > 0.2`). In `low` graphics, bloom is disabled and rendering bypasses the composer. Render targets and

@@ -68,6 +68,53 @@ async function measureFps(page) {
   });
 }
 
+/** Decodes PNG screenshots in the page (no Node image decoder in the repo) and returns RGBA arrays. */
+async function pixels(page, ...shots) {
+  return page.evaluate(async encoded => Promise.all(encoded.map(async base64 => {
+    const bitmap = await window.createImageBitmap(await (await fetch(`data:image/png;base64,${base64}`)).blob());
+    const canvas = new window.OffscreenCanvas(bitmap.width, bitmap.height), context = canvas.getContext('2d');
+    context.drawImage(bitmap, 0, 0);
+    return Array.from(context.getImageData(0, 0, bitmap.width, bitmap.height).data);
+  })), shots.map(shot => shot.toString('base64')));
+}
+const luma = (data, at) => 0.2126 * data[at] + 0.7152 * data[at + 1] + 0.0722 * data[at + 2];
+// The scene area between the HUD panels at 1440×900 (quests on the left, top bar, bottom tool bar).
+const SCENE_CLIP = { x: 320, y: 120, width: 1020, height: 580 };
+
+/**
+ * Foliage-vs-scene night gate: unlit foliage (KHR_materials_unlit far trees and bushes) must darken like lit
+ * surfaces. Foliage pixels are the vivid-green ones of the same view at 13:00; at 22:00 their mean luminance
+ * must stay within FOLIAGE_RATIO_MAX of the rest of the scene (before the D031 fix it was ~5×).
+ */
+const FOLIAGE_RATIO_MAX = 1.5;
+async function foliageGate(page, hour) {
+  await page.evaluate(() => window.__debug.timeOfDay(13)); await page.waitForTimeout(1500);
+  const day = await page.screenshot({ type: 'png', clip: SCENE_CLIP });
+  await page.evaluate(h => window.__debug.timeOfDay(h), hour); await page.waitForTimeout(1500);
+  const night = await page.screenshot({ type: 'png', clip: SCENE_CLIP });
+  const [dayData, nightData] = await pixels(page, day, night);
+  let foliage = 0, foliageSum = 0, rest = 0, restSum = 0, dayFoliageSum = 0;
+  for (let at = 0; at < dayData.length; at += 4) {
+    const r = dayData[at], g = dayData[at + 1], b = dayData[at + 2];
+    if (g > r + 25 && g > b + 25 && g > 60) { foliage++; foliageSum += luma(nightData, at); dayFoliageSum += luma(dayData, at); }
+    else { rest++; restSum += luma(nightData, at); }
+  }
+  const foliageLuma = foliage ? foliageSum / foliage : 0, sceneLuma = rest ? restSum / rest : 0;
+  return {
+    hour, foliagePixelShare: +(foliage / (foliage + rest)).toFixed(3), dayFoliageLuma: +(foliage ? dayFoliageSum / foliage : 0).toFixed(1),
+    nightFoliageLuma: +foliageLuma.toFixed(1), nightSceneLuma: +sceneLuma.toFixed(1),
+    ratio: +(foliageLuma / Math.max(1, sceneLuma)).toFixed(2), max: FOLIAGE_RATIO_MAX,
+  };
+}
+
+/** Warm lit-window pixels (orange-yellow emissive) in a screenshot. */
+async function warmWindowPixels(page) {
+  const [data] = await pixels(page, await page.screenshot({ type: 'png', clip: SCENE_CLIP }));
+  let count = 0;
+  for (let at = 0; at < data.length; at += 4) if (data[at] > 200 && data[at + 1] > 120 && data[at + 2] < 140 && data[at] - data[at + 2] > 90) count++;
+  return count;
+}
+
 // ---------------- 1. Overviews at 22:00 (City & Farm, High & Low) ----------------
 console.log('--- 1. Overviews at 22:00 ---');
 for (const kind of ['city', 'farm']) {
@@ -88,6 +135,7 @@ for (const kind of ['city', 'farm']) {
     await page.evaluate(() => window.__debug.camera(128, 128, 220, 45, 75));
     await page.waitForTimeout(2000);
 
+    const foliage = await foliageGate(page, 22);
     const perf = await measureFps(page);
     const m = await page.evaluate(() => window.__debug.metrics());
     const fileName = `${kind}-${quality}-overview-22h.jpg`;
@@ -96,9 +144,9 @@ for (const kind of ['city', 'farm']) {
     report.overviews[`${kind}_${quality}`] = {
       kind, quality, hour: 22, file: fileName,
       drawCalls: m.drawCalls, triangles: m.triangles, fps: perf.fps, p95Ms: perf.p95Ms,
-      bloom: m.bloom, night: m.night,
+      bloom: m.bloom, night: m.night, foliage,
     };
-    console.log(`  ${kind} ${quality} 22h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
+    console.log(`  ${kind} ${quality} 22h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}, foliage/scene ${foliage.ratio}`);
   }
   await context.close();
 }
@@ -116,10 +164,13 @@ console.log('--- 2. Closeups at 22:00 ---');
   await page.waitForTimeout(2000);
   const perf = await measureFps(page);
   const m = await page.evaluate(() => window.__debug.metrics());
+  const warmPixels22h = await warmWindowPixels(page);
   await page.screenshot({ path: `${OUT}/closeup-rice_mill-22h.jpg`, type: 'jpeg', quality: 85 });
+  await page.evaluate(() => window.__debug.timeOfDay(13)); await page.waitForTimeout(1500);
+  const warmPixels13h = await warmWindowPixels(page);
   report.closeups.rice_mill = {
     target: 'rice_mill', hour: 22, file: 'closeup-rice_mill-22h.jpg',
-    drawCalls: m.drawCalls, triangles: m.triangles, fps: perf.fps, bloom: m.bloom,
+    drawCalls: m.drawCalls, triangles: m.triangles, fps: perf.fps, bloom: m.bloom, warmPixels22h, warmPixels13h,
   };
   console.log(`  rice_mill closeup 22h: ${m.drawCalls} calls, ${m.triangles} tris, ${perf.fps} fps, bloom=${m.bloom}`);
   await context.close();
@@ -247,7 +298,8 @@ report.metrics.budgetChecks = {
   desktopCityFpsOk: cityHigh.fps >= 35, // Desktop budget
   desktopFarmFpsOk: farmHigh.fps >= 50,
   mobilePixel7FpsOk: mobileShot.fps >= 30, // mobile >= 30 FPS
-  riceMillLit: report.closeups.rice_mill.bloom !== undefined,
+  riceMillLit: report.closeups.rice_mill.warmPixels22h > Math.max(50, report.closeups.rice_mill.warmPixels13h * 3),
+  foliageDarkensAtNight: ['city_high', 'city_low', 'farm_high', 'farm_low'].every(key => report.overviews[key].foliage.ratio <= FOLIAGE_RATIO_MAX),
   bloomActiveAtNightHigh: cityHigh.bloom === true,
   bloomDisabledAtLow: report.overviews.city_low.bloom === false,
   noErrors: report.errors.length === 0,
@@ -258,3 +310,5 @@ console.log('--- Budget Checks Summary ---');
 console.log(JSON.stringify(report.metrics.budgetChecks, null, 2));
 
 await browser.close();
+const failed = Object.entries(report.metrics.budgetChecks).filter(([, ok]) => !ok).map(([name]) => name);
+if (failed.length) { console.error(`D031 night QA FAILED: ${failed.join(', ')}`); process.exitCode = 1; }

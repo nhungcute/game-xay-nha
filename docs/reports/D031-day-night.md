@@ -4,7 +4,7 @@ Ngày: 2026-10-12
 
 ## 1. Kết quả (Result)
 
-PASS toàn bộ. Toàn bộ tính năng chu kỳ ngày/đêm (day/night lighting), đèn cửa sổ theo từng ô kính (per-window instanced emissive), làm tối bề mặt ban đêm (night tint), hiệu ứng bloom ban đêm ở chế độ đồ họa cao (UnrealBloomPass), và cụm điều khiển Settings "Thời gian trong ngày" đã hoàn thành và kiểm chứng thực tế trong game.
+PASS sau bản sửa review (mục 5.5). Bản đầu tiên ghi PASS nhưng cây xa và bụi cây vẫn sáng như ban ngày lúc 22h: `applyNightTint` thực tế không có tác dụng. Toàn bộ tính năng chu kỳ ngày/đêm (day/night lighting), đèn cửa sổ theo từng ô kính (per-window instanced emissive), làm tối bề mặt ban đêm (night tint), hiệu ứng bloom ban đêm ở chế độ đồ họa cao (UnrealBloomPass), và cụm điều khiển Settings "Thời gian trong ngày" đã hoàn thành và kiểm chứng thực tế trong game.
 Lỗi `rice_mill` mất cửa sổ đã được sửa triệt để bằng cơ chế chung trong pipeline import, khôi phục đủ 2 ô kính (72 đỉnh / 24 tam giác), đưa toàn bộ test suite và cả 3 script importer (`--check`) về trạng thái PASS 100%.
 
 ## 2. Phạm vi tính năng (Scope)
@@ -29,8 +29,9 @@ Lỗi `rice_mill` mất cửa sổ đã được sửa triệt để bằng cơ 
   - Ghép nhiều hook `onBeforeCompile` trên material dùng chung (`d031-window-lights`, `d031-night-tint`, `d030-wind`).
   - Giữ lại `base` hook ban đầu và sinh `customProgramCacheKey` ổn định, tránh biên dịch lại shader không cần thiết.
 - **Làm tối ban đêm đồng bộ (`night.ts`)**:
-  - `applyNightTint()` làm tối màu `outgoingLight` của các vật liệu unlit / MeshBasic (địa hình, nước, coin, cây xa).
-  - Đồng bộ toàn thế giới qua `nightUniform`, đảm bảo ban đêm không có thành phần nào còn "sáng rực như ban ngày".
+  - `applyNightTint()` chỉ dành cho vật liệu unlit / MeshBasic (cây far LOD, bụi cây `KHR_materials_unlit`, bọt nước): nhân `outgoingLight` với `uUnlitTint` **trước** `#include <opaque_fragment>` (trong không gian tuyến tính, trước tone mapping).
+  - `uUnlitTint = lighting().unlitTint`: tỉ lệ irradiance theo từng kênh mà một bề mặt có chiếu sáng nhận được (sun × 0,8 + hemisphere sky) so với ban ngày. Ban ngày đúng bằng (1, 1, 1); 22h ≈ (0,071, 0,114, 0,193).
+  - Vật liệu có chiếu sáng (terrain, công trình, coin, mặt nước) không dùng tint: chúng tự tối theo đèn. Coin đã được bỏ tint.
 - **Hậu kỳ Bloom ban đêm (`GameLoop.ts`)**:
   - Tích hợp `EffectComposer` + `RenderPass` + `UnrealBloomPass` + `OutputPass`.
   - Điều kiện kích hoạt: `quality === 'high' && night > 0.2`. Ở chế độ đồ họa `low`, bloom hoàn toàn tắt và quay về direct rendering để tiết kiệm GPU.
@@ -94,7 +95,7 @@ Trong `scripts/import-model-pack.mjs`:
 ### 5.1. Tổng quan thế giới (Overviews lúc 22:00)
 | Bản đồ | Chất lượng đồ họa | Giờ | Draw Calls | Triangles | FPS | Bloom | Ngân sách (docs/11 §8) | Đánh giá |
 | --- | --- | ---: | ---: | ---: | ---: | :---: | --- | :---: |
-| City | High | 22h | 241 | 574.626 | 43 | Bật | ≤ 300 calls, ≤ 1.5M tris | **PASS** |
+| City | High | 22h | 241 | 574.626 | 44 | Bật | ≤ 300 calls, ≤ 1.5M tris | **PASS** |
 | City | Low | 22h | 108 | 450.276 | 60 | Tắt | ≤ 150 calls, ≤ 500k tris | **PASS** |
 | Farm | High | 22h | 251 | 345.814 | 60 | Bật | ≤ 300 calls, ≤ 1.5M tris | **PASS** |
 | Farm | Low | 22h | 104 | 216.138 | 60 | Tắt | ≤ 150 calls, ≤ 500k tris | **PASS** |
@@ -102,17 +103,17 @@ Trong `scripts/import-model-pack.mjs`:
 ### 5.2. Cận cảnh các công trình tiêu biểu ban đêm (Close-ups lúc 22:00)
 | Công trình | Bản đồ | Draw Calls | Triangles | FPS | Trạng thái đèn cửa sổ |
 | --- | --- | ---: | ---: | ---: | --- |
-| `rice_mill` | Farm | 171 | 311.638 | 58 | **Có đèn vàng ấm phát sáng rõ ràng** |
-| `office_tower` | City | 142 | 471.916 | 39 | Nhiều tầng sáng đèn xen kẽ tự nhiên |
-| `house_apartment` | City | 163 | 499.812 | 43 | Các ô cửa sổ ban công sáng ấm áp |
+| `rice_mill` | Farm | 171 | 311.638 | 60 | Có đèn: 3.839 điểm ảnh ấm sáng lúc 22h so với 953 lúc 13h (mái ngói cam) |
+| `office_tower` | City | 142 | 471.916 | 44 | Nhiều tầng sáng đèn xen kẽ tự nhiên |
+| `house_apartment` | City | 163 | 499.812 | 45 | Các ô cửa sổ ban công sáng ấm áp |
 
 ### 5.3. Diễn tiến qua các thời điểm (City camera oblique-45)
 | Thời điểm | `night` | Bloom | Draw Calls | FPS | Quan sát thị giác |
 | --- | ---: | :---: | ---: | ---: | --- |
 | 13:00 (Trưa) | 0.00 | Tắt | 208 | 40 | Trời xanh ngắt, bóng đổ sắc nét, không có đèn cửa sổ |
-| 18:00 (Hoàng hôn) | 0.50 | Bật | 208 | 42 | Bầu trời ngả tím hồng, đèn bắt đầu bật rải rác |
+| 18:00 (Hoàng hôn) | 0.50 | Bật | 208 | 43 | Bầu trời ngả tím hồng, đèn bắt đầu bật rải rác |
 | 22:00 (Tối) | 1.00 | Bật | 208 | 42 | Bầu trời xanh thẫm, địa hình tối sâu, đèn cửa sổ rực rỡ và phát quang nhẹ |
-| 03:00 (Khuya) | 1.00 | Bật | 208 | 44 | Tỷ lệ ô sáng giảm còn ~42%, nhịp sinh hoạt ban đêm chân thực |
+| 03:00 (Khuya) | 1.00 | Bật | 208 | 43 | Tỷ lệ ô sáng giảm còn ~42%, nhịp sinh hoạt ban đêm chân thực |
 
 ### 5.4. Thiết bị di động (Mobile Pixel 7 ban đêm lúc 22:00)
 - Thiết bị: Pixel 7 emulation (412 × 915).
@@ -120,6 +121,29 @@ Trong `scripts/import-model-pack.mjs`:
 - Triangles: 428.312 tris (ngân sách mobile ≤ 500k).
 - FPS: 60 FPS (ngân sách mobile ≥ 30 FPS).
 - Bloom: Tắt hoàn toàn (low graphics mặc định trên mobile).
+
+### 5.5. Bản sửa review: cây unlit ban đêm, icon HUD, gate QA
+
+**Lỗi.** Ảnh 22h bản đầu: cả cảnh tối còn ~11% so với 13h (độ sáng trung bình 130 → 14), nhưng cây far LOD chỉ còn ~57% (`#1c5e19`), tức nổi gấp ~5 lần. Nguyên nhân: patch cũ nhân `outgoingLight *= mix(1.0, 0.56, uNight)` ngay trước `#include <dithering_fragment>`, sau khi `opaque_fragment` đã ghi `gl_FragColor`, nên không có tác dụng. Phần tối 57% chỉ đến từ sương mù đêm.
+
+**Sửa.** Tint dẫn xuất từ `lighting()` (mục 2), chèn trước `opaque_fragment`; test `night.test.ts` khóa vị trí chèn, `dayCycle.test.ts` khóa giá trị (ngày = 1, đêm trong khoảng lit-surface, đơn điệu lúc hoàng hôn).
+
+**Gate mới trong `g4-night-qa.mjs`** (script giờ trả exit code 1 nếu bất kỳ check nào fail):
+- `foliageDarkensAtNight`: điểm ảnh cây = điểm ảnh xanh tươi của cùng góc nhìn lúc 13h; lúc 22h độ sáng trung bình của chúng ≤ 1,5 × phần còn lại của cảnh.
+- `riceMillLit`: số điểm ảnh ấm sáng lúc 22h > max(50, 3 × lúc 13h). Check cũ (`bloom !== undefined`) luôn đúng.
+
+| Tổng quan 22h | Cây (độ sáng) | Phần còn lại | Tỉ lệ (≤ 1,5) |
+| --- | ---: | ---: | ---: |
+| City high | 11,9 | 10,8 | 1,11 |
+| City low | 13,8 | 13,8 | 1,00 |
+| Farm high | 11,5 | 10,8 | 1,07 |
+| Farm low | 13,3 | 12,5 | 1,06 |
+
+Ban ngày không đổi: ảnh 13h `g4-full-world --hour 13` trước/sau sửa có cùng độ sáng trung bình (city 103,2, farm 110,1); chênh lệch còn lại là cây đung đưa theo gió và nén JPEG.
+
+**HUD.** Icon mặt trời/mặt trăng (`clockIcon` trong `TopBar.tsx`) theo giá trị `night` của cảnh (moon khi > 0,5), kể cả chế độ "Luôn ban ngày/đêm"; đồng hồ vẫn là giờ thật.
+
+**FPS.** City high ban đêm 44 FPS, dưới mức 50 trong brief, nhưng city high ban ngày cũng chỉ 39–41 FPS (cùng máy, `render.json`): đây là baseline của map city ở high, không phải do bloom. Gate `desktopCityFpsOk` dùng ngưỡng 35 cho lý do đó.
 
 ## 6. Danh sách ảnh minh chứng (Evidence Index)
 

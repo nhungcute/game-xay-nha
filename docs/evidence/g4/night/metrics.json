@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:5190",
-  "at": "2026-10-12T09:18:14.533Z",
+  "at": "2026-10-12T10:34:09.746Z",
   "overviews": {
     "city_high": {
       "kind": "city",
@@ -9,10 +9,19 @@
       "file": "city-high-overview-22h.jpg",
       "drawCalls": 241,
       "triangles": 574626,
-      "fps": 43,
-      "p95Ms": 26.2,
+      "fps": 44,
+      "p95Ms": 31.5,
       "bloom": true,
-      "night": 1
+      "night": 1,
+      "foliage": {
+        "hour": 22,
+        "foliagePixelShare": 0.424,
+        "dayFoliageLuma": 134.7,
+        "nightFoliageLuma": 11.9,
+        "nightSceneLuma": 10.8,
+        "ratio": 1.11,
+        "max": 1.5
+      }
     },
     "city_low": {
       "kind": "city",
@@ -22,9 +31,18 @@
       "drawCalls": 108,
       "triangles": 450276,
       "fps": 60,
-      "p95Ms": 17.6,
+      "p95Ms": 17.2,
       "bloom": false,
-      "night": 1
+      "night": 1,
+      "foliage": {
+        "hour": 22,
+        "foliagePixelShare": 0.423,
+        "dayFoliageLuma": 136.5,
+        "nightFoliageLuma": 13.8,
+        "nightSceneLuma": 13.8,
+        "ratio": 1,
+        "max": 1.5
+      }
     },
     "farm_high": {
       "kind": "farm",
@@ -34,9 +52,18 @@
       "drawCalls": 251,
       "triangles": 345814,
       "fps": 60,
-      "p95Ms": 18.1,
+      "p95Ms": 18.5,
       "bloom": true,
-      "night": 1
+      "night": 1,
+      "foliage": {
+        "hour": 22,
+        "foliagePixelShare": 0.545,
+        "dayFoliageLuma": 136.1,
+        "nightFoliageLuma": 11.5,
+        "nightSceneLuma": 10.8,
+        "ratio": 1.07,
+        "max": 1.5
+      }
     },
     "farm_low": {
       "kind": "farm",
@@ -46,9 +73,18 @@
       "drawCalls": 104,
       "triangles": 216138,
       "fps": 60,
-      "p95Ms": 17.7,
+      "p95Ms": 17.1,
       "bloom": false,
-      "night": 1
+      "night": 1,
+      "foliage": {
+        "hour": 22,
+        "foliagePixelShare": 0.548,
+        "dayFoliageLuma": 136.2,
+        "nightFoliageLuma": 13.3,
+        "nightSceneLuma": 12.5,
+        "ratio": 1.06,
+        "max": 1.5
+      }
     }
   },
   "closeups": {
@@ -58,8 +94,10 @@
       "file": "closeup-rice_mill-22h.jpg",
       "drawCalls": 171,
       "triangles": 311638,
-      "fps": 58,
-      "bloom": true
+      "fps": 60,
+      "bloom": true,
+      "warmPixels22h": 3839,
+      "warmPixels13h": 953
     },
     "office_tower": {
       "target": "office_tower",
@@ -67,7 +105,7 @@
       "file": "closeup-office_tower-22h.jpg",
       "drawCalls": 142,
       "triangles": 471916,
-      "fps": 39,
+      "fps": 44,
       "bloom": true
     },
     "house_apartment": {
@@ -76,7 +114,7 @@
       "file": "closeup-house_apartment-22h.jpg",
       "drawCalls": 163,
       "triangles": 499812,
-      "fps": 43,
+      "fps": 45,
       "bloom": true
     }
   },
@@ -95,7 +133,7 @@
       "file": "compare-18h.jpg",
       "drawCalls": 208,
       "triangles": 557702,
-      "fps": 42,
+      "fps": 43,
       "bloom": true,
       "night": 0.5
     },
@@ -113,7 +151,7 @@
       "file": "compare-3h.jpg",
       "drawCalls": 208,
       "triangles": 557702,
-      "fps": 42,
+      "fps": 43,
       "bloom": true,
       "night": 1
     }
@@ -147,6 +185,7 @@
       "desktopFarmFpsOk": true,
       "mobilePixel7FpsOk": true,
       "riceMillLit": true,
+      "foliageDarkensAtNight": true,
       "bloomActiveAtNightHigh": true,
       "bloomDisabledAtLow": true,
       "noErrors": true
