@@ -1,14 +1,20 @@
-import type { Scene } from 'three';
+import type { InstancedMesh, Scene } from 'three';
 import { CELL_SIZE_M } from '@xay-nha/contracts';
 import { catalog } from '@xay-nha/content';
 import { rotatedSize, type SimState } from '@xay-nha/sim';
 import { AssetManager } from '../assets/AssetManager';
 import { InstanceBatches, type InstancePlacement } from '../assets/InstanceBatches';
 import { addInstance, matrix, terrainHeight } from '../assets/placement';
+import { applyWindowLights } from './windowLights';
 
 export class BuildingRenderer {
   private readonly batches: InstanceBatches;
-  constructor(scene: Scene, assets: AssetManager) { this.batches = new InstanceBatches(scene, assets); }
+  constructor(scene: Scene, assets: AssetManager) {
+    this.batches = new InstanceBatches(scene, assets, () => true, (mesh: InstancedMesh) => {
+      if (!mesh.geometry.getAttribute('_window')) return;
+      for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) applyWindowLights(material);
+    });
+  }
   update(s: SimState): void {
     const groups = new Map<string, InstancePlacement>();
     for (const b of s.snapshot.buildings) {

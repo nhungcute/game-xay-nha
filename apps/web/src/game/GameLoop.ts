@@ -1,5 +1,9 @@
-import { ACESFilmicToneMapping, Color, DirectionalLight, Fog, HemisphereLight, PCFSoftShadowMap, Scene, SRGBColorSpace, Vector3, WebGLRenderer } from 'three';
+import { ACESFilmicToneMapping, Color, DirectionalLight, Fog, HemisphereLight, PCFSoftShadowMap, Scene, SRGBColorSpace, Vector2, Vector3, WebGLRenderer } from 'three';
 import type { InstancedMesh, Material, Mesh, PlaneGeometry, Texture } from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import type { CommandType } from '@xay-nha/contracts';
 import { stateHash } from '@xay-nha/sim';
 import { AssetManager } from './assets/AssetManager';
@@ -21,6 +25,9 @@ import { PointerRouter } from './PointerRouter';
 import { loadQuality, pixelRatio, saveQuality, type Quality } from './quality';
 import { commandSounds, SoundEffects, tickSounds, waterNearby } from './audio';
 import { commandEffects, EffectsRenderer, progressEffects } from './render/EffectsRenderer';
+import { hourFromTimestamp, lighting, loadTimeOfDayMode, saveTimeOfDayMode, type TimeOfDayMode } from './dayCycle';
+import { setNight } from './render/night';
+import { setWindowTime } from './render/windowLights';
 
 export class GameLoop {
   readonly scene=new Scene();
@@ -42,6 +49,16 @@ export class GameLoop {
   private readonly effects:EffectsRenderer;
   private readonly renderers:{update: (state:WorldStore['state'])=>void;dispose:()=>void}[];
   private readonly sun=new DirectionalLight('#fff0d5',2.1);
+  private readonly hemisphere=new HemisphereLight('#d6edff','#566c37',1.25);
+  private readonly sunDirection=new Vector3(-50,90,40);
+  private readonly composer:EffectComposer;
+  private readonly bloom:UnrealBloomPass;
+  private bloomEnabled=false;
+  private sceneDrawCalls=0;
+  private sceneTriangles=0;
+  private lastLighting=-Infinity;
+  private forcedHour:number|null=null;
+  private timeOfDay:TimeOfDayMode=loadTimeOfDayMode();
   private readonly subscriptions:(()=>void)[]=[];
   private readonly resizeObserver:ResizeObserver;
   private frameId=0;
@@ -55,7 +72,7 @@ export class GameLoop {
     this.renderer.outputColorSpace=SRGBColorSpace;this.renderer.toneMapping=ACESFilmicToneMapping;this.renderer.toneMappingExposure=.85;this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=PCFSoftShadowMap;
     this.scene.background=new Color('#b6d4ce');this.scene.fog=new Fog('#b6d4ce',190,420);
     this.sun.castShadow=true;this.sun.shadow.mapSize.setScalar(mobile?1024:2048);this.sun.shadow.camera.left=-60;this.sun.shadow.camera.right=60;this.sun.shadow.camera.top=60;this.sun.shadow.camera.bottom=-60;this.sun.shadow.camera.near=1;this.sun.shadow.camera.far=220;this.sun.shadow.bias=-.0003;
-    this.scene.add(this.sun,this.sun.target,new HemisphereLight('#d6edff','#566c37',1.25));
+    this.scene.add(this.sun,this.sun.target,this.hemisphere);
     this.terrain=new TerrainRenderer(this.scene);this.terrain.update(world.state);
     this.water=new WaterRenderer(this.scene);this.water.update(world.state);
     this.overlay=new OverlayRenderer(this.scene);this.overlay.update(world.state);
@@ -66,10 +83,22 @@ export class GameLoop {
     world.onCommand=(command,accepted,before,after)=>{this.sound.play(commandSounds(command.type,accepted,before,after));if(accepted)this.effects.show(commandEffects(command.type,command.payload,before,after),project);};
     world.onTick=(before,after)=>{this.sound.play(tickSounds(before,after));this.effects.show(progressEffects(before,after),project);};
     for(const renderer of this.renderers)renderer.update(world.state);
-    this.rig=new CameraRig(world.state,(x,z)=>this.terrain.sampleHeight(x,z));this.tools=new ToolController(world);
+    this.rig=new CameraRig(world.state,(x,z)=>this.terrain.sampleHeight(x,z));
+    this.composer=new EffectComposer(this.renderer);
+    const renderPass=new RenderPass(this.scene, this.rig.camera);
+    const originalRenderPass=renderPass.render.bind(renderPass);
+    renderPass.render=(renderer,writeBuffer,readBuffer,deltaTime,maskActive)=>{
+      originalRenderPass(renderer,writeBuffer,readBuffer,deltaTime,maskActive);
+      this.sceneDrawCalls=renderer.info.render.calls;
+      this.sceneTriangles=renderer.info.render.triangles;
+    };
+    this.composer.addPass(renderPass);
+    this.bloom=new UnrealBloomPass(new Vector2(1,1), 0.62, 0.42, 1.15);
+    this.composer.addPass(this.bloom); this.composer.addPass(new OutputPass());
+    this.tools=new ToolController(world);
     this.pointer=new PointerRouter(canvas,this.rig,this.tools,this.terrain.meshes);
     this.subscriptions.push(world.subscribe((state,dirty,entitiesChanged)=>{this.rig.setState(state);if(dirty.length){this.terrain.update(state,dirty);this.overlay.update(state);}if(entitiesChanged)for(const renderer of this.renderers)renderer.update(state);else {this.crops.update(state);this.coins.update(state);}}),useTools.subscribe(ui=>{const p=ui.preview;const status=p?.valid?(p.warning?'warning':'valid'):'invalid';if(p)this.overlay.preview(p.cells,world.state,status,p.bad);else this.overlay.hide();if(p&&ui.tool==='build'&&ui.cell)this.ghost.preview(ui.buildingId,ui.cell,ui.rotation,world.state,status);else this.ghost.hide();}));
-    canvas.addEventListener('pointerdown',this.unlockAudio);this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.resize();this.frameId=requestAnimationFrame(this.frame);
+    canvas.addEventListener('pointerdown',this.unlockAudio);this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.resize();this.updateLighting(true);this.frameId=requestAnimationFrame(this.frame);
     if(new URLSearchParams(location.search).get('debug')==='1')this.installDebug();
   }
   /** docs/11 §8 low-graphics mode: shadows off, lower pixel ratio, thinner scenery. Persisted per browser. */
@@ -79,23 +108,36 @@ export class GameLoop {
     this.renderer.setPixelRatio(pixelRatio(quality));this.renderer.shadowMap.enabled=shadows;this.sun.castShadow=shadows;
     this.scene.traverse(o=>{const m=(o as Mesh).material;if(m)for(const x of Array.isArray(m)?m:[m])x.needsUpdate=true;});
     this.env.setQuality(quality);
+    this.updateLighting(true);
   }
   /** Ambience follows the camera: running water near shores, wind stronger when zoomed out. */
   private updateAmbience():void {const t=this.rig.target,s=this.world.state;this.sound.ambient(waterNearby(s.surface,Math.floor(t.x/2),Math.floor(t.z/2)),Math.max(0,Math.min(1,(260-this.rig.distance)/200)));this.sound.playMusic(s.template.mapKind);}
   private unlockAudio=():void=>this.sound.unlock();
-  private resize():void {const rect=this.canvas.getBoundingClientRect();this.renderer.setSize(rect.width,rect.height,false);this.rig.resize(rect.width,rect.height);}
+  private resize():void {
+    const rect=this.canvas.getBoundingClientRect();this.renderer.setSize(rect.width,rect.height,false);this.composer.setPixelRatio(this.renderer.getPixelRatio());this.composer.setSize(rect.width,rect.height);this.bloom.setSize(Math.max(1,Math.round(rect.width*this.renderer.getPixelRatio()/2)),Math.max(1,Math.round(rect.height*this.renderer.getPixelRatio()/2)));this.rig.resize(rect.width,rect.height);
+  }
+  private currentHour():number { return this.forcedHour ?? (this.timeOfDay==='day'?13:this.timeOfDay==='night'?22:hourFromTimestamp(Date.now())); }
+  private updateLighting(force=false):void {
+    const now=performance.now();if(!force&&now-this.lastLighting<1000)return;this.lastLighting=now;
+    const state=lighting(this.currentHour(),this.timeOfDay);setNight(state.night);setWindowTime(state.hour,state.night);
+    this.sun.color.set(state.sunColor);this.sun.intensity=state.sunIntensity;this.sunDirection.set(...state.sunDirection);
+    this.hemisphere.color.set(state.hemisphereSkyColor);this.hemisphere.groundColor.set(state.hemisphereGroundColor);this.hemisphere.intensity=state.hemisphereIntensity;
+    (this.scene.background as Color).set(state.backgroundColor);(this.scene.fog as Fog).color.set(state.fogColor);this.renderer.toneMappingExposure=state.exposure;
+    this.bloomEnabled=this.quality==='high'&&state.night>0.2;
+  }
+  setTimeOfDay(mode:TimeOfDayMode):void { if(mode===this.timeOfDay)return;this.timeOfDay=mode;saveTimeOfDayMode(mode);this.updateLighting(true); }
   private frame=(now:number):void=>{
     const dt=Math.min((now-this.last)/1000,.1);this.last=now;this.pointer.update(dt);this.terrain.animate(dt);this.water.animate(dt);this.coins.animate(dt);this.effects.animate(dt);
-    this.env.frame(dt,{x:this.rig.target.x,z:this.rig.target.z,yawDeg:this.rig.yaw});
-    this.sun.target.position.copy(this.rig.target);this.sun.position.copy(this.rig.target).add(new Vector3(-50,90,40));
-    this.renderer.render(this.scene,this.rig.camera);this.frameCount++;
+    this.env.frame(dt,{x:this.rig.target.x,z:this.rig.target.z,yawDeg:this.rig.yaw});this.updateLighting();
+    this.sun.target.position.copy(this.rig.target);this.sun.position.copy(this.rig.target).add(this.sunDirection);
+    if(this.bloomEnabled)this.composer.render();else this.renderer.render(this.scene,this.rig.camera);this.frameCount++;
     if(now-this.second>=1000){this.fps=this.frameCount*1000/(now-this.second);this.second=now;this.frameCount=0;this.world.tick();this.updateAmbience();}
     this.frameId=requestAnimationFrame(this.frame);
   };
   project(x:number,z:number):{x:number;y:number} {const point=new Vector3(x,this.terrain.sampleHeight(x,z),z).project(this.rig.camera),r=this.canvas.getBoundingClientRect();return{x:r.left+(point.x+1)*r.width/2,y:r.top+(1-point.y)*r.height/2};}
-  metrics(){const info=this.renderer.info;return{quality:this.quality,muted:this.sound.muted,musicOn:this.sound.musicOn,pending:this.world.pendingCount(),clockSkewMs:this.world.clockSkewMs(),fps:this.fps,drawCalls:info.render.calls,triangles:info.render.triangles,geometries:info.memory.geometries,textures:info.memory.textures,programs:info.programs?.length??0,terrain:this.terrain.stats,revision:this.world.state.snapshot.revision};}
+  metrics(){const info=this.renderer.info;return{quality:this.quality,timeOfDay:this.timeOfDay,night:lighting(this.currentHour(),this.timeOfDay).night,bloom:this.bloomEnabled,muted:this.sound.muted,musicOn:this.sound.musicOn,pending:this.world.pendingCount(),clockSkewMs:this.world.clockSkewMs(),fps:this.fps,drawCalls:this.bloomEnabled?this.sceneDrawCalls:info.render.calls,triangles:this.bloomEnabled?this.sceneTriangles:info.render.triangles,geometries:info.memory.geometries,textures:info.memory.textures,programs:info.programs?.length??0,terrain:this.terrain.stats,revision:this.world.state.snapshot.revision};}
   private installDebug():void {
-    const debug={getStateHash:()=>stateHash(this.world.state),listSceneObjectTypes:()=>{const types:string[]=[];this.scene.traverse(o=>types.push(o.type));return types;},auditScene:()=>this.auditScene(),envCull:(enabled:boolean)=>this.env.setFrustumCulled(enabled),envVisible:(visible:boolean)=>this.env.setVisible(visible),treeLod:(options:{nearCount:number})=>this.env.setNearCount(options.nearCount),envBatches:()=>{const batches:{name:string;count:number;capacity:number;visible:boolean;castShadow:boolean;boundingSphereR:number}[]=[];this.env.sceneBatches(b=>batches.push(b));return batches;},env:()=>{const s=this.world.state,removed=new Set(s.snapshot.delta.removedEnvIds);return s.env.filter(e=>!removed.has(e.id)&&s.snapshot.unlockedZones.includes(Math.floor(e.cell[1]/16)*8+Math.floor(e.cell[0]/16))).map(e=>({id:e.id,cell:e.cell,assetId:e.assetId,blocking:e.blocking,footprint:e.footprint}));},orbit:(deg:number)=>this.rig.orbit(deg),camera:(x:number,z:number,distance?:number,yaw?:number,pitch?:number)=>this.rig.focus(x,z,distance,yaw,pitch),cameraState:()=>({distance:this.rig.distance,yaw:this.rig.yaw,pitch:this.rig.pitch,target:this.rig.target.toArray()}),screenshot:()=>this.canvas.toDataURL('image/png'),metrics:()=>this.metrics(),project:(x:number,z:number)=>this.project(x,z),snapshot:()=>structuredClone(this.world.state.snapshot),flush:()=>this.world.flushSaves(),drain:()=>this.world.drain()};
+    const debug={getStateHash:()=>stateHash(this.world.state),listSceneObjectTypes:()=>{const types:string[]=[];this.scene.traverse(o=>types.push(o.type));return types;},auditScene:()=>this.auditScene(),envCull:(enabled:boolean)=>this.env.setFrustumCulled(enabled),envVisible:(visible:boolean)=>this.env.setVisible(visible),treeLod:(options:{nearCount:number})=>this.env.setNearCount(options.nearCount),envBatches:()=>{const batches:{name:string;count:number;capacity:number;visible:boolean;castShadow:boolean;boundingSphereR:number}[]=[];this.env.sceneBatches(b=>batches.push(b));return batches;},env:()=>{const s=this.world.state,removed=new Set(s.snapshot.delta.removedEnvIds);return s.env.filter(e=>!removed.has(e.id)&&s.snapshot.unlockedZones.includes(Math.floor(e.cell[1]/16)*8+Math.floor(e.cell[0]/16))).map(e=>({id:e.id,cell:e.cell,assetId:e.assetId,blocking:e.blocking,footprint:e.footprint}));},orbit:(deg:number)=>this.rig.orbit(deg),camera:(x:number,z:number,distance?:number,yaw?:number,pitch?:number)=>this.rig.focus(x,z,distance,yaw,pitch),cameraState:()=>({distance:this.rig.distance,yaw:this.rig.yaw,pitch:this.rig.pitch,target:this.rig.target.toArray()}),screenshot:()=>this.canvas.toDataURL('image/png'),metrics:()=>this.metrics(),timeOfDay:(hour:number|null)=>{this.forcedHour=hour===null?null:Math.max(0,Math.min(23.999,hour));this.updateLighting(true);},project:(x:number,z:number)=>this.project(x,z),snapshot:()=>structuredClone(this.world.state.snapshot),flush:()=>this.world.flushSaves(),drain:()=>this.world.drain()};
     Object.assign(window,{__debug:{...debug,...(import.meta.env.DEV&&new URLSearchParams(location.search).get('test')==='1'?{command:(type:CommandType,payload:unknown)=>this.world.apply(type,payload).result,advance:(ms:number)=>this.world.advanceForTest(ms),loadSnapshot:(snapshot:unknown)=>this.world.loadSnapshot(snapshot)}:{})}});
   }
   /** docs/10 §5: detect flat image planes faking 3D (textured planes / sprites) and summarise the scene. */
@@ -109,5 +151,5 @@ export class GameLoop {
     });
     return {objects,meshes,instanced,sprites,texturedPlanes,largestPlaneM,textures:textures.size};
   }
-  dispose():void {cancelAnimationFrame(this.frameId);this.resizeObserver.disconnect();for(const unsubscribe of this.subscriptions)unsubscribe();this.canvas.removeEventListener('pointerdown',this.unlockAudio);this.pointer.dispose();this.overlay.dispose();this.ghost.dispose();for(const renderer of this.renderers)renderer.dispose();this.terrain.dispose();this.water.dispose();this.assets.dispose();this.renderer.dispose();this.world.onCommand=undefined;this.world.onTick=undefined;this.sound.dispose();this.effects.dispose();this.world.dispose();Reflect.deleteProperty(window,'__debug');}
+  dispose():void {cancelAnimationFrame(this.frameId);this.resizeObserver.disconnect();for(const unsubscribe of this.subscriptions)unsubscribe();this.canvas.removeEventListener('pointerdown',this.unlockAudio);this.pointer.dispose();this.overlay.dispose();this.ghost.dispose();for(const renderer of this.renderers)renderer.dispose();this.terrain.dispose();this.water.dispose();this.assets.dispose();this.bloom.dispose();this.composer.dispose();this.renderer.dispose();this.world.onCommand=undefined;this.world.onTick=undefined;this.sound.dispose();this.effects.dispose();this.world.dispose();Reflect.deleteProperty(window,'__debug');}
 }

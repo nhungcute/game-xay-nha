@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { WorldTemplate } from '@xay-nha/contracts';
 import type { SimState } from '@xay-nha/sim';
 import { heightAt } from './geometry';
+import { applyNightTint } from './night';
 
 export class WaterRenderer {
   private readonly group = new THREE.Group();
@@ -12,6 +13,7 @@ export class WaterRenderer {
 
   constructor(private readonly scene: THREE.Scene) {
     this.group.name = 'water-bodies'; scene.add(this.group);
+    applyNightTint(this.foamMaterial);
     this.material.onBeforeCompile = shader => {
       shader.uniforms.waterTime = { value: 0 };
       shader.vertexShader = `uniform float waterTime;\n${shader.vertexShader}`.replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed.y += sin(position.x * 0.65 + waterTime) * cos(position.z * 0.42 + waterTime * 0.7) * 0.018;');

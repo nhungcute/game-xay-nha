@@ -18,6 +18,7 @@ import { CategoryBar, CategoryTray, categoryOf, type Category } from './ui/Categ
 import type { GamePanel } from './ui/panels';
 import { BuildingPanel } from './ui/BuildingPanel';
 import { LevelUpCard } from './ui/LevelUp';
+import { type TimeOfDayMode } from './game/dayCycle';
 
 function GraphicsSettings({ quality, onChange }: { quality: 'high' | 'low' | undefined; onChange: (quality: 'high' | 'low') => void }) {
   return <div className="settings" role="group" aria-label={t('graphics')}><span>{t('graphics')}</span>
@@ -35,6 +36,13 @@ function MusicSettings({ on, onChange }: { on: boolean | undefined; onChange: (o
   return <div className="settings" role="group" aria-label={t('music')}><span>{t('music')}</span>
     {([true, false] as const).map(value => <button type="button" key={String(value)} aria-pressed={on === value}
       className={on === value ? 'selected' : ''} onClick={() => onChange(value)}>{t(value ? 'soundOn' : 'soundOff')}</button>)}
+  </div>;
+}
+function TimeOfDaySettings({ mode, onChange }: { mode: TimeOfDayMode | undefined; onChange: (mode: TimeOfDayMode) => void }) {
+  const options: [TimeOfDayMode, string][] = [['auto', 'Tự động theo giờ'], ['day', 'Luôn ban ngày'], ['night', 'Luôn ban đêm']];
+  return <div className="settings" role="group" aria-label="Thời gian trong ngày"><span>Thời gian trong ngày</span>
+    {options.map(([value, label]) => <button type="button" key={value} aria-pressed={mode === value}
+      className={mode === value ? 'selected' : ''} onClick={() => onChange(value)}>{label}</button>)}
   </div>;
 }
 /** D030: attribution for every manifest entry under a Creative Commons license — model, author, license (linked),
@@ -137,6 +145,7 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
   const setQuality=(quality:'high'|'low')=>{gameRef.current?.setQuality(quality);setStats(gameRef.current?.metrics()??null);};
   const setMuted=(muted:boolean)=>{gameRef.current?.sound.setMuted(muted);setStats(gameRef.current?.metrics()??null);};
   const setMusic=(on:boolean)=>{gameRef.current?.sound.setMusic(on);setStats(gameRef.current?.metrics()??null);};
+  const setTimeOfDay=(mode:TimeOfDayMode)=>{gameRef.current?.setTimeOfDay(mode);setStats(gameRef.current?.metrics()??null);};
   const switchMap=async()=>{
     const world=gameRef.current?.world;if(!world||!onSwitchMap||switchingMap)return;
     setSwitchingMap(true);
@@ -172,7 +181,7 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
         <h2 className="panel-heading"><GameIcon name={PANEL_ICON[panel]}/>{PANEL_TITLE[panel]}</h2>
         {panel==='profile'?<Profile state={state}/>
           :panel==='settings'?<>{onSwitchMap&&<button type="button" className="hud3-switch" aria-label={t('switchMap')} disabled={switchingMap} onClick={()=>{void switchMap();}}><GameIcon name="maps"/>{switchingMap?'Đang đổi…':t('switchMap')}</button>}
-            <GraphicsSettings quality={stats?.quality} onChange={setQuality}/><SoundSettings muted={stats?.muted} onChange={setMuted}/><MusicSettings on={stats?.musicOn} onChange={setMusic}/>
+            <GraphicsSettings quality={stats?.quality} onChange={setQuality}/><TimeOfDaySettings mode={stats?.timeOfDay} onChange={setTimeOfDay}/><SoundSettings muted={stats?.muted} onChange={setMuted}/><MusicSettings on={stats?.musicOn} onChange={setMusic}/>
             <AssetCredits/>
             {onLogout&&<button type="button" className="hud3-switch hud3-logout" onClick={()=>{const w=gameRef.current?.world;if(w)void onLogout(w);}}><GameIcon name="close"/>Đăng xuất · {state.snapshot.character.displayName}</button>}
             <p className="hud3-panel-note">{status} · {cacheStatus||'—'}</p></>

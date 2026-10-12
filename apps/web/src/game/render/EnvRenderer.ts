@@ -7,6 +7,7 @@ import { addInstance, cellCenter, matrix, terrainHeight } from '../assets/placem
 import { keepInLow, type Quality } from '../quality';
 import { TREE_LOD } from './treeLod';
 import { applyWind, tickWind, windDepthMaterial } from './wind';
+import { applyNightTint } from './night';
 
 /** Environment batches are asset × LOD × map quadrant (not × zone): near/far per asset keeps the detailed
  * models to the TREE_LOD.nearCount closest instances while the whole map still renders as billboards, and the
@@ -103,6 +104,7 @@ export class EnvRenderer {
   private decorate(mesh: InstancedMesh, assetId: string): void {
     const material = Array.isArray(mesh.material) ? mesh.material[0]! : mesh.material;
     applyWind(material, undefined, assetId.endsWith('_far'));
+    if (material.type === 'MeshBasicMaterial') applyNightTint(material);
     if (assetId.startsWith('tree_') && !assetId.endsWith('_far')) {
       // Alpha-cutout shadows must follow the leaf silhouette and the sway — custom depth material per tree asset.
       const map = (material as Material & { map?: Texture | null }).map ?? null;

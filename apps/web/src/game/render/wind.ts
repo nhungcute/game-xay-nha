@@ -1,4 +1,5 @@
 import { MeshDepthMaterial, RGBADepthPacking, type Material, type Texture } from 'three';
+import { patchMaterial } from './shaderPatches';
 
 /**
  * D030 tree wind: a gentle height-weighted sway injected via onBeforeCompile into every environment
@@ -36,7 +37,7 @@ export function applyWind(material: Material, amplitude = WIND_AMPLITUDE, fadeTo
   const key = `${amplitude}:${fadeTopQuad}`;
   if (patched.get(material) === key) return;
   patched.set(material, key);
-  material.onBeforeCompile = shader => {
+  patchMaterial(material, `wind-${key}`, shader => {
     shader.uniforms.uWindTime = windTime;
     shader.uniforms.uWindStrength = windStrength;
     shader.uniforms.uWindAmplitude = { value: amplitude };
@@ -50,8 +51,7 @@ export function applyWind(material: Material, amplitude = WIND_AMPLITUDE, fadeTo
       }
     ` : '';
     shader.vertexShader = WIND_UNIFORMS + shader.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>\n${WIND_CHUNK}${farFade}`);
-  };
-  material.customProgramCacheKey = () => `wind-${key}`;
+  });
 }
 
 /** Shadow-pass material with the same alpha cutout and sway as the visible foliage. */
