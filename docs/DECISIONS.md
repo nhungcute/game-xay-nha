@@ -364,6 +364,33 @@ source value clipped the canopy to bare branches).
   clear before/after, city/farm high+low, Pixel 7 + iPhone 13, credits panel desktop+mobile; `report.json` with
   per-shot draw calls/triangles/fps).
 
+## D031 - 2026-10-12 - Day/night lighting cycle and instanced window lights
+
+Smooth continuous lighting cycle (`dayCycle.ts`): dawn 05:00–07:00, day 07:00–17:00, dusk 17:00–19:00, night 19:00–05:00.
+Default is `auto` following the player's local machine clock (`Date.now()`); mode preference (`auto`, `day`, `night`) is
+persisted in `localStorage` with fail-safe error handling when storage is blocked. To guarantee test and E2E determinism,
+QA scripts (`g4-full-world.mjs`, `tree-shots.mjs`, `rock-shots.mjs`) force 13:00 by default via `window.__debug.timeOfDay(13)`,
+unless an explicit `--hour` argument is passed.
+
+Window lights system (`windowLights.ts`): utilizes vertex attribute `_WINDOW` on authored building GLBs, hashed with
+instance position seed (`vInstanceSeed`) and window ID to illuminate a stable subset of windows (0% at day, 60–70% at night,
+~42% between 00:00–05:00) with warm orange emissive radiance (`vec3(1.0, 0.56, 0.16) * 2.0`). Shader hook composition
+(`shaderPatches.ts`) chains multiple `onBeforeCompile` patches across shared GLTF materials without collision and maintains
+a stable `customProgramCacheKey`. `night.ts` tints unlit materials (terrain, water, coins, distant billboards) so nothing stays
+daylight-bright at night.
+
+Bloom post-processing (`GameLoop.ts`): `EffectComposer` with `UnrealBloomPass` activates only on `quality === 'high'` when
+night settles (`night > 0.2`). In `low` graphics, bloom is disabled and rendering bypasses the composer. Render targets and
+passes are properly resized and disposed on session teardown.
+
+Pipeline fix for `rice_mill`: Meshopt simplifier retains window vertices via automatic `vertexLock` retry when standard
+simplification collapses all window triangles (`retainedWindows === 0`). A post-simplify guard throws if any building with
+source windows ends up with zero output window vertices. Config `windowCount` records actual surviving output panes (2 for
+`rice_mill`, 64 for `hotel`), leaving 19 authored models 100% byte-identical.
+
+Evidence: `docs/evidence/g4/night/` (city/farm overviews at 22:00 high/low, close-ups of `rice_mill`, `office_tower`,
+`house_apartment`, time progression 13h/18h/22h/03h, mobile Pixel 7 night, `metrics.json`).
+
 ## D032 - 2026-10-12 - Replace six placeholder rocks with the Stone Pack
 
 The six existing rock ids remain unchanged in world templates, scatter rules, occupancy and gameplay. The source

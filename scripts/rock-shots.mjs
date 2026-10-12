@@ -60,6 +60,7 @@ async function loadWorld(page, kind, placeholder = false, options = {}) {
     if (!loaded.ok) throw new Error(`${kind} snapshot rejected: ${JSON.stringify(loaded.errors).slice(0, 300)}`);
   }
   await page.waitForTimeout(2500);
+  await page.evaluate(() => window.__debug?.timeOfDay?.(13));
   await dismissLevelUp(page);
 }
 

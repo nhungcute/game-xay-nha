@@ -26,6 +26,7 @@ async function loadWorld(page, kind) {
   const loaded = await page.evaluate(s => { const cur = window.__debug.snapshot(); s.worldId = cur.worldId; s.accountId = cur.accountId; return window.__debug.loadSnapshot(s); }, snapshot);
   if (!loaded.ok) throw new Error(`${kind} snapshot rejected: ${JSON.stringify(loaded.errors).slice(0, 300)}`);
   await page.waitForTimeout(3000);
+  await page.evaluate(() => window.__debug?.timeOfDay?.(13));
   await dismissLevelUp(page);
 }
 

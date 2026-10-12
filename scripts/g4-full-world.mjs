@@ -7,6 +7,9 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { dismissLevelUp, openSettings } from './lib/hud.mjs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5190', OUT = 'docs/evidence/g4/full-world';
+const hourArg = process.argv.indexOf('--hour');
+const forcedHour = hourArg >= 0 ? Number(process.argv[hourArg + 1]) : 13;
+if (!Number.isFinite(forcedHour) || forcedHour < 0 || forcedHour >= 24) throw new Error('--hour must be in [0,24)');
 const browser = await chromium.launch({ headless: true, executablePath: process.env.BROWSER_EXECUTABLE ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe', args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'] });
 const report = { base: BASE, at: new Date().toISOString(), maps: {} };
 let failed = false;
@@ -23,6 +26,7 @@ for (const [kind, mapId] of [['city', 'city-coast-01'], ['farm', 'farm-valley-01
   const loaded = await page.evaluate(s => { const cur = window.__debug.snapshot(); s.worldId = cur.worldId; s.accountId = cur.accountId; return window.__debug.loadSnapshot(s); }, snapshot);
   if (!loaded.ok) { console.error(kind, 'snapshot rejected', JSON.stringify(loaded.errors).slice(0, 500)); failed = true; await context.close(); continue; }
   await page.waitForTimeout(3000);
+  if (forcedHour !== null) await page.evaluate(hour => window.__debug.timeOfDay(hour), forcedHour);
   await dismissLevelUp(page);
   const views = [];
   for (const quality of ['high', 'low']) {
@@ -55,7 +59,7 @@ for (const [kind, mapId] of [['city', 'city-coast-01'], ['farm', 'farm-valley-01
     noErrors: errors.length === 0,
   };
   if (Object.values(checks).some(v => !v)) failed = true;
-  report.maps[kind] = { world, views, rebuild, checks, errors };
+  report.maps[kind] = { world, hour: forcedHour, views, rebuild, checks, errors };
   console.log(kind, JSON.stringify(world), '\n ', views.map(v => `${v.quality}/${v.view}: ${v.drawCalls} calls ${v.triangles} tris ${v.fps} fps p95 ${v.p95FrameMs} ms`).join(' | '), '\n ', JSON.stringify(checks), 'rebuild', rebuild.stats.maxRebuildMs);
   await context.close();
 }

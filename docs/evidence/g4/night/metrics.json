@@ -1,0 +1,156 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-12T09:18:14.533Z",
+  "overviews": {
+    "city_high": {
+      "kind": "city",
+      "quality": "high",
+      "hour": 22,
+      "file": "city-high-overview-22h.jpg",
+      "drawCalls": 241,
+      "triangles": 574626,
+      "fps": 43,
+      "p95Ms": 26.2,
+      "bloom": true,
+      "night": 1
+    },
+    "city_low": {
+      "kind": "city",
+      "quality": "low",
+      "hour": 22,
+      "file": "city-low-overview-22h.jpg",
+      "drawCalls": 108,
+      "triangles": 450276,
+      "fps": 60,
+      "p95Ms": 17.6,
+      "bloom": false,
+      "night": 1
+    },
+    "farm_high": {
+      "kind": "farm",
+      "quality": "high",
+      "hour": 22,
+      "file": "farm-high-overview-22h.jpg",
+      "drawCalls": 251,
+      "triangles": 345814,
+      "fps": 60,
+      "p95Ms": 18.1,
+      "bloom": true,
+      "night": 1
+    },
+    "farm_low": {
+      "kind": "farm",
+      "quality": "low",
+      "hour": 22,
+      "file": "farm-low-overview-22h.jpg",
+      "drawCalls": 104,
+      "triangles": 216138,
+      "fps": 60,
+      "p95Ms": 17.7,
+      "bloom": false,
+      "night": 1
+    }
+  },
+  "closeups": {
+    "rice_mill": {
+      "target": "rice_mill",
+      "hour": 22,
+      "file": "closeup-rice_mill-22h.jpg",
+      "drawCalls": 171,
+      "triangles": 311638,
+      "fps": 58,
+      "bloom": true
+    },
+    "office_tower": {
+      "target": "office_tower",
+      "hour": 22,
+      "file": "closeup-office_tower-22h.jpg",
+      "drawCalls": 142,
+      "triangles": 471916,
+      "fps": 39,
+      "bloom": true
+    },
+    "house_apartment": {
+      "target": "house_apartment",
+      "hour": 22,
+      "file": "closeup-house_apartment-22h.jpg",
+      "drawCalls": 163,
+      "triangles": 499812,
+      "fps": 43,
+      "bloom": true
+    }
+  },
+  "timeComparison": {
+    "13h": {
+      "hour": 13,
+      "file": "compare-13h.jpg",
+      "drawCalls": 208,
+      "triangles": 557702,
+      "fps": 40,
+      "bloom": false,
+      "night": 0
+    },
+    "18h": {
+      "hour": 18,
+      "file": "compare-18h.jpg",
+      "drawCalls": 208,
+      "triangles": 557702,
+      "fps": 42,
+      "bloom": true,
+      "night": 0.5
+    },
+    "22h": {
+      "hour": 22,
+      "file": "compare-22h.jpg",
+      "drawCalls": 208,
+      "triangles": 557702,
+      "fps": 42,
+      "bloom": true,
+      "night": 1
+    },
+    "3h": {
+      "hour": 3,
+      "file": "compare-3h.jpg",
+      "drawCalls": 208,
+      "triangles": 557702,
+      "fps": 42,
+      "bloom": true,
+      "night": 1
+    }
+  },
+  "mobile": {
+    "pixel7": {
+      "device": "Pixel 7",
+      "viewport": {
+        "width": 412,
+        "height": 839
+      },
+      "hour": 22,
+      "file": "mobile-pixel7-night.jpg",
+      "drawCalls": 64,
+      "triangles": 428312,
+      "fps": 60,
+      "p95Ms": 17.2,
+      "bloom": false
+    }
+  },
+  "settingsTest": {
+    "forcedNightOk": true,
+    "forcedDayOk": true,
+    "persistenceOk": true
+  },
+  "metrics": {
+    "budgetChecks": {
+      "desktopCityDrawCallsOk": true,
+      "desktopFarmDrawCallsOk": true,
+      "desktopCityFpsOk": true,
+      "desktopFarmFpsOk": true,
+      "mobilePixel7FpsOk": true,
+      "riceMillLit": true,
+      "bloomActiveAtNightHigh": true,
+      "bloomDisabledAtLow": true,
+      "noErrors": true
+    }
+  },
+  "errors": []
+}
