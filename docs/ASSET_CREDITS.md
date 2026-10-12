@@ -38,6 +38,18 @@ Every model below ships as a **near LOD** (one mesh, one atlas material) and a *
   shrub at game scale; four hue/scale variants (0.9–1.1 m); material marked unlit (`KHR_materials_unlit`) so
   the scan shading does not blacken under the game lights; plus the far-LOD billboards.
 
+## Stone Pack (D032)
+
+The six game rock ids (`rock_01..04`, `rock_large_01..02`) use **[Stone Pack](https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17)**
+by **ashkan.fancy**, licensed **[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)**.
+The source file is owner-supplied at `map/hon_da/stone_pack.glb` and is not committed.
+
+`scripts/import-rocks.mjs` bakes source node transforms and units, welds and simplifies vertices with
+meshoptimizer, recenters the pivot at the bottom and applies the recorded sink, composites ambient occlusion
+into base color, and downsizes textures to 256x256 (small) or 512x512 (large). Each output is one indexed mesh,
+one opaque metal-rough material and one base-color texture; the existing game ids and scatter/template data
+remain unchanged. All six outputs are marked modified in the manifest and the Settings attribution panel.
+
 ## Buildings (D029, unchanged)
 
 The 20 building models imported in D029 keep their recorded provenance: source pack

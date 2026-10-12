@@ -1,0 +1,353 @@
+{
+  "generatedBy": "scripts/import-rocks.mjs",
+  "source": "map/hon_da/stone_pack.glb",
+  "parameters": {
+    "triangleCaps": {
+      "rock": 300,
+      "rock_large": 1000
+    },
+    "footprintM": {
+      "rock": 2,
+      "rock_large": 4
+    },
+    "footprintMargin": {
+      "rock": 0.8,
+      "rock_large": 0.88
+    },
+    "targetMaxHorizontalM": {
+      "rock": 1.4,
+      "rock_large": 3.5
+    },
+    "sink": {
+      "heightFraction": 0.05,
+      "maxM": 0.08
+    },
+    "texture": {
+      "rockPx": 256,
+      "rockLargePx": 512,
+      "quantizer": {
+        "method": "median-cut",
+        "colors": {
+          "rock": 256,
+          "rock_large": 64
+        }
+      }
+    },
+    "tone": {
+      "tint": "#8e877a",
+      "rock": {
+        "chroma": 0.35,
+        "gain": 1.6,
+        "knee": 0.8,
+        "ceiling": 0.95
+      },
+      "rock_large": {
+        "chroma": 0.35,
+        "gain": 1.75,
+        "knee": 0.7,
+        "ceiling": 0.9
+      }
+    },
+    "simplify": {
+      "initialError": 0.001,
+      "uvWeight": 0.5
+    }
+  },
+  "credits": {
+    "title": "Stone Pack",
+    "author": "ashkan.fancy",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "url": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17"
+  },
+  "models": {
+    "rock_01": {
+      "file": "apps/web/public/assets/models/env/rock_01.glb",
+      "sourceMesh": "Small_1",
+      "family": "rock",
+      "triangles": 300,
+      "triangleCap": 300,
+      "bounds": {
+        "min": [
+          -0.7,
+          -0.041374,
+          -0.569548
+        ],
+        "max": [
+          0.7,
+          0.868139,
+          0.569548
+        ]
+      },
+      "scale": 0.776097,
+      "sink": 0.045692,
+      "tone": {
+        "tint": "#8e877a",
+        "chroma": 0.35,
+        "gain": 1.6,
+        "knee": 0.8,
+        "ceiling": 0.95
+      },
+      "texture": {
+        "width": 256,
+        "height": 256,
+        "bytes": 42873,
+        "paletteColors": 256
+      },
+      "bytes": 52268,
+      "simplifyError": 0.004,
+      "sourceBounds": {
+        "min": [
+          -10.834793,
+          -0.033244,
+          4.321201
+        ],
+        "max": [
+          -9.030895,
+          1.144225,
+          5.788924
+        ]
+      }
+    },
+    "rock_02": {
+      "file": "apps/web/public/assets/models/env/rock_02.glb",
+      "sourceMesh": "Small_2",
+      "family": "rock",
+      "triangles": 300,
+      "triangleCap": 300,
+      "bounds": {
+        "min": [
+          -0.7,
+          -0.048587,
+          -0.462489
+        ],
+        "max": [
+          0.7,
+          0.923147,
+          0.462489
+        ]
+      },
+      "scale": 0.793784,
+      "sink": 0.048587,
+      "tone": {
+        "tint": "#8e877a",
+        "chroma": 0.35,
+        "gain": 1.6,
+        "knee": 0.8,
+        "ceiling": 0.95
+      },
+      "texture": {
+        "width": 256,
+        "height": 256,
+        "bytes": 42873,
+        "paletteColors": 256
+      },
+      "bytes": 51600,
+      "simplifyError": 0.004,
+      "sourceBounds": {
+        "min": [
+          -8.542938,
+          -0.070146,
+          4.410673
+        ],
+        "max": [
+          -6.779233,
+          1.154034,
+          5.575951
+        ]
+      }
+    },
+    "rock_03": {
+      "file": "apps/web/public/assets/models/env/rock_03.glb",
+      "sourceMesh": "Small_3",
+      "family": "rock",
+      "triangles": 300,
+      "triangleCap": 300,
+      "bounds": {
+        "min": [
+          -0.699148,
+          -0.045004,
+          -0.510237
+        ],
+        "max": [
+          0.7,
+          0.855077,
+          0.502272
+        ]
+      },
+      "scale": 0.706977,
+      "sink": 0.045004,
+      "tone": {
+        "tint": "#8e877a",
+        "chroma": 0.35,
+        "gain": 1.6,
+        "knee": 0.8,
+        "ceiling": 0.95
+      },
+      "texture": {
+        "width": 256,
+        "height": 256,
+        "bytes": 42873,
+        "paletteColors": 256
+      },
+      "bytes": 52080,
+      "simplifyError": 0.008,
+      "sourceBounds": {
+        "min": [
+          -6.109639,
+          -0.083681,
+          4.174717
+        ],
+        "max": [
+          -4.129377,
+          1.18946,
+          5.618151
+        ]
+      }
+    },
+    "rock_04": {
+      "file": "apps/web/public/assets/models/env/rock_04.glb",
+      "sourceMesh": "Small_4",
+      "family": "rock",
+      "triangles": 300,
+      "triangleCap": 300,
+      "bounds": {
+        "min": [
+          -0.7,
+          -0.044783,
+          -0.48585
+        ],
+        "max": [
+          0.697457,
+          0.88672,
+          0.48585
+        ]
+      },
+      "scale": 0.732775,
+      "sink": 0.046773,
+      "tone": {
+        "tint": "#8e877a",
+        "chroma": 0.35,
+        "gain": 1.6,
+        "knee": 0.8,
+        "ceiling": 0.95
+      },
+      "texture": {
+        "width": 256,
+        "height": 256,
+        "bytes": 42873,
+        "paletteColors": 256
+      },
+      "bytes": 52304,
+      "simplifyError": 0.004,
+      "sourceBounds": {
+        "min": [
+          -3.186954,
+          -0.101698,
+          4.305649
+        ],
+        "max": [
+          -1.276409,
+          1.174893,
+          5.631703
+        ]
+      }
+    },
+    "rock_large_01": {
+      "file": "apps/web/public/assets/models/env/rock_large_01.glb",
+      "sourceMesh": "Mid_1",
+      "family": "rock_large",
+      "triangles": 1000,
+      "triangleCap": 1000,
+      "bounds": {
+        "min": [
+          -1.748863,
+          -0.064534,
+          -1.635929
+        ],
+        "max": [
+          1.748414,
+          3.005686,
+          1.635885
+        ]
+      },
+      "scale": 0.820411,
+      "sink": 0.08,
+      "tone": {
+        "tint": "#8e877a",
+        "chroma": 0.35,
+        "gain": 1.75,
+        "knee": 0.7,
+        "ceiling": 0.9
+      },
+      "texture": {
+        "width": 512,
+        "height": 512,
+        "bytes": 112299,
+        "paletteColors": 64
+      },
+      "bytes": 139344,
+      "simplifyError": 0.008,
+      "sourceBounds": {
+        "min": [
+          -15.414921,
+          -0.008681,
+          -2.561373
+        ],
+        "max": [
+          -11.148766,
+          3.763477,
+          1.426748
+        ]
+      }
+    },
+    "rock_large_02": {
+      "file": "apps/web/public/assets/models/env/rock_large_02.glb",
+      "sourceMesh": "Mid_2",
+      "family": "rock_large",
+      "triangles": 1000,
+      "triangleCap": 1000,
+      "bounds": {
+        "min": [
+          -1.560846,
+          -0.072066,
+          -1.75
+        ],
+        "max": [
+          1.560846,
+          2.346804,
+          1.75
+        ]
+      },
+      "scale": 0.830457,
+      "sink": 0.08,
+      "tone": {
+        "tint": "#8e877a",
+        "chroma": 0.35,
+        "gain": 1.75,
+        "knee": 0.7,
+        "ceiling": 0.9
+      },
+      "texture": {
+        "width": 512,
+        "height": 512,
+        "bytes": 112299,
+        "paletteColors": 64
+      },
+      "bytes": 140532,
+      "simplifyError": 0.008,
+      "sourceBounds": {
+        "min": [
+          -10.243318,
+          -0.004833,
+          -2.664836
+        ],
+        "max": [
+          -6.484316,
+          2.924012,
+          1.549708
+        ]
+      }
+    }
+  }
+}

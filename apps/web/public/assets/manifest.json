@@ -184,147 +184,75 @@
     },
     {
       "id": "rock_01",
-      "file": "models/rock_01.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/rock_01.glb",
+      "source": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "author": "ashkan.fancy",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.72,
-          0,
-          -0.6235382907247957
-        ],
-        "max": [
-          0.72,
-          0.95,
-          0.6235382907247958
-        ]
-      },
-      "triangles": 48
+      "triangles": 300
     },
     {
       "id": "rock_02",
-      "file": "models/rock_02.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/rock_02.glb",
+      "source": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "author": "ashkan.fancy",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.72,
-          0,
-          -0.6235382907247957
-        ],
-        "max": [
-          0.72,
-          1.08,
-          0.6235382907247958
-        ]
-      },
-      "triangles": 48
+      "triangles": 300
     },
     {
       "id": "rock_03",
-      "file": "models/rock_03.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/rock_03.glb",
+      "source": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "author": "ashkan.fancy",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.72,
-          0,
-          -0.6235382907247957
-        ],
-        "max": [
-          0.72,
-          1.21,
-          0.6235382907247958
-        ]
-      },
-      "triangles": 48
+      "triangles": 300
     },
     {
       "id": "rock_04",
-      "file": "models/rock_04.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/rock_04.glb",
+      "source": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "author": "ashkan.fancy",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -0.72,
-          0,
-          -0.6235382907247957
-        ],
-        "max": [
-          0.72,
-          1.34,
-          0.6235382907247958
-        ]
-      },
-      "triangles": 48
+      "triangles": 300
     },
     {
       "id": "rock_large_01",
-      "file": "models/rock_large_01.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/rock_large_01.glb",
+      "source": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "author": "ashkan.fancy",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -1.55,
-          0,
-          -1.34233937586588
-        ],
-        "max": [
-          1.55,
-          0.95,
-          1.34233937586588
-        ]
-      },
-      "triangles": 48
+      "triangles": 1000
     },
     {
       "id": "rock_large_02",
-      "file": "models/rock_large_02.glb",
-      "source": "Procedural low-poly placeholder generated in this repository",
-      "author": "Xây Nhà project",
-      "license": "Project-owned generated asset",
-      "url": "scripts/generate-placeholder-assets.mjs",
-      "modified": false,
-      "placeholder": true,
+      "file": "models/env/rock_large_02.glb",
+      "source": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "author": "ashkan.fancy",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/stone-pack-f3e0a67b9ca243b09119177649f21e17",
+      "modified": true,
+      "placeholder": false,
       "category": "environment",
-      "bounds": {
-        "min": [
-          -1.55,
-          0,
-          -1.34233937586588
-        ],
-        "max": [
-          1.55,
-          1.08,
-          1.34233937586588
-        ]
-      },
-      "triangles": 48
+      "triangles": 1000
     },
     {
       "id": "reed_01",

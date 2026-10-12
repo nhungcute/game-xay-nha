@@ -155,5 +155,20 @@ if (existsSync(TREES_CONFIG)) {
     assets.push({ id: `${id}_far`, file: rel(model.farFile), category: 'environment', ...credits, triangles: model.farTriangles });
   }
 }
+// D032: replace only the six existing rock ids when the deterministic Stone Pack import is available. The
+// source pack is intentionally untracked, so a clean CI checkout keeps the generated placeholders instead.
+const ROCKS_CONFIG = new URL('../scripts/rocks.config.json', import.meta.url);
+if (existsSync(ROCKS_CONFIG)) {
+  const rocks = JSON.parse(await readFile(ROCKS_CONFIG, 'utf8'));
+  for (const [id, model] of Object.entries(rocks.models)) {
+    const entry = assets.find(asset => asset.id === id);
+    if (!entry) throw new Error(`manifest: no placeholder entry for rock ${id}`);
+    const credits = { source: rocks.credits.url, author: rocks.credits.author, license: rocks.credits.license,
+      url: rocks.credits.url, modified: true, placeholder: false };
+    const rel = path => path.replace('apps/web/public/assets/', '');
+    Object.assign(entry, { file: rel(model.file), ...credits, triangles: model.triangles });
+    delete entry.bounds;
+  }
+}
 await writeFile(new URL('manifest.json',directory),`${JSON.stringify({version:1,placeholder:assets.every(asset=>asset.placeholder),assets},null,2)}\n`);
 console.log(`Generated ${assets.length} actual GLB placeholder assets; every source/license is recorded in assets/manifest.json.`);
