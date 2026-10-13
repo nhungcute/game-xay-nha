@@ -5,7 +5,7 @@
 // Usage: BASE_URL=http://127.0.0.1:8090 MINUTES=15 node scripts/g4-soak.mjs
 import { chromium } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { cameraButtons, claimButton, dismissLevelUp, createOtherMapUI, materialsButton, openSettings, openSwitchMap, pickTool, profileButton, registerUI, uniqueName } from './lib/hud.mjs';
+import { buyMaterial, cameraButtons, claimButton, dismissLevelUp, createOtherMapUI, materialsButton, openSettings, openSwitchMap, pickTool, profileButton, registerUI, uniqueName } from './lib/hud.mjs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8090', OUT = process.env.OUT ?? 'docs/evidence/g4/soak';
 const MINUTES = Number(process.env.MINUTES ?? 15), END = Date.now() + MINUTES * 60_000;
@@ -68,7 +68,7 @@ const steps = [
   async () => useTool(['Dọn', 'San nền', 'Đường', 'Kè', 'Cầu', 'Xây', 'Phá', 'Khu đất', 'Cuốc', 'Gieo', 'Thu hoạch'][rnd(11)]),
   async () => useTool('Dọn'),
   async () => useTool('Đường'),
-  async () => { await materialsButton(page).click(); await page.locator('.side.panel .item button').nth(rnd(2) * 2).click(); await page.locator('.side.panel .close').click(); count('buy'); },
+  async () => { await materialsButton(page).click(); await buyMaterial(page, rnd(2) ? 'Đá' : 'Gỗ', 1 + rnd(10)); await page.locator('.side.panel .close').click(); count('buy'); },
   async () => { const c = claimButton(page); if (await c.count()) { await c.first().click(); count('claim'); } },
   async () => { const c = page.locator('.hud3-collect'); if (await c.count()) { await c.click(); count('collect-all'); } },
   async () => { await profileButton(page).click(); await page.waitForTimeout(300); await page.locator('.side.panel .close').click(); count('profile'); },

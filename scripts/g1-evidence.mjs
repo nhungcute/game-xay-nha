@@ -77,8 +77,8 @@ for (const step of plan.steps) {
     case 'buy': {
       await page.locator('.resources button').first().click(); await settle(200);
       for (const [material, label] of [['wood', 'Gỗ'], ['stone', 'Đá']]) {
-        const item = page.locator('.side.panel .item', { hasText: label });
-        for (let i = 0; i < step.options[material] / 10; i++) { await item.locator('button', { hasText: 'Mua 10' }).click(); await settle(80); }
+        const row = page.locator('.side.panel .material-row', { hasText: label });
+        if (step.options[material] > 0) { await row.locator('input').fill(String(step.options[material])); await row.locator('button', { hasText: 'Mua' }).click(); await settle(80); }
       }
       await page.locator('.side.panel .close').click();
       await expectRevisionUp(step.note, rev); break;

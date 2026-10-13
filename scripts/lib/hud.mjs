@@ -6,7 +6,7 @@ const TOOL_CATEGORY = {
   'Dọn': 'nature', 'San nền': 'nature', 'Đường': 'roads', 'Cầu': 'roads', 'Kè': 'roads',
   'Cuốc': 'farms', 'Gieo': 'farms', 'Thu hoạch': 'farms', 'Khu đất': 'utilities', 'Phá': 'utilities',
 };
-export const SYNC = '.hud3-sync';
+export const SYNC = '.sync-status';
 export const syncText = page => page.evaluate(sel => document.querySelector(sel)?.textContent ?? '', SYNC);
 export const waitSynced = (page, timeout = 20000) =>
   page.waitForFunction(sel => /Đã đồng bộ/.test(document.querySelector(sel)?.textContent ?? ''), SYNC, { timeout });
@@ -49,6 +49,12 @@ export async function pickBuilding(page, name) {
 }
 export const claimButton = page => page.locator('.hud3-missions .hud3-claim');
 export const materialsButton = page => page.locator('.hud3-chip[data-res=wood]');
+/** Vật liệu panel (open): type `count` into the material's quantity box and press Mua. */
+export async function buyMaterial(page, label, count) {
+  const row = page.locator('.side.panel .material-row', { hasText: label });
+  await row.locator('input').fill(String(count));
+  await row.locator('button', { hasText: 'Mua' }).click();
+}
 export const inventoryButton = page => page.locator('.hud3-chip[data-res=inventory]');
 export const profileButton = page => page.locator('.hud3-player');
 export const hudBar = page => page.locator('.hud3-top');

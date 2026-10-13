@@ -7,7 +7,7 @@
 // Usage: BASE_URL=http://127.0.0.1:8090 node scripts/g4-smoke.mjs
 import { chromium, devices, webkit } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { SYNC, createOtherMapUI, hudBar, loginUI, materialsButton, openSwitchMap, registerUI, uniqueName } from './lib/hud.mjs';
+import { SYNC, buyMaterial, createOtherMapUI, hudBar, loginUI, materialsButton, openSwitchMap, registerUI, uniqueName } from './lib/hud.mjs';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8090', OUT = process.env.OUT ?? 'docs/evidence/g4/smoke';
 await mkdir(OUT, { recursive: true });
@@ -41,7 +41,7 @@ for (const run of runs) {
     await inGame(page);
     // One real UI command (buy 1 wood), confirmed by the server, so the reload check covers persistence.
     await materialsButton(page).click();
-    await page.locator('.side.panel .item', { hasText: 'Gỗ' }).locator('button', { hasText: 'Mua 1' }).first().click();
+    await buyMaterial(page, 'Gỗ', 1);
     await page.locator('.side.panel .close').click();
     await page.waitForFunction(() => window.__debug.snapshot().revision >= 1, null, { timeout: 20000 });
     await synced(page);

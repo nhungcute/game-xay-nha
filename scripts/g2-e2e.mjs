@@ -4,7 +4,7 @@
  * Writes docs/evidence/g2/*.jpg and g2-e2e.json; exit code 1 on any failed check.
  */
 import { chromium } from '@playwright/test';
-import { SYNC, claimButton, dismissLevelUp, hudBar, loginUI, materialsButton, pickBuilding, pickTool, syncText, uniqueName, waitSynced as hudSynced } from './lib/hud.mjs';
+import { SYNC, buyMaterial, claimButton, dismissLevelUp, hudBar, loginUI, materialsButton, pickBuilding, pickTool, syncText, uniqueName, waitSynced as hudSynced } from './lib/hud.mjs';
 import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 
 const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:5191';
@@ -73,7 +73,7 @@ await shot(page, 'game-start');
 // farm-valley-01 v2 (same cells as scripts/g3-e2e.mjs): clear north of ENTRY [72,79], road north, market beside it.
 await debug(page, 'camera', [147, 152, 70, 0, 62]); await page.waitForTimeout(400);
 await materialsButton(page).click();
-await page.locator('.side.panel .item', { hasText: 'Gỗ' }).locator('button', { hasText: 'Mua 10' }).click();
+await buyMaterial(page, 'Gỗ', 10);
 await page.locator('.side.panel .close').click();
 await tool(page, 'Dọn'); await drag(page, [70, 70], [77, 79]);
 await tool(page, 'Đường'); await drag(page, [72, 79], [72, 71]);
@@ -100,7 +100,7 @@ check('reload goes straight back into the same character with identical state', 
 // ---- 4. Offline then online: queued command is delivered ----
 await ctxA.setOffline(true);
 await materialsButton(page).click();
-await page.locator('.side.panel .item', { hasText: 'Đá' }).locator('button', { hasText: 'Mua 1' }).first().click();
+await buyMaterial(page, 'Đá', 1);
 await page.locator('.side.panel .close').click();
 await page.waitForFunction(sel => /Mất kết nối|Đang đồng bộ/.test(document.querySelector(sel)?.textContent ?? ''), SYNC, { timeout: 10000 });
 const offlineStatus = await syncText(page);
