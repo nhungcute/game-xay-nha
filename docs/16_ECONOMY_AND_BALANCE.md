@@ -116,6 +116,9 @@ Nâng cấp đường = trả chênh lệch giữa hai tier. Gỡ bất kỳ h�
 | `shop_supermarket` | Siêu thị | 4×4 | 22 000 | 30 | 40 | 23 250 | 9 | — | 30 | **5 070** | 4,6 h | 317 | 1 giờ |
 | `hotel` | Khách sạn | 4×5 | 50 000 | 40 | 80 | 52 200 | 12 | — | 40 | **7 480** | 7,0 h | 374 | 2 giờ |
 | `office_tower` | Tòa văn phòng | 4×4 | 100 000 | 20 | 120 | 102 700 | 15 | — | 60 | **9 680** | 10,6 h | 605 | 4 giờ |
+| `landmark_culture` | Nhà văn hóa | 7×6 | 30 000 | 40 | 80 | 32 200 | 10 | — | — | +10% bán kính 10 ô | — | — | 2 giờ |
+| `landmark_palace` | Cung điện | 5×5 | 60 000 | 60 | 120 | 63 300 | 14 | — | — | +15% bán kính 12 ô | — | — | 3 giờ |
+| `landmark_castle` | Lâu đài | 8×4 | 90 000 | 80 | 150 | 94 200 | 16 | — | — | +15% bán kính 12 ô | — | — | 4 giờ |
 
 Ngân hàng: ngoài thu nhập, mỗi ngân hàng (tối đa 4 có hiệu lực) **+2 giờ trần kho tiền** cho toàn bộ công trình. Nút "Thu tất cả" có ngay từ đầu, không cần ngân hàng (D028). Khách sạn nhận thưởng view nước +20% thay vì +10%.
 
@@ -138,6 +141,10 @@ Ngân hàng: ngoài thu nhập, mỗi ngân hàng (tối đa 4 có hiệu lực)
 | Siêu thị | 1 | 1 | 18 | — | — | — | 2 | 4 | 7 | 12 |
 | Khách sạn | 1 | 1/2 | 10 | — | — | — | — | 1 | 2 | 5 |
 | Tòa văn phòng | 1 | 1/2 | 10 | — | — | — | — | — | 1 | 3 |
+| Nhà văn hóa | 1 | 0 | 1 | — | — | — | 1 | 1 | 1 | 1 |
+| Cung điện | 1 | 0 | 1 | — | — | — | — | — | 1 | 1 |
+| Lâu đài | 1 | 0 | 1 | — | — | — | — | — | — | 1 |
+| Thành cổ | 1 | 0 | 1 | — | — | — | — | — | 1 | 1 |
 
 ### 6.3 Công thức thu nhập
 
@@ -240,6 +247,7 @@ Hạt mua bằng $ khi gieo. Sản lượng tính trên mỗi ô. **Giá bán đ
 | `silo` | Kho | 2×2 | 800 | 10 | 10 | 2 | 5 phút | +100 sức chứa |
 | `deco_flowerbed` | Luống hoa | 1×1 | 80 | 0 | 0 | 2 | 15 giây | Trang trí |
 | `deco_streetlight` | Cột đèn | 1×1 | 150 | 0 | 2 | 2 | 15 giây | Trang trí |
+| `landmark_citadel` | Thành cổ | 10×6 | 80 000 | 120 | 200 | 15 | 4 giờ | Công trình biểu tượng. Tối đa 1 |
 
 **Nhà nông** (giá tăng dần, cấp yêu cầu):
 

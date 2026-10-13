@@ -481,3 +481,28 @@ the same hours. Night QA (`g4-night-qa`, `streetlight-qa`, `object-panel-qa`) no
 dusk frame of the time comparison. Streetlight review: the ground pool is sRGB warm amber over most of the lamp's
 cell (was a ~1 m near-white hot spot) and the bulbs glow at 1.8 so a small bloom halo marks a lit lamp (at 0.95 they
 read as unlit). All night gates pass (foliage/scene 0.97–1.20, lamp cell vs neighbour 14×–101× at 23:00, ≤ 2.3 % by day).
+
+
+## D037 — 2026-10-13 — Tích hợp các "Công trình biểu tượng" từ `map/nha2`
+
+Owner request: tích hợp 4 công trình biểu tượng (Iconic Landmarks) từ `map/nha2` (`landmark_palace`, `landmark_castle`, `landmark_culture`, `landmark_citadel`). Bỏ 2 file: `royal_palace_brussel_minecraft.glb` (CC-BY-NC-4.0 cấm thương mại) và `rome_river_side.glb` (cả khu phố có mặt nước, không phải công trình đơn lẻ).
+
+Cân bằng và phân loại:
+- `landmark_culture` (Nhà văn hóa, 7×6, city, cấp 10, $30.000 + 40 gỗ + 80 đá, xây 2 giờ, decor +10% r=10 ô, giới hạn 1).
+- `landmark_palace` (Cung điện, 5×5, city, cấp 14, $60.000 + 60 gỗ + 120 đá, xây 3 giờ, decor +15% r=12 ô, giới hạn 1).
+- `landmark_castle` (Lâu đài, 8×4, city, cấp 16, $90.000 + 80 gỗ + 150 đá, xây 4 giờ, decor +15% r=12 ô, giới hạn 1).
+- `landmark_citadel` (Thành cổ, 10×6, farm, cấp 15, $80.000 + 120 gỗ + 200 đá, xây 4 giờ, không hiệu ứng kinh tế, XP theo công thức hiện có, giới hạn 1).
+- Không thu nhập/giờ, không dân số, không việc làm. Hiệu ứng decor không phụ thuộc đường nối và tuân thủ trần `economy.income.decorCap` (30%).
+- Thanh công cụ HUD (`buildingCategory` trong `CategoryBar.tsx`): ID bắt đầu bằng `landmark_` luôn thuộc danh mục **Công trình** (`buildings`), không rơi vào Trang trí.
+
+Pipeline import (`scripts/import-landmarks.mjs`, deterministic với `--check`):
+- Đây là loại tòa nhà có texture đầu tiên (`TEXCOORD_0` + `map` thay cho `COLOR_0`). 20 tòa D029 cũ giữ nguyên yêu cầu `COLOR_0`.
+- Mỗi GLB thành phẩm có đúng 1 mesh, 1 primitive, 1 material `MeshStandardMaterial` đặc (loại bỏ `KHR_materials_unlit` và BLEND alpha), 1 texture JPEG baseColor ≤ 1024².
+- Nắn chỉnh: Monserrate cắt bỏ tấm đế gỗ màu cam (`y < 0.044`), kẹp chân thềm và nâng sáng vùng bóng đổ in chết; Pripyat giữ bệ thềm, tẩy vết ố bẩn tường bê tông và phục hồi kính vỡ thành kính xanh nhạt; Citadel ghép 2 texture thành 1 atlas 1024² và ép phẳng cốt nền tại y=0.
+- Simplify lưới với meshoptimizer: Cung điện 4.200/6.000 tris, Lâu đài 7.999/8.000 tris, Nhà văn hóa 5.999/6.000 tris, Thành cổ 9.569/10.000 tris.
+- Fit footprint theo tỷ lệ chuẩn, pivot tâm đáy tại y=0, mặt chính hướng về -Z. Dung lượng mỗi file < 700 KB (palace 670 KB, castle 474 KB, culture 631 KB, citadel 442 KB, tổng 2.217 KB < 2,5 MB ngân sách thế giới).
+
+Validation:
+- `assets.test.ts` kiểm tra 1 part, UV + texture, triangle cap, footprint bounds, provenance CC-BY, hash URL và byte-identical `--check`.
+- Kịch bản QA `scripts/landmark-qa.mjs` xác minh 5 automated gates (draw calls tăng ≤ 1/tòa, FPS drop ≤ 3, triangles ≤ 1.5M, 0 console errors, decor effect đúng) qua 20 ảnh bằng chứng tại `docs/evidence/g4/landmarks/`.
+- Toàn bộ regression passes: `g4-night-qa.mjs`, `hud-scale-qa.mjs`, `pnpm test` (769 tests) và `pnpm check`. Báo cáo chi tiết: `docs/reports/D037-landmarks.md`.
