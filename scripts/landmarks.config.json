@@ -105,41 +105,6 @@
         "url": "https://sketchfab.com/3d-models/pripyat-palace-of-culture-energetik-e2647265ab4949cfaef2d021e24cec23",
         "source": "map/nha2/pripyat_palace_of_culture_energetik.glb"
       }
-    },
-    "landmark_citadel": {
-      "file": "apps/web/public/assets/models/authored/landmark_citadel.glb",
-      "footprint": [
-        10,
-        6
-      ],
-      "triangles": 9569,
-      "triangleCap": 10000,
-      "bounds": {
-        "min": [
-          -9.2,
-          0,
-          -5.337017
-        ],
-        "max": [
-          9.2,
-          7.014365,
-          5.337017
-        ]
-      },
-      "scale": 0.101657,
-      "texture": {
-        "width": 1024,
-        "height": 1024,
-        "bytes": 262253
-      },
-      "bytes": 452604,
-      "credits": {
-        "title": "Citadel of Kings",
-        "author": "Cade",
-        "license": "CC-BY-4.0",
-        "url": "https://sketchfab.com/3d-models/citadel-of-kings-0ba725cb5268487a8fbb740f5e1c4012",
-        "source": "map/nha2/citadel_of_kings.glb"
-      }
     }
   }
 }

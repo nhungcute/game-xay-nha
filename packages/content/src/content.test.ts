@@ -94,16 +94,8 @@ describe('docs/16 generated economy content', () => {
     expect(castle?.decor).toEqual({ bonus: 0.15, radius: 12 });
     expect(vi[castle!.nameKey]).toBe('Lâu đài');
 
-    const citadel = catalog.buildings.landmark_citadel;
-    expect(citadel).toBeDefined();
-    expect(citadel?.mapKinds).toEqual(['farm']);
-    expect(citadel?.cost).toEqual({ cash: 80000, wood: 120, stone: 200 });
-    expect(citadel?.unlockLevel).toBe(15);
-    expect(citadel?.size).toEqual([10, 6]);
-    expect(citadel?.buildSeconds).toBe(14400);
-    expect(citadel?.limit).toEqual([1, 0, 1]);
-    expect(citadel?.decor).toBeUndefined();
-    expect(vi[citadel!.nameKey]).toBe('Thành cổ');
+    // D038: the Citadel (farm) was removed: its voxel model did not survive simplification.
+    expect(catalog.buildings.landmark_citadel).toBeUndefined();
   });
   it.each(cropRows)('matches crop table %s', (id, _name, level, seed, _time, yieldCount, price, _profit, _perHour, xp) => {
     const def = catalog.crops[id ?? ''];

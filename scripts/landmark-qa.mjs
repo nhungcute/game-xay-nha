@@ -1,7 +1,6 @@
 // D037 visual QA & automated gates: Iconic Landmarks verification.
-// Places 4 landmark buildings via __debug PLACE_BUILDING across city and farm:
-//   - City: landmark_culture (7x6), landmark_palace (5x5), landmark_castle (8x4)
-//   - Farm: landmark_citadel (10x6)
+// Places the 3 landmark buildings via __debug PLACE_BUILDING on the city map:
+//   landmark_culture (7x6), landmark_palace (5x5), landmark_castle (8x4). (The farm Citadel was removed in D038.)
 // Captures close-up shots at 13:00 and 23:00, mid-range scale comparison against standard buildings,
 // high/low quality comparison, and Pixel 7 mobile viewport.
 // Automated gates:
@@ -243,143 +242,17 @@ try {
   await mobileContext.close();
 
   // ==========================================
-  // PART 2: FARM MAP (citadel)
-  // ==========================================
-  console.log('=== Testing FARM Landmark (Citadel) ===');
-  const farmContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  const farmPage = await farmContext.newPage();
-  farmPage.on('pageerror', e => { report.errors.push(`farm: ${e.message}`); });
-  farmPage.on('console', m => { if (m.type() === 'error') report.errors.push(`farm: ${m.text()}`); });
-
-  await loadWorld(farmPage, 'farm');
-
-  await farmPage.evaluate(() => window.__debug.command('BUY_MATERIAL', { wood: 500, stone: 500 }));
-  await farmPage.evaluate(() => window.__debug.timeOfDay(13));
-  await farmPage.evaluate(() => window.__debug.setQuality('high'));
-  await farmPage.waitForTimeout(1000);
-
-  const farmBaseMetrics = await farmPage.evaluate(() => window.__debug.metrics());
-  console.log('Farm baseline metrics:', { drawCalls: farmBaseMetrics.drawCalls, triangles: farmBaseMetrics.triangles, fps: farmBaseMetrics.fps });
-
-  // Unlock zones for citadel
-  await farmPage.evaluate(() => {
-    window.__debug.command('UNLOCK_ZONE', { zoneId: 18 });
-    window.__debug.command('UNLOCK_ZONE', { zoneId: 19 });
-    window.__debug.command('UNLOCK_ZONE', { zoneId: 26 });
-  });
-
-  // Place Citadel (10x6) at [49, 52] with auto CLEAR_ENV
-  const citadelRes = await farmPage.evaluate(() => {
-    for (let attempt = 0; attempt < 30; attempt++) {
-      const r = window.__debug.command('PLACE_BUILDING', { defId: 'landmark_citadel', anchor: [49, 52], rotation: 0, autoFlattenHDm: 50 });
-      if (r.accepted) return { accepted: true, attempt };
-      if (r.code === 'OCCUPIED' && r.detail && typeof r.detail === 'string' && !r.detail.startsWith('b_')) {
-        window.__debug.command('CLEAR_ENV', { envIds: [r.detail] });
-      } else {
-        return { accepted: false, code: r.code, detail: r.detail };
-      }
-    }
-    return { accepted: false };
-  });
-  if (!citadelRes.accepted) throw new Error(`Failed to place citadel: ${citadelRes.code} - ${citadelRes.detail}`);
-  console.log(`Placed landmark_citadel at [49, 52] (cleared ${citadelRes.attempt} env obstacles)`);
-
-  // Complete construction
-  await farmPage.evaluate(() => window.__debug.advance(15000 * 1000));
-  await farmPage.waitForTimeout(1500);
-
-  const farmMetricsAfter = await farmPage.evaluate(() => window.__debug.metrics());
-  console.log('Farm metrics after citadel:', {
-    drawCalls: farmMetricsAfter.drawCalls,
-    triangles: farmMetricsAfter.triangles,
-    fps: farmMetricsAfter.fps,
-  });
-
-  const citadelDrawCallIncrease = farmMetricsAfter.drawCalls - farmBaseMetrics.drawCalls;
-  console.log(`Citadel draw call increase: ${citadelDrawCallIncrease} (need <= 1)`);
-
-  const citadelCx = (49 + 10 / 2) * 2;
-  const citadelCz = (52 + 6 / 2) * 2;
-
-  // 1. Close-up at 13h and 23h
-  for (const [hourName, hour] of [['13h', 13], ['23h', 23]]) {
-    await farmPage.evaluate(h => window.__debug.timeOfDay(h), hour);
-    await farmPage.evaluate(([x, z]) => window.__debug.camera(x, z, 42, 25, 45), [citadelCx, citadelCz]);
-    await farmPage.waitForTimeout(800);
-
-    const shotFile = `${OUT}/farm-citadel-close-${hourName}.jpg`;
-    await farmPage.screenshot({ path: shotFile, type: 'jpeg', quality: 85 });
-    report.shots.push({ kind: 'farm', landmark: 'citadel', shot: 'close', hour: hourName, file: shotFile });
-  }
-
-  // 2. Mid-range scale comparison against farmhouse and silos
-  await farmPage.evaluate(() => window.__debug.timeOfDay(13));
-  await farmPage.evaluate(([x, z]) => window.__debug.camera(x + 20, z + 15, 85, 45, 50), [citadelCx, citadelCz]);
-  await farmPage.waitForTimeout(800);
-  const farmMidShotFile = `${OUT}/farm-citadel-mid-scale.jpg`;
-  await farmPage.screenshot({ path: farmMidShotFile, type: 'jpeg', quality: 85 });
-  report.shots.push({ kind: 'farm', landmark: 'citadel', shot: 'mid-scale', file: farmMidShotFile });
-
-  // 3. Low quality comparison
-  await farmPage.evaluate(() => window.__debug.setQuality('low'));
-  await farmPage.evaluate(([x, z]) => window.__debug.camera(x, z, 42, 25, 45), [citadelCx, citadelCz]);
-  await farmPage.waitForTimeout(800);
-  const farmLowShotFile = `${OUT}/farm-citadel-low-quality.jpg`;
-  await farmPage.screenshot({ path: farmLowShotFile, type: 'jpeg', quality: 85 });
-  report.shots.push({ kind: 'farm', landmark: 'citadel', shot: 'low-quality', file: farmLowShotFile });
-
-  // Farm overview with Citadel
-  await farmPage.evaluate(() => window.__debug.setQuality('high'));
-  await farmPage.evaluate(() => window.__debug.camera(54 * 2, 55 * 2, 120, 35, 52));
-  await farmPage.waitForTimeout(1000);
-  const farmOverviewFile = `${OUT}/farm-citadel-overview.jpg`;
-  await farmPage.screenshot({ path: farmOverviewFile, type: 'jpeg', quality: 85 });
-  report.shots.push({ kind: 'farm', shot: 'overview', file: farmOverviewFile });
-
-  await farmContext.close();
-
-  // Mobile Pixel 7 for Farm Citadel
-  console.log('Capturing Farm Citadel on Pixel 7 mobile...');
-  const mobileFarmContext = await browser.newContext({ ...pixel7 });
-  const mobileFarmPage = await mobileFarmContext.newPage();
-  mobileFarmPage.on('pageerror', e => { report.errors.push(`mobile-farm: ${e.message}`); });
-  await loadWorld(mobileFarmPage, 'farm');
-  await mobileFarmPage.evaluate(() => {
-    window.__debug.command('BUY_MATERIAL', { wood: 500, stone: 500 });
-    window.__debug.command('UNLOCK_ZONE', { zoneId: 18 });
-    window.__debug.command('UNLOCK_ZONE', { zoneId: 19 });
-    window.__debug.command('UNLOCK_ZONE', { zoneId: 26 });
-    for (let i = 0; i < 20; i++) {
-      const p = window.__debug.command('PLACE_BUILDING', { defId: 'landmark_citadel', anchor: [49, 52], rotation: 0, autoFlattenHDm: 50 });
-      if (p.accepted) break;
-      if (p.detail && typeof p.detail === 'string') window.__debug.command('CLEAR_ENV', { envIds: [p.detail] });
-    }
-    window.__debug.advance(15000 * 1000);
-    window.__debug.timeOfDay(13);
-    window.__debug.camera((49 + 5) * 2, (52 + 3) * 2, 55, 30, 45);
-  });
-  await mobileFarmPage.waitForTimeout(1500);
-  const mobileFarmFile = `${OUT}/mobile-pixel7-farm-citadel.jpg`;
-  await mobileFarmPage.screenshot({ path: mobileFarmFile, type: 'jpeg', quality: 85 });
-  report.shots.push({ kind: 'mobile', target: 'farm-citadel', file: mobileFarmFile });
-  await mobileFarmContext.close();
-
-  // ==========================================
   // AUTOMATED GATES VERIFICATION
   // ==========================================
   console.log('=== Verifying Automated Gates ===');
 
   // Gate 1: Draw calls increase <= 1 per building
   // City has 3 buildings -> drawCalls increase <= 3
-  // Farm has 1 building -> drawCalls increase <= 1
-  const gate1City = cityDrawCallIncrease <= 3;
-  const gate1Farm = citadelDrawCallIncrease <= 1;
-  const gate1Pass = gate1City && gate1Farm;
+  const gate1Pass = cityDrawCallIncrease <= 3;
   report.gates.gate1_draw_calls = {
     pass: gate1Pass,
     cityDrawCallIncrease,
-    citadelDrawCallIncrease,
-    details: `City +${cityDrawCallIncrease} calls for 3 buildings (<=3); Farm +${citadelDrawCallIncrease} calls for 1 building (<=1)`,
+    details: `City +${cityDrawCallIncrease} calls for 3 buildings (<=3)`,
   };
   console.log(`Gate 1 (Draw calls increase <= 1 per landmark): ${gate1Pass ? 'PASS' : 'FAIL'} (${report.gates.gate1_draw_calls.details})`);
 
@@ -396,12 +269,11 @@ try {
   console.log(`Gate 2 (FPS city high drop <= 3): ${gate2Pass ? 'PASS' : 'FAIL'} (${report.gates.gate2_fps.details})`);
 
   // Gate 3: Total triangles within desktop budget (<= 1.5M)
-  const gate3Pass = cityMetricsAfter.triangles <= 1_500_000 && farmMetricsAfter.triangles <= 1_500_000;
+  const gate3Pass = cityMetricsAfter.triangles <= 1_500_000;
   report.gates.gate3_triangles_budget = {
     pass: gate3Pass,
     cityTriangles: cityMetricsAfter.triangles,
-    farmTriangles: farmMetricsAfter.triangles,
-    details: `City triangles ${cityMetricsAfter.triangles} <= 1.5M; Farm triangles ${farmMetricsAfter.triangles} <= 1.5M`,
+    details: `City triangles ${cityMetricsAfter.triangles} <= 1.5M`,
   };
   console.log(`Gate 3 (Triangles <= 1.5M): ${gate3Pass ? 'PASS' : 'FAIL'} (${report.gates.gate3_triangles_budget.details})`);
 

@@ -506,3 +506,14 @@ Validation:
 - `assets.test.ts` kiểm tra 1 part, UV + texture, triangle cap, footprint bounds, provenance CC-BY, hash URL và byte-identical `--check`.
 - Kịch bản QA `scripts/landmark-qa.mjs` xác minh 5 automated gates (draw calls tăng ≤ 1/tòa, FPS drop ≤ 3, triangles ≤ 1.5M, 0 console errors, decor effect đúng) qua 20 ảnh bằng chứng tại `docs/evidence/g4/landmarks/`.
 - Toàn bộ regression passes: `g4-night-qa.mjs`, `hud-scale-qa.mjs`, `pnpm test` (769 tests) và `pnpm check`. Báo cáo chi tiết: `docs/reports/D037-landmarks.md`.
+
+## D038 - 2026-10-13 - The Citadel landmark is removed
+
+Owner decision after review. `landmark_citadel` (Thành cổ, farm) shipped in D037 as an unreadable dark mass: the
+voxel source's two 8192² block textures were squeezed into one 1024² atlas (8× resolution loss) and a permissive
+simplify (652k → 9.6k triangles) collapsed across UV seams. D037's QA gates measured only draw calls, FPS, triangles
+and decor, so nothing caught it. Removed from docs/16 (§6.2, §7.3), generated content (catalog, economy, i18n), the
+importer (its two-image atlas and permissive-simplify branches), the manifest, both GLBs, QA script, evidence and
+credits. No saved world contained one (0 of 147 checked on the server before removal), so no migration is needed.
+The three city landmarks are unchanged byte for byte. Lesson for future imports: add a visual gate (in-game render
+compared with a render of the source) rather than performance gates alone.

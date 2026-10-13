@@ -72,18 +72,17 @@ Four iconic landmark buildings added from owner-supplied untracked models in `ma
 | `landmark_palace` | Cung điện | [St James's Palace](https://sketchfab.com/3d-models/st-jamess-palace-9ebcaaca6ba8451eabd6344230272c0f) | QuintusHortensiusHortalus | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
 | `landmark_castle` | Lâu đài | [Monserrate Palace - Scale Model (Scaniverse)](https://sketchfab.com/3d-models/monserrate-palace-scale-model-scaniverse-e9d5212d88a34cf98912ed59df136888) | JFN | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
 | `landmark_culture` | Nhà văn hóa | [Pripyat Palace of Culture, "Energetik"](https://sketchfab.com/3d-models/pripyat-palace-of-culture-energetik-e2647265ab4949cfaef2d021e24cec23) | AndrewDW | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
-| `landmark_citadel` | Thành cổ | [Citadel of Kings](https://sketchfab.com/3d-models/citadel-of-kings-0ba725cb5268487a8fbb740f5e1c4012) | Cade | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
 
 Excluded files from `map/nha2`:
 - `royal_palace_brussel_minecraft.glb`: excluded due to **CC-BY-NC-4.0** license (non-commercial clause incompatible with commercial distribution).
 - `rome_river_side.glb`: excluded because it is an entire urban neighborhood and river bank quarter rather than an individual landmark building.
+- `citadel_of_kings.glb`: imported in D037 then **removed in D038** (the voxel model collapsed into an unreadable mass after simplification); no longer shipped.
 
 Modifications ("đã chỉnh sửa", `modified: true`):
 - All node hierarchies flattened and baked; all primitives combined into 1 mesh, 1 primitive, 1 MeshStandardMaterial with 1 baseColor texture (JPEG ≤ 1024²).
 - `KHR_materials_unlit` and BLEND alpha modes removed to participate in scene day/night lighting.
 - Monserrate: orange wooden pedestal base removed (y < 0.044 m); bottom step terrace preserved; texture shadow lift with soft highlight shoulder applied.
 - Pripyat: base terrace preserved; wall dirt/grunge lifted and brightened; window tints refreshed; simplified 88 943 → 5 999 triangles.
-- Citadel of Kings: two 8192² textures composited into a single 1024² atlas; UVs remapped; ground perimeter clamped at y = 0; voxel cube structure simplified 651 678 → 9 569 triangles with meshoptimizer Permissive mode.
 - All models fitted to declared footprints with uniform scale and bottom-center pivot at y = 0, facing -Z. All outputs < 700 KB per GLB.
 
 ## Buildings (D029, unchanged)

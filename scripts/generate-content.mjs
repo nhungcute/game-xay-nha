@@ -110,7 +110,6 @@ for (const [id, label, mapKind, decorVal] of [
   ['landmark_culture', 'Nhà văn hóa', 'city', 0.10],
   ['landmark_palace', 'Cung điện', 'city', 0.15],
   ['landmark_castle', 'Lâu đài', 'city', 0.15],
-  ['landmark_citadel', 'Thành cổ', 'farm', 0],
 ]) {
   const table = mapKind === 'city' ? citySource : farmSource;
   const row = findRow(table, id);

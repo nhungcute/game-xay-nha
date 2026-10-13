@@ -27,7 +27,6 @@ describe('reference HUD logic', () => {
     expect(buildingCategory(catalog.buildings.landmark_palace!)).toBe('buildings');
     expect(buildingCategory(catalog.buildings.landmark_castle!)).toBe('buildings');
     expect(buildingCategory(catalog.buildings.landmark_culture!)).toBe('buildings');
-    expect(buildingCategory(catalog.buildings.landmark_citadel!)).toBe('buildings');
     for (const kind of ['city', 'farm'] as const) for (const c of CATEGORIES.filter(c => !c.farmOnly || kind === 'farm')) {
       const buildings = Object.values(catalog.buildings).filter(d => d.mapKinds.includes(kind) && buildingCategory(d) === c.id);
       expect(buildings.length + categoryTools(c.id).length, `${kind}/${c.id}`).toBeGreaterThan(0);

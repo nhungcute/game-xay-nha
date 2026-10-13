@@ -4,7 +4,9 @@ Ngày: 2026-10-13
 
 ## 1. Tóm tắt kết quả (Summary)
 
-**PASS**. Đã tích hợp thành công 4 "Công trình biểu tượng" (Iconic Landmarks) từ thư mục nguồn `map/nha2` vào game:
+> **Cập nhật D038 (2026-10-13):** Thành cổ (`landmark_citadel`) đã **bị gỡ khỏi game**. Review phát hiện mô hình khối vuông bị hỏng hình sau khi simplify: texture 2 × 8192² dồn vào 1024² mất 8 lần độ phân giải, cộng simplify "permissive" làm xoắn UV, nên chỉ còn một khối nâu đen nhàu nát. Gate QA khi đó chỉ đo hiệu năng nên không bắt được. Các mục về Thành cổ bên dưới giữ lại làm lịch sử; ảnh `farm-citadel-*` đã xóa. Game hiện có 3 công trình biểu tượng (city).
+
+**PASS (bản đầu)**. Đã tích hợp 4 "Công trình biểu tượng" (Iconic Landmarks) từ thư mục nguồn `map/nha2` vào game:
 - **Cung điện** (`landmark_palace`, 5×5 ô, map `city`, cấp 14, $60.000 + 60 gỗ + 120 đá, xây 3 giờ, decor +15% bán kính 12 ô, giới hạn 1).
 - **Lâu đài** (`landmark_castle`, 8×4 ô, map `city`, cấp 16, $90.000 + 80 gỗ + 150 đá, xây 4 giờ, decor +15% bán kính 12 ô, giới hạn 1).
 - **Nhà văn hóa** (`landmark_culture`, 7×6 ô, map `city`, cấp 10, $30.000 + 40 gỗ + 80 đá, xây 2 giờ, decor +10% bán kính 10 ô, giới hạn 1).

@@ -144,7 +144,6 @@ Ngân hàng: ngoài thu nhập, mỗi ngân hàng (tối đa 4 có hiệu lực)
 | Nhà văn hóa | 1 | 0 | 1 | — | — | — | 1 | 1 | 1 | 1 |
 | Cung điện | 1 | 0 | 1 | — | — | — | — | — | 1 | 1 |
 | Lâu đài | 1 | 0 | 1 | — | — | — | — | — | — | 1 |
-| Thành cổ | 1 | 0 | 1 | — | — | — | — | — | 1 | 1 |
 
 ### 6.3 Công thức thu nhập
 
@@ -247,7 +246,6 @@ Hạt mua bằng $ khi gieo. Sản lượng tính trên mỗi ô. **Giá bán đ
 | `silo` | Kho | 2×2 | 800 | 10 | 10 | 2 | 5 phút | +100 sức chứa |
 | `deco_flowerbed` | Luống hoa | 1×1 | 80 | 0 | 0 | 2 | 15 giây | Trang trí |
 | `deco_streetlight` | Cột đèn | 1×1 | 150 | 0 | 2 | 2 | 15 giây | Trang trí |
-| `landmark_citadel` | Thành cổ | 10×6 | 80 000 | 120 | 200 | 15 | 4 giờ | Công trình biểu tượng. Tối đa 1 |
 
 **Nhà nông** (giá tăng dần, cấp yêu cầu):
 

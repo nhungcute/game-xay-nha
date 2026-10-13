@@ -64,20 +64,6 @@ const MODELS = [
     cutBase: false,
     flattenY0: false,
   },
-  {
-    id: 'landmark_citadel',
-    sourceFile: 'map/nha2/citadel_of_kings.glb',
-    title: 'Citadel of Kings',
-    author: 'Cade',
-    license: 'CC-BY-4.0',
-    url: 'https://sketchfab.com/3d-models/citadel-of-kings-0ba725cb5268487a8fbb740f5e1c4012',
-    footprint: [10, 6],
-    triangleCap: 10000,
-    rotationY: Math.PI, // Gatehouse & bridge face -Z
-    textureSize: 1024,
-    cutBase: false,
-    flattenY0: true, // Ground level clamped at y = 0
-  },
 ];
 
 // Helper to pad buffer to 4-byte alignment
@@ -315,33 +301,6 @@ function cleanTonePripyat(image) {
   return { width: image.width, height: image.height, data };
 }
 
-// Build composite atlas for Citadel (Image 0 on left half, Image 1 on right half)
-function buildCitadelAtlas(img0, img1, size = 1024) {
-  const halfW = size / 2;
-  const left = downscale(img0, halfW, size);
-  const right = downscale(img1, halfW, size);
-  const data = new Uint8ClampedArray(size * size * 4);
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < halfW; x++) {
-      const srcAt = (y * halfW + x) * 4;
-      const dstAt = (y * size + x) * 4;
-      data[dstAt] = left.data[srcAt];
-      data[dstAt + 1] = left.data[srcAt + 1];
-      data[dstAt + 2] = left.data[srcAt + 2];
-      data[dstAt + 3] = 255;
-    }
-    for (let x = 0; x < halfW; x++) {
-      const srcAt = (y * halfW + x) * 4;
-      const dstAt = (y * size + halfW + x) * 4;
-      data[dstAt] = right.data[srcAt];
-      data[dstAt + 1] = right.data[srcAt + 1];
-      data[dstAt + 2] = right.data[srcAt + 2];
-      data[dstAt + 3] = 255;
-    }
-  }
-  return { width: size, height: size, data };
-}
-
 // Rotation matrix around Y axis
 function rotY(angle) {
   const c = Math.cos(angle), s = Math.sin(angle);
@@ -396,9 +355,6 @@ function collectSceneGeometry(parsed, config) {
     const nrmMat = normalMatrix(fullMat);
     const baseVertex = combinedPos.length / 3;
 
-    // Citadel: Material 1, 2, 4 use Image 1 (right half of atlas)
-    const isCitadelTex1 = config.id === 'landmark_citadel' && (prim.material === 1 || prim.material === 2 || prim.material === 4);
-
     for (let v = 0; v < prim.positions.length / 3; v++) {
       const offset = v * 3;
       const x = prim.positions[offset], y = prim.positions[offset + 1], z = prim.positions[offset + 2];
@@ -416,13 +372,7 @@ function collectSceneGeometry(parsed, config) {
       const len = Math.hypot(tnx, tny, tnz) || 1;
       combinedNrm.push(tnx / len, tny / len, tnz / len);
 
-      let u = prim.uvs[v * 2];
-      let uvV = prim.uvs[v * 2 + 1];
-      if (config.id === 'landmark_citadel') {
-        if (isCitadelTex1) u = u * 0.5 + 0.5;
-        else u = u * 0.5;
-      }
-      combinedUv.push(u, uvV);
+      combinedUv.push(prim.uvs[v * 2], prim.uvs[v * 2 + 1]);
     }
 
     for (let i = 0; i < prim.indices.length; i++) {
@@ -430,7 +380,7 @@ function collectSceneGeometry(parsed, config) {
     }
   }
 
-  // Handle cutting base plate (Monserrate) or flattening Y=0 (Citadel)
+  // Handle cutting base plate (Monserrate) or flattening Y=0
   let finalIndices = combinedIdx;
   if (config.cutBase && config.cutY !== undefined) {
     // Drop triangles where all 3 vertices are below cutY
@@ -494,7 +444,7 @@ function weld(geometry) {
   };
 }
 
-async function simplifyGeometry(geometry, cap, isCitadel = false) {
+async function simplifyGeometry(geometry, cap) {
   if (geometry.indices.length / 3 <= cap) return { indices: geometry.indices, error: 0 };
   await MeshoptSimplifier.ready;
   const attributes = new Float32Array(geometry.positions.length / 3 * 2);
@@ -503,8 +453,8 @@ async function simplifyGeometry(geometry, cap, isCitadel = false) {
     attributes[vertex * 2 + 1] = geometry.uvs[vertex * 2 + 1];
   }
   let best = null;
-  const flagSets = isCitadel ? [['Permissive'], []] : [['LockBorder'], ['LockBorder', 'Permissive'], []];
-  const uvWeights = isCitadel ? [0.05, 0.05] : [0.5, 0.5];
+  const flagSets = [['LockBorder'], ['LockBorder', 'Permissive'], []];
+  const uvWeights = [0.5, 0.5];
 
   for (let error = 0.001; error <= 0.5; error *= 2) {
     for (const flags of flagSets) {
@@ -517,11 +467,6 @@ async function simplifyGeometry(geometry, cap, isCitadel = false) {
   }
   if (!best) throw new Error(`meshoptimizer returned no candidate for cap ${cap}`);
   if (best.indices.length / 3 > cap) {
-    // If still over cap on Citadel, fallback to simplifySloppy
-    if (isCitadel) {
-      const [sloppyIdx] = MeshoptSimplifier.simplifySloppy(geometry.indices, geometry.positions, 3, null, cap * 3, 0.05);
-      return { indices: sloppyIdx, error: 0.05 };
-    }
     throw new Error(`meshoptimizer could not reach ${cap} triangles (best ${best.indices.length / 3})`);
   }
   return best;
@@ -667,22 +612,9 @@ async function processModel(config) {
   const parsed = parseGlb(rawGlb);
 
   // 1. Process texture
-  let textureRgba;
-  if (config.id === 'landmark_citadel') {
-    const img0 = decodeGlbImage(parsed, 0);
-    const img1 = decodeGlbImage(parsed, 1);
-    textureRgba = buildCitadelAtlas(img0, img1, config.textureSize);
-  } else {
-    const rawImg = decodeGlbImage(parsed, 0);
-    const downscaled = downscale(rawImg, config.textureSize);
-    if (config.id === 'landmark_castle') {
-      textureRgba = cleanToneMonserrate(downscaled);
-    } else if (config.id === 'landmark_culture') {
-      textureRgba = cleanTonePripyat(downscaled);
-    } else {
-      textureRgba = downscaled;
-    }
-  }
+  const downscaled = downscale(decodeGlbImage(parsed, 0), config.textureSize);
+  const textureRgba = config.id === 'landmark_castle' ? cleanToneMonserrate(downscaled)
+    : config.id === 'landmark_culture' ? cleanTonePripyat(downscaled) : downscaled;
 
   const jpegBytes = Buffer.from(jpeg.encode({ data: textureRgba.data, width: textureRgba.width, height: textureRgba.height }, 85).data);
 
@@ -691,8 +623,7 @@ async function processModel(config) {
   const welded = weld(rawGeometry);
 
   // 3. Simplify
-  const isCitadel = config.id === 'landmark_citadel';
-  const simplified = await simplifyGeometry(welded, config.triangleCap, isCitadel);
+  const simplified = await simplifyGeometry(welded, config.triangleCap);
 
   // 4. Fit footprint
   const fitted = compactAndFit(welded, simplified, config.footprint);

@@ -1039,32 +1039,6 @@
           "bonus": 0.15,
           "radius": 12
         }
-      },
-      "landmark_citadel": {
-        "id": "landmark_citadel",
-        "mapKinds": [
-          "farm"
-        ],
-        "nameKey": "building.landmark_citadel",
-        "size": [
-          10,
-          6
-        ],
-        "entranceSide": "S",
-        "cost": {
-          "cash": 80000,
-          "wood": 120,
-          "stone": 200
-        },
-        "unlockLevel": 15,
-        "buildSeconds": 14400,
-        "buildXp": 586,
-        "modelId": "landmark_citadel",
-        "limit": [
-          1,
-          0,
-          1
-        ]
       }
     },
     "crops": {

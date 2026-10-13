@@ -960,23 +960,6 @@
       "hash": "1cbf105f31d9"
     },
     {
-      "id": "landmark_citadel",
-      "file": "models/authored/landmark_citadel.glb",
-      "source": "https://sketchfab.com/3d-models/citadel-of-kings-0ba725cb5268487a8fbb740f5e1c4012",
-      "author": "Cade",
-      "license": "CC-BY-4.0",
-      "url": "https://sketchfab.com/3d-models/citadel-of-kings-0ba725cb5268487a8fbb740f5e1c4012",
-      "modified": true,
-      "placeholder": false,
-      "category": "building",
-      "footprint": [
-        10,
-        6
-      ],
-      "triangles": 9569,
-      "hash": "98c6de25b37e"
-    },
-    {
       "id": "veg_greens_seed",
       "file": "models/veg_greens_seed.glb",
       "source": "Procedural low-poly placeholder generated in this repository",
