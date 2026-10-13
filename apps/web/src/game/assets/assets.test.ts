@@ -67,6 +67,11 @@ const streetlightConfig = JSON.parse(await readFile(new URL('../../../../../scri
   credits: { author: string; license: string; url: string };
   triangleCap: number; triangles: number; bounds: { span: number[] }; lampVertices: number;
 };
+// D037: four landmark ids imported from map/nha2 by scripts/import-landmarks.mjs.
+const landmarksConfig = JSON.parse(await readFile(new URL('../../../../../scripts/landmarks.config.json', import.meta.url), 'utf8')) as {
+  models: Record<string, { file: string; footprint: [number, number]; triangles: number; triangleCap: number; bounds: { min: number[]; max: number[] }; credits: { author: string; license: string; url: string } }>;
+};
+const LANDMARK_IDS = Object.keys(landmarksConfig.models).sort();
 
 /** PNG IHDR dimensions of the first embedded image of a GLB (textures are committed, Node cannot decode pixels). */
 async function glbTextureSize(manifestFile: string): Promise<{ width: number; height: number }> {
@@ -123,14 +128,15 @@ async function farTextureCoverage(manifestFile: string): Promise<number[]> {
 describe('actual placeholder GLB artifacts', () => {
   it('loads every model with valid triangles, bottom pivot, footprint bounds and explicit provenance', async () => {
     const manager = await setup();
-    expect(manager.manifest).toHaveLength(75 + TREE_IDS.length); // tree far LODs add entries; rocks replace in place
+    expect(manager.manifest).toHaveLength(75 + TREE_IDS.length + LANDMARK_IDS.length); // tree far LODs & landmarks add entries; rocks replace in place
     expect(manager.manifest.filter(entry => !entry.placeholder).map(entry => entry.id).sort())
-      .toEqual([...AUTHORED_IDS, ...TREE_IDS, ...TREE_IDS.map(id => `${id}_far`), ...ROCK_IDS, 'deco_streetlight'].sort());
+      .toEqual([...AUTHORED_IDS, ...TREE_IDS, ...TREE_IDS.map(id => `${id}_far`), ...ROCK_IDS, 'deco_streetlight', ...LANDMARK_IDS].sort());
     for (const entry of manager.manifest) {
-      // Imported models (D029/D030) arrive pre-fitted; everything else is a generated placeholder.
+      // Imported models (D029/D030/D037) arrive pre-fitted; everything else is a generated placeholder.
       expect(entry.license).toBeTruthy(); expect(entry.source).toBeTruthy();
       const asset = manager.get(entry.id);
       const building = catalog.buildings[entry.id];
+      const landmark = landmarksConfig.models[entry.id];
       expect(asset.parts.length).toBeGreaterThan(0);
       if (!entry.placeholder) {
         if (catalog.buildings[entry.id]) expect(entry.footprint).toBeTruthy();
@@ -148,8 +154,8 @@ describe('actual placeholder GLB artifacts', () => {
         const index = part.geometry.getIndex();
         triangles += (index ? index.count : positions.count) / 3; // D030 foliage is indexed; D029 buildings are not
         expect(part.geometry.getAttribute('normal').count).toBe(positions.count);
-        if (tree || rock) expect(part.geometry.getAttribute('uv').count).toBe(positions.count); // textured foliage / rocks
-        else expect(part.geometry.getAttribute('color').count).toBe(positions.count);
+        if (tree || rock || landmark) expect(part.geometry.getAttribute('uv').count).toBe(positions.count); // textured foliage / rocks / landmarks
+        else expect(part.geometry.getAttribute('color').count).toBe(positions.count); // 20 authored D029 buildings require COLOR_0
         if (!entry.placeholder && building) {
           if (entry.id === 'deco_streetlight') {
             const lamp = part.geometry.getAttribute('_lamp');
@@ -157,6 +163,9 @@ describe('actual placeholder GLB artifacts', () => {
             expect(lamp.count).toBe(positions.count);
             for (const value of lamp.array) expect(value).toBeGreaterThanOrEqual(0);
             expect([...lamp.array].some(value => value > 0)).toBe(true);
+          } else if (landmark) {
+            expect(asset.parts).toHaveLength(1);
+            expect(entry.license).toMatch(/^CC-BY/);
           } else {
             const windows = part.geometry.getAttribute('_window');
             expect(windows).toBeDefined();
@@ -176,10 +185,11 @@ describe('actual placeholder GLB artifacts', () => {
       }
       const cap = rock ? rock.triangleCap : tree
         ? entry.id.endsWith('_far') ? treesConfig.parameters.triangleCaps[tree.family]!.far : treesConfig.parameters.triangleCaps[tree.family]!.near
+        : landmark ? landmark.triangleCap
         : entry.id.startsWith('tree') ? 800 : building ? 5000 : 300;
       expect(triangles).toBeLessThanOrEqual(cap);
       if (!entry.placeholder && catalog.buildings[entry.id]) {
-        const modelCap = entry.id === 'deco_streetlight' ? streetlightConfig.triangleCap : modelPackConfig.models[entry.id]?.triangleCap;
+        const modelCap = entry.id === 'deco_streetlight' ? streetlightConfig.triangleCap : landmark ? landmark.triangleCap : modelPackConfig.models[entry.id]?.triangleCap;
         expect(modelCap).toBeDefined();
         expect(triangles).toBeLessThanOrEqual(modelCap!);
       }
@@ -288,6 +298,43 @@ describe('actual placeholder GLB artifacts', () => {
 
     const output = execFileSync('node', ['scripts/import-streetlight.mjs', '--check'], { encoding: 'utf8', timeout: 25_000 });
     expect(output).toMatch(/--check PASS|skipping/);
+    manager.dispose();
+  });
+  it('keeps D037 landmark models byte-identical to what the deterministic import script generates', async () => {
+    const output = execFileSync('node', ['scripts/import-landmarks.mjs', '--check'], { encoding: 'utf8', timeout: 55_000 });
+    expect(output).toMatch(/--check PASS|skipping/);
+  }, 60_000);
+  it('verifies D037 landmark artifacts meet 1-part, texture, footprint and hash constraints', async () => {
+    const manager = await setup();
+    for (const [id, model] of Object.entries(landmarksConfig.models)) {
+      const entry = manager.manifest.find(e => e.id === id);
+      expect(entry, `Manifest entry for landmark ${id}`).toBeDefined();
+      expect(entry?.placeholder).toBe(false);
+      expect(entry?.license).toMatch(/^CC-BY/);
+      expect(entry?.modified).toBe(true);
+
+      const fileBuffer = await readFile(new URL(entry!.file, assetRoot));
+      const expectedHash = createHash('sha256').update(fileBuffer).digest('hex').slice(0, 12);
+      expect(entry?.hash, `Hash of landmark ${id}`).toBe(expectedHash);
+
+      const asset = manager.get(id);
+      expect(asset.parts).toHaveLength(1);
+      const part = asset.parts[0]!;
+      expect(part.geometry.getAttribute('uv')).toBeDefined();
+      expect(part.geometry.getAttribute('position')).toBeDefined();
+      expect(part.geometry.getAttribute('normal')).toBeDefined();
+
+      const tris = part.geometry.getIndex() ? part.geometry.getIndex()!.count / 3 : part.geometry.getAttribute('position').count / 3;
+      expect(tris).toBe(model.triangles);
+      expect(tris).toBeLessThanOrEqual(model.triangleCap);
+
+      const bounds = asset.bounds;
+      expect(bounds.min.y).toBeCloseTo(0, 1);
+      expect(bounds.max.x - bounds.min.x).toBeLessThanOrEqual(model.footprint[0] * 2);
+      expect(bounds.max.z - bounds.min.z).toBeLessThanOrEqual(model.footprint[1] * 2);
+
+      asset.release();
+    }
     manager.dispose();
   });
   it('keeps the imported models byte-identical to what the deterministic import script generates', async () => {

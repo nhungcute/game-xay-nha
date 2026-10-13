@@ -1,0 +1,164 @@
+{
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-13T15:02:33.723Z",
+  "shots": [
+    {
+      "kind": "city",
+      "landmark": "palace",
+      "shot": "close",
+      "hour": "13h",
+      "file": "docs/evidence/g4/landmarks/city-palace-close-13h.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "palace",
+      "shot": "close",
+      "hour": "23h",
+      "file": "docs/evidence/g4/landmarks/city-palace-close-23h.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "palace",
+      "shot": "mid-scale",
+      "file": "docs/evidence/g4/landmarks/city-palace-mid-scale.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "palace",
+      "shot": "low-quality",
+      "file": "docs/evidence/g4/landmarks/city-palace-low-quality.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "culture",
+      "shot": "close",
+      "hour": "13h",
+      "file": "docs/evidence/g4/landmarks/city-culture-close-13h.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "culture",
+      "shot": "close",
+      "hour": "23h",
+      "file": "docs/evidence/g4/landmarks/city-culture-close-23h.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "culture",
+      "shot": "mid-scale",
+      "file": "docs/evidence/g4/landmarks/city-culture-mid-scale.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "culture",
+      "shot": "low-quality",
+      "file": "docs/evidence/g4/landmarks/city-culture-low-quality.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "castle",
+      "shot": "close",
+      "hour": "13h",
+      "file": "docs/evidence/g4/landmarks/city-castle-close-13h.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "castle",
+      "shot": "close",
+      "hour": "23h",
+      "file": "docs/evidence/g4/landmarks/city-castle-close-23h.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "castle",
+      "shot": "mid-scale",
+      "file": "docs/evidence/g4/landmarks/city-castle-mid-scale.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "castle",
+      "shot": "low-quality",
+      "file": "docs/evidence/g4/landmarks/city-castle-low-quality.jpg"
+    },
+    {
+      "kind": "city",
+      "shot": "overview",
+      "file": "docs/evidence/g4/landmarks/city-landmarks-overview.jpg"
+    },
+    {
+      "kind": "mobile",
+      "target": "city-landmarks",
+      "file": "docs/evidence/g4/landmarks/mobile-pixel7-city-landmarks.jpg"
+    },
+    {
+      "kind": "farm",
+      "landmark": "citadel",
+      "shot": "close",
+      "hour": "13h",
+      "file": "docs/evidence/g4/landmarks/farm-citadel-close-13h.jpg"
+    },
+    {
+      "kind": "farm",
+      "landmark": "citadel",
+      "shot": "close",
+      "hour": "23h",
+      "file": "docs/evidence/g4/landmarks/farm-citadel-close-23h.jpg"
+    },
+    {
+      "kind": "farm",
+      "landmark": "citadel",
+      "shot": "mid-scale",
+      "file": "docs/evidence/g4/landmarks/farm-citadel-mid-scale.jpg"
+    },
+    {
+      "kind": "farm",
+      "landmark": "citadel",
+      "shot": "low-quality",
+      "file": "docs/evidence/g4/landmarks/farm-citadel-low-quality.jpg"
+    },
+    {
+      "kind": "farm",
+      "shot": "overview",
+      "file": "docs/evidence/g4/landmarks/farm-citadel-overview.jpg"
+    },
+    {
+      "kind": "mobile",
+      "target": "farm-citadel",
+      "file": "docs/evidence/g4/landmarks/mobile-pixel7-farm-citadel.jpg"
+    }
+  ],
+  "gates": {
+    "gate1_draw_calls": {
+      "pass": true,
+      "cityDrawCallIncrease": 3,
+      "citadelDrawCallIncrease": -1,
+      "details": "City +3 calls for 3 buildings (<=3); Farm +-1 calls for 1 building (<=1)"
+    },
+    "gate2_fps": {
+      "pass": true,
+      "fpsBaseline": 37.298782881821744,
+      "fpsAfter": 35.956851777866596,
+      "fpsDrop": 1.3419311039551474,
+      "details": "Baseline FPS 37.3 -> After 36.0 (drop 1.3 <= 3)"
+    },
+    "gate3_triangles_budget": {
+      "pass": true,
+      "cityTriangles": 550952,
+      "farmTriangles": 369279,
+      "details": "City triangles 550952 <= 1.5M; Farm triangles 369279 <= 1.5M"
+    },
+    "gate4_zero_console_errors": {
+      "pass": true,
+      "errors": []
+    },
+    "gate5_decor_effect": {
+      "pass": true,
+      "decorBoostNear": true,
+      "farUnchanged": true,
+      "details": "All landmarks active and contributing decor in radius under decorCap; far building unaffected"
+    }
+  },
+  "measurements": {},
+  "errors": [],
+  "allGatesPass": true
+}

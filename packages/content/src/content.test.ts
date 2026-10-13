@@ -60,6 +60,51 @@ describe('docs/16 generated economy content', () => {
     expect(def?.size).toEqual([1, 1]);
     expect(def?.buildSeconds).toBe(15);
   });
+  it('configures D037 iconic landmarks with correct costs, limits, decor effects and maps', () => {
+    const culture = catalog.buildings.landmark_culture;
+    expect(culture).toBeDefined();
+    expect(culture?.mapKinds).toEqual(['city']);
+    expect(culture?.cost).toEqual({ cash: 30000, wood: 40, stone: 80 });
+    expect(culture?.unlockLevel).toBe(10);
+    expect(culture?.size).toEqual([7, 6]);
+    expect(culture?.buildSeconds).toBe(7200);
+    expect(culture?.limit).toEqual([1, 0, 1]);
+    expect(culture?.decor).toEqual({ bonus: 0.10, radius: 10 });
+    expect(vi[culture!.nameKey]).toBe('Nhà văn hóa');
+
+    const palace = catalog.buildings.landmark_palace;
+    expect(palace).toBeDefined();
+    expect(palace?.mapKinds).toEqual(['city']);
+    expect(palace?.cost).toEqual({ cash: 60000, wood: 60, stone: 120 });
+    expect(palace?.unlockLevel).toBe(14);
+    expect(palace?.size).toEqual([5, 5]);
+    expect(palace?.buildSeconds).toBe(10800);
+    expect(palace?.limit).toEqual([1, 0, 1]);
+    expect(palace?.decor).toEqual({ bonus: 0.15, radius: 12 });
+    expect(vi[palace!.nameKey]).toBe('Cung điện');
+
+    const castle = catalog.buildings.landmark_castle;
+    expect(castle).toBeDefined();
+    expect(castle?.mapKinds).toEqual(['city']);
+    expect(castle?.cost).toEqual({ cash: 90000, wood: 80, stone: 150 });
+    expect(castle?.unlockLevel).toBe(16);
+    expect(castle?.size).toEqual([8, 4]);
+    expect(castle?.buildSeconds).toBe(14400);
+    expect(castle?.limit).toEqual([1, 0, 1]);
+    expect(castle?.decor).toEqual({ bonus: 0.15, radius: 12 });
+    expect(vi[castle!.nameKey]).toBe('Lâu đài');
+
+    const citadel = catalog.buildings.landmark_citadel;
+    expect(citadel).toBeDefined();
+    expect(citadel?.mapKinds).toEqual(['farm']);
+    expect(citadel?.cost).toEqual({ cash: 80000, wood: 120, stone: 200 });
+    expect(citadel?.unlockLevel).toBe(15);
+    expect(citadel?.size).toEqual([10, 6]);
+    expect(citadel?.buildSeconds).toBe(14400);
+    expect(citadel?.limit).toEqual([1, 0, 1]);
+    expect(citadel?.decor).toBeUndefined();
+    expect(vi[citadel!.nameKey]).toBe('Thành cổ');
+  });
   it.each(cropRows)('matches crop table %s', (id, _name, level, seed, _time, yieldCount, price, _profit, _perHour, xp) => {
     const def = catalog.crops[id ?? ''];
     expect(def?.unlockLevel).toBe(num(level ?? ''));

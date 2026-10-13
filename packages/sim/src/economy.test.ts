@@ -103,6 +103,18 @@ describe('income rates and spatial bonuses', () => {
     for (const x of [48, 50, 51, 54, 55, 56, 57]) building(s, 'deco_garden', [x, 69]);
     expect(s.rates[b.id]).toBeCloseTo(170 * 1.3);
   });
+  it('D037: landmark_palace decor adds +15% within 12-cell radius, capped at decorCap', () => {
+    const s = setup(), b = building(s, 'house_small', [52, 68]);
+    building(s, 'landmark_palace', [55, 68]);
+    recompute(s);
+    expect(s.rates[b.id]).toBeCloseTo(170 * 1.15);
+
+    // Add landmark_castle (+15%) and park (+10%) -> sum 40%, capped at 30%
+    building(s, 'landmark_castle', [43, 68]);
+    building(s, 'deco_park', [50, 71]);
+    recompute(s);
+    expect(s.rates[b.id]).toBeCloseTo(170 * 1.30);
+  });
   it('combines capped decoration, water and road multiplicatively to 1.68', () => {
     const s = setup(), b = building(s, 'house_small', [52, 68]);
     for (const x of [48, 50, 51, 54, 55, 56, 57]) building(s, 'deco_garden', [x, 69]);
