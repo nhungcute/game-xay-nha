@@ -1,0 +1,145 @@
+{
+  "generatedBy": "scripts/import-landmarks.mjs",
+  "models": {
+    "landmark_palace": {
+      "file": "apps/web/public/assets/models/authored/landmark_palace.glb",
+      "footprint": [
+        5,
+        5
+      ],
+      "triangles": 4200,
+      "triangleCap": 6000,
+      "bounds": {
+        "min": [
+          -4.6,
+          0,
+          -4.6
+        ],
+        "max": [
+          4.6,
+          8.433394,
+          4.6
+        ]
+      },
+      "scale": 147.00008,
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "bytes": 431714
+      },
+      "bytes": 686252,
+      "credits": {
+        "title": "St James's Palace",
+        "author": "QuintusHortensiusHortalus",
+        "license": "CC-BY-4.0",
+        "url": "https://sketchfab.com/3d-models/st-jamess-palace-9ebcaaca6ba8451eabd6344230272c0f",
+        "source": "map/nha2/st_jamess_palace.glb"
+      }
+    },
+    "landmark_castle": {
+      "file": "apps/web/public/assets/models/authored/landmark_castle.glb",
+      "footprint": [
+        8,
+        4
+      ],
+      "triangles": 7999,
+      "triangleCap": 8000,
+      "bounds": {
+        "min": [
+          -7.36,
+          0,
+          -3.590826
+        ],
+        "max": [
+          7.36,
+          5.549345,
+          3.590826
+        ]
+      },
+      "scale": 21.490862,
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "bytes": 221013
+      },
+      "bytes": 485140,
+      "credits": {
+        "title": "Monserrate Palace - Scale Model (Scaniverse)",
+        "author": "JFN",
+        "license": "CC-BY-4.0",
+        "url": "https://sketchfab.com/3d-models/monserrate-palace-scale-model-scaniverse-e9d5212d88a34cf98912ed59df136888",
+        "source": "map/nha2/monserrate_palace_-_scale_model_scaniverse.glb"
+      }
+    },
+    "landmark_culture": {
+      "file": "apps/web/public/assets/models/authored/landmark_culture.glb",
+      "footprint": [
+        7,
+        6
+      ],
+      "triangles": 5999,
+      "triangleCap": 6000,
+      "bounds": {
+        "min": [
+          -6.44,
+          0,
+          -5.107773
+        ],
+        "max": [
+          6.44,
+          3.68686,
+          5.107773
+        ]
+      },
+      "scale": 0.175532,
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "bytes": 392722
+      },
+      "bytes": 646416,
+      "credits": {
+        "title": "Pripyat Palace of Culture, \"Energetik\"",
+        "author": "AndrewDW",
+        "license": "CC-BY-4.0",
+        "url": "https://sketchfab.com/3d-models/pripyat-palace-of-culture-energetik-e2647265ab4949cfaef2d021e24cec23",
+        "source": "map/nha2/pripyat_palace_of_culture_energetik.glb"
+      }
+    },
+    "landmark_citadel": {
+      "file": "apps/web/public/assets/models/authored/landmark_citadel.glb",
+      "footprint": [
+        10,
+        6
+      ],
+      "triangles": 9569,
+      "triangleCap": 10000,
+      "bounds": {
+        "min": [
+          -9.2,
+          0,
+          -5.337017
+        ],
+        "max": [
+          9.2,
+          7.014365,
+          5.337017
+        ]
+      },
+      "scale": 0.101657,
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "bytes": 262253
+      },
+      "bytes": 452604,
+      "credits": {
+        "title": "Citadel of Kings",
+        "author": "Cade",
+        "license": "CC-BY-4.0",
+        "url": "https://sketchfab.com/3d-models/citadel-of-kings-0ba725cb5268487a8fbb740f5e1c4012",
+        "source": "map/nha2/citadel_of_kings.glb"
+      }
+    }
+  }
+}

@@ -184,6 +184,20 @@ if (existsSync(STREETLIGHT_CONFIG)) {
     delete entry.bounds;
   }
 }
+// D037: iconic landmarks imported from map/nha2 by scripts/import-landmarks.mjs
+const LANDMARKS_CONFIG = new URL('../scripts/landmarks.config.json', import.meta.url);
+if (existsSync(LANDMARKS_CONFIG)) {
+  const landmarks = JSON.parse(await readFile(LANDMARKS_CONFIG, 'utf8'));
+  for (const [id, model] of Object.entries(landmarks.models)) {
+    const entry = assets.find(asset => asset.id === id);
+    if (!entry) throw new Error(`manifest: no placeholder entry for landmark ${id}`);
+    const credits = { source: model.credits.url, author: model.credits.author, license: model.credits.license,
+      url: model.credits.url, modified: true, placeholder: false };
+    const rel = path => path.replace('apps/web/public/assets/', '');
+    Object.assign(entry, { file: rel(model.file), ...credits, triangles: model.triangles, footprint: model.footprint });
+    delete entry.bounds;
+  }
+}
 // Content version per file: the client requests `file?v=<hash>`, so a re-imported model is fetched again even when a
 // browser still holds the old bytes under the same path (models are cached for a day; D031 windows were missed so).
 for (const asset of assets) asset.hash=createHash('sha256').update(await readFile(new URL(asset.file,directory))).digest('hex').slice(0,12);

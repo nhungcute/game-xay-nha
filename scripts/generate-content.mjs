@@ -103,6 +103,32 @@ building({ id: streetlight[0], w: number(streetlight[2].split('×')[0]), d: numb
   L: number(streetlight[7]), build: seconds(streetlight[13]) / 60,
   limit: [number(streetlightLimit[1]), number(streetlightLimit[2]), number(streetlightLimit[3])] }, citySource, 'city');
 buildings.deco_streetlight.mapKinds = ['city', 'farm'];
+
+// D037: Iconic Landmarks
+const landmarkLimits = section('### 6.2', '### 6.3');
+for (const [id, label, mapKind, decorVal] of [
+  ['landmark_culture', 'Nhà văn hóa', 'city', 0.10],
+  ['landmark_palace', 'Cung điện', 'city', 0.15],
+  ['landmark_castle', 'Lâu đài', 'city', 0.15],
+  ['landmark_citadel', 'Thành cổ', 'farm', 0],
+]) {
+  const table = mapKind === 'city' ? citySource : farmSource;
+  const row = findRow(table, id);
+  const limitRow = findRow(landmarkLimits, label);
+  const w = number(row[2].split('×')[0]), d = number(row[2].split('×')[1]);
+  const costCash = number(row[3]), costWood = number(row[4]), costStone = number(row[5]);
+  const L = mapKind === 'city' ? number(row[7]) : number(row[6]);
+  const buildSec = mapKind === 'city' ? seconds(row[13]) : seconds(row[7]);
+  const def = {
+    id, w, d,
+    cost: { cash: costCash, wood: costWood, stone: costStone },
+    L,
+    build: buildSec / 60,
+    limit: [number(limitRow[1]), number(limitRow[2]), number(limitRow[3])],
+  };
+  if (decorVal > 0) def.decor = decorVal;
+  building(def, table, mapKind);
+}
 const crops = Object.fromEntries(CROPS.map(def => [def.id, {
   id: def.id, nameKey: name('crop', def.id, findRow(cropSource, def.id)[1]),
   unlockLevel: def.L, seedCost: def.seed, growSeconds: def.cycleMin * 60,

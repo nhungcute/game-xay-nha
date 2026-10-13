@@ -635,6 +635,122 @@
         3,
         80
       ]
+    },
+    "landmark_culture": {
+      "id": "landmark_culture",
+      "mapKinds": [
+        "city"
+      ],
+      "nameKey": "building.landmark_culture",
+      "size": [
+        7,
+        6
+      ],
+      "entranceSide": "S",
+      "cost": {
+        "cash": 30000,
+        "wood": 40,
+        "stone": 80
+      },
+      "unlockLevel": 10,
+      "buildSeconds": 7200,
+      "buildXp": 359,
+      "modelId": "landmark_culture",
+      "limit": [
+        1,
+        0,
+        1
+      ],
+      "decor": {
+        "bonus": 0.1,
+        "radius": 10
+      }
+    },
+    "landmark_palace": {
+      "id": "landmark_palace",
+      "mapKinds": [
+        "city"
+      ],
+      "nameKey": "building.landmark_palace",
+      "size": [
+        5,
+        5
+      ],
+      "entranceSide": "S",
+      "cost": {
+        "cash": 60000,
+        "wood": 60,
+        "stone": 120
+      },
+      "unlockLevel": 14,
+      "buildSeconds": 10800,
+      "buildXp": 503,
+      "modelId": "landmark_palace",
+      "limit": [
+        1,
+        0,
+        1
+      ],
+      "decor": {
+        "bonus": 0.15,
+        "radius": 12
+      }
+    },
+    "landmark_castle": {
+      "id": "landmark_castle",
+      "mapKinds": [
+        "city"
+      ],
+      "nameKey": "building.landmark_castle",
+      "size": [
+        8,
+        4
+      ],
+      "entranceSide": "S",
+      "cost": {
+        "cash": 90000,
+        "wood": 80,
+        "stone": 150
+      },
+      "unlockLevel": 16,
+      "buildSeconds": 14400,
+      "buildXp": 614,
+      "modelId": "landmark_castle",
+      "limit": [
+        1,
+        0,
+        1
+      ],
+      "decor": {
+        "bonus": 0.15,
+        "radius": 12
+      }
+    },
+    "landmark_citadel": {
+      "id": "landmark_citadel",
+      "mapKinds": [
+        "farm"
+      ],
+      "nameKey": "building.landmark_citadel",
+      "size": [
+        10,
+        6
+      ],
+      "entranceSide": "S",
+      "cost": {
+        "cash": 80000,
+        "wood": 120,
+        "stone": 200
+      },
+      "unlockLevel": 15,
+      "buildSeconds": 14400,
+      "buildXp": 586,
+      "modelId": "landmark_citadel",
+      "limit": [
+        1,
+        0,
+        1
+      ]
     }
   },
   "crops": {

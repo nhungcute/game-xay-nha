@@ -21,6 +21,7 @@ const TOOLS: Record<Category, Tool[]> = {
 };
 /** Which bar category a building belongs to (presentation only). */
 export function buildingCategory(def: BuildingDef): Category {
+  if (def.id.startsWith('landmark_')) return 'buildings';
   if (def.decor || def.id.startsWith('deco_')) return 'decorations';
   if (def.production) return 'farms';
   if (def.bankCapHours || def.storageBonus || def.id === 'well') return 'utilities';
