@@ -81,7 +81,8 @@ export function TopBar({ state, panel, status, connected, unread, canCollect, ni
       <button type="button" className="hud3-icon" aria-label="Cài đặt" aria-pressed={panel === 'settings'} onClick={() => onPanel('settings')}><GameIcon name="settings"/></button>
       <span className="hud3-divider" aria-hidden="true"/>
       <span className="hud3-clock"><GameIcon name={clockIcon(hour, night)}/><span><strong>Ngày {day}</strong><small>{now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</small></span></span>
-      <span className={`hud3-sync ${connected ? 'is-on' : 'is-off'}`} role="status">{status}</span>
+      {/* Sync state is shown in Cài đặt (owner request); this live region stays for screen readers and E2E checks. */}
+      <span className={`sync-status visually-hidden ${connected ? 'is-on' : 'is-off'}`} role="status">{status}</span>
     </div>
   </header>;
 }

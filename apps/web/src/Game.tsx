@@ -18,6 +18,7 @@ import { CategoryBar, CategoryTray, categoryOf, type Category } from './ui/Categ
 import type { GamePanel } from './ui/panels';
 import { BuildingPanel } from './ui/BuildingPanel';
 import { ObjectPanel } from './ui/ObjectPanel';
+import { MaterialShop } from './ui/MaterialShop';
 import { LevelUpCard } from './ui/LevelUp';
 import { type TimeOfDayMode } from './game/dayCycle';
 
@@ -40,7 +41,7 @@ function MusicSettings({ on, onChange }: { on: boolean | undefined; onChange: (o
   </div>;
 }
 function TimeOfDaySettings({ mode, onChange }: { mode: TimeOfDayMode | undefined; onChange: (mode: TimeOfDayMode) => void }) {
-  const options: [TimeOfDayMode, string][] = [['auto', 'Tự động theo giờ'], ['day', 'Luôn ban ngày'], ['night', 'Luôn ban đêm']];
+  const options: [TimeOfDayMode, string][] = [['auto', 'Tự động'], ['day', 'Luôn ban ngày'], ['night', 'Luôn ban đêm']];
   return <div className="settings" role="group" aria-label="Thời gian trong ngày"><span>Thời gian trong ngày</span>
     {options.map(([value, label]) => <button type="button" key={value} aria-pressed={mode === value}
       className={mode === value ? 'selected' : ''} onClick={() => onChange(value)}>{label}</button>)}
@@ -166,7 +167,7 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
   const preview=ui.preview;
   return <main className={`game-shell hud3-shell game-${kind}`}>
     <canvas ref={canvas} aria-label="Bản đồ 3D"/>
-    {!ready&&<div className="loading"><h1>AI Farm</h1><p>{loadingError||t('loading')}</p>{loadingError&&<button onClick={()=>{setLoadingError('');setAttempt(attempt+1);}}>{t('retry')}</button>}</div>}
+    {!ready&&<div className="loading"><h1>AI Farm</h1><p>{loadingError||t('loading')}</p>{!loadingError&&<div className="loading-bar" role="progressbar" aria-label={t('loading')}><span/></div>}{loadingError&&<button onClick={()=>{setLoadingError('');setAttempt(attempt+1);}}>{t('retry')}</button>}</div>}
     {ready&&state&&<>
       <TopBar state={state} night={stats?.night} panel={panel} status={status} connected={connection==='online'||connection==='local'} unread={alerts.length>0&&signature!==seen}
         canCollect={canCollect} onPanel={openPanel} onCollect={()=>apply('COLLECT',{buildingIds:[]})} onMeasure={hudRef}/>
@@ -188,10 +189,11 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
             <GraphicsSettings quality={stats?.quality} onChange={setQuality}/><TimeOfDaySettings mode={stats?.timeOfDay} onChange={setTimeOfDay}/><SoundSettings muted={stats?.muted} onChange={setMuted}/><MusicSettings on={stats?.musicOn} onChange={setMusic}/>
             <AssetCredits/>
             {onLogout&&<button type="button" className="hud3-switch hud3-logout" onClick={()=>{const w=gameRef.current?.world;if(w)void onLogout(w);}}><GameIcon name="close"/>Đăng xuất · {state.snapshot.character.displayName}</button>}
-            <p className="hud3-panel-note">{status} · {cacheStatus||'—'}</p></>
+            <p className={`hud3-sync-row ${connection==='online'||connection==='local'?'is-on':'is-off'}`}><span className="hud3-sync-dot" aria-hidden="true"/>Đồng bộ: <strong>{status}</strong></p>
+            <p className="hud3-panel-note">{cacheStatus||'—'}</p></>
           :panel==='notifications'?(alerts.length?<ul className="hud3-notes">{alerts.map(text=><li key={text}>{text}</li>)}</ul>:<p className="empty-inventory"><GameIcon name="mail"/>Chưa có thông báo mới.</p>)
           :panel==='people'?<div className="population-summary"><GameIcon name="people"/>{kind==='city'?<><strong>{populationAndJobs(state).population} cư dân</strong><p>{populationAndJobs(state).jobs} việc làm từ các công trình hiện có.</p><p>Xây thêm nhà để tăng dân số và đáp ứng nhân lực kinh doanh.</p></>:<><strong>{state.snapshot.crops.length}/{fieldQuota(state)} ô ruộng</strong><p>Nhà nông giúp mở rộng diện tích canh tác.</p></>}</div>
-          :panel==='materials'?(['wood','stone'] as const).map(material=><div className="item" key={material}><GameIcon name={material}/><span>{t(material)}</span>{[1,10,50].map(count=><button key={count} onClick={()=>apply('BUY_MATERIAL',{[material]:count})}>{t('buy')} {count}</button>)}</div>)
+          :panel==='materials'?<MaterialShop state={state} apply={(type,payload)=>{apply(type,payload);}}/>
           :Object.keys(state.snapshot.inventory).length?Object.entries(state.snapshot.inventory).filter(([,count])=>count>0).map(([id,count])=>{const price=catalog.items[id]?.sellPrice??0;return <div className="item" key={id}><span>{t(catalog.items[id]?.nameKey??id)} × {count}</span>{[1,10].filter(n=>n<count).map(n=><button key={n} onClick={()=>apply('SELL',{items:{[id]:n}})}>{t('sell')} {n}</button>)}<button onClick={()=>apply('SELL',{items:{[id]:count}})}>{t('sell')} hết · {money(count*price)}</button></div>;})
           :<p className="empty-inventory"><GameIcon name="inventory"/>Kho đang trống. Thu hoạch hoặc thu sản phẩm để thêm hàng vào kho.</p>}
       </aside>}

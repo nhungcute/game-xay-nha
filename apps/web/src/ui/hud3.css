@@ -212,3 +212,17 @@
 @media(max-width:700px),(max-height:500px) and (orientation:landscape){:root{--hud-zoom:1}}
 .hud3-shell .hud3-top,.hud3-shell .hud3-missions,.hud3-shell .hud3-minimap,.hud3-shell .hud3-controls,
 .hud3-shell .hud3-dock,.hud3-shell .side,.hud3-shell .debug{zoom:var(--hud-zoom)}
+/* Vật liệu panel: name + stock, unit price, quantity box + Mua (total on the button). */
+.hud3-shell .material-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px 10px;padding:12px 0}
+.hud3-shell .material-name{display:flex;align-items:center;gap:8px;min-width:0}
+.hud3-shell .material-name small{color:var(--h3-muted);font-size:11px}
+.hud3-shell .material-price{justify-self:end;font-size:12px;color:#5d7046;white-space:nowrap}
+.hud3-shell .material-buy{grid-column:1/-1;display:flex;gap:8px}
+.hud3-shell .material-buy input{width:96px;min-height:40px;padding:6px 10px;border:1px solid #d1daca;border-radius:10px;background:#fff;text-align:right;font-variant-numeric:tabular-nums}
+.hud3-shell .material-buy button{flex:1;min-height:40px}
+.hud3-shell .material-note{grid-column:1/-1;font-size:11px;color:#b2622d}
+/* Sync state lives in Cài đặt (the top-bar badge was removed). */
+.hud3-shell .hud3-sync-row{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:12px}
+.hud3-shell .hud3-sync-dot{width:9px;height:9px;border-radius:50%;background:#3f9a52;box-shadow:0 0 0 3px #3f9a5226}
+.hud3-shell .hud3-sync-row.is-off .hud3-sync-dot{background:#c9712f;box-shadow:0 0 0 3px #c9712f26}
+.hud3-shell .hud3-sync-row.is-off strong{color:#b2622d}
