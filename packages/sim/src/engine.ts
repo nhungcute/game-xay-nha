@@ -96,7 +96,7 @@ export function authoredQuestProgress(s: SimState): number {
   if (q.action==='BUILD' && q.buildingId) return s.snapshot.buildings.filter(b=>b.defId===q.buildingId && b.status==='ACTIVE' && (!q.requiresRoad || access(s,b))).length;
   if (q.action==='POPULATION') return populationAndJobs(s).population;
   let count=0;
-  if (q.action==='ROAD') { for (let i=0;i<s.roadTier.length;i++) if (s.roadTier[i] && !s.baseRoadTier[i] && s.connected[i]) count++; return count; }
+  if (q.action==='ROAD') { for (let i=0;i<s.roadTier.length;i++) if (s.roadTier[i] && !s.baseRoadTier[i]) count++; return count; }
   if (q.action==='EMBANK') { for (let i=0;i<s.flags.length;i++) if (s.flags[i]! & CellFlag.EMBANKED) count++; return count; }
   if (q.action==='TILL' && q.kind==='cells') { for (let i=0;i<s.surface.length;i++) if (s.surface[i]===Surface.TILLED) count++; return count; }
   return p.questProgress[q.id] ?? 0;

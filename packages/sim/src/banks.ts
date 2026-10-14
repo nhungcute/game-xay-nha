@@ -42,6 +42,18 @@ function legacyFlood(s: SimState, starts: Cell[]): Uint8Array {
   return visited;
 }
 
+function startZoneDryCells(s: SimState): Cell[] {
+  const result: Cell[] = [];
+  for (const zone of s.template.startZones) {
+    const ox = (zone % 8) * 16, oz = Math.floor(zone / 8) * 16;
+    for (let dz = 0; dz < 16; dz++) for (let dx = 0; dx < 16; dx++) {
+      const x = ox + dx, z = oz + dz;
+      if (s.surface[cellIndex(x, z)] !== Surface.WATER) result.push([x, z]);
+    }
+  }
+  return result;
+}
+
 export function isFarBank(s: SimState, cells: Cell[]): boolean {
   if (!cells.length) return false;
   const bridges = s.snapshot.bridges.filter(bridge => bridge.status === 'ACTIVE');
@@ -55,21 +67,47 @@ export function isFarBank(s: SimState, cells: Cell[]): boolean {
       authoredRegions.set(regions, regionAt);
     }
     const at = (cell: Cell) => regionAt.get(cellIndex(...cell));
-    const home = new Set(s.template.entryCells.map(at).filter((id): id is string => id !== undefined));
+    let home: Set<string>;
+    if (s.template.entryCells.length) {
+      home = new Set(s.template.entryCells.map(at).filter((id): id is string => id !== undefined));
+    } else {
+      const counts = new Map<string, number>();
+      for (const cell of startZoneDryCells(s)) {
+        const id = at(cell);
+        if (id !== undefined) counts.set(id, (counts.get(id) ?? 0) + 1);
+      }
+      let bestId: string | undefined, maxCount = -1;
+      for (const [id, count] of counts) if (count > maxCount) { maxCount = count; bestId = id; }
+      home = new Set(bestId !== undefined ? [bestId] : []);
+    }
     const target = at(cells[0]!);
     return target !== undefined && !home.has(target) && cells.every(cell => at(cell) === target)
       && bridges.some(bridge => (home.has(at(bridge.a) ?? '') && at(bridge.b) === target)
         || (home.has(at(bridge.b) ?? '') && at(bridge.a) === target));
   }
   const dry = (cell: Cell) => inBounds(cell) && s.surface[cellIndex(...cell)] !== Surface.WATER;
-  if (!cells.every(dry) || !s.template.entryCells.every(dry)) {
-    const home = legacyFlood(s, s.template.entryCells), target = legacyFlood(s, cells);
-    return cells.every(cell => !home[cellIndex(...cell)]) && bridges.some(bridge =>
-      (home[cellIndex(...bridge.a)] && target[cellIndex(...bridge.b)])
-      || (home[cellIndex(...bridge.b)] && target[cellIndex(...bridge.a)]));
+  const labels = components(s.surface), at = (cell: Cell): number => labels[cellIndex(...cell)] ?? 0;
+  let home: Set<number>;
+  if (s.template.entryCells.length) {
+    home = new Set(s.template.entryCells.map(at));
+  } else {
+    const counts = new Map<number, number>();
+    for (const cell of startZoneDryCells(s)) {
+      const label = at(cell);
+      if (label > 0) counts.set(label, (counts.get(label) ?? 0) + 1);
+    }
+    let bestLabel = 0, maxCount = -1;
+    for (const [lbl, count] of counts) if (count > maxCount) { maxCount = count; bestLabel = lbl; }
+    home = new Set(bestLabel > 0 ? [bestLabel] : []);
   }
-  const labels = components(s.surface), at = (cell: Cell) => labels[cellIndex(...cell)];
-  const home = new Set(s.template.entryCells.map(at));
+  if (!cells.every(dry) || (s.template.entryCells.length > 0 && !s.template.entryCells.every(dry))) {
+    const homeStarts = s.template.entryCells.length ? s.template.entryCells
+      : startZoneDryCells(s).filter(c => home.has(at(c)));
+    const homeMask = legacyFlood(s, homeStarts), targetMask = legacyFlood(s, cells);
+    return cells.every(cell => !homeMask[cellIndex(...cell)]) && bridges.some(bridge =>
+      (homeMask[cellIndex(...bridge.a)] && targetMask[cellIndex(...bridge.b)])
+      || (homeMask[cellIndex(...bridge.b)] && targetMask[cellIndex(...bridge.a)]));
+  }
   if (cells.some(cell => home.has(at(cell)))) return false;
   // The old multi-source flood accepts a union of far components; keep that behavior.
   const target = new Set(cells.map(at));

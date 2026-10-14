@@ -64,7 +64,7 @@ export function describeFocus(state: State, focus: Focus): ObjectDescription | n
       .map(next => ({ kind: 'command', key: `tier-${next}`, label: `Nâng lên ${ROAD_TIER_NAMES[next]}`, type: 'BUILD_ROAD',
         payload: { cells: [focus.cell], tier: next }, needLevel: economy.roadTiers[next].unlockLevel }));
     return {
-      title: ROAD_TIER_NAMES[tier], icon: 'road', status: `Cấp ${tier}/3${s.connected[i] ? ' · nối với đường làng' : ' · chưa nối với đường làng'}`,
+      title: ROAD_TIER_NAMES[tier], icon: 'road', status: `Cấp ${tier}/3`,
       actions: [
         ...upgrades,
         { kind: 'command', key: 'remove', label: 'Xóa đường', type: 'REMOVE_ROAD', payload: { cells: [focus.cell] }, danger: true },

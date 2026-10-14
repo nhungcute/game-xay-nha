@@ -83,7 +83,7 @@ export const WorldTemplateSchema = z.object({
     waterfalls: z.array(z.object({ id: IdSchema, topXZ: point, bottomXZ: point, widthM: positive }).strict()),
   }).strict(),
   startZones: z.array(zoneId).min(1).max(64).refine(values => unique(values, String), 'Duplicate start zone'),
-  entryCells: z.array(CellSchema).min(1).max(3).refine(values => unique(values, String), 'Duplicate entry cell'),
+  entryCells: z.array(CellSchema).max(3).refine(values => unique(values, String), 'Duplicate entry cell'),
   env: EnvSpecSchema,
   suggestedLots: z.array(z.object({ id: IdSchema, cells: z.tuple([IntegerSchema.max(127), IntegerSchema.max(127), IntegerSchema.max(127), IntegerSchema.max(127)]) }).strict()).optional(),
   bankRegions: z.array(z.object({ id: IdSchema, cells: z.array(CellSchema).min(1) }).strict()).min(1).optional(),

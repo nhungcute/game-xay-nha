@@ -35,7 +35,6 @@ export function validateTemplate(input: unknown): string[] {
   if (startVisited.size !== zones.size || !zones.size) errors.push('startZones: must be nonempty and connected');
   const entries = new Set(template.entryCells.map(([x, z]) => z * 128 + x));
   if (entries.size !== template.entryCells.length) errors.push('entryCells: duplicates');
-  if (!entries.size) errors.push('entryCells: must contain an entry');
   let buildable = 0;
   const anchorOccupied = new Set<number>(), anchorIds = new Set<string>();
   for (const anchor of template.env.anchors) {

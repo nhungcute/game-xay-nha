@@ -1,15 +1,13 @@
-import { GRID, cellIndex, type Cell } from '@xay-nha/contracts';
+import { GRID, cellIndex } from '@xay-nha/contracts';
 import { bridgeCells, neighbors, type SimState } from './state';
 import { footprintCells } from './footprint';
 import { catalog } from '@xay-nha/content';
 
 export function roadConnectivity(s: SimState): Uint8Array {
-  const result = new Uint8Array(GRID * GRID), roads = s.roadTier.slice(), queue: Cell[] = [];
-  for (const b of s.snapshot.bridges) if (b.status === 'ACTIVE') for (const c of bridgeCells(b.a, b.b)) roads[cellIndex(...c)] = 1;
-  for (const c of s.template.entryCells) if (roads[cellIndex(...c)]) { result[cellIndex(...c)] = 1; queue.push(c); }
-  for (let head = 0; head < queue.length; head++) for (const n of neighbors(queue[head]!)) {
-    const i = cellIndex(...n);
-    if (!result[i] && roads[i]) { result[i] = 1; queue.push(n); }
+  const result = new Uint8Array(GRID * GRID);
+  for (let i = 0; i < s.roadTier.length; i++) if (s.roadTier[i]! > 0) result[i] = 1;
+  for (const b of s.snapshot.bridges) {
+    if (b.status === 'ACTIVE') for (const c of bridgeCells(b.a, b.b)) result[cellIndex(...c)] = 1;
   }
   return result;
 }

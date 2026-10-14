@@ -1032,9 +1032,8 @@
         "id": "city-2",
         "nameKey": "quest.city-2",
         "action": "ROAD",
-        "kind": "connected_cells",
+        "kind": "road_cells",
         "target": 6,
-        "requiresRoad": true,
         "reward": {
           "cash": 100,
           "wood": 0,

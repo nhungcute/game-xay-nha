@@ -227,7 +227,7 @@ const economy = {
 const questRules = {
   city: [
     { action: 'CLEAR', kind: 'tree', target: 3 },
-    { action: 'ROAD', kind: 'connected_cells', target: 6, requiresRoad: true },
+    { action: 'ROAD', kind: 'road_cells', target: 6 },
     { action: 'TERRAFORM', kind: 'flat_2x2', target: 1 },
     { action: 'BUILD', kind: 'building', target: 1, buildingId: 'house_small' },
     { action: 'BUILD', kind: 'building', target: 1, buildingId: 'shop_grocery' },
