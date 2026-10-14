@@ -189,9 +189,10 @@ describe('authored state quests count work done before the quest appeared (G3 si
     built.snapshot.progress.questIndex = 1;
     expect(run(built, 'CLAIM_QUEST', { questId: catalog.quests.city[1]!.id }).result.accepted).toBe(true);
   });
-  it('template village roads and disconnected roads do not count', () => {
+  it('template village roads do not count; player-built roads count even if isolated (D039 Law A)', () => {
     const s = createState(createTestTemplate('city'), NOW);
     s.snapshot.progress.questIndex = 1;
+    expect(authoredQuestProgress(s)).toBe(0);
     // Two free, flat cells away from the village road and ENTRY.
     let pair: [number, number][] | null = null;
     for (let z = 50; z < 62 && !pair; z++) for (let x = 50; x < 75 && !pair; x++) {
@@ -200,6 +201,6 @@ describe('authored state quests count work done before the quest appeared (G3 si
     }
     const e = run(s, 'BUILD_ROAD', { tier: 1, cells: pair! });
     expect(e.result.accepted).toBe(true);
-    expect(authoredQuestProgress(e.state)).toBe(0);
+    expect(authoredQuestProgress(e.state)).toBe(2);
   });
 });

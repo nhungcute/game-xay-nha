@@ -120,10 +120,9 @@ describe('roads and embankment',()=>{
     const s=state();s.heights[vertIndex(74,54)]=65;rejected(s,'BUILD_ROAD',{tier:1,cells:[[74,54]]},'TOO_STEEP');
   });
   it('rejects disconnected road-list geometry at schema boundary',()=>rejected(state(),'BUILD_ROAD',{tier:1,cells:[[74,54],[76,54]]},'INVALID_COMMAND'));
-  it('connects a separated branch and disconnects it after road removal',()=>{
-    let s=accepted(state(),'BUILD_ROAD',{tier:1,cells:[[70,76]]}).state;expect(s.connected[cellIndex(70,76)]).toBe(0);
-    s=accepted(s,'BUILD_ROAD',{tier:1,cells:[[70,77],[70,78]]}).state;expect(s.connected[cellIndex(70,76)]).toBe(1);
-    s=accepted(s,'REMOVE_ROAD',{cells:[[70,78]]}).state;expect(s.connected[cellIndex(70,76)]).toBe(0);expect(s.surface[cellIndex(70,78)]).toBe(Surface.DIRT);
+  it('marks road cells connected upon build and disconnects them upon removal (D039 Law A)',()=>{
+    let s=accepted(state(),'BUILD_ROAD',{tier:1,cells:[[70,76]]}).state;expect(s.connected[cellIndex(70,76)]).toBe(1);
+    s=accepted(s,'REMOVE_ROAD',{cells:[[70,76]]}).state;expect(s.connected[cellIndex(70,76)]).toBe(0);expect(s.surface[cellIndex(70,76)]).toBe(Surface.DIRT);
   });
   it('allows ENTRY upgrades while refusing ENTRY removal',()=>{
     const s=accepted(state(),'BUILD_ROAD',{tier:2,cells:[[70,79]]}).state;

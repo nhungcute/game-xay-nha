@@ -8,7 +8,7 @@ import { createTestTemplate } from '@xay-nha/worldgen';
 import { builderCapacity, buildingLimit, completeConstruction, construction, validateBridge } from './construction';
 import { RuleError } from './common';
 import { footprintCells } from './footprint';
-import { cloneState, createState, rebuildOccupancy, type SimState } from './state';
+import { bridgeCells, cloneState, createState, rebuildOccupancy, type SimState } from './state';
 import { roadConnectivity } from './roads';
 
 const NOW = 1_000_000;
@@ -276,9 +276,10 @@ describe('bridge geometry and lifecycle', () => {
     const a: Cell = [72, entry[1]], b: Cell = [76, entry[1]];
     for (let x = entry[0]; x <= a[0]; x++) { s.roadTier[cellIndex(x, entry[1])] = 1; s.surface[cellIndex(x, entry[1])] = Surface.ROAD; }
     const bridge = buildBridge(s, a, b);
-    expect(roadConnectivity(s)[cellIndex(...b)]).toBe(0);
+    const mid = bridgeCells(a, b)[0]!;
+    expect(roadConnectivity(s)[cellIndex(...mid)]).toBe(0);
     completeConstruction(s, bridge);
-    expect(roadConnectivity(s)[cellIndex(...b)]).toBe(1);
+    expect(roadConnectivity(s)[cellIndex(...mid)]).toBe(1);
   });
   it('bridge supports cancel/full refund and demolition/half refund', () => {
     const s = setup(), initial = { ...s.snapshot.wallet }, b = buildBridge(s);

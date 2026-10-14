@@ -91,12 +91,12 @@ describe('income rates and spatial bonuses', () => {
     recompute(s);
     expect(s.rates[b.id]).toBeCloseTo(170 * multiplier);
   });
-  it('uses highest connected adjacent tier, excluding an isolated higher tier', () => {
+  it('uses highest connected adjacent tier (under D039 Law A, any adjacent road is connected)', () => {
     const s = setup(), b = building(s, 'house_small', [52, 68]);
     s.roadTier[cellIndex(51, 68)] = 3; s.surface[cellIndex(51, 68)] = Surface.ROAD;
     recompute(s);
-    expect(s.connected[cellIndex(51, 68)]).toBe(0);
-    expect(s.rates[b.id]).toBe(170);
+    expect(s.connected[cellIndex(51, 68)]).toBe(1);
+    expect(s.rates[b.id]).toBeCloseTo(170 * 1.2);
   });
   it('caps summed decoration at 30%', () => {
     const s = setup(), b = building(s, 'house_small', [52, 68]);
