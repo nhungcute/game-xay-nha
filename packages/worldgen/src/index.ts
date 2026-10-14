@@ -5,3 +5,5 @@ export * from './environment';
 export * from './geometry';
 export * from './validator';
 export * from './fixture';
+export * from './authored-template';
+export * from './random-layout';
