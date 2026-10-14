@@ -7,46 +7,73 @@ import { generateZone } from './environment';
 import { hash32, mulberry32 } from './random';
 import { buildAuthoredTemplate, type AuthoredLayout } from './authored-template';
 
-// 16 directional unit vectors for polygonal lake generation without Math.sin / Math.cos
-const DIRS16: readonly [number, number][] = [
-  [1.0, 0.0],
-  [0.92388, 0.38268],
-  [0.70711, 0.70711],
-  [0.38268, 0.92388],
-  [0.0, 1.0],
-  [-0.38268, 0.92388],
-  [-0.70711, 0.70711],
-  [-0.92388, 0.38268],
-  [-1.0, 0.0],
-  [-0.92388, -0.38268],
-  [-0.70711, -0.70711],
-  [-0.38268, -0.92388],
-  [0.0, -1.0],
-  [0.38268, -0.92388],
-  [0.70711, -0.70711],
-  [0.92388, -0.38268],
-];
+function catmullRom(
+  p0: readonly [number, number],
+  p1: readonly [number, number],
+  p2: readonly [number, number],
+  p3: readonly [number, number],
+  t: number,
+): [number, number] {
+  const t2 = t * t, t3 = t2 * t;
+  const v0 = (p2[0] - p0[0]) * 0.5, v1 = (p3[0] - p1[0]) * 0.5;
+  const x = (2 * p1[0] - 2 * p2[0] + v0 + v1) * t3 + (-3 * p1[0] + 3 * p2[0] - 2 * v0 - v1) * t2 + v0 * t + p1[0];
+  const u0 = (p2[1] - p0[1]) * 0.5, u1 = (p3[1] - p1[1]) * 0.5;
+  const z = (2 * p1[1] - 2 * p2[1] + u0 + u1) * t3 + (-3 * p1[1] + 3 * p2[1] - 2 * u0 - u1) * t2 + u0 * t + p1[1];
+  return [Math.round(x), Math.round(z)];
+}
 
-export function generateRandomLayout(mapKind: MapKind, seed: number, attempt = 0): AuthoredLayout {
-  const subSeed = hash32(seed, attempt, mapKind === 'city' ? 101 : 202, 'rnd-v1');
+function smoothPolyline(pts: readonly [number, number][], steps = 3): [number, number][] {
+  const result: [number, number][] = [pts[0] as [number, number]];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)]!;
+    const p1 = pts[i]!;
+    const p2 = pts[i + 1]!;
+    const p3 = pts[Math.min(pts.length - 1, i + 2)]!;
+    for (let s = 1; s <= steps; s++) {
+      result.push(catmullRom(p0, p1, p2, p3, s / steps));
+    }
+  }
+  return result;
+}
+
+export interface RiverForkInfo {
+  x: number;
+  z: number;
+  distToStartM: number;
+  angleToStartDeg: number;
+}
+
+export interface GeneratedLayoutMeta {
+  fork: RiverForkInfo;
+  lakeCV: number;
+  lakeRadii: number[];
+  elevationRangeM: number;
+}
+
+export type RandomAuthoredLayout = AuthoredLayout & { meta: GeneratedLayoutMeta };
+
+export function generateRandomLayout(
+  mapKind: MapKind,
+  seed: number,
+  attempt = 0,
+): RandomAuthoredLayout {
+  const subSeed = hash32(seed, attempt, mapKind === 'city' ? 101 : 202, 'rnd-v6');
   const rng = mulberry32(subSeed);
 
   const waterLevelDm = mapKind === 'farm' ? 30 : 20;
 
-  // 1. Khu khởi đầu: 4 khu (2x2) gần giữa map, tâm được dịch ngẫu nhiên ±1 khu
+  // 1. Khu khởi đầu: 4 khu (2x2) gần giữa map, dịch ngẫu nhiên ±1 khu
   const rowOffset = Math.floor(rng() * 3) - 1; // -1, 0, 1
   const colOffset = Math.floor(rng() * 3) - 1; // -1, 0, 1
   const r0 = 3 + rowOffset; // 2, 3, 4
   const c0 = 3 + colOffset; // 2, 3, 4
   const startZones = [r0 * 8 + c0, r0 * 8 + c0 + 1, (r0 + 1) * 8 + c0, (r0 + 1) * 8 + c0 + 1];
 
-  // Start zone boundaries in cells: [szX0..szX1, szZ0..szZ1]
   const szX0 = c0 * 16;
   const szX1 = (c0 + 2) * 16 - 1;
   const szZ0 = r0 * 16;
   const szZ1 = (r0 + 2) * 16 - 1;
 
-  // Start zone coordinates in metres:
   const szM_x0 = szX0 * 2;
   const szM_x1 = (szX1 + 1) * 2;
   const szM_z0 = szZ0 * 2;
@@ -54,194 +81,267 @@ export function generateRandomLayout(mapKind: MapKind, seed: number, attempt = 0
   const szCenterM_x = (szM_x0 + szM_x1) / 2;
   const szCenterM_z = (szM_z0 + szM_z1) / 2;
 
-  // 2. Sông: 1 sông chính cắt qua 1 góc của khu khởi đầu.
-  // Chiều rộng trong startZones: 7m (3.5 ô nước).
-  // cutOffset = 26..30m (13..15 ô) => tam giác ~14x14 ô (98 ô), trừ sông còn ~50 ô khô cho bờ bên kia.
+  // 2. Sông chính 1 (Main river): chảy từ một mép qua góc startZones sang mép đối diện
   const corner = Math.floor(rng() * 4);
-  const cutOffset = 26 + Math.floor(rng() * 5); // 26..30 m
+  const cutOffset = 25 + Math.floor(rng() * 4); // 25..28 m
 
   let riverInM: [number, number];
   let riverOutM: [number, number];
-  let riverStartM: [number, number];
-  let riverEndM: [number, number];
 
   if (corner === 0) {
-    // NW corner cut
     riverInM = [szM_x0 + cutOffset, szM_z0];
     riverOutM = [szM_x0, szM_z0 + cutOffset];
-    riverStartM = [Math.max(10, riverInM[0] + (rng() * 16 - 8)), 0];
-    riverEndM = [0, Math.min(246, riverOutM[1] + 30 + rng() * 30)];
   } else if (corner === 1) {
-    // NE corner cut
     riverInM = [szM_x1 - cutOffset, szM_z0];
     riverOutM = [szM_x1, szM_z0 + cutOffset];
-    riverStartM = [Math.min(246, riverInM[0] + (rng() * 16 - 8)), 0];
-    riverEndM = [256, Math.min(246, riverOutM[1] + 30 + rng() * 30)];
   } else if (corner === 2) {
-    // SW corner cut
     riverInM = [szM_x0 + cutOffset, szM_z1];
     riverOutM = [szM_x0, szM_z1 - cutOffset];
-    riverStartM = [Math.max(10, riverInM[0] + (rng() * 16 - 8)), 256];
-    riverEndM = [0, Math.max(10, riverOutM[1] - 30 - rng() * 30)];
   } else {
-    // SE corner cut
     riverInM = [szM_x1 - cutOffset, szM_z1];
     riverOutM = [szM_x1, szM_z1 - cutOffset];
-    riverStartM = [Math.min(246, riverInM[0] + (rng() * 16 - 8)), 256];
-    riverEndM = [256, Math.max(10, riverOutM[1] - 30 - rng() * 30)];
   }
 
-  const mid1: [number, number] = [
-    Math.round((riverStartM[0] + riverInM[0]) / 2 + (rng() * 10 - 5)),
-    Math.round((riverStartM[1] + riverInM[1]) / 2 + (rng() * 10 - 5)),
+  const dirChoice = Math.floor(rng() * 4);
+  let mainStart: [number, number];
+  let mainEnd: [number, number];
+
+  if (corner === 0 || corner === 1) {
+    mainStart = [Math.max(16, Math.min(240, riverInM[0] + (rng() * 30 - 15))), 0];
+    if (dirChoice === 0) {
+      mainEnd = [corner === 0 ? 0 : 256, Math.max(30, Math.min(230, riverOutM[1] + 45 + rng() * 30))];
+    } else {
+      mainEnd = [Math.max(16, Math.min(240, (corner === 0 ? 30 : 220) + rng() * 30)), 256];
+    }
+  } else {
+    mainStart = [Math.max(16, Math.min(240, riverInM[0] + (rng() * 30 - 15))), 256];
+    if (dirChoice === 0) {
+      mainEnd = [corner === 2 ? 0 : 256, Math.max(30, Math.min(230, riverOutM[1] - 45 - rng() * 30))];
+    } else {
+      mainEnd = [Math.max(16, Math.min(240, (corner === 2 ? 30 : 220) + rng() * 30)), 0];
+    }
+  }
+
+  const midUp1: [number, number] = [
+    Math.round((mainStart[0] + riverInM[0]) / 2 + (rng() * 14 - 7)),
+    Math.round((mainStart[1] + riverInM[1]) / 2 + (rng() * 14 - 7)),
   ];
-  const midRiver: [number, number] = [
+  const midSZ1: [number, number] = [
     Math.round((riverInM[0] + riverOutM[0]) / 2),
     Math.round((riverInM[1] + riverOutM[1]) / 2),
   ];
-  const mid2: [number, number] = [
-    Math.round((riverOutM[0] + riverEndM[0]) / 2 + (rng() * 10 - 5)),
-    Math.round((riverOutM[1] + riverEndM[1]) / 2 + (rng() * 10 - 5)),
+  const midDown1: [number, number] = [
+    Math.round((riverOutM[0] + mainEnd[0]) / 2 + (rng() * 14 - 7)),
+    Math.round((riverOutM[1] + mainEnd[1]) / 2 + (rng() * 14 - 7)),
   ];
 
-  const riverCenterline: [number, number][] = [
-    riverStartM, mid1, riverInM, midRiver, riverOutM, mid2, riverEndM,
-  ];
-  const riverWidths: number[] = [10, 8, 7, 7, 7, 9, 11];
+  const mainCenterline = smoothPolyline([mainStart, midUp1, riverInM, midSZ1, riverOutM, midDown1, mainEnd], 3);
+  const mainWidths: number[] = mainCenterline.map(pt => {
+    const inSZ = Math.hypot(pt[0] - szCenterM_x, pt[1] - szCenterM_z);
+    if (inSZ < 45) return 7.5; // Nhịp cầu 4-5 ô trong startZones
+    return 13.0;
+  });
 
-  // 3. Hồ nước: 7 hồ đặt tại các giao điểm 4 khu (bội số của 32m) ngoài khu khởi đầu
-  interface LakeSpec {
-    id: string;
-    cx: number;
-    cz: number;
-    radius: number;
+  // Nhánh phụ 1 (Tributary 1) tạo ngã ba sông:
+  const forkProgress1 = 0.25 + rng() * 0.1;
+  const forkIdx1 = Math.floor(forkProgress1 * (mainCenterline.length - 1));
+  const forkP1 = mainCenterline[forkIdx1]!;
+
+  const forkInfo: RiverForkInfo = {
+    x: forkP1[0],
+    z: forkP1[1],
+    distToStartM: Math.round(Math.hypot(forkP1[0] - szCenterM_x, forkP1[1] - szCenterM_z)),
+    angleToStartDeg: Math.round(Math.atan2(forkP1[1] - szCenterM_z, forkP1[0] - szCenterM_x) * 180 / Math.PI),
+  };
+
+  let trib1Start: [number, number];
+  if (forkP1[0] < 128) {
+    trib1Start = [0, Math.min(240, Math.max(16, forkP1[1] + (rng() * 40 - 20)))];
+  } else {
+    trib1Start = [256, Math.min(240, Math.max(16, forkP1[1] + (rng() * 40 - 20)))];
   }
-  const lakeSpecs: LakeSpec[] = [];
-
-  const gridJunctions: [number, number][] = [
-    [32, 32], [96, 32], [160, 32], [224, 32],
-    [32, 96], [96, 96], [160, 96], [224, 96],
-    [32, 160], [96, 160], [160, 160], [224, 160],
-    [32, 224], [96, 224], [160, 224], [224, 224],
-    [64, 64], [192, 64], [64, 192], [192, 192],
+  const trib1Mid: [number, number] = [
+    Math.round((trib1Start[0] + forkP1[0]) / 2 + (rng() * 10 - 5)),
+    Math.round((trib1Start[1] + forkP1[1]) / 2 + (rng() * 10 - 5)),
   ];
+  const trib1Centerline = smoothPolyline([trib1Start, trib1Mid, forkP1], 3);
+  const trib1Widths: number[] = trib1Centerline.map(() => 8.5);
 
-  function distToRiver(x: number, z: number): number {
+  // Nhánh phụ 2 (Tributary 2):
+  const forkProgress2 = 0.75 + rng() * 0.1;
+  const forkIdx2 = Math.floor(forkProgress2 * (mainCenterline.length - 1));
+  const forkP2 = mainCenterline[forkIdx2]!;
+
+  let trib2Start: [number, number];
+  if (forkP2[0] < 128) {
+    trib2Start = [0, Math.min(240, Math.max(16, forkP2[1] + (rng() * 40 - 20)))];
+  } else {
+    trib2Start = [256, Math.min(240, Math.max(16, forkP2[1] + (rng() * 40 - 20)))];
+  }
+  const trib2Mid: [number, number] = [
+    Math.round((trib2Start[0] + forkP2[0]) / 2 + (rng() * 10 - 5)),
+    Math.round((trib2Start[1] + forkP2[1]) / 2 + (rng() * 10 - 5)),
+  ];
+  const trib2Centerline = smoothPolyline([trib2Start, trib2Mid, forkP2], 3);
+  const trib2Widths: number[] = trib2Centerline.map(() => 8.5);
+
+  function distToAllRivers(x: number, z: number): number {
     let minD = Infinity;
-    for (let i = 1; i < riverCenterline.length; i++) {
-      const p1 = riverCenterline[i - 1]!, p2 = riverCenterline[i]!;
-      const dx = p2[0] - p1[0], dz = p2[1] - p1[1];
-      const lenSq = dx * dx + dz * dz;
-      const t = lenSq === 0 ? 0 : Math.max(0, Math.min(1, ((x - p1[0]) * dx + (z - p1[1]) * dz) / lenSq));
-      const d = Math.hypot(x - (p1[0] + t * dx), z - (p1[1] + t * dz));
-      if (d < minD) minD = d;
+    for (const r of [mainCenterline, trib1Centerline, trib2Centerline]) {
+      for (let i = 1; i < r.length; i++) {
+        const p1 = r[i - 1]!, p2 = r[i]!;
+        const dx = p2[0] - p1[0], dz = p2[1] - p1[1];
+        const lenSq = dx * dx + dz * dz;
+        const t = lenSq === 0 ? 0 : Math.max(0, Math.min(1, ((x - p1[0]) * dx + (z - p1[1]) * dz) / lenSq));
+        const d = Math.hypot(x - (p1[0] + t * dx), z - (p1[1] + t * dz));
+        if (d < minD) minD = d;
+      }
     }
     return minD;
   }
 
-  const safeJunctions = gridJunctions.filter(([jx, jz]) => {
-    const distToStart = Math.hypot(jx - szCenterM_x, jz - szCenterM_z);
-    return distToStart > 58 && distToRiver(jx, jz) > 30;
-  });
+  // 3. Hồ nước: 4 hồ (1 hồ lớn R=24..26m + 3 ao nhỏ R=12..16m)
+  // Đặt tại các giao điểm khu cách xa sông >= 36m, cách startZones >= 60m, cách nhau >= 65m
+  const allJunctions: [number, number][] = [
+    [64, 64], [192, 64], [64, 192], [192, 192],
+    [96, 32], [160, 32], [96, 224], [160, 224],
+    [32, 96], [32, 160], [224, 96], [224, 160],
+    [32, 32], [224, 32], [32, 224], [224, 224],
+    [64, 128], [192, 128], [128, 64], [128, 192],
+  ];
 
-  const shuffled = safeJunctions.slice();
-  for (let i = shuffled.length - 1; i > 0; i--) {
+  const candidateJunctions = allJunctions.filter(([jx, jz]) =>
+    Math.hypot(jx - szCenterM_x, jz - szCenterM_z) > 60 && distToAllRivers(jx, jz) > 36,
+  );
+
+  const shuffledJunctions = candidateJunctions.slice();
+  for (let i = shuffledJunctions.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
-    const tmp = shuffled[i]!;
-    shuffled[i] = shuffled[j]!;
-    shuffled[j] = tmp;
+    const tmp = shuffledJunctions[i]!;
+    shuffledJunctions[i] = shuffledJunctions[j]!;
+    shuffledJunctions[j] = tmp;
   }
 
-  // Chọn các giao điểm cách nhau ít nhất 60m để không có 2 hồ nào ảnh hưởng cùng 1 khu
-  const chosenJunctions: [number, number][] = [];
-  for (const candidate of shuffled) {
-    if (chosenJunctions.every(([cx, cz]) => Math.hypot(cx - candidate[0], cz - candidate[1]) >= 60)) {
-      chosenJunctions.push(candidate);
-      if (chosenJunctions.length >= 7) break;
+  const safeJunctions: [number, number][] = [];
+  for (const cand of shuffledJunctions) {
+    if (safeJunctions.every(([sx, sz]) => Math.hypot(cand[0] - sx, cand[1] - sz) >= 65)) {
+      safeJunctions.push(cand);
+      if (safeJunctions.length >= 4) break;
     }
   }
 
-  for (let i = 0; i < chosenJunctions.length; i++) {
-    const [jx, jz] = chosenJunctions[i]!;
-    const baseR = 22 + rng() * 2; // 22..24 m
-    lakeSpecs.push({ id: `lake-${i + 1}`, cx: jx, cz: jz, radius: baseR });
-  }
+  const majorR = 24.5 + rng() * 1.5;
+  const minorR1 = 16.0 + rng() * 1.5;
+  const minorR2 = 14.0 + rng() * 1.5;
+  const minorR3 = 12.5 + rng() * 1.5;
 
-  function buildLakePolygons(specs: LakeSpec[]): WorldTemplate['water']['lakes'] {
-    return specs.map(spec => {
+  interface LakeSpec {
+    id: string;
+    cx: number;
+    cz: number;
+    baseR: number;
+  }
+  const lakeSpecs: LakeSpec[] = [
+    { id: 'lake-major', cx: safeJunctions[0]![0], cz: safeJunctions[0]![1], baseR: majorR },
+  ];
+  if (safeJunctions.length > 1) lakeSpecs.push({ id: 'lake-p1', cx: safeJunctions[1]![0], cz: safeJunctions[1]![1], baseR: minorR1 });
+  if (safeJunctions.length > 2) lakeSpecs.push({ id: 'lake-p2', cx: safeJunctions[2]![0], cz: safeJunctions[2]![1], baseR: minorR2 });
+  if (safeJunctions.length > 3) lakeSpecs.push({ id: 'lake-p3', cx: safeJunctions[3]![0], cz: safeJunctions[3]![1], baseR: minorR3 });
+
+  const allRadii = lakeSpecs.map(l => l.baseR);
+  const areas = allRadii.map(r => Math.PI * r * r);
+  const meanArea = areas.reduce((s, a) => s + a, 0) / areas.length;
+  const varArea = areas.reduce((s, a) => s + (a - meanArea) ** 2, 0) / areas.length;
+  const lakeCV = Math.sqrt(varArea) / meanArea;
+
+  function buildLakes(specs: LakeSpec[]): WorldTemplate['water']['lakes'] {
+    return specs.map((s, lIdx) => {
       const polygon: [number, number][] = [];
-      for (let i = 0; i < 16; i++) {
-        const pR = spec.radius * (0.92 + ((i * 5 + attempt) % 5) * 0.04);
-        const x = Math.round(Math.max(2, Math.min(254, spec.cx + DIRS16[i]![0] * pR)));
-        const z = Math.round(Math.max(2, Math.min(254, spec.cz + DIRS16[i]![1] * pR)));
-        polygon.push([x, z]);
+      for (let i = 0; i < 18; i++) {
+        const a = (i / 18) * Math.PI * 2;
+        const r = s.baseR * (1 + 0.15 * Math.sin(i * 2.3 + lIdx * 1.5));
+        polygon.push([
+          Math.round(Math.max(2, Math.min(254, s.cx + Math.cos(a) * r))),
+          Math.round(Math.max(2, Math.min(254, s.cz + Math.sin(a) * r))),
+        ]);
       }
-      return { id: spec.id, polygonXZ: polygon };
+      return { id: s.id, polygonXZ: polygon };
     });
   }
 
   const water: WorldTemplate['water'] = {
-    lakes: buildLakePolygons(lakeSpecs),
-    rivers: [{ id: 'main-river', centerlineXZ: riverCenterline, widthM: riverWidths }],
+    lakes: buildLakes(lakeSpecs),
+    rivers: [
+      { id: 'main', centerlineXZ: mainCenterline, widthM: mainWidths },
+      { id: 'trib1', centerlineXZ: trib1Centerline, widthM: trib1Widths },
+      { id: 'trib2', centerlineXZ: trib2Centerline, widthM: trib2Widths },
+    ],
     waterfalls: [],
   };
 
-  // 4. Cân chỉnh tổng nước về 20% ± 1% (3.113 - 3.441 ô trên 16.384)
+  // 4. Cân chỉnh nước về chính xác 20.0% (3,277 ô), không lệch về dưới
   for (let iter = 0; iter < 12; iter++) {
     const mask = rasterizeWater(water);
-    let wetCount = 0;
-    for (let i = 0; i < mask.length; i++) if (mask[i]) wetCount++;
+    let count = 0;
+    for (let i = 0; i < mask.length; i++) if (mask[i]) count++;
 
-    if (wetCount >= 3150 && wetCount <= 3400) break;
+    if (count >= 3240 && count <= 3315) break;
 
-    const scale = Math.sqrt(3277 / Math.max(1, wetCount));
-    const clamped = Math.max(0.85, Math.min(1.18, scale));
+    const scale = Math.sqrt(3277 / Math.max(1, count));
+    const clamped = Math.max(0.92, Math.min(1.08, scale));
 
     for (const spec of lakeSpecs) {
-      spec.radius = Math.max(14, Math.min(26, spec.radius * clamped));
+      spec.baseR = Math.max(9, Math.min(25.5, spec.baseR * clamped));
     }
-    water.lakes = buildLakePolygons(lakeSpecs);
+    for (let j = 0; j < mainWidths.length; j++) {
+      if (Math.hypot(mainCenterline[j]![0] - szCenterM_x, mainCenterline[j]![1] - szCenterM_z) >= 45) {
+        mainWidths[j] = Math.max(7, Math.min(14.5, mainWidths[j]! * clamped));
+      }
+    }
+    for (let j = 0; j < trib1Widths.length; j++) {
+      trib1Widths[j] = Math.max(5, Math.min(9.5, trib1Widths[j]! * clamped));
+    }
+    for (let j = 0; j < trib2Widths.length; j++) {
+      trib2Widths[j] = Math.max(5, Math.min(9.5, trib2Widths[j]! * clamped));
+    }
+    water.lakes = buildLakes(lakeSpecs);
   }
 
-  // 5. Địa hình: đồi ngoài khu khởi đầu (tọa độ tính bằng ĐƠN VỊ Ô 0..128 để khớp buildAuthoredTemplate)
+  // 5. Địa hình gồ ghề: 5–7 đồi/rặng núi ngoài khu khởi đầu, chênh cao 14–22m
   const hills: { x: number; z: number; radius: number; heightDm: number }[] = [];
-  const numHills = 5 + Math.floor(rng() * 2); // 5..6 hills
+  const numHills = 5 + Math.floor(rng() * 3);
   const szCenterCellX = (szX0 + szX1) / 2;
   const szCenterCellZ = (szZ0 + szZ1) / 2;
 
   for (let i = 0; i < numHills; i++) {
     let hx = 0, hz = 0;
     for (let tries = 0; tries < 20; tries++) {
-      hx = 12 + Math.floor(rng() * 104);
-      hz = 12 + Math.floor(rng() * 104);
+      hx = 14 + Math.floor(rng() * 100);
+      hz = 14 + Math.floor(rng() * 100);
       if (Math.hypot(hx - szCenterCellX, hz - szCenterCellZ) > 28) break;
     }
-    const radius = 14 + Math.floor(rng() * 8); // 14..22 ô bán kính
-    const heightDm = 140 + Math.floor(rng() * 40); // 14..18 m chiều cao đồi
+    const radius = 13 + Math.floor(rng() * 8); // 13..20 ô
+    const heightDm = 110 + Math.floor(rng() * 25); // 11..13.5 m (đảm bảo chênh cao tổng 15..22m)
     hills.push({ x: hx, z: hz, radius, heightDm });
   }
 
-  // 6. Gợi ý lô đất (suggestedLots): 4 lô đất trong khu khởi đầu
-  const homeCornerX = corner === 0 || corner === 2 ? szX1 - 12 : szX0 + 2;
-  const homeCornerZ = corner === 0 || corner === 1 ? szZ1 - 12 : szZ0 + 2;
+  // 6. Gợi ý lô đất (suggestedLots): không san phẳng
+  const homeCornerX = corner === 0 || corner === 2 ? szX1 - 10 : szX0 + 2;
+  const homeCornerZ = corner === 0 || corner === 1 ? szZ1 - 10 : szZ0 + 2;
 
   const suggestedLots: NonNullable<WorldTemplate['suggestedLots']> = [
-    { id: 'lot-a', cells: [homeCornerX, homeCornerZ, homeCornerX + 5, homeCornerZ + 5] },
-    { id: 'lot-b', cells: [homeCornerX + 6, homeCornerZ, homeCornerX + 10, homeCornerZ + 5] },
-    { id: 'lot-c', cells: [homeCornerX, homeCornerZ + 6, homeCornerX + 5, homeCornerZ + 10] },
-    { id: 'lot-d', cells: [homeCornerX + 6, homeCornerZ + 6, homeCornerX + 10, homeCornerZ + 10] },
+    { id: 'lot-a', cells: [homeCornerX, homeCornerZ, homeCornerX + 4, homeCornerZ + 4] },
+    { id: 'lot-b', cells: [homeCornerX + 5, homeCornerZ, homeCornerX + 9, homeCornerZ + 4] },
+    { id: 'lot-c', cells: [homeCornerX, homeCornerZ + 5, homeCornerX + 4, homeCornerZ + 9] },
+    { id: 'lot-d', cells: [homeCornerX + 5, homeCornerZ + 5, homeCornerX + 9, homeCornerZ + 9] },
   ];
 
-  // 7. Rừng & đá
-  const forests: [number, number, number, number][] = [
-    [0, 0, 12, 127],
-    [115, 0, 127, 127],
-    [0, 0, 127, 10],
-    [0, 117, 127, 127],
-  ];
-  const rocky: [number, number, number, number][] = hills.slice(0, 2).map(h => {
-    return [Math.max(0, h.x - 6), Math.max(0, h.z - 6), Math.min(127, h.x + 6), Math.min(127, h.z + 6)] as [number, number, number, number];
-  });
+  const meta: GeneratedLayoutMeta = {
+    fork: forkInfo,
+    lakeCV: Math.round(lakeCV * 100) / 100,
+    lakeRadii: lakeSpecs.map(l => Math.round(l.baseR * 10) / 10),
+    elevationRangeM: 0,
+  };
 
   return {
     schemaVersion: 1,
@@ -254,7 +354,7 @@ export function generateRandomLayout(mapKind: MapKind, seed: number, attempt = 0
     waterLevelDm,
     water,
     startZones,
-    entryCells: [], // Map random KHÔNG CÓ ô đường nào và entryCells rỗng
+    entryCells: [],
     roads: [],
     suggestedLots,
     protectedCells: [],
@@ -266,11 +366,11 @@ export function generateRandomLayout(mapKind: MapKind, seed: number, attempt = 0
     },
     terrain: {
       baseDm: 25,
-      amplitude: 0.40,
+      amplitude: 0.42,
       hills,
     },
-    forests,
-    rocky,
+    organicBiomes: true,
+    meta,
   };
 }
 
@@ -280,7 +380,7 @@ function bridgeEdgeHeight(heights: Int16Array, [x, z]: Cell, [dx, dz]: readonly 
   return (heights[v[0]!]! + heights[v[1]!]!) / 2;
 }
 
-export function checkPlayability(template: WorldTemplate): string[] {
+export function checkPlayability(template: WorldTemplate, meta?: GeneratedLayoutMeta): string[] {
   const errors: string[] = [];
   const layers = decodeLayers(template);
   const water = rasterizeWater(template.water);
@@ -293,7 +393,16 @@ export function checkPlayability(template: WorldTemplate): string[] {
     errors.push(`WATER_TOTAL: ${totalWater} cells (${(totalWater / 163.84).toFixed(1)}%), required 3113..3441 (19..21%)`);
   }
 
-  // 2. Nước trong khu khởi đầu <= 10% (<= 102 ô)
+  // 2. Nước hồ chiếm <= 60% tổng nước
+  const lakeOnlyWater = rasterizeWater({ lakes: template.water.lakes, rivers: [], waterfalls: [] });
+  let lakeCells = 0;
+  for (let i = 0; i < totalCells; i++) if (lakeOnlyWater[i]) lakeCells++;
+  const lakePctOfTotalWater = totalWater > 0 ? (lakeCells / totalWater) * 100 : 0;
+  if (lakePctOfTotalWater > 60) {
+    errors.push(`LAKE_SHARE_MAX: lakes occupy ${lakePctOfTotalWater.toFixed(1)}% of total water (${lakeCells}/${totalWater}), required <= 60%`);
+  }
+
+  // 3. Nước trong khu khởi đầu <= 10% (<= 102 ô)
   const startZonesSet = new Set(template.startZones);
   let startWater = 0;
   const startDryCells: Cell[] = [];
@@ -310,7 +419,7 @@ export function checkPlayability(template: WorldTemplate): string[] {
     errors.push(`WATER_START_ZONE: ${startWater}/1024 (${(startWater / 10.24).toFixed(1)}%), required <= 10% (102 cells)`);
   }
 
-  // 3 & 4. Nước mỗi khu khác <= 60% (<= 153 ô) và mỗi khu >= 40% ô khô (>= 103 ô)
+  // 4 & 5. Nước mỗi khu khác <= 60% và mỗi khu >= 40% ô khô
   for (let zid = 0; zid < 64; zid++) {
     const ox = (zid % 8) * 16, oz = Math.floor(zid / 8) * 16;
     let zoneWater = 0;
@@ -326,7 +435,7 @@ export function checkPlayability(template: WorldTemplate): string[] {
     }
   }
 
-  // 5. Đất bằng xây được trong khu khởi đầu (độ dốc <= 10 dm, khô): >= 55% số ô (>= 564 ô)
+  // 6. Đất bằng xây được trong khu khởi đầu (độ dốc <= 10 dm, khô): >= 55% số ô (>= 564 ô)
   const isFlatDry = new Uint8Array(totalCells);
   let flatBuildable = 0;
   for (const [cx, cz] of startDryCells) {
@@ -342,7 +451,7 @@ export function checkPlayability(template: WorldTemplate): string[] {
     errors.push(`START_ZONE_FLAT: ${flatBuildable}/1024 (${(flatBuildable / 10.24).toFixed(1)}%) flat buildable, required >= 55% (564 cells)`);
   }
 
-  // 6. Ô bờ nước trong khu khởi đầu >= 12 ô
+  // 7. Ô bờ nước trong khu khởi đầu >= 12 ô
   let shoreCount = 0;
   for (const [cx, cz] of startDryCells) {
     let touchesWater = false;
@@ -358,7 +467,7 @@ export function checkPlayability(template: WorldTemplate): string[] {
     errors.push(`START_ZONE_SHORE: ${shoreCount} shore cells in startZones, required >= 12`);
   }
 
-  // 7 & 8. Chỗ bắc cầu <= 6 ô và bờ bên kia >= 24 ô khô, bằng
+  // 8 & 9. Chỗ bắc cầu <= 6 ô và bờ bên kia >= 24 ô khô, bằng
   const visited = new Uint8Array(totalCells);
   const dryComponents: Cell[][] = [];
   for (const [cx, cz] of startDryCells) {
@@ -401,7 +510,6 @@ export function checkPlayability(template: WorldTemplate): string[] {
     errors.push(`FAR_BANK_FLAT: largest far bank in startZones has only ${maxFarBankFlat} flat cells, required >= 24`);
   }
 
-  // Tìm chỗ bắc cầu gỗ hợp lệ (nhịp nước 1..6 ô thẳng hàng giữa homeBank và farBank)
   let foundBridge = false;
   bridgeSearch:
   for (const [hx, hz] of homeBank) {
@@ -430,7 +538,7 @@ export function checkPlayability(template: WorldTemplate): string[] {
     errors.push('BRIDGE_SPAN: no valid wooden bridge location (1..6 water cells) between home and far bank in startZones');
   }
 
-  // 9. Chênh cao toàn map: 12-25m (120-250 dm)
+  // 10. Chênh cao toàn map: 12-25m (120-250 dm)
   let minH = Infinity, maxH = -Infinity;
   for (let i = 0; i < layers.heightsDm.length; i++) {
     const h = layers.heightsDm[i]!;
@@ -441,9 +549,11 @@ export function checkPlayability(template: WorldTemplate): string[] {
   if (diffDm < 120 || diffDm > 250) {
     errors.push(`ELEVATION_RANGE: ${(diffDm / 10).toFixed(1)} m (min ${minH / 10}m, max ${maxH / 10}m), required 12..25 m`);
   }
+  if (meta) {
+    meta.elevationRangeM = Math.round((diffDm / 10) * 10) / 10;
+  }
 
-  // 10. Cây/đá trong khu khởi đầu không chặn quá 25% số ô xây được
-  // Tối ưu: chỉ sinh env cho 4 startZones thay vì 64 zones
+  // 11. Cây/đá trong khu khởi đầu không chặn quá 25% số ô xây được
   let blockedCells = 0;
   for (const zid of template.startZones) {
     const zoneEnv = generateZone(template, zid);
@@ -461,6 +571,11 @@ export function checkPlayability(template: WorldTemplate): string[] {
     errors.push(`START_ZONE_BLOCKING: ${blockPct.toFixed(1)}% (${blockedCells}/${flatBuildable}) buildable cells blocked, required <= 25%`);
   }
 
+  // 12. Ràng buộc đa dạng: Hệ số biến thiên kích thước hồ CV >= 0.4
+  if (meta && meta.lakeCV < 0.4) {
+    errors.push(`LAKE_CV_MIN: lake size variation CV is ${meta.lakeCV}, required >= 0.4`);
+  }
+
   return errors;
 }
 
@@ -468,14 +583,14 @@ export function generateWorldTemplate(
   mapKind: MapKind,
   seed: number,
   maxAttempts = 50,
-): { template: WorldTemplate; attempt: number; layout: AuthoredLayout } {
+): { template: WorldTemplate; attempt: number; layout: RandomAuthoredLayout; meta: GeneratedLayoutMeta } {
   let lastErrors: string[] = [];
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const layout = generateRandomLayout(mapKind, seed, attempt);
     const template = buildAuthoredTemplate(layout);
-    const errors = checkPlayability(template);
+    const errors = checkPlayability(template, layout.meta);
     if (errors.length === 0) {
-      return { template, attempt, layout };
+      return { template, attempt, layout, meta: layout.meta };
     }
     lastErrors = errors;
   }

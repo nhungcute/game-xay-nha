@@ -18,6 +18,8 @@ export interface AuthoredLayout {
   /** Inclusive cell rectangles [x0,z0,x1,z1]; biome 1 = forest edge (dense), biome 2 = rocky hill. */
   forests?: [number, number, number, number][];
   rocky?: [number, number, number, number][];
+  /** D039: Organic biome painting from noise thresholds rather than rectangles. */
+  organicBiomes?: boolean;
 }
 
 function noise(seed: number, x: number, z: number): number {
@@ -72,7 +74,9 @@ export function buildAuthoredTemplate(layout: AuthoredLayout): WorldTemplate {
       : Math.max(0, 1 - Math.hypot(x - 114, z - 8) / 24) * 160;
     layers.heightsDm[z * 129 + x] = Math.round((level + (layout.terrain?.baseDm ?? 25) + fbm + hills) / 5) * 5;
   }
-  for (const lot of layout.suggestedLots) for (let z = lot.cells[1]; z <= lot.cells[3] + 1; z++) for (let x = lot.cells[0]; x <= lot.cells[2] + 1; x++) layers.heightsDm[z * 129 + x] = level + 20;
+  if (!layout.organicBiomes) {
+    for (const lot of layout.suggestedLots) for (let z = lot.cells[1]; z <= lot.cells[3] + 1; z++) for (let x = lot.cells[0]; x <= lot.cells[2] + 1; x++) layers.heightsDm[z * 129 + x] = level + 20;
+  }
   for (const path of layout.roads) for (const cell of path) {
     if (!Array.isArray(cell) || cell.length !== 2 || cell.some(value => !Number.isInteger(value) || value < 0 || value >= 128)) throw new Error('Invalid authored road cell');
     const [x, z] = cell, index = z * 128 + x;
@@ -92,10 +96,31 @@ export function buildAuthoredTemplate(layout: AuthoredLayout): WorldTemplate {
     for (const cz of [z - 1, z]) for (const cx of [x - 1, x]) if (cx >= 0 && cx < 128 && cz >= 0 && cz < 128) adjacent.push(water[cz * 128 + cx]!);
     if (adjacent.some(Boolean)) layers.heightsDm[z * 129 + x] = adjacent.every(Boolean) ? level - 15 : level + 5;
   }
-  const paint = (rects: [number, number, number, number][] | undefined, biome: number) => {
-    for (const [x0, z0, x1, z1] of rects ?? []) for (let z = Math.max(0, z0); z <= Math.min(127, z1); z++) for (let x = Math.max(0, x0); x <= Math.min(127, x1); x++) layers.biome[z * 128 + x] = biome;
-  };
-  paint(layout.forests, 1); paint(layout.rocky, 2);
+  if (layout.organicBiomes) {
+    for (let z = 0; z < 128; z++) for (let x = 0; x < 128; x++) {
+      const idx = z * 128 + x;
+      if (water[idx]) continue;
+      const h = layers.heightsDm[z * 129 + x]!;
+      const verts = [z * 129 + x, z * 129 + x + 1, (z + 1) * 129 + x, (z + 1) * 129 + x + 1].map(v => layers.heightsDm[v]!);
+      const slope = Math.max(...verts) - Math.min(...verts);
+      const inStart = layout.startZones.includes(zoneOfCell(x, z));
+      const rockNoise = noise(template.seed + 101, x / 14, z / 14);
+      if (!inStart && (slope > 14 || h > level + 110) && rockNoise > 0.05) {
+        layers.biome[idx] = 2;
+      } else {
+        const borderDist = Math.min(x, 127 - x, z, 127 - z);
+        const forestNoise = noise(template.seed + 202, x / 18, z / 18);
+        if (!inStart && (borderDist < 10 || forestNoise > 0.16)) {
+          layers.biome[idx] = 1;
+        }
+      }
+    }
+  } else {
+    const paint = (rects: [number, number, number, number][] | undefined, biome: number) => {
+      for (const [x0, z0, x1, z1] of rects ?? []) for (let z = Math.max(0, z0); z <= Math.min(127, z1); z++) for (let x = Math.max(0, x0); x <= Math.min(127, x1); x++) layers.biome[z * 128 + x] = biome;
+    };
+    paint(layout.forests, 1); paint(layout.rocky, 2);
+  }
   template.layers = encodeLayers(layers);
   if (layout.templateVersion) template.templateVersion = layout.templateVersion;
   template.env.anchors = layout.terrain ? [] : template.env.anchors.filter(anchor => !water[anchor.cell[1] * 128 + anchor.cell[0]]);
