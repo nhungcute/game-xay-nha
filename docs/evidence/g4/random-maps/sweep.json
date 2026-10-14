@@ -1,0 +1,562 @@
+{
+  "at": "2026-10-14T11:15:52.019Z",
+  "totalDurationSeconds": 469,
+  "gatePassed": true,
+  "city": {
+    "mapKind": "city",
+    "totalSeeds": 500,
+    "passedSeeds": 500,
+    "gatePassed": true,
+    "attemptsDistribution": {
+      "1": 295,
+      "2": 122,
+      "3": 48,
+      "4": 22,
+      "5": 9,
+      "6": 4
+    },
+    "avgAttempts": 1.68,
+    "maxAttempts": 6,
+    "waterPct": {
+      "min": 19.08,
+      "max": 20.73,
+      "avg": 19.76,
+      "median": 19.71
+    },
+    "flatBuildablePct": {
+      "min": 79.2,
+      "max": 89.65,
+      "avg": 87.91
+    },
+    "bridgeSpanDistribution": {
+      "4": 151,
+      "5": 349
+    },
+    "durationMs": {
+      "avg": 460.7,
+      "max": 1720.7,
+      "p95": 1077.5
+    },
+    "sampleSeeds": [
+      {
+        "seed": 20260000,
+        "attempt": 1,
+        "durationMs": 337.7,
+        "waterCells": 3194,
+        "waterPct": 19.49,
+        "flatBuildableCells": 917,
+        "flatBuildablePct": 89.55,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260001,
+        "attempt": 2,
+        "durationMs": 534.2,
+        "waterCells": 3178,
+        "waterPct": 19.4,
+        "flatBuildableCells": 917,
+        "flatBuildablePct": 89.55,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260002,
+        "attempt": 1,
+        "durationMs": 265.9,
+        "waterCells": 3234,
+        "waterPct": 19.74,
+        "flatBuildableCells": 905,
+        "flatBuildablePct": 88.38,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260003,
+        "attempt": 1,
+        "durationMs": 259.9,
+        "waterCells": 3193,
+        "waterPct": 19.49,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260004,
+        "attempt": 1,
+        "durationMs": 235.5,
+        "waterCells": 3266,
+        "waterPct": 19.93,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260005,
+        "attempt": 2,
+        "durationMs": 510.8,
+        "waterCells": 3281,
+        "waterPct": 20.03,
+        "flatBuildableCells": 899,
+        "flatBuildablePct": 87.79,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260006,
+        "attempt": 1,
+        "durationMs": 355.4,
+        "waterCells": 3248,
+        "waterPct": 19.82,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260007,
+        "attempt": 1,
+        "durationMs": 287.8,
+        "waterCells": 3229,
+        "waterPct": 19.71,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260008,
+        "attempt": 1,
+        "durationMs": 335,
+        "waterCells": 3227,
+        "waterPct": 19.7,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260009,
+        "attempt": 3,
+        "durationMs": 797.8,
+        "waterCells": 3298,
+        "waterPct": 20.13,
+        "flatBuildableCells": 890,
+        "flatBuildablePct": 86.91,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260010,
+        "attempt": 1,
+        "durationMs": 269.7,
+        "waterCells": 3199,
+        "waterPct": 19.53,
+        "flatBuildableCells": 894,
+        "flatBuildablePct": 87.3,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260011,
+        "attempt": 1,
+        "durationMs": 271.3,
+        "waterCells": 3235,
+        "waterPct": 19.74,
+        "flatBuildableCells": 897,
+        "flatBuildablePct": 87.6,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260012,
+        "attempt": 2,
+        "durationMs": 574,
+        "waterCells": 3289,
+        "waterPct": 20.07,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260013,
+        "attempt": 5,
+        "durationMs": 1405.7,
+        "waterCells": 3323,
+        "waterPct": 20.28,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260014,
+        "attempt": 1,
+        "durationMs": 278.9,
+        "waterCells": 3263,
+        "waterPct": 19.92,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260015,
+        "attempt": 4,
+        "durationMs": 1086.6,
+        "waterCells": 3289,
+        "waterPct": 20.07,
+        "flatBuildableCells": 908,
+        "flatBuildablePct": 88.67,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260016,
+        "attempt": 1,
+        "durationMs": 274.9,
+        "waterCells": 3212,
+        "waterPct": 19.6,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260017,
+        "attempt": 1,
+        "durationMs": 275.9,
+        "waterCells": 3177,
+        "waterPct": 19.39,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260018,
+        "attempt": 1,
+        "durationMs": 267.5,
+        "waterCells": 3179,
+        "waterPct": 19.4,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260019,
+        "attempt": 1,
+        "durationMs": 267.8,
+        "waterCells": 3190,
+        "waterPct": 19.47,
+        "flatBuildableCells": 899,
+        "flatBuildablePct": 87.79,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260020,
+        "attempt": 1,
+        "durationMs": 294.1,
+        "waterCells": 3162,
+        "waterPct": 19.3,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260021,
+        "attempt": 3,
+        "durationMs": 815.5,
+        "waterCells": 3239,
+        "waterPct": 19.77,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260022,
+        "attempt": 1,
+        "durationMs": 277.5,
+        "waterCells": 3213,
+        "waterPct": 19.61,
+        "flatBuildableCells": 899,
+        "flatBuildablePct": 87.79,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260023,
+        "attempt": 3,
+        "durationMs": 1014.1,
+        "waterCells": 3379,
+        "waterPct": 20.62,
+        "flatBuildableCells": 905,
+        "flatBuildablePct": 88.38,
+        "bridgeSpan": 4
+      }
+    ]
+  },
+  "farm": {
+    "mapKind": "farm",
+    "totalSeeds": 500,
+    "passedSeeds": 500,
+    "gatePassed": true,
+    "attemptsDistribution": {
+      "1": 297,
+      "2": 127,
+      "3": 47,
+      "4": 17,
+      "5": 11,
+      "6": 1
+    },
+    "avgAttempts": 1.64,
+    "maxAttempts": 6,
+    "waterPct": {
+      "min": 19,
+      "max": 20.73,
+      "avg": 19.74,
+      "median": 19.67
+    },
+    "flatBuildablePct": {
+      "min": 83.98,
+      "max": 89.65,
+      "avg": 87.91
+    },
+    "bridgeSpanDistribution": {
+      "4": 145,
+      "5": 352,
+      "6": 3
+    },
+    "durationMs": {
+      "avg": 459.8,
+      "max": 1696.4,
+      "p95": 1088.5
+    },
+    "sampleSeeds": [
+      {
+        "seed": 20260000,
+        "attempt": 2,
+        "durationMs": 527.1,
+        "waterCells": 3193,
+        "waterPct": 19.49,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260001,
+        "attempt": 1,
+        "durationMs": 256.5,
+        "waterCells": 3213,
+        "waterPct": 19.61,
+        "flatBuildableCells": 915,
+        "flatBuildablePct": 89.36,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260002,
+        "attempt": 2,
+        "durationMs": 542,
+        "waterCells": 3180,
+        "waterPct": 19.41,
+        "flatBuildableCells": 890,
+        "flatBuildablePct": 86.91,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260003,
+        "attempt": 1,
+        "durationMs": 281.7,
+        "waterCells": 3221,
+        "waterPct": 19.66,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260004,
+        "attempt": 2,
+        "durationMs": 504.4,
+        "waterCells": 3187,
+        "waterPct": 19.45,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260005,
+        "attempt": 1,
+        "durationMs": 276.5,
+        "waterCells": 3244,
+        "waterPct": 19.8,
+        "flatBuildableCells": 900,
+        "flatBuildablePct": 87.89,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260006,
+        "attempt": 1,
+        "durationMs": 288.9,
+        "waterCells": 3201,
+        "waterPct": 19.54,
+        "flatBuildableCells": 908,
+        "flatBuildablePct": 88.67,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260007,
+        "attempt": 2,
+        "durationMs": 602,
+        "waterCells": 3171,
+        "waterPct": 19.35,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260008,
+        "attempt": 1,
+        "durationMs": 279.3,
+        "waterCells": 3279,
+        "waterPct": 20.01,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260009,
+        "attempt": 1,
+        "durationMs": 250.6,
+        "waterCells": 3233,
+        "waterPct": 19.73,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260010,
+        "attempt": 1,
+        "durationMs": 280.7,
+        "waterCells": 3211,
+        "waterPct": 19.6,
+        "flatBuildableCells": 917,
+        "flatBuildablePct": 89.55,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260011,
+        "attempt": 1,
+        "durationMs": 293,
+        "waterCells": 3209,
+        "waterPct": 19.59,
+        "flatBuildableCells": 900,
+        "flatBuildablePct": 87.89,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260012,
+        "attempt": 1,
+        "durationMs": 294.4,
+        "waterCells": 3214,
+        "waterPct": 19.62,
+        "flatBuildableCells": 879,
+        "flatBuildablePct": 85.84,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260013,
+        "attempt": 2,
+        "durationMs": 553.3,
+        "waterCells": 3276,
+        "waterPct": 20,
+        "flatBuildableCells": 900,
+        "flatBuildablePct": 87.89,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260014,
+        "attempt": 1,
+        "durationMs": 272,
+        "waterCells": 3194,
+        "waterPct": 19.49,
+        "flatBuildableCells": 898,
+        "flatBuildablePct": 87.7,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260015,
+        "attempt": 1,
+        "durationMs": 283.2,
+        "waterCells": 3278,
+        "waterPct": 20.01,
+        "flatBuildableCells": 896,
+        "flatBuildablePct": 87.5,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260016,
+        "attempt": 2,
+        "durationMs": 662.8,
+        "waterCells": 3178,
+        "waterPct": 19.4,
+        "flatBuildableCells": 874,
+        "flatBuildablePct": 85.35,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260017,
+        "attempt": 1,
+        "durationMs": 266.4,
+        "waterCells": 3290,
+        "waterPct": 20.08,
+        "flatBuildableCells": 905,
+        "flatBuildablePct": 88.38,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260018,
+        "attempt": 3,
+        "durationMs": 808.7,
+        "waterCells": 3310,
+        "waterPct": 20.2,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260019,
+        "attempt": 1,
+        "durationMs": 269.8,
+        "waterCells": 3210,
+        "waterPct": 19.59,
+        "flatBuildableCells": 900,
+        "flatBuildablePct": 87.89,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260020,
+        "attempt": 2,
+        "durationMs": 701.2,
+        "waterCells": 3227,
+        "waterPct": 19.7,
+        "flatBuildableCells": 905,
+        "flatBuildablePct": 88.38,
+        "bridgeSpan": 4
+      },
+      {
+        "seed": 20260021,
+        "attempt": 2,
+        "durationMs": 579.9,
+        "waterCells": 3199,
+        "waterPct": 19.53,
+        "flatBuildableCells": 909,
+        "flatBuildablePct": 88.77,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260022,
+        "attempt": 2,
+        "durationMs": 544.9,
+        "waterCells": 3167,
+        "waterPct": 19.33,
+        "flatBuildableCells": 891,
+        "flatBuildablePct": 87.01,
+        "bridgeSpan": 5
+      },
+      {
+        "seed": 20260023,
+        "attempt": 1,
+        "durationMs": 254.4,
+        "waterCells": 3167,
+        "waterPct": 19.33,
+        "flatBuildableCells": 917,
+        "flatBuildablePct": 89.55,
+        "bridgeSpan": 4
+      }
+    ]
+  }
+}
