@@ -9,3 +9,6 @@ playwright-report/
 !.env.example
 /review-*.png
 /backups/
+
+# Owner-supplied source models and packs (hundreds of MB, some > 100 MB, one CC-BY-NC); importers read them locally
+/map/
