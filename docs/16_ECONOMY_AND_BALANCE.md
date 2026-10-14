@@ -350,7 +350,7 @@ Lưới an toàn chống kẹt: khi tiền mặt **dưới $150** và không cò
 | # | Nhiệm vụ | Thưởng |
 |---|---|---|
 | 1 | Chặt 3 cây | $100, 20 XP |
-| 2 | Làm đường nối điểm vào tới khu đất trống (≥ 6 ô) | $100, 10 XP |
+| 2 | Làm 6 ô đường | $100, 10 XP |
 | 3 | San phẳng một nền 2 × 2 | $50, 10 XP |
 | 4 | Xây Nhà nhỏ (hoàn thành ngay) | $150 |
 | 5 | Xây Tạp hóa (hoàn thành ngay) | $200 |
