@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { catalog, economy } from '@xay-nha/content';
+import { economy } from '@xay-nha/content';
 import { authoredQuestProgressFor, openQuests, capHours, inventoryCount, populationAndJobs, repeatQuestProgress, storageCapacity } from '@xay-nha/sim';
 import type { WorldStore } from '../game/WorldStore';
 import { money, t } from '../i18n';

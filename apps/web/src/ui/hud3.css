@@ -150,6 +150,8 @@
  .hud3-sync{display:none}
  .hud3-shell .hud3-missions{left:8px;width:min(250px,calc(100vw - 90px));padding:10px 12px 8px;top:calc(var(--hud-bottom,130px) + 12px)}
  .hud3-missions-head strong{font-size:14px}.hud3-missions-head small{font-size:12px}.hud3-mission-copy strong{font-size:12px}.hud3-mission-desc{font-size:11px}
+ /* D041: up to five parallel quests: compact cards, and the list scrolls above the minimap instead of covering it. */
+ .hud3-shell .hud3-missions{max-height:calc(var(--dock-top,80dvh) - var(--hud-bottom,130px) - 12px - 104px - 24px)}.hud3-mission.is-active{margin:6px 0 0;padding:8px 10px;gap:10px}.hud3-shell .hud3-mission-icon{width:34px;height:34px}.hud3-mission-copy{gap:4px}
  .hud3-controls{right:8px;top:calc(var(--hud-bottom,130px) + 14px);transform:none;gap:8px}.hud3-shell .hud3-controls button{width:44px;height:44px}.hud3-controls .game-icon{width:21px;height:21px}
  .hud3-minimap{left:8px;bottom:calc(100dvh - var(--dock-top,80dvh) + 10px);width:104px;height:104px;padding:4px}.hud3-north b{font-size:10px}.hud3-north i{border-left-width:5px;border-right-width:5px;border-bottom-width:9px}
  .hud3-dock{left:8px;right:8px;bottom:max(8px,env(safe-area-inset-bottom));transform:none;width:auto;max-width:none;align-items:stretch}
