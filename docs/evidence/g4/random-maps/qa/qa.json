@@ -1,0 +1,661 @@
+{
+  "at": "2026-10-15T03:39:28.309Z",
+  "baseUrl": "http://127.0.0.1:5195",
+  "gates": {
+    "maxDrawCalls": 300,
+    "maxTriangles": 1500000,
+    "consoleErrors": 0
+  },
+  "seeds": [
+    {
+      "kind": "city",
+      "seed": 20260100,
+      "label": "city-20260100",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 233,
+          "triangles": 235484,
+          "fps": 30
+        },
+        "overview-2300": {
+          "drawCalls": 233,
+          "triangles": 235484,
+          "fps": 19
+        },
+        "river": {
+          "drawCalls": 192,
+          "triangles": 232804,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 161,
+          "triangles": 242700,
+          "fps": 55
+        },
+        "flow": {
+          "drawCalls": 161,
+          "triangles": 199110,
+          "fps": 57
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "house_small",
+          "anchor": [
+            60,
+            78
+          ]
+        },
+        "incomeCash": 395,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "house_small",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "city",
+      "seed": 20260101,
+      "label": "city-20260101",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 239,
+          "triangles": 233226,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 239,
+          "triangles": 233226,
+          "fps": 47
+        },
+        "river": {
+          "drawCalls": 180,
+          "triangles": 189378,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 171,
+          "triangles": 257926,
+          "fps": 58
+        },
+        "flow": {
+          "drawCalls": 175,
+          "triangles": 199326,
+          "fps": 59
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "house_small",
+          "anchor": [
+            60,
+            62
+          ]
+        },
+        "incomeCash": 395,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "house_small",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "city",
+      "seed": 20260102,
+      "label": "city-20260102",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 199,
+          "triangles": 195614,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 199,
+          "triangles": 195614,
+          "fps": 48
+        },
+        "river": {
+          "drawCalls": 134,
+          "triangles": 195982,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 197,
+          "triangles": 186494,
+          "fps": 60
+        },
+        "flow": {
+          "drawCalls": 133,
+          "triangles": 152164,
+          "fps": 58
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "house_small",
+          "anchor": [
+            44,
+            46
+          ]
+        },
+        "incomeCash": 395,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "house_small",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "city",
+      "seed": 20260103,
+      "label": "city-20260103",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 241,
+          "triangles": 234300,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 241,
+          "triangles": 234300,
+          "fps": 49
+        },
+        "river": {
+          "drawCalls": 184,
+          "triangles": 208716,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 157,
+          "triangles": 254250,
+          "fps": 56
+        },
+        "flow": {
+          "drawCalls": 157,
+          "triangles": 191054,
+          "fps": 57
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "house_small",
+          "anchor": [
+            76,
+            78
+          ]
+        },
+        "incomeCash": 395,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "house_small",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "city",
+      "seed": 20260104,
+      "label": "city-20260104",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 217,
+          "triangles": 218796,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 217,
+          "triangles": 218796,
+          "fps": 48
+        },
+        "river": {
+          "drawCalls": 148,
+          "triangles": 219692,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 179,
+          "triangles": 204860,
+          "fps": 60
+        },
+        "flow": {
+          "drawCalls": 152,
+          "triangles": 186034,
+          "fps": 55
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "house_small",
+          "anchor": [
+            44,
+            78
+          ]
+        },
+        "incomeCash": 395,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "house_small",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "city",
+      "seed": 20260105,
+      "label": "city-20260105",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 230,
+          "triangles": 234750,
+          "fps": 58
+        },
+        "overview-2300": {
+          "drawCalls": 230,
+          "triangles": 234750,
+          "fps": 43
+        },
+        "river": {
+          "drawCalls": 185,
+          "triangles": 202692,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 175,
+          "triangles": 266166,
+          "fps": 51
+        },
+        "flow": {
+          "drawCalls": 160,
+          "triangles": 200276,
+          "fps": 58
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "house_small",
+          "anchor": [
+            60,
+            78
+          ]
+        },
+        "incomeCash": 395,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "house_small",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "farm",
+      "seed": 20260100,
+      "label": "farm-20260100",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 225,
+          "triangles": 236962,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 225,
+          "triangles": 236962,
+          "fps": 49
+        },
+        "river": {
+          "drawCalls": 153,
+          "triangles": 221202,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 145,
+          "triangles": 264112,
+          "fps": 59
+        },
+        "flow": {
+          "drawCalls": 154,
+          "triangles": 194502,
+          "fps": 55
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "farmhouse",
+          "anchor": [
+            43,
+            61
+          ]
+        },
+        "incomeCash": 48,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "farmhouse",
+            "status": "ACTIVE"
+          },
+          {
+            "defId": "market",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "farm",
+      "seed": 20260101,
+      "label": "farm-20260101",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 257,
+          "triangles": 246546,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 257,
+          "triangles": 246546,
+          "fps": 47
+        },
+        "river": {
+          "drawCalls": 189,
+          "triangles": 185366,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 162,
+          "triangles": 176518,
+          "fps": 60
+        },
+        "flow": {
+          "drawCalls": 184,
+          "triangles": 212850,
+          "fps": 60
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "farmhouse",
+          "anchor": [
+            59,
+            61
+          ]
+        },
+        "incomeCash": 48,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "farmhouse",
+            "status": "ACTIVE"
+          },
+          {
+            "defId": "market",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "farm",
+      "seed": 20260102,
+      "label": "farm-20260102",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 226,
+          "triangles": 238624,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 226,
+          "triangles": 238624,
+          "fps": 49
+        },
+        "river": {
+          "drawCalls": 157,
+          "triangles": 241812,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 113,
+          "triangles": 233518,
+          "fps": 55
+        },
+        "flow": {
+          "drawCalls": 154,
+          "triangles": 205418,
+          "fps": 58
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "farmhouse",
+          "anchor": [
+            75,
+            77
+          ]
+        },
+        "incomeCash": 48,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "farmhouse",
+            "status": "ACTIVE"
+          },
+          {
+            "defId": "market",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "farm",
+      "seed": 20260103,
+      "label": "farm-20260103",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 201,
+          "triangles": 221406,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 201,
+          "triangles": 221406,
+          "fps": 48
+        },
+        "river": {
+          "drawCalls": 153,
+          "triangles": 161676,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 156,
+          "triangles": 249720,
+          "fps": 60
+        },
+        "flow": {
+          "drawCalls": 135,
+          "triangles": 177936,
+          "fps": 56
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "farmhouse",
+          "anchor": [
+            43,
+            45
+          ]
+        },
+        "incomeCash": 48,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "farmhouse",
+            "status": "ACTIVE"
+          },
+          {
+            "defId": "market",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "farm",
+      "seed": 20260104,
+      "label": "farm-20260104",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 219,
+          "triangles": 245860,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 219,
+          "triangles": 245860,
+          "fps": 48
+        },
+        "river": {
+          "drawCalls": 167,
+          "triangles": 198254,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 163,
+          "triangles": 279020,
+          "fps": 55
+        },
+        "flow": {
+          "drawCalls": 154,
+          "triangles": 206932,
+          "fps": 52
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "farmhouse",
+          "anchor": [
+            43,
+            77
+          ]
+        },
+        "incomeCash": 48,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "farmhouse",
+            "status": "ACTIVE"
+          },
+          {
+            "defId": "market",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "farm",
+      "seed": 20260105,
+      "label": "farm-20260105",
+      "errors": [],
+      "metrics": {
+        "overview-1300": {
+          "drawCalls": 238,
+          "triangles": 243410,
+          "fps": 60
+        },
+        "overview-2300": {
+          "drawCalls": 238,
+          "triangles": 243410,
+          "fps": 48
+        },
+        "river": {
+          "drawCalls": 183,
+          "triangles": 237482,
+          "fps": 60
+        },
+        "lake": {
+          "drawCalls": 188,
+          "triangles": 292834,
+          "fps": 49
+        },
+        "flow": {
+          "drawCalls": 163,
+          "triangles": 206242,
+          "fps": 53
+        }
+      },
+      "flow": {
+        "ok": true,
+        "roadCells": 6,
+        "building": {
+          "defId": "farmhouse",
+          "anchor": [
+            75,
+            61
+          ]
+        },
+        "incomeCash": 48,
+        "pageRejected": [],
+        "buildings": [
+          {
+            "defId": "farmhouse",
+            "status": "ACTIVE"
+          },
+          {
+            "defId": "market",
+            "status": "ACTIVE"
+          }
+        ]
+      }
+    }
+  ],
+  "passed": true,
+  "failures": []
+}

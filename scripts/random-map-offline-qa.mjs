@@ -14,7 +14,7 @@ page.on('console', msg => { if (msg.type() === 'error' && !/favicon/.test(msg.te
 page.on('pageerror', error => errors.push(String(error)));
 const failures = [];
 const stored = () => page.evaluate(() => new Promise((resolve, reject) => {
-  const open = indexedDB.open('xay-nha-offline-v1', 1);
+  const open = window.indexedDB.open('xay-nha-offline-v1', 1);
   open.onsuccess = () => { const get = open.result.transaction('worlds').objectStore('worlds').get('offline-template'); get.onsuccess = () => resolve(get.result?.mapId ?? null); get.onerror = () => reject(get.error); };
   open.onerror = () => reject(open.error);
 }));
