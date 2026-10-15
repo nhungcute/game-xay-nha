@@ -4,7 +4,7 @@ import type { Cell, CommandType } from '@xay-nha/contracts';
 import { authoredQuestProgressFor, builderCapacity, fieldQuota, openQuests, populationAndJobs } from '@xay-nha/sim';
 import { AssetManager, type AssetManifestEntry } from './game/assets/AssetManager';
 import { GameLoop } from './game/GameLoop';
-import { WorldStore, useWorld } from './game/WorldStore';
+import { WorldStore, useWorld, type ToolPreview } from './game/WorldStore';
 import { useTools, type Tool } from './game/ToolController';
 import { errorText, money, t } from './i18n';
 import { GameIcon } from './ui/GameIcon';
@@ -107,6 +107,14 @@ const SKIP_KEY = 'xay-nha.skipTutorial';
 const skipped = () => { try { return localStorage.getItem(SKIP_KEY) === '1'; } catch { return false; } };
 const PANEL_TITLE: Record<GamePanel, string> = { profile: 'Thành tích', materials: 'Vật liệu', inventory: 'Kho nông sản', settings: 'Cài đặt', people: 'Cư dân', notifications: 'Thông báo' };
 const PANEL_ICON = { profile: 'trophy', materials: 'wood', inventory: 'inventory', settings: 'settings', people: 'people', notifications: 'mail' } as const;
+const VERB:Partial<Record<Tool,string>>={clear:'Dọn',terraform:'San nền',till:'Cuốc',road:'Xây đường',embank:'Đắp kè',bridge:'Xây cầu',plant:'Gieo',harvest:'Thu hoạch',zone:'Mở khu'};
+/** Tool-bar tail. Mouse: tools confirm on release, so only a hint + exit (demolish keeps a red confirm). Touch: one primary button naming the action and its price, plus a × cancel. */
+function commitUi(ui:ReturnType<typeof useTools.getState>,preview:ToolPreview|null,confirm:()=>void,cancel:()=>void,exit:()=>void){
+  const demo=ui.tool==='demolish',cash=preview?.cost?.cash??0,n=preview?.cells.length??0;
+  if(!demo&&!ui.touch)return <><span className="preview-hint">Esc để thoát</span><button type="button" className="exit-x" aria-label="Thoát công cụ" title="Thoát (Esc)" onClick={exit}><GameIcon name="close"/></button></>;
+  const label=demo?`Phá · hoàn ${money(preview?.refund??0)}`:ui.tool==='build'?`Đặt ${t(catalog.buildings[ui.buildingId]?.nameKey??'build')}${cash?` · ${money(cash)}`:''}`:`${VERB[ui.tool]??t(ui.tool)}${['zone','bridge','road'].includes(ui.tool)||n<2?'':` ${n} ô`}${cash?` · ${money(cash)}`:''}`;
+  return <><button type="button" className={`primary commit${demo?' danger':''}`} disabled={!preview?.valid} onClick={confirm}>{preview?.valid||!preview?.code?label:errorText(preview.code)}</button><button type="button" className="exit-x" aria-label="Hủy" title="Hủy" onClick={preview?cancel:exit}><GameIcon name="close"/></button></>;
+}
 export interface GameProps { loader:()=>Promise<WorldStore>; onSwitchMap?:(world:WorldStore)=>void|Promise<void>; onLogout?:(world:WorldStore)=>void|Promise<void>;
   /** D039 (offline only): throw the saved map away and start on a freshly generated one. */ onNewMap?:()=>void|Promise<void> }
 export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
@@ -213,7 +221,7 @@ export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
           {['road','embank','bridge','till'].includes(ui.tool)&&<label><input type="checkbox" checked={ui.remove} onChange={e=>update({remove:e.target.checked})}/>{t('remove')}</label>}
           {ui.tool==='build'&&<><button onClick={()=>gameRef.current?.tools.rotate()}><GameIcon name="rotate"/>{t('rotate')} {ui.rotation*90}°</button><label><input type="checkbox" checked={ui.autoFlatten} onChange={e=>update({autoFlatten:e.target.checked})}/>San tự động</label></>}
           {ui.tool==='plant'&&<select value={ui.cropId} onChange={e=>update({cropId:e.target.value})}>{Object.values(catalog.crops).map(crop=><option key={crop.id} value={crop.id}>{t(crop.nameKey)} · {money(crop.seedCost)} · {t('level')} {crop.unlockLevel}</option>)}</select>}
-          {preview?.note&&<span className="preview-note" role="alert">{preview.note}</span>}<span className={`preview-cost ${preview?.valid?(preview.warning?'warning':'valid'):'error'}`}>{preview?.cost?<>{money(preview.cost.cash)} <GameIcon name="wood"/>{preview.cost.wood} <GameIcon name="stone"/>{preview.cost.stone}</>:preview?.code?errorText(preview.code):t('select')}</span><button className="primary" disabled={!preview?.valid} onClick={()=>gameRef.current?.tools.confirm()}><GameIcon name="confirm"/>{t('confirm')}</button><button onClick={()=>gameRef.current?.tools.cancel()}><GameIcon name="close"/>{t('cancel')}</button>
+          {preview?.note&&<span className="preview-note" role="alert">{preview.note}</span>}<span className={`preview-cost ${preview?.valid?(preview.warning?'warning':'valid'):'error'}`}>{preview?.cost?<>{money(preview.cost.cash)} <GameIcon name="wood"/>{preview.cost.wood} <GameIcon name="stone"/>{preview.cost.stone}</>:preview?.code?errorText(preview.code):t('select')}</span>{commitUi(ui,preview,()=>gameRef.current?.tools.confirm(),()=>gameRef.current?.tools.cancel(),()=>gameRef.current?.tools.choose('explore'))}
         </div>}
         {category&&<CategoryTray state={state} category={category} tool={ui.tool} buildingId={ui.buildingId} hintTool={hint?.tool}
           onTool={tool=>choose(tool)} onBuilding={defId=>pickBuilding(defId)}/>}
