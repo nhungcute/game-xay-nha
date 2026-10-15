@@ -549,3 +549,18 @@ Owner decisions. Full assessment and results: `docs/reports/D039-random-maps-ass
   previous rows are kept in the git-ignored `backups/`.
 - `.gitattributes` pins generated JSON (content, manifest, map templates, importer configs) to LF so `--check` scripts do
   not report CRLF checkouts as stale.
+
+## D041 - 2026-10-15 - Parallel quests: five open, claimable in any order
+
+- The authored quest list shows the first five unclaimed quests of the chain (`OPEN_QUESTS = 5`); any of them can be
+  progressed and claimed in any order. Claiming one brings the next unclaimed quest into the list. Rewards, XP and quest
+  content are unchanged. Owner request.
+- `progress.claimedQuests` (optional) records claimed ids; `questIndex` stays and always equals the claimed count. Older
+  saves (only `questIndex`) read as "the first N quests are claimed" and are rewritten in the new form on the next save; no
+  SQL migration. `stateHash` hashes the normalised form so client and server agree.
+- Tutorial helpers (instant build, fast crops, boosted first collection) apply to open, unclaimed tutorial quests and end
+  when all six tutorial quests are claimed (same set as `tutorialInstantThroughQuest = 6`).
+- Daily repeat quests still start only after the whole chain and keep 3 slots.
+- Bot bench (7 days, authored maps): farm normal/slow finish the chain faster, city about flat; the fast-spending farm
+  style no longer finishes within 7 days (bot spends on several quests before the bridge). Bot policy, not a game rule.
+  Report: `docs/reports/QUESTS-parallel.md`.
