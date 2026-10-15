@@ -1,6 +1,8 @@
 # D039 — Đánh giá: Map ngẫu nhiên toàn bộ có ràng buộc
 
-Ngày: 2026-10-14 · Trạng thái: **đề xuất, chưa triển khai**
+Ngày: 2026-10-14 · Cập nhật: 2026-10-15 · Trạng thái: **đã triển khai bước 1–4 sau cờ `RANDOM_MAPS` (mặc định tắt); gate cân bằng kinh tế chưa đạt, xem §8.4**
+
+> Các mục §1–§7 là bản đánh giá gốc (giữ nguyên). Kết quả triển khai và số đo nằm ở **§8**.
 
 Yêu cầu của chủ dự án:
 
@@ -175,3 +177,98 @@ Tổng ước tính: **7–9 ngày công agent**.
 3. Map cũ giữ nguyên; chỉ world tạo mới (hoặc xóa đi tạo lại) mới random: khuyến nghị.
 4. Áp dụng cho **cả city và farm**: khuyến nghị.
 5. Các ngưỡng ở §4.3 có thể chỉnh sau khi xem ảnh sweep.
+
+## 8. Kết quả triển khai (bước 1–4)
+
+### 8.1 Bộ sinh (vòng 4) — `packages/worldgen/src/random-layout.ts`
+
+Sweep 500 seed mỗi loại map (`node scripts/random-map-sweep.mjs`, số liệu trong `docs/evidence/g4/random-maps/sweep.json`):
+
+| Chỉ số | City | Farm |
+|---|---|---|
+| Đạt trong ≤ 50 lần thử | 500/500 (TB 1,03 lần; tối đa 3) | 500/500 (TB 1,03; tối đa 2) |
+| Nước (min / TB / max) | 19,90 / 20,01 / 20,21% | 19,92 / 20,01 / 20,21% |
+| Tỉ lệ seed có nước ≥ 20,0% | 61,4% | 61,2% |
+| Hệ số biến thiên kích thước hồ CV (min / TB) | 0,43 / 0,65 | 0,40 / 0,65 |
+| Tỉ lệ ô bờ dốc > 2 m | 0% | 0% |
+| Nhịp cầu | 3–6 ô, hai đầu trong khu khởi đầu | 3–6 ô, hai đầu trong khu khởi đầu |
+| Góc rẽ lớn nhất của sông trên 12 m (TB / max) | 29° / 46° | 29° / 47° |
+| Đoạn sông thẳng dài nhất (độ lệch ≤ 1,5 m; TB / max) | 55 m / 83 m | 54 m / 83 m |
+| Thời gian sinh p95 / max (máy đang chạy nhiều tiến trình khác) | 943 ms / 2,2 s | 826 ms / 1,7 s |
+
+Thay đổi so với vòng 3:
+
+- **Nước lệch thấp (19,0–19,96%) → 19,9–20,2%.** Nguyên nhân: các hệ số co giãn bị chặn trên nên vòng hội tụ dừng ở ~19,5%, và CV hồ được đo *trước* khi co giãn
+  (nhiều hồ cùng chạm trần bán kính 22 m nên CV thực tế thấp hơn số báo cáo). Nay: một hệ số chung cho mọi hồ (giữ tỉ lệ kích thước, CV đo lại sau co giãn),
+  sông co giãn trong ngưỡng rộng hơn, và 0–3 ao nhỏ (8–16 m) ở góc khu bù phần nước còn thiếu mà không làm một khu vượt 60% nước.
+  Sông thứ 2 (`r2`) chọn dải ngang/dọc (48 hoặc 208 m) tránh sông chính và nhánh, vì sông chính cắt `r2` làm một khu quá 60% nước.
+- **Sông hết "kênh thẳng, góc nhọn".** Bo góc các điểm điều khiển (16 m), thêm uốn lượn hai sóng (bước sóng 55–115 m, biên độ 9–13 m, tắt dần ở mép map và quanh chỗ sông cắt khu khởi đầu),
+  rồi nội suy Catmull-Rom, không làm tròn về số nguyên. Sweep đo góc rẽ và đoạn thẳng của từng sông và dùng làm gate (góc ≤ 48°, đoạn thẳng ≤ 100 m).
+  Vài khúc cua cắt qua khu khởi đầu vẫn gấp (≈ 45°/6 m, bán kính ≈ 8 m): đây là giá trị chấp nhận được, đã kiểm bằng ảnh.
+- Ảnh in-game 8 seed nay không còn bị thẻ "Lên cấp 4!" che (`dismissLevelUp` + chờ; script báo lỗi nếu thẻ vẫn hiện). `sweep.json` ghi kết quả thật của lệnh EMBANK/BUILD_BRIDGE
+  trên từng seed in-game (`ingameLive`: cờ accepted, số ô kè = 4, chiều dài cầu, hai đầu cầu).
+- Template random có `templateVersion: 1` và `generatorVersion` lưu trong DB là `rnd-v13-meander`.
+- Bản `city-coast-01` / `farm-valley-01` / `farm-g1` không đổi (`npx tsx scripts/build-maps.ts` cho cùng hash blob với `HEAD`).
+
+### 8.2 Server và client (bước 3)
+
+- **Migration** `apps/api/migrations/0003_world_templates.sql`: bảng `world_templates (world_id uuid PK → worlds ON DELETE CASCADE, map_id, generator_version, seed bigint, attempt, template jsonb, created_at)`.
+- **Tạo world** (`WorldService.createCharacter`): khi `RANDOM_MAPS=1` chọn seed 32 bit ngẫu nhiên, `generateWorldTemplate` + `validateTemplate`, ghi world và template **trong cùng một transaction**
+  (`map_id = rnd-<kind>-<seed>`, `template_version = 1`), rồi tạo state như cũ. Cờ tắt thì hành vi y hệt trước (không có dòng nào trong `world_templates`). Cờ nằm ở `config.randomMaps`
+  (biến môi trường `RANDOM_MAPS`, truyền qua `infra/compose.yml` với mặc định `0`).
+- **`TemplateRegistry`**: id tĩnh đọc từ file như cũ; id `rnd-*` đọc từ DB theo `world_id` qua LRU (32 mục), env sinh từ template. `WorldService.restore` và `commands` dùng template của chính world đó.
+- **API** `GET /api/worlds/:id/template`: cần đăng nhập, cùng luật sở hữu với snapshot (tài khoản khác nhận 404, không đăng nhập 401), trả JSON khóa đã sắp xếp (ETag ổn định kể cả sau khi khởi động lại,
+  vì `jsonb` không giữ thứ tự khóa), `ETag`, `Cache-Control: private, max-age=31536000, immutable`, `304` khi `If-None-Match` khớp. Với world tĩnh endpoint trả file tĩnh; client vẫn dùng URL tĩnh cho các map đó.
+- **Client**: `Root.tsx` dùng `api.template(worldId)` khi `mapId` bắt đầu bằng `rnd-`, ngược lại `/worlds/<mapId>/template.v<n>.json`.
+- **Offline** (`VITE_OFFLINE=1`): chế độ random là **tùy chọn** (`?random=1` hoặc `VITE_RANDOM_MAPS=1`) để bản offline mặc định, các script QA cũ và route `farm-g1` không đổi. Khi bật: sinh một map farm ngẫu nhiên ở client,
+  lưu cùng bản lưu trong IndexedDB `xay-nha-offline-v1` (khóa `offline-template`), tải lại giữ nguyên map; nút **"Map mới"** trong Cài đặt (chỉ offline random) hỏi xác nhận, xóa bản lưu + template rồi sinh map mới.
+  Kiểm bằng `scripts/random-map-offline-qa.mjs` (đạt).
+- **Test tích hợp** (`pnpm test:api`, 38/38 đạt, container Postgres tạm): cờ tắt không đổi gì; cờ bật cho `rnd-` map, dòng `world_templates`, ETag/304, lệnh được nhận, tải lại với registry rỗng cho cùng byte và cùng ETag;
+  hai world có template khác nhau; tài khoản khác bị chặn; xóa world xóa template; world tạo khi cờ tắt vẫn chạy trên server bật cờ. `scripts/test-api.mjs` nhận thêm `TEST_PG_NAME` để nhiều agent không giẫm lên container của nhau.
+
+### 8.3 QA in-game (bước 4.2) — `scripts/random-map-qa.mjs`
+
+6 seed mỗi loại map (20260100–105), route template vào `**/worlds/farm-g1/template.v1.json`, ảnh nằm ở `docs/evidence/g4/random-maps/qa/` (2 seed mỗi loại; số liệu cả 12 seed trong `qa.json`):
+
+| Gate | Ngưỡng | Kết quả |
+|---|---|---|
+| Draw call (cảnh tổng quan 13:00 và 23:00) | ≤ 300 | tối đa 257 |
+| Tam giác | ≤ 1,5 triệu | tối đa 246.546 |
+| Lỗi console | 0 | 0 trên 12 seed |
+| Luồng thật: làm đường đất 6 ô → đặt nhà cạnh đường → thời gian trôi → thu nhập | có thu nhập | 12/12 (city: `house_small` + COLLECT +395; farm: `farmhouse`, chợ, cuốc/gieo/thu/bán +48), trang nhận mọi lệnh đã lập kế hoạch bằng sim cục bộ |
+
+Ảnh gồm tổng quan ngày/đêm, cận cảnh sông, cận cảnh hồ và khung luồng thật. Random map không có thác nước (`waterfalls: []`).
+
+### 8.4 Cân bằng kinh tế (bước 4.1) — `scripts/random-map-economy.ts` — **chưa đạt gate**
+
+Economy bot (chính sách `tuned`, phong cách `thuong`, 7 ngày mô phỏng) trên 30 seed mỗi loại map và trên map vẽ tay; bot tự làm đường đất ngắn cạnh công trình (luật A). Số liệu: `docs/evidence/g4/random-maps/economy.json`.
+Không có snapshot sai (0/60), mọi lần chạy hợp lệ.
+
+| | Map vẽ tay | Random: trung vị (p10–p90) | Lệch trung vị |
+|---|---|---|---|
+| City — tài sản sau 7 ngày | 3,14 triệu | 4,48 triệu (4,21–4,85) | **+42,7%** |
+| City — hoàn thành chuỗi nhiệm vụ | không xong trong 7 ngày (kẹt ở nhiệm vụ 11 "Bắc cầu") | ngày thứ 0,69 (phiên thứ 2) | không so được |
+| Farm — tài sản sau 7 ngày | 108.744 | 133.427 (111.151–158.176) | **+22,7%** |
+| Farm — hoàn thành chuỗi nhiệm vụ | 4,69 ngày | 0,69 ngày (0,69–1,04) | −85% |
+
+Phân tích:
+
+- Hai map **giống hệt nhau đến hết nhiệm vụ "Kè 4 ô bờ"** (các nhiệm vụ 1–10 đạt cùng thời điểm, thu nhập/giờ ngày 1–2 lệch dưới 2%: city 1.422→1.430 và 7.946→8.072). Chỉ khác ở **nhiệm vụ "Bắc cầu"** và phần thưởng sau đó.
+- Trên random, chỗ bắc cầu (≤ 6 ô) và bờ bên kia nằm **trong khu khởi đầu** (ràng buộc §4.3), nên bot không phải mở thêm khu hay làm đường dài: chuỗi xong trong ngày thứ 2.
+  Trên map vẽ tay, chỗ qua sông cách xa (city: nhịp sông 5–11 ô, cầu gỗ tối đa 6 ô; farm: nhiều khả năng cần mở thêm khu và làm đường dài, chưa kiểm riêng) nên bot xong ở ngày 4,69 (farm) hoặc không xong (city). Phần thưởng chuỗi (XP, cấp 10, 102 công trình thay vì 88) tạo chênh lệch tài sản.
+- Độ dài nhịp cầu không ảnh hưởng (chi phí cầu gỗ chỉ 80 tiền + 5 gỗ mỗi ô; so sánh theo seed cho thấy chuỗi xong ở ngày 0,5–1,5 bất kể nhịp 3 hay 6).
+- Vì vậy không thể đưa gate về ±20% chỉ bằng cách siết ràng buộc trong khuôn khổ §4.3 hiện tại: cách duy nhất là **dời chỗ bắc cầu ra ngoài khu khởi đầu** (buộc phải mở khu trước khi bắc cầu), tức là sửa ràng buộc "cả hai đầu nằm trong khu khởi đầu"
+  và nhiệm vụ không mở khu trước bước cầu của farm. Không đụng vào `economy.v1.json` hay chuỗi nhiệm vụ như yêu cầu; **cần chủ dự án quyết định** (a) chấp nhận random map nhanh hơn ở đoạn cầu (tài sản +23%/+43% sau 7 ngày, trùng khít trước đoạn cầu), hoặc (b) cho phép chỗ cầu ngoài khu khởi đầu và sinh lại.
+- Phần "chuỗi hướng dẫn" tức thời (`tutorialDone`, qua nhiệm vụ 6) xong trong vài phút ở cả hai loại map, không phân biệt được.
+
+### 8.5 Test và kiểm tra
+
+- `pnpm check`: đạt (content check, lint, typecheck, 781 test, build). Ghi chú: trên Windows với `core.autocrlf=true`, file nội dung sinh ra bị checkout CRLF nên `content:check` báo "stale"; chạy
+  `node scripts/generate-content.mjs` một lần (không đổi nội dung trong git) rồi `pnpm check` đạt. Không liên quan thay đổi này.
+- `packages/sim/src/invariants.test.ts`: 48–51 s khi máy đang chạy nhiều tiến trình song song (giới hạn 60 s). Thay đổi này không đụng `packages/sim`, nên thời gian phụ thuộc tải máy, không phải do D039.
+- Bundle web: chunk chính 1.084 kB (gzip 304 kB) sau khi đưa bộ sinh vào để dùng offline.
+
+### 8.6 Việc còn lại
+
+1. Chủ dự án quyết định về gate kinh tế (§8.4).
+2. Bật `RANDOM_MAPS=1` khi deploy (không làm trong nhánh này); đo lại thời gian sinh trên máy chủ thật (≤ 300 ms mỗi lần thử là mục tiêu §4.3; trên máy dev đang tải, một lần sinh mất 0,5–1 s, chủ yếu ở `buildAuthoredTemplate`, không phải bộ sinh layout ~30 ms).
