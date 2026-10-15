@@ -1,0 +1,228 @@
+{
+ "base": "http://127.0.0.1:5200",
+ "at": "2026-10-15T08:36:14.931Z",
+ "failures": [],
+ "shots": [
+  "city-tool-off-1440x900",
+  "city-fresh-day-1440x900",
+  "city-fresh-night-1440x900",
+  "farm-tool-off-1440x900",
+  "farm-fresh-day-1440x900",
+  "farm-fresh-night-1440x900",
+  "city-mid-day-1440x900",
+  "city-mid-poor-1440x900",
+  "farm-mid-day-1440x900",
+  "farm-mid-poor-1440x900",
+  "city-tool-off-pixel7",
+  "city-fresh-day-pixel7",
+  "farm-tool-off-pixel7",
+  "farm-fresh-day-pixel7",
+  "city-mid-day-pixel7",
+  "farm-mid-day-pixel7",
+  "click-dead-1440x900",
+  "click-ok-picked-1440x900",
+  "click-after-unlock-1440x900",
+  "click-dead-pixel7",
+  "click-ok-picked-pixel7",
+  "click-after-unlock-pixel7"
+ ],
+ "perf": {
+  "offMetrics": {
+   "drawCalls": 247,
+   "triangles": 584978,
+   "geometries": 125,
+   "textures": 32,
+   "programs": 22
+  },
+  "onMetrics": {
+   "drawCalls": 263,
+   "triangles": 592174,
+   "geometries": 127,
+   "textures": 46,
+   "programs": 25
+  },
+  "activeTool": "Khu đất",
+  "rounds": [
+   {
+    "mode": "on",
+    "active": 14,
+    "fps": 32.5,
+    "p95Ms": 67.7,
+    "min": 28.9,
+    "max": 32.7,
+    "spread": 3.8,
+    "samples": [
+     32.5,
+     32.7,
+     28.9
+    ]
+   },
+   {
+    "mode": "off",
+    "active": 0,
+    "fps": 32.5,
+    "p95Ms": 106.6,
+    "min": 19.9,
+    "max": 33.3,
+    "spread": 13.4,
+    "samples": [
+     33.3,
+     32.5,
+     19.9
+    ]
+   },
+   {
+    "mode": "on",
+    "active": 14,
+    "fps": 19.6,
+    "p95Ms": 148.4,
+    "min": 18.9,
+    "max": 19.6,
+    "spread": 0.7,
+    "samples": [
+     18.9,
+     19.6,
+     19.6
+    ]
+   },
+   {
+    "mode": "off",
+    "active": 0,
+    "fps": 21.3,
+    "p95Ms": 122.4,
+    "min": 20.6,
+    "max": 21.7,
+    "spread": 1.1,
+    "samples": [
+     21.3,
+     21.7,
+     20.6
+    ]
+   },
+   {
+    "mode": "on",
+    "active": 14,
+    "fps": 18.7,
+    "p95Ms": 147.5,
+    "min": 17.3,
+    "max": 18.8,
+    "spread": 1.6,
+    "samples": [
+     18.7,
+     17.3,
+     18.8
+    ]
+   },
+   {
+    "mode": "off",
+    "active": 0,
+    "fps": 21.1,
+    "p95Ms": 137,
+    "min": 20.6,
+    "max": 21.6,
+    "spread": 1,
+    "samples": [
+     21.1,
+     20.6,
+     21.6
+    ]
+   },
+   {
+    "mode": "on",
+    "active": 14,
+    "fps": 20.1,
+    "p95Ms": 140.6,
+    "min": 17.6,
+    "max": 20.4,
+    "spread": 2.8,
+    "samples": [
+     20.1,
+     17.6,
+     20.4
+    ]
+   },
+   {
+    "mode": "off",
+    "active": 0,
+    "fps": 17.4,
+    "p95Ms": 149,
+    "min": 15.9,
+    "max": 20.4,
+    "spread": 4.5,
+    "samples": [
+     20.4,
+     17.4,
+     15.9
+    ]
+   }
+  ]
+ },
+ "click": {
+  "1440x900": {
+   "ok": 41,
+   "dead": 0,
+   "price": 5600,
+   "cash": 9000,
+   "deadConfirmEnabled": false,
+   "deadUnlocked": false,
+   "okConfirmEnabled": false,
+   "feedback": "Có thể thực hiện",
+   "at": {
+    "x": 720.0000000000001,
+    "y": 450.0000000000002
+   },
+   "okUnlocked": true,
+   "stillHighlighted": false,
+   "cashAfter": 3400
+  },
+  "pixel7": {
+   "ok": 41,
+   "dead": 0,
+   "price": 5600,
+   "cash": 9000,
+   "deadConfirmEnabled": false,
+   "deadUnlocked": false,
+   "okConfirmEnabled": true,
+   "feedback": "Khu đất chưa được mở hoặc không liền kề.",
+   "at": {
+    "x": 206.00000000000009,
+    "y": 419.50000000000017
+   },
+   "okUnlocked": true,
+   "stillHighlighted": false,
+   "cashAfter": 3400
+  }
+ },
+ "1440x900-city-fresh": {
+  "level": 8
+ },
+ "1440x900-farm-fresh": {
+  "level": 8
+ },
+ "1440x900-city-mid": {
+  "poor": 12,
+  "ok": 2
+ },
+ "1440x900-city-mid-poor": {
+  "poor": 14
+ },
+ "1440x900-farm-mid": {
+  "ok": 11
+ },
+ "1440x900-farm-mid-poor": {
+  "poor": 11
+ },
+ "pixel7-city-fresh": {
+  "level": 8
+ },
+ "pixel7-farm-fresh": {
+  "level": 8
+ },
+ "pixel7-city-mid": {
+  "poor": 12,
+  "ok": 2
+ },
+ "pixel7-farm-mid": {
+  "ok": 11
+ }
+}
