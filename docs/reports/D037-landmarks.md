@@ -124,3 +124,14 @@ Các bước xử lý kỹ thuật:
 ## 6. Giới hạn đã biết (Known Limitations)
 
 - Do là thế hệ công trình đầu tiên sử dụng texture ảnh (`TEXCOORD_0` + `map`) thay cho mã màu đỉnh (`COLOR_0`), các công trình biểu tượng không có đèn cửa sổ đêm phát sáng instanced như 20 tòa D029/D031. Ban đêm các công trình đón nhận ánh sáng môi trường đêm và đèn đường tự nhiên.
+
+## 7. Làm sạch Nhà văn hóa (Culture house cleanup)
+
+Mái phẳng của `landmark_culture` vẫn còn vết loang đen và bẩn nên tòa nhà trông như đã bị bỏ hoang. Importer (`scripts/import-landmarks.mjs`, hàm `cleanCultureHouse`) được bổ sung bước làm sạch texture, deterministic và chỉ áp dụng cho `landmark_culture` (hình học, 5.999 tam giác, footprint, hướng không đổi; Cung điện và Lâu đài byte-identical):
+
+- **Nhận diện texel mái:** raster hóa các tam giác UV của mô hình nguồn (chưa simplify) có pháp tuyến thế giới hướng lên (`n.y > 0,8`); nằm ở 25% cao nhất của mô hình là mái, phần còn lại (hiên, bệ thềm, nền) là bề mặt ngang thấp. Mask có biên nới 0,15 texel để tránh viền đen khi lọc bilinear.
+- **Mái:** nâng các điểm tối (vết loang) lên trung vị của đảo UV, làm mượt bằng box blur có mask, rồi vẽ lại quanh tông bê tông/bitum xám sáng (178, 178, 174) với biến thiên tần số thấp (±10) và chi tiết mịn (±5) để không bị phẳng một màu. Bề mặt ngang thấp dùng tông bê tông ấm sáng (186, 182, 172).
+- **Tường và hàng cột:** nâng các mảng tối cục bộ (so với trung bình bán kính 24 px), làm dịu lốm đốm bằng blur nhỏ (giữ cạnh cột và khung cửa), giảm bão hòa, nâng sáng nhẹ vùng tối; kính tối/vỡ chuyển thành xanh xám trung tính sáng.
+- **Kích thước GLB:** 646.416 B -> 485.356 B (texture nhẹ hơn nhờ ít nhiễu), vẫn < 700 KB. Manifest chỉ đổi `hash` của `landmark_culture`.
+- **Ảnh trước/sau:** `docs/evidence/g4/landmarks/culture-clean-before-close-13h.jpg` / `culture-clean-after-close-13h.jpg` (cận cảnh 13:00) và `culture-clean-before-mid.jpg` / `culture-clean-after-mid.jpg` (tầm trung). `city-culture-*.jpg` trong cùng thư mục giữ nguyên bản cũ.
+

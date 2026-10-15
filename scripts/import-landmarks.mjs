@@ -5,7 +5,7 @@
 // Deterministic: byte-identical output across runs.
 // When map/nha2 is absent, skips cleanly with exit 0.
 
-import { existsSync } from 'node:fs';
+import { existsSync, writeFileSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { inflateSync } from 'node:zlib';
@@ -299,6 +299,171 @@ function cleanTonePripyat(image) {
     data[i + 3] = 255;
   }
   return { width: image.width, height: image.height, data };
+}
+
+// ---- Culture house cleanup helpers (D037 follow-up) ----
+
+// Separable box blur on a Float32Array plane; `weight` (optional) makes it a normalised, masked blur.
+function boxBlurPlane(src, w, h, r, weight = null) {
+  const num = new Float32Array(w * h);
+  const den = weight ? new Float32Array(w * h) : null;
+  const tmpN = new Float32Array(w * h);
+  const tmpD = weight ? new Float32Array(w * h) : null;
+  const pass = (inN, inD, outN, outD, horizontal) => {
+    const len = horizontal ? w : h;
+    const lines = horizontal ? h : w;
+    for (let line = 0; line < lines; line++) {
+      let sn = 0, sd = 0;
+      const at = k => (horizontal ? line * w + k : k * w + line);
+      for (let k = -r; k <= r; k++) {
+        const kk = Math.min(len - 1, Math.max(0, k));
+        sn += inN[at(kk)];
+        if (inD) sd += inD[at(kk)];
+      }
+      for (let k = 0; k < len; k++) {
+        outN[at(k)] = sn;
+        if (outD) outD[at(k)] = sd;
+        const add = Math.min(len - 1, k + r + 1), sub = Math.max(0, k - r);
+        sn += inN[at(add)] - inN[at(sub)];
+        if (inD) sd += inD[at(add)] - inD[at(sub)];
+      }
+    }
+  };
+  const pre = weight ? src.map((v, i) => v * weight[i]) : src;
+  pass(pre, weight, tmpN, tmpD, true);
+  pass(tmpN, tmpD, num, den, false);
+  const norm = (2 * r + 1) * (2 * r + 1);
+  const out = new Float32Array(w * h);
+  for (let i = 0; i < out.length; i++) out[i] = weight ? (den[i] > 1e-3 ? num[i] / den[i] : src[i]) : num[i] / norm;
+  return out;
+}
+
+// Rasterise (into a w x h mask) the UV triangles of horizontal surfaces: faces pointing up (normal.y > 0.8);
+// those in the top quarter of the model are the roof (1), the rest terrace/plinth/ground (2). Returns a Uint8Array of 0/1/2 (triangle edges overdrawn by a fraction of a texel).
+function roofUvMask(geometry, w, h) {
+  const { positions: P, uvs: UV, indices: I } = geometry;
+  let minY = Infinity, maxY = -Infinity;
+  for (let i = 1; i < P.length; i += 3) { minY = Math.min(minY, P[i]); maxY = Math.max(maxY, P[i]); }
+  const roofY = minY + (maxY - minY) * 0.75;
+  const mask = new Uint8Array(w * h); // 1 = roof, 2 = lower horizontal surface (terrace, plinth, ground)
+  for (let t = 0; t < I.length; t += 3) {
+    const a = I[t] * 3, b = I[t + 1] * 3, c = I[t + 2] * 3;
+    const e1x = P[b] - P[a], e1y = P[b + 1] - P[a + 1], e1z = P[b + 2] - P[a + 2];
+    const e2x = P[c] - P[a], e2y = P[c + 1] - P[a + 1], e2z = P[c + 2] - P[a + 2];
+    const nx = e1y * e2z - e1z * e2y, ny = e1z * e2x - e1x * e2z, nz = e1x * e2y - e1y * e2x;
+    const len = Math.hypot(nx, ny, nz);
+    if (len < 1e-12 || ny / len < 0.8) continue;
+    const cls = (P[a + 1] + P[b + 1] + P[c + 1]) / 3 < roofY ? 2 : 1;
+    const u0 = UV[I[t] * 2] * w, v0 = UV[I[t] * 2 + 1] * h;
+    const u1 = UV[I[t + 1] * 2] * w, v1 = UV[I[t + 1] * 2 + 1] * h;
+    const u2 = UV[I[t + 2] * 2] * w, v2 = UV[I[t + 2] * 2 + 1] * h;
+    const minX = Math.max(0, Math.floor(Math.min(u0, u1, u2) - 0.5)), maxX = Math.min(w - 1, Math.ceil(Math.max(u0, u1, u2) + 0.5));
+    const minYp = Math.max(0, Math.floor(Math.min(v0, v1, v2) - 0.5)), maxYp = Math.min(h - 1, Math.ceil(Math.max(v0, v1, v2) + 0.5));
+    const den = (v1 - v2) * (u0 - u2) + (u2 - u1) * (v0 - v2);
+    if (Math.abs(den) < 1e-9) continue;
+    for (let py = minYp; py <= maxYp; py++) {
+      for (let px = minX; px <= maxX; px++) {
+        const x = px + 0.5, y = py + 0.5;
+        const l0 = ((v1 - v2) * (x - u2) + (u2 - u1) * (y - v2)) / den;
+        const l1 = ((v2 - v0) * (x - u2) + (u0 - u2) * (y - v2)) / den;
+        const l2 = 1 - l0 - l1;
+        const eps = -0.15;
+        if (l0 >= eps && l1 >= eps && l2 >= eps && (mask[py * w + px] === 0 || cls === 1)) mask[py * w + px] = cls;
+      }
+    }
+  }
+  return mask;
+}
+
+// Culture house: clean walls and a clean, evenly toned roof. Deterministic, pure JS.
+function cleanCultureHouse(image, geometry) {
+  const w = image.width, h = image.height, n = w * h;
+  const tone = cleanTonePripyat(image);
+  const roof = roofUvMask(geometry, w, h);
+
+  const R = new Float32Array(n), G = new Float32Array(n), B = new Float32Array(n), L = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    R[i] = tone.data[i * 4]; G[i] = tone.data[i * 4 + 1]; B[i] = tone.data[i * 4 + 2];
+    L[i] = 0.2126 * R[i] + 0.7152 * G[i] + 0.0722 * B[i];
+  }
+  const wallW = Float32Array.from(roof, v => (v ? 0 : 1));
+  const horiz = new Float32Array(n); // detail offsets for horizontal surfaces
+  const baseOf = new Array(n);
+  // Per class: pull dark outliers (stains) up to the island median, smooth, add subtle variation.
+  const classes = [
+    { id: 1, base: [178, 178, 174], lowAmp: 10, fineAmp: 5 }, // roof: even light concrete/bitumen grey
+    { id: 2, base: [186, 182, 172], lowAmp: 12, fineAmp: 7 }, // terrace / plinth / ground paving: warm light concrete
+  ];
+  for (const cls of classes) {
+    const m = Float32Array.from(roof, v => (v === cls.id ? 1 : 0));
+    const sorted = [];
+    for (let i = 0; i < n; i++) if (m[i]) sorted.push(Math.round(L[i]));
+    if (!sorted.length) continue;
+    sorted.sort((a, b) => a - b);
+    const medianL = sorted[sorted.length >> 1];
+    const lifted = new Float32Array(n);
+    for (let i = 0; i < n; i++) lifted[i] = m[i] ? Math.max(L[i], medianL) : L[i];
+    const low = boxBlurPlane(boxBlurPlane(lifted, w, h, 9, m), w, h, 9, m);
+    const fine = boxBlurPlane(lifted, w, h, 2, m);
+    for (let i = 0; i < n; i++) {
+      if (!m[i]) continue;
+      horiz[i] = Math.max(-cls.lowAmp, Math.min(cls.lowAmp, (low[i] - medianL) * 0.25))
+        + Math.max(-cls.fineAmp, Math.min(cls.fineAmp, (lifted[i] - fine[i]) * 0.6));
+      baseOf[i] = cls.base;
+    }
+  }
+
+  // ---- Walls: lift grime blobs / streaks, glass to a neutral light blue-grey ----
+  const wallLow = boxBlurPlane(boxBlurPlane(L, w, h, 5, wallW), w, h, 5, wallW);
+  const wallSoft = boxBlurPlane(L, w, h, 2, wallW);
+  const wallRef = boxBlurPlane(boxBlurPlane(L, w, h, 24, wallW), w, h, 24, wallW);
+
+  const out = new Uint8ClampedArray(n * 4);
+  for (let i = 0; i < n; i++) {
+    let r = R[i], g = G[i], b = B[i];
+    if (roof[i]) {
+      const d = horiz[i], base = baseOf[i];
+      r = base[0] + d; g = base[1] + d; b = base[2] + d;
+    } else {
+      const l = L[i];
+      // Mid-scale dark blobs relative to the surroundings = grime; lift partially.
+      const blob = wallRef[i] - wallLow[i];
+      if (blob > 2 && wallRef[i] > 110) {
+        const lift = Math.min(80, blob * 0.85);
+        r += lift; g += lift; b += lift;
+      }
+      // Soften the remaining mottling (keeps column / mullion edges, which are wider than the blur).
+      const soft = wallSoft[i] - L[i];
+      r += soft * 0.5; g += soft * 0.5; b += soft * 0.5;
+      // Dark, neutral/cool texels = broken glass: neutral light blue-grey, keep some of the pane structure.
+      const sat = Math.max(r, g, b) - Math.min(r, g, b);
+      if (l < 120 && sat < 40) {
+        const k = Math.min(0.75, (120 - l) / 120 * 1.1);
+        r = r * (1 - k) + (150 + (l - 60) * 0.35) * k;
+        g = g * (1 - k) + (174 + (l - 60) * 0.35) * k;
+        b = b * (1 - k) + (188 + (l - 60) * 0.3) * k;
+      }
+      // Pull stray warm brown stains toward neutral concrete.
+      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      const desat = 0.45;
+      r = r + (lum - r) * desat; g = g + (lum - g) * desat; b = b + (lum - b) * desat;
+      // Gentle brightening toward a clean, maintained light concrete (darks lift most).
+      const lift2 = Math.max(0, 215 - lum) * 0.22;
+      r += lift2; g += lift2; b += lift2 * 1.03;
+    }
+    out[i * 4] = Math.round(Math.max(0, Math.min(255, r)));
+    out[i * 4 + 1] = Math.round(Math.max(0, Math.min(255, g)));
+    out[i * 4 + 2] = Math.round(Math.max(0, Math.min(255, b)));
+    out[i * 4 + 3] = 255;
+  }
+  if (process.env.CULTURE_DEBUG) {
+    writeFileSync(`${process.env.CULTURE_DEBUG}/before.jpg`, jpeg.encode(image, 90).data);
+    writeFileSync(`${process.env.CULTURE_DEBUG}/after.jpg`, jpeg.encode({ data: out, width: w, height: h }, 90).data);
+    const m = new Uint8ClampedArray(n * 4);
+    for (let i = 0; i < n; i++) { m[i * 4] = m[i * 4 + 1] = m[i * 4 + 2] = roof[i] * 120; m[i * 4 + 3] = 255; }
+    writeFileSync(`${process.env.CULTURE_DEBUG}/mask.jpg`, jpeg.encode({ data: m, width: w, height: h }, 90).data);
+  }
+  return { width: w, height: h, data: out };
 }
 
 // Rotation matrix around Y axis
@@ -613,13 +778,14 @@ async function processModel(config) {
 
   // 1. Process texture
   const downscaled = downscale(decodeGlbImage(parsed, 0), config.textureSize);
+  // 2. Collect and transform geometry (before the texture: the culture house cleanup needs the roof UV mask)
+  const rawGeometry = collectSceneGeometry(parsed, config);
+
   const textureRgba = config.id === 'landmark_castle' ? cleanToneMonserrate(downscaled)
-    : config.id === 'landmark_culture' ? cleanTonePripyat(downscaled) : downscaled;
+    : config.id === 'landmark_culture' ? cleanCultureHouse(downscaled, rawGeometry) : downscaled;
 
   const jpegBytes = Buffer.from(jpeg.encode({ data: textureRgba.data, width: textureRgba.width, height: textureRgba.height }, 85).data);
 
-  // 2. Collect and transform geometry
-  const rawGeometry = collectSceneGeometry(parsed, config);
   const welded = weld(rawGeometry);
 
   // 3. Simplify
