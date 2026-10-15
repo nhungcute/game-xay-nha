@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { economy } from '@xay-nha/content';
-import { createTestTemplate } from '@xay-nha/worldgen';
+import { createTestTemplate, generateWorldTemplate } from '@xay-nha/worldgen';
 import { EconomyBot } from './economy-bot-core';
+import { createBot } from './economy-bot-policies';
 import { nextHarvestMinute, sessions } from './economy-bot-schedule';
 import { pacingComparison, runEconomy } from '../sim-economy';
 
@@ -47,5 +48,17 @@ describe('tuned bot policies (Q010, default of sim-economy)', () => {
       const result = createBot(createTestTemplate(kind), 'thuong', 1).run();
       expect(result.invariants).toMatchObject({ snapshotValid: true, walletSafe: true, occupancyValid: true });
     }
+  });
+});
+
+describe('random maps (D039 rule A)', () => {
+  it.each(['city', 'farm'] as const)('%s bot on a random map has no entry road, lays its own dirt road, and keeps a valid snapshot', kind => {
+    const { template } = generateWorldTemplate(kind, 20260004);
+    expect(template.entryCells).toEqual([]);
+    const bot = createBot(template, 'thuong', 1), result = bot.run();
+    expect(bot.s.roadTier.some(Boolean)).toBe(true);
+    expect(result.final.buildings).toBeGreaterThan(0);
+    expect(result.final.questIndex).toBeGreaterThanOrEqual(economy.construction.tutorialInstantThroughQuest);
+    expect(result.invariants).toEqual({ snapshotValid: true, errors: [], walletSafe: true, occupancyValid: true });
   });
 });

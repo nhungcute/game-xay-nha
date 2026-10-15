@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { WorldTemplateSchema, type MapKind, type WorldTemplate } from '@xay-nha/contracts';
+import { generateWorldTemplate, validateTemplate } from '@xay-nha/worldgen';
 import { Game } from './Game';
-import { WorldStore } from './game/WorldStore';
+import { OFFLINE_TEMPLATE_KEY, OFFLINE_WORLD_KEY, SnapshotCache, WorldStore } from './game/WorldStore';
 import { api, ApiError, storage, type CharacterSummary, type MapInfo } from './net/api';
 import { t } from './i18n';
 import { errorMessage, LoginForm, MapSelect, RegisterForm } from './start/EntryScreens';
@@ -19,12 +20,39 @@ function loadTemplate(url: string): Promise<WorldTemplate> {
   return cached;
 }
 const templateUrl = (c: { mapId: string; templateVersion: number }) => `/worlds/${c.mapId}/template.v${c.templateVersion}.json`;
+/** D039: a random map's template lives on the server (per world); static maps keep their static URLs. */
+const isRandom = (mapId: string) => mapId.startsWith('rnd-');
+const loadCharacterTemplate = async (c: CharacterSummary): Promise<WorldTemplate> => isRandom(c.mapId)
+  ? WorldTemplateSchema.parse(await api.template(c.id)) : loadTemplate(templateUrl(c));
+
+/** Offline random maps are opt-in (VITE_RANDOM_MAPS=1 or ?random=1) so the hand-authored offline slice stays the default. */
+const OFFLINE_RANDOM = import.meta.env.VITE_RANDOM_MAPS === '1' || (typeof location !== 'undefined' && new URLSearchParams(location.search).has('random'));
+/** Generated once, stored with the offline save in IndexedDB; a reload keeps the same map. */
+async function loadOfflineTemplate(): Promise<WorldTemplate> {
+  if (!OFFLINE_RANDOM) return loadTemplate('/worlds/farm-g1/template.v1.json');
+  const cache = new SnapshotCache();
+  try {
+    await cache.open();
+    const stored = WorldTemplateSchema.safeParse(await cache.readKey(OFFLINE_TEMPLATE_KEY));
+    if (stored.success && validateTemplate(stored.data).length === 0) return stored.data;
+    const { template } = generateWorldTemplate('farm', crypto.getRandomValues(new Uint32Array(1))[0]!);
+    await cache.deleteKeys([OFFLINE_WORLD_KEY]); // an old save belongs to the previous map
+    await cache.writeKey(OFFLINE_TEMPLATE_KEY, template);
+    return template;
+  } catch { return generateWorldTemplate('farm', crypto.getRandomValues(new Uint32Array(1))[0]!).template; }
+  finally { cache.close(); }
+}
+async function newOfflineMap(): Promise<void> {
+  const cache = new SnapshotCache();
+  try { await cache.open(); await cache.deleteKeys([OFFLINE_WORLD_KEY, OFFLINE_TEMPLATE_KEY]); } finally { cache.close(); }
+  location.reload();
+}
 
 type Screen = { name: 'boot' } | { name: 'maps' } | { name: 'register'; kind: MapKind } | { name: 'login' } | { name: 'game'; character: CharacterSummary };
 
 export function Root() {
-  if (OFFLINE) return <Game loader={async () => {
-    const template = await loadTemplate('/worlds/farm-g1/template.v1.json');
+  if (OFFLINE) return <Game onNewMap={OFFLINE_RANDOM ? newOfflineMap : undefined} loader={async () => {
+    const template = await loadOfflineTemplate();
     return new WorldStore(template);
   }}/>;
   return <OnlineRoot/>;
@@ -73,7 +101,7 @@ function OnlineRoot() {
   if (screen.name === 'game') {
     const c = screen.character;
     return <Game key={c.id} loader={async () => {
-      const template = await loadTemplate(templateUrl(c));
+      const template = await loadCharacterTemplate(c);
       return WorldStore.online(template, { send: commands => api.commands(c.id, commands), fetchSnapshot: () => api.snapshot(c.id) });
     }} onSwitchMap={async world => { await world.drain(); await refresh().catch(() => undefined); setScreen({ name: 'maps' }); }}
       onLogout={async world => { await world.drain().catch(() => undefined); await logout(); }}/>;

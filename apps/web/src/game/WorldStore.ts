@@ -28,8 +28,18 @@ export class SnapshotCache {
     const snapshot = structuredClone(state.snapshot);
     await new Promise<void>((resolve, reject) => { const tx = this.db!.transaction('worlds', 'readwrite'); tx.objectStore('worlds').put(snapshot, snapshot.worldId); tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error); tx.onabort = () => reject(tx.error); });
   }
+  /** D039: the offline random map is stored next to the offline save (same database, separate keys). */
+  async readKey(key: string): Promise<unknown> { return this.read(key); }
+  async writeKey(key: string, value: unknown): Promise<void> {
+    await new Promise<void>((resolve, reject) => { const tx = this.db!.transaction('worlds', 'readwrite'); tx.objectStore('worlds').put(value, key); tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error); tx.onabort = () => reject(tx.error); });
+  }
+  async deleteKeys(keys: string[]): Promise<void> {
+    await new Promise<void>((resolve, reject) => { const tx = this.db!.transaction('worlds', 'readwrite'); for (const key of keys) tx.objectStore('worlds').delete(key); tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error); tx.onabort = () => reject(tx.error); });
+  }
   close(): void { this.db?.close(); }
 }
+
+export const OFFLINE_WORLD_KEY = 'offline-farm', OFFLINE_TEMPLATE_KEY = 'offline-template';
 
 /** Server transport (G2). The server is authoritative; sim runs locally for previews and optimism. */
 export interface Transport {
@@ -53,7 +63,7 @@ export class WorldStore {
   private retryDelay = 1000;
 
   constructor(readonly template: WorldTemplate, now = Date.now(), private readonly transport: Transport | null = null,
-    identity = { worldId: 'offline-farm', accountId: 'offline', displayName: 'Người chơi', tag: '0001' }) {
+    identity = { worldId: OFFLINE_WORLD_KEY, accountId: 'offline', displayName: 'Người chơi', tag: '0001' }) {
     const errors = validateTemplate(template); if (errors.length) throw new Error(errors.join('\n'));
     this.state = createState(template, now, generateEnvironment(template), identity);
     recompute(this.state); useWorld.setState({ state: this.state, connection: transport ? 'syncing' : 'local', pending: 0 });

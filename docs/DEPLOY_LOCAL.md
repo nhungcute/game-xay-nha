@@ -6,6 +6,8 @@ Lần chạy đầu, `pnpm deploy:up` tự tạo `infra/.env` với mật khẩu
 
 Người chơi vào game theo hai cách (D027): **Đăng nhập** bằng tên người chơi + mã PIN (4–6 số), hoặc **Tạo nhân vật mới** (đặt tên không trùng + PIN). Nhập sai PIN 5 lần thì tên đó bị khóa 15 phút; mỗi IP tối đa 30 lần đăng nhập/giờ (`LOGINS_PER_HOUR`) và 5 tài khoản mới/giờ (`ACCOUNTS_PER_HOUR`).
 
+Bản đồ ngẫu nhiên (D039): đặt `RANDOM_MAPS=1` trong `.env` để mọi nhân vật **mới** có map riêng (lưu trong bảng `world_templates`); mặc định tắt, nhân vật cũ giữ map cũ. Xem `docs/reports/D039-random-maps-assessment.md` §8.
+
 ## Yêu cầu
 
 - Docker Desktop (Engine ≥ 24) đang chạy, kèm Docker Compose v2.

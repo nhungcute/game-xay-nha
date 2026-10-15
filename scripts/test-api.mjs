@@ -3,7 +3,7 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const NAME = 'xay-nha-test-pg', PORT = process.env.TEST_PG_PORT ?? '55432';
+const PORT = process.env.TEST_PG_PORT ?? '55432', NAME = process.env.TEST_PG_NAME ?? 'xay-nha-test-pg';
 const docker = (...args) => execFileSync('docker', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 try { docker('rm', '-f', NAME); } catch { /* not running */ }
 docker('run', '-d', '--rm', '--name', NAME, '-e', 'POSTGRES_PASSWORD=test', '-e', 'POSTGRES_USER=test', '-e', 'POSTGRES_DB=test',

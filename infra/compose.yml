@@ -27,6 +27,7 @@ services:
       DATABASE_URL: postgres://xaynha:${POSTGRES_PASSWORD}@postgres:5432/xaynha
       TOKEN_PEPPER: ${TOKEN_PEPPER:?run node scripts/ensure-env.mjs}
       LOG_LEVEL: ${LOG_LEVEL:-info}
+      RANDOM_MAPS: ${RANDOM_MAPS:-0}
     depends_on:
       postgres:
         condition: service_healthy

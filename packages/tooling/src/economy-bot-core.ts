@@ -9,7 +9,7 @@ import { nextHarvestMinute, sessions, type PlayStyle, type Session } from './eco
 const MINUTE = 60000;
 export interface BotResult {
   mapKind: MapKind; style: PlayStyle; days: number; templateId: string; templateVersion: number; firstMinute: number;
-  levelAtDays: Record<number, number>; commands: number; rejected: Record<string, number>; final: { level: number; xp: number; cash: number; netWorth: number; buildings: number; zones: number; fields: number; producers: number; questIndex: number; repeatClaims: number; rate: number };
+  levelAtDays: Record<number, number>; tutorialDoneDays?: number; chainDoneDays?: number; questReachedDays?: number[]; commands: number; rejected: Record<string, number>; final: { level: number; xp: number; cash: number; netWorth: number; buildings: number; zones: number; fields: number; producers: number; questIndex: number; repeatClaims: number; rate: number };
   daily: { day: number; level: number; cash: number; buildings: number; fields: number; rate: number }[];
   invariants: { snapshotValid: boolean; errors: string[]; walletSafe: boolean; occupancyValid: boolean };
   limitations: string[];
@@ -23,6 +23,12 @@ export class EconomyBot {
   readonly levelAtDays: Record<number, number> = {};
   readonly daily: BotResult['daily'] = [];
   commands = 0; repeatClaims = 0; now = 0;
+  /** Elapsed days (from the first session) when the tutorial chain was completed; undefined if never. */
+  tutorialDoneDays: number | undefined;
+  /** Elapsed days when the whole authored quest chain was claimed. */
+  chainDoneDays: number | undefined;
+  /** Elapsed days at which each authored quest index was first reached (index i = quest i-1 claimed). */
+  readonly questReachedDays: number[] = [];
   private serial = 0;
   private siteCursor = new Map<string, number>();
   private noSpace = new Set<string>();
@@ -37,6 +43,41 @@ export class EconomyBot {
     this.state = createState(template, this.now, generateEnvironment(template)); recompute(this.state);
   }
   get s(): SimState { return this.state; }
+  /** Where the bot builds first: the village entry on authored maps; random maps (D039) have none, so the middle of the start zones. */
+  get anchor(): Cell {
+    const entry = this.template.entryCells[0];
+    if (entry) return entry;
+    const zones = this.template.startZones;
+    const x = zones.reduce((sum, zone) => sum + (zone % 8) * 16 + 8, 0) / zones.length, z = zones.reduce((sum, zone) => sum + Math.floor(zone / 8) * 16 + 8, 0) / zones.length;
+    return [Math.round(x), Math.round(z)];
+  }
+  /** Dry cells of the home bank on a random map: the water-separated component holding most start-zone land (same rule as sim `isFarBank`). */
+  private homeCells(): Set<number> {
+    const label = new Int32Array(128 * 128), counts = new Map<number, number>();
+    let next = 0;
+    for (const zone of this.template.startZones) for (let dz = 0; dz < 16; dz++) for (let dx = 0; dx < 16; dx++) {
+      const start = cellIndex((zone % 8) * 16 + dx, Math.floor(zone / 8) * 16 + dz);
+      if (label[start] || this.s.surface[start] === Surface.WATER) continue;
+      const id = ++next, queue = [start]; label[start] = id;
+      for (let head = 0; head < queue.length; head++) {
+        const cell: Cell = [queue[head]! % 128, Math.floor(queue[head]! / 128)];
+        for (const n of neighbors(cell)) {
+          const index = cellIndex(...n);
+          if (label[index] || this.s.surface[index] === Surface.WATER) continue;
+          label[index] = id; queue.push(index);
+        }
+      }
+    }
+    for (const zone of this.template.startZones) for (let dz = 0; dz < 16; dz++) for (let dx = 0; dx < 16; dx++) {
+      const l = label[cellIndex((zone % 8) * 16 + dx, Math.floor(zone / 8) * 16 + dz)]!;
+      if (l) counts.set(l, (counts.get(l) ?? 0) + 1);
+    }
+    let best = 0, max = -1;
+    for (const [l, c] of counts) if (c > max) { max = c; best = l; }
+    const home = new Set<number>();
+    for (let i = 0; i < label.length; i++) if (best && label[i] === best) home.add(i);
+    return home;
+  }
   command<T extends CommandType>(type: T, payload: CommandPayload[T]): boolean {
     const result = execute(this.s, { type, payload, commandId: `ec000000-0000-4000-8000-${(++this.serial).toString(16).padStart(12, '0')}`,
       worldId: this.s.snapshot.worldId, expectedRevision: this.s.snapshot.revision, clientTime: this.now }, this.now);
@@ -47,6 +88,9 @@ export class EconomyBot {
   captureLevels(): void {
     const elapsed = (this.now / MINUTE - this.schedule[0]!.start) / 1440;
     for (let level = 2; level <= this.s.snapshot.progress.level; level++) this.levelAtDays[level] ??= elapsed;
+    for (let q = this.questReachedDays.length; q <= this.s.snapshot.progress.questIndex; q++) this.questReachedDays[q] = elapsed;
+    if (this.s.snapshot.progress.tutorialDone) this.tutorialDoneDays ??= elapsed;
+    if (this.s.snapshot.progress.questIndex >= catalog.quests[this.template.mapKind].length) this.chainDoneDays ??= elapsed;
   }
   materials(cost: Cost, extraCash = 0): boolean {
     const wood = Math.max(0, cost.wood - this.s.snapshot.wallet.wood), stone = Math.max(0, cost.stone - this.s.snapshot.wallet.stone);
@@ -66,6 +110,13 @@ export class EconomyBot {
   }
   pathTo(cells: Cell[]): Cell[] | undefined {
     const owned = new Set(cells.map(cell => cellIndex(...cell))), starts = cells.flatMap(cell => neighbors(cell)).filter(cell => !owned.has(cellIndex(...cell)));
+    // Rule A (D039): without an entry road every road cell counts as connected, so the bot lays one short dirt road cell next to the building.
+    if (!this.template.entryCells.length) {
+      const joined = starts.find(cell => this.s.connected[cellIndex(...cell)]);
+      if (joined) return [joined];
+      const first = starts.find(cell => this.free(cell, true));
+      return first ? [first] : undefined;
+    }
     // Reject disconnected regions once per state revision instead of flood-filling every proposed lot.
     if (this.reachableRevision !== this.s.snapshot.revision) {
       this.reachableRevision = this.s.snapshot.revision; this.reachableRoad.clear();
@@ -112,7 +163,7 @@ export class EconomyBot {
     return true;
   }
   expand(): boolean {
-    const owned = new Set(this.s.snapshot.unlockedZones), entry = this.template.entryCells[0]!;
+    const owned = new Set(this.s.snapshot.unlockedZones), entry = this.anchor;
     const candidates = Array.from({ length: 64 }, (_, zone) => zone).filter(zone => !owned.has(zone)
       && [...owned].some(other => Math.abs(other % 8 - zone % 8) + Math.abs(Math.floor(other / 8) - Math.floor(zone / 8)) === 1));
     candidates.sort((a, b) => Math.hypot(a % 8 * 16 - entry[0], Math.floor(a / 8) * 16 - entry[1]) - Math.hypot(b % 8 * 16 - entry[0], Math.floor(b / 8) * 16 - entry[1]));
@@ -125,7 +176,7 @@ export class EconomyBot {
       || this.s.snapshot.buildings.filter(building => building.status === 'CONSTRUCTING').length >= builderCapacity(this.s)) return false;
     const cost = { ...def.cost, cash: def.costScaling?.[count] ?? def.cost.cash };
     if (this.s.snapshot.wallet.cash < costValue(cost)) return false;
-    const entry = this.template.entryCells[0]!;
+    const entry = this.anchor;
     const candidates: Cell[] = [];
     for (const zone of this.s.snapshot.unlockedZones) for (let z = Math.floor(zone / 8) * 16; z < Math.floor(zone / 8) * 16 + 16; z++) for (let x = zone % 8 * 16; x < zone % 8 * 16 + 16; x++) candidates.push([x, z]);
     candidates.sort((a, b) => Math.abs(a[0] - entry[0]) + Math.abs(a[1] - entry[1]) - Math.abs(b[0] - entry[0]) - Math.abs(b[1] - entry[1]));
@@ -178,6 +229,20 @@ export class EconomyBot {
     for (const zone of path.reverse()) if (!this.command('UNLOCK_ZONE', { zoneId: zone })) return false;
     this.siteCursor.clear(); this.noSpace.clear(); return true;
   }
+  /** Rule A: any run of road cells counts, so a random-map player lays a short straight dirt road on flat free ground near the start. */
+  dirtRoad(length: number): boolean {
+    const [ax, az] = this.anchor, runs: { cells: Cell[]; d: number }[] = [];
+    for (const zone of this.s.snapshot.unlockedZones) for (let dz = 0; dz < 16; dz++) for (let dx = 0; dx < 16; dx++) {
+      const x = (zone % 8) * 16 + dx, z = Math.floor(zone / 8) * 16 + dz;
+      for (const [sx, sz] of [[1, 0], [0, 1]] as const) {
+        const cells = Array.from({ length }, (_, i) => [x + sx * i, z + sz * i] as Cell);
+        if (cells.every(cell => this.free(cell) && slope(this.s, cell) <= economy.terraform.stepDm)) runs.push({ cells, d: Math.abs(x - ax) + Math.abs(z - az) });
+      }
+    }
+    runs.sort((a, b) => a.d - b.d);
+    for (const run of runs.slice(0, 8)) if (this.road(run.cells)) return true;
+    return false;
+  }
   gradedRoad(path: Cell[], endHeight: number): boolean {
     if (!this.clear(path.filter(cell => !this.s.roadTier[cellIndex(...cell)]))) return false;
     const begin = Math.round(meanHeight(this.s, path[0]!) / economy.terraform.stepDm) * economy.terraform.stepDm;
@@ -192,10 +257,11 @@ export class EconomyBot {
   bridge(): void {
     if (this.s.snapshot.bridges.length || this.bridgeAttemptedMinute === this.now / MINUTE) return;
     this.bridgeAttemptedMinute = this.now / MINUTE;
-    const def = catalog.bridges.bridge_wood!, entry = this.template.entryCells[0]!, candidates: { a: Cell; b: Cell; span: number; distance: number }[] = [];
+    const def = catalog.bridges.bridge_wood!, entry = this.anchor, candidates: { a: Cell; b: Cell; span: number; distance: number }[] = [];
     if (this.s.snapshot.progress.level < def.unlockLevel) return;
-    const home = new Set<number>();
-    if (this.template.bankRegions) {
+    let home = new Set<number>();
+    if (!this.template.entryCells.length) home = this.homeCells();
+    else if (this.template.bankRegions) {
       const region = this.template.bankRegions.find(item => item.cells.some(cell => cellIndex(...cell) === cellIndex(...entry)));
       for (const cell of region?.cells ?? []) home.add(cellIndex(...cell));
     } else {
@@ -246,7 +312,7 @@ export class EconomyBot {
       else if (cells.length < quest.target) {
         const shore: Cell[] = [];
         for (let z = 0; z < 128; z++) for (let x = 0; x < 128; x++) if (isShore(this.s, [x, z]) && !(this.s.flags[cellIndex(x, z)]! & (CellFlag.PROTECTED | CellFlag.NO_BUILD))) shore.push([x, z]);
-        const entry = this.template.entryCells[0]!;
+        const entry = this.anchor;
         shore.sort((a, b) => Math.abs(a[0] - entry[0]) + Math.abs(a[1] - entry[1]) - Math.abs(b[0] - entry[0]) - Math.abs(b[1] - entry[1]));
         const next = shore.find(cell => !isUnlocked(this.s, cell)); if (next) this.unlockCell(next);
       }
@@ -346,7 +412,7 @@ export class EconomyBot {
     if (room <= 0 || this.s.snapshot.wallet.cash < room * economy.till.cost) return;
     const choices: Cell[] = [];
     for (let z = 0; z < 128; z++) for (let x = 0; x < 128; x++) if (this.free([x, z]) && slope(this.s, [x, z]) <= economy.terraform.stepDm) choices.push([x, z]);
-    const entry = this.template.entryCells[0]!;
+    const entry = this.anchor;
     choices.sort((a, b) => Math.abs(a[0] - entry[0]) + Math.abs(a[1] - entry[1]) - Math.abs(b[0] - entry[0]) - Math.abs(b[1] - entry[1]));
     let remaining = room;
     for (const cell of choices) {
@@ -408,8 +474,9 @@ export class EconomyBot {
         if (this.template.mapKind === 'city') {
           if (quest?.action === 'CLEAR') this.command('CLEAR_ENV', { envIds: this.s.env.filter(env => env.assetId.startsWith('tree') && isUnlocked(this.s, env.cell) && !this.s.snapshot.delta.removedEnvIds.includes(env.id)).slice(0, quest.target).map(env => env.id) });
           if (quest?.action === 'ROAD') {
-            const [x, z] = this.template.entryCells[0]!;
-            this.road(Array.from({ length: quest.target + 1 }, (_, offset) => [x + offset, z]));
+            const [x, z] = this.template.entryCells[0] ?? [-1, -1];
+            if (this.template.entryCells.length) this.road(Array.from({ length: quest.target + 1 }, (_, offset) => [x + offset, z]));
+            else this.dirtRoad(quest.target);
           }
           if (quest?.action === 'TERRAFORM') {
             const lot = this.template.suggestedLots?.[0];
@@ -428,7 +495,7 @@ export class EconomyBot {
     recompute(this.s); rebuildOccupancy(this.s);
     const snapshot = validateSnapshot(this.s, this.s.snapshot, this.now), occupancy = rebuildOccupancy(this.s);
     return { mapKind: this.template.mapKind, style: this.style, days: this.days, templateId: this.template.mapId, templateVersion: this.template.templateVersion,
-      firstMinute: this.schedule[0]!.start, levelAtDays: this.levelAtDays, commands: this.commands, rejected: this.rejected, daily: this.daily,
+      firstMinute: this.schedule[0]!.start, levelAtDays: this.levelAtDays, ...(this.tutorialDoneDays !== undefined ? { tutorialDoneDays: this.tutorialDoneDays } : {}), ...(this.chainDoneDays !== undefined ? { chainDoneDays: this.chainDoneDays } : {}), questReachedDays: this.questReachedDays, commands: this.commands, rejected: this.rejected, daily: this.daily,
       final: { level: this.s.snapshot.progress.level, xp: this.s.snapshot.progress.xp, cash: this.s.snapshot.wallet.cash, netWorth: this.s.snapshot.character.netWorth,
         buildings: this.s.snapshot.buildings.length, zones: this.s.snapshot.unlockedZones.length, fields: this.s.surface.reduce((sum, surface) => sum + Number(surface === Surface.TILLED), 0),
         producers: this.s.snapshot.buildings.filter(building => catalog.buildings[building.defId]!.production).length, questIndex: this.s.snapshot.progress.questIndex, repeatClaims: this.repeatClaims,

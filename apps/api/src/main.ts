@@ -7,7 +7,7 @@ const config = loadConfig();
 const { pool, db } = createDatabase(config.databaseUrl);
 const applied = await migrate(pool, config.migrationsDir);
 const templates = await TemplateRegistry.load(config.worldsDir);
-const app = buildApp({ db, templates, tokenPepper: config.tokenPepper, logLevel: config.logLevel, trustProxy: config.trustProxy, limits: { accountsPerHour: config.accountsPerHour, loginsPerHour: config.loginsPerHour } });
+const app = buildApp({ db, templates, tokenPepper: config.tokenPepper, logLevel: config.logLevel, trustProxy: config.trustProxy, randomMaps: config.randomMaps, limits: { accountsPerHour: config.accountsPerHour, loginsPerHour: config.loginsPerHour } });
 app.log.info({ applied, maps: templates.maps() }, 'migrations applied, templates loaded');
 
 const shutdown = async (): Promise<void> => { await app.close(); await pool.end(); process.exit(0); };

@@ -1,0 +1,1272 @@
+{
+  "at": "2026-10-15T03:47:01.950Z",
+  "days": 7,
+  "style": "thuong",
+  "seeds": 30,
+  "gate": "random median within +-20% of authored for tutorial time and net worth",
+  "kinds": {
+    "city": {
+      "authoredMap": "city-coast-01",
+      "authored": {
+        "tutorialDoneDays": 0.0020833333333333333,
+        "chainDoneDays": null,
+        "netWorthDay7": 3142592,
+        "level": 9,
+        "buildings": 88,
+        "questIndex": 10
+      },
+      "random": {
+        "tutorialDoneDays": {
+          "n": 30,
+          "of": 30,
+          "median": 0.002,
+          "p10": 0.002,
+          "p90": 0.002,
+          "min": 0.002,
+          "max": 0.002
+        },
+        "chainDoneDays": {
+          "n": 29,
+          "of": 30,
+          "median": 0.689,
+          "p10": 0.506,
+          "p90": 0.692,
+          "min": 0.505,
+          "max": 1.043
+        },
+        "netWorthDay7": {
+          "n": 30,
+          "of": 30,
+          "median": 4484490,
+          "p10": 4205882,
+          "p90": 4851933,
+          "min": 3244325,
+          "max": 4936150
+        },
+        "level": {
+          "n": 30,
+          "of": 30,
+          "median": 10,
+          "p10": 10,
+          "p90": 10,
+          "min": 9,
+          "max": 10
+        },
+        "buildings": {
+          "n": 30,
+          "of": 30,
+          "median": 102,
+          "p10": 102,
+          "p90": 102,
+          "min": 88,
+          "max": 102
+        },
+        "invalid": 0
+      },
+      "authoredDaily": [
+        {
+          "day": 1,
+          "level": 4,
+          "incomeRatePerHour": 1422,
+          "buildings": 12
+        },
+        {
+          "day": 2,
+          "level": 4,
+          "incomeRatePerHour": 7946,
+          "buildings": 29
+        },
+        {
+          "day": 3,
+          "level": 5,
+          "incomeRatePerHour": 17555,
+          "buildings": 43
+        },
+        {
+          "day": 4,
+          "level": 7,
+          "incomeRatePerHour": 24116,
+          "buildings": 60
+        },
+        {
+          "day": 5,
+          "level": 8,
+          "incomeRatePerHour": 34036,
+          "buildings": 72
+        },
+        {
+          "day": 6,
+          "level": 8,
+          "incomeRatePerHour": 43827,
+          "buildings": 76
+        },
+        {
+          "day": 7,
+          "level": 9,
+          "incomeRatePerHour": 57987,
+          "buildings": 88
+        }
+      ],
+      "randomDailyMedian": [
+        {
+          "day": 1,
+          "level": 4,
+          "incomeRatePerHour": 1430,
+          "buildings": 12
+        },
+        {
+          "day": 2,
+          "level": 4,
+          "incomeRatePerHour": 8072,
+          "buildings": 29
+        },
+        {
+          "day": 3,
+          "level": 6,
+          "incomeRatePerHour": 20427,
+          "buildings": 52
+        },
+        {
+          "day": 4,
+          "level": 8,
+          "incomeRatePerHour": 35494,
+          "buildings": 72
+        },
+        {
+          "day": 5,
+          "level": 9,
+          "incomeRatePerHour": 47626,
+          "buildings": 84
+        },
+        {
+          "day": 6,
+          "level": 9,
+          "incomeRatePerHour": 61392,
+          "buildings": 88
+        },
+        {
+          "day": 7,
+          "level": 10,
+          "incomeRatePerHour": 79587,
+          "buildings": 102
+        }
+      ],
+      "authoredQuestReachedDays": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        null,
+        null
+      ],
+      "randomQuestReachedDaysMedian": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.69,
+        0.69
+      ],
+      "medianDeltaPct": {
+        "tutorialDoneDays": 0,
+        "chainDoneDays": null,
+        "netWorthDay7": 42.7
+      },
+      "pass": false,
+      "perSeed": [
+        {
+          "seed": 20260000,
+          "level": 9,
+          "questIndex": 11,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": null,
+          "netWorth": 3244325,
+          "buildings": 88,
+          "rejected": {
+            "ZONE_LOCKED": 3,
+            "NO_BUILDER_FREE": 40,
+            "AFFECTS_NEIGHBOR": 754,
+            "TOO_STEEP_EDGE": 288,
+            "SHORE_RULE": 5
+          }
+        },
+        {
+          "seed": 20260001,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6895833333333333,
+          "netWorth": 4391457,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 205,
+            "NO_BUILDER_FREE": 65,
+            "TOO_STEEP_EDGE": 14,
+            "TOO_STEEP": 4,
+            "SHORE_RULE": 4,
+            "NOT_FLAT": 1,
+            "ZONE_LOCKED": 24
+          }
+        },
+        {
+          "seed": 20260002,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4503495,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 114,
+            "NO_BUILDER_FREE": 36,
+            "ZONE_LOCKED": 12,
+            "TOO_STEEP": 2,
+            "NOT_FLAT": 1,
+            "SHORE_RULE": 4,
+            "TOO_STEEP_EDGE": 7
+          }
+        },
+        {
+          "seed": 20260003,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4518971,
+          "buildings": 102,
+          "rejected": {
+            "ZONE_LOCKED": 13,
+            "AFFECTS_NEIGHBOR": 114,
+            "NO_BUILDER_FREE": 64
+          }
+        },
+        {
+          "seed": 20260004,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6930555555555555,
+          "netWorth": 4364708,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 166,
+            "ZONE_LOCKED": 13,
+            "NO_BUILDER_FREE": 45,
+            "SHORE_RULE": 7
+          }
+        },
+        {
+          "seed": 20260005,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 1.0430555555555556,
+          "netWorth": 4936150,
+          "buildings": 102,
+          "rejected": {
+            "NO_BUILDER_FREE": 112,
+            "AFFECTS_NEIGHBOR": 74,
+            "TOO_STEEP": 2,
+            "NOT_FLAT": 1
+          }
+        },
+        {
+          "seed": 20260006,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4627145,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 80,
+            "NO_BUILDER_FREE": 108,
+            "ZONE_LOCKED": 9
+          }
+        },
+        {
+          "seed": 20260007,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4246035,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 68,
+            "ZONE_LOCKED": 6,
+            "NO_BUILDER_FREE": 57,
+            "SHORE_RULE": 4,
+            "TOO_STEEP": 2,
+            "NOT_FLAT": 1
+          }
+        },
+        {
+          "seed": 20260008,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4412882,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 95,
+            "NO_BUILDER_FREE": 46,
+            "ZONE_LOCKED": 9,
+            "TOO_STEEP": 4,
+            "NOT_FLAT": 1
+          }
+        },
+        {
+          "seed": 20260009,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.5055555555555555,
+          "netWorth": 4429044,
+          "buildings": 102,
+          "rejected": {
+            "ZONE_LOCKED": 3,
+            "NO_BUILDER_FREE": 48,
+            "AFFECTS_NEIGHBOR": 26,
+            "SHORE_RULE": 1
+          }
+        },
+        {
+          "seed": 20260010,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4199896,
+          "buildings": 102,
+          "rejected": {
+            "NO_BUILDER_FREE": 93,
+            "AFFECTS_NEIGHBOR": 90,
+            "ZONE_LOCKED": 8
+          }
+        },
+        {
+          "seed": 20260011,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4490850,
+          "buildings": 101,
+          "rejected": {
+            "ZONE_LOCKED": 35,
+            "NO_BUILDER_FREE": 60,
+            "AFFECTS_NEIGHBOR": 204,
+            "TOO_STEEP_EDGE": 3
+          }
+        },
+        {
+          "seed": 20260012,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4702236,
+          "buildings": 102,
+          "rejected": {
+            "ZONE_LOCKED": 9,
+            "NO_BUILDER_FREE": 112,
+            "AFFECTS_NEIGHBOR": 89,
+            "TOO_STEEP": 12,
+            "SHORE_RULE": 1,
+            "NOT_FLAT": 1
+          }
+        },
+        {
+          "seed": 20260013,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4184333,
+          "buildings": 102,
+          "rejected": {
+            "NO_BUILDER_FREE": 48,
+            "AFFECTS_NEIGHBOR": 62,
+            "TOO_STEEP": 4,
+            "ZONE_LOCKED": 9
+          }
+        },
+        {
+          "seed": 20260014,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4424739,
+          "buildings": 102,
+          "rejected": {
+            "NO_BUILDER_FREE": 112,
+            "AFFECTS_NEIGHBOR": 76,
+            "ZONE_LOCKED": 18,
+            "TOO_STEEP": 8,
+            "SHORE_RULE": 2
+          }
+        },
+        {
+          "seed": 20260015,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6923611111111111,
+          "netWorth": 4840689,
+          "buildings": 102,
+          "rejected": {
+            "ZONE_LOCKED": 6,
+            "AFFECTS_NEIGHBOR": 32,
+            "NO_BUILDER_FREE": 2
+          }
+        },
+        {
+          "seed": 20260016,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4772830,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 134,
+            "NO_BUILDER_FREE": 52,
+            "ZONE_LOCKED": 13,
+            "TOO_STEEP": 2
+          }
+        },
+        {
+          "seed": 20260017,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4895955,
+          "buildings": 102,
+          "rejected": {
+            "NO_BUILDER_FREE": 112,
+            "AFFECTS_NEIGHBOR": 29,
+            "ZONE_LOCKED": 4,
+            "SHORE_RULE": 1,
+            "TOO_STEEP": 4,
+            "NOT_FLAT": 2
+          }
+        },
+        {
+          "seed": 20260018,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4739325,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 122,
+            "NO_BUILDER_FREE": 64,
+            "ZONE_LOCKED": 10,
+            "SHORE_RULE": 3,
+            "TOO_STEEP_EDGE": 4
+          }
+        },
+        {
+          "seed": 20260019,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4440988,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 39,
+            "NO_BUILDER_FREE": 57,
+            "ZONE_LOCKED": 2,
+            "TOO_STEEP": 2,
+            "NOT_FLAT": 1
+          }
+        },
+        {
+          "seed": 20260020,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.5048611111111111,
+          "netWorth": 4481696,
+          "buildings": 102,
+          "rejected": {
+            "NO_BUILDER_FREE": 41,
+            "AFFECTS_NEIGHBOR": 127,
+            "ZONE_LOCKED": 5,
+            "TOO_STEEP": 2
+          }
+        },
+        {
+          "seed": 20260021,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4376208,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 131,
+            "NO_BUILDER_FREE": 52,
+            "ZONE_LOCKED": 6,
+            "TOO_STEEP": 6,
+            "NOT_FLAT": 3
+          }
+        },
+        {
+          "seed": 20260022,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4269898,
+          "buildings": 101,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 135,
+            "NO_BUILDER_FREE": 35,
+            "ZONE_LOCKED": 14,
+            "TOO_STEEP_EDGE": 8
+          }
+        },
+        {
+          "seed": 20260023,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4205882,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 158,
+            "NO_BUILDER_FREE": 45,
+            "ZONE_LOCKED": 3
+          }
+        },
+        {
+          "seed": 20260024,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4504439,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 83,
+            "NO_BUILDER_FREE": 36,
+            "ZONE_LOCKED": 6,
+            "TOO_STEEP": 12
+          }
+        },
+        {
+          "seed": 20260025,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4243793,
+          "buildings": 102,
+          "rejected": {
+            "NO_BUILDER_FREE": 97,
+            "AFFECTS_NEIGHBOR": 114,
+            "SHORE_RULE": 17,
+            "ZONE_LOCKED": 7,
+            "TOO_STEEP": 14,
+            "NOT_FLAT": 4
+          }
+        },
+        {
+          "seed": 20260026,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4851933,
+          "buildings": 102,
+          "rejected": {
+            "ZONE_LOCKED": 14,
+            "NO_BUILDER_FREE": 65,
+            "AFFECTS_NEIGHBOR": 79,
+            "TOO_STEEP": 8,
+            "SHORE_RULE": 10
+          }
+        },
+        {
+          "seed": 20260027,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4484490,
+          "buildings": 102,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 107,
+            "NO_BUILDER_FREE": 58,
+            "TOO_STEEP": 2,
+            "NOT_FLAT": 1,
+            "ZONE_LOCKED": 7,
+            "TOO_STEEP_EDGE": 4
+          }
+        },
+        {
+          "seed": 20260028,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.5055555555555555,
+          "netWorth": 4499923,
+          "buildings": 102,
+          "rejected": {
+            "ZONE_LOCKED": 5,
+            "NO_BUILDER_FREE": 45,
+            "AFFECTS_NEIGHBOR": 120,
+            "TOO_STEEP": 4,
+            "SHORE_RULE": 2,
+            "TOO_STEEP_EDGE": 2
+          }
+        },
+        {
+          "seed": 20260029,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.0020833333333333333,
+          "chainDoneDays": 0.6888888888888889,
+          "netWorth": 4508958,
+          "buildings": 102,
+          "rejected": {
+            "ZONE_LOCKED": 1,
+            "AFFECTS_NEIGHBOR": 39,
+            "NO_BUILDER_FREE": 64,
+            "SHORE_RULE": 2
+          }
+        }
+      ]
+    },
+    "farm": {
+      "authoredMap": "farm-valley-01",
+      "authored": {
+        "tutorialDoneDays": 0.004861111111111111,
+        "chainDoneDays": 4.6875,
+        "netWorthDay7": 108744,
+        "level": 9,
+        "buildings": 16,
+        "questIndex": 12
+      },
+      "random": {
+        "tutorialDoneDays": {
+          "n": 30,
+          "of": 30,
+          "median": 0.005,
+          "p10": 0.004,
+          "p90": 0.005,
+          "min": 0.004,
+          "max": 0.005
+        },
+        "chainDoneDays": {
+          "n": 30,
+          "of": 30,
+          "median": 0.688,
+          "p10": 0.688,
+          "p90": 1.042,
+          "min": 0.503,
+          "max": 1.5
+        },
+        "netWorthDay7": {
+          "n": 30,
+          "of": 30,
+          "median": 133427,
+          "p10": 111151,
+          "p90": 158176,
+          "min": 101174,
+          "max": 165796
+        },
+        "level": {
+          "n": 30,
+          "of": 30,
+          "median": 10,
+          "p10": 10,
+          "p90": 10,
+          "min": 9,
+          "max": 10
+        },
+        "buildings": {
+          "n": 30,
+          "of": 30,
+          "median": 19,
+          "p10": 18,
+          "p90": 19,
+          "min": 17,
+          "max": 19
+        },
+        "invalid": 0
+      },
+      "authoredDaily": [
+        {
+          "day": 1,
+          "level": 4,
+          "incomeRatePerHour": 0,
+          "buildings": 5
+        },
+        {
+          "day": 2,
+          "level": 5,
+          "incomeRatePerHour": 0,
+          "buildings": 6
+        },
+        {
+          "day": 3,
+          "level": 6,
+          "incomeRatePerHour": 0,
+          "buildings": 8
+        },
+        {
+          "day": 4,
+          "level": 7,
+          "incomeRatePerHour": 0,
+          "buildings": 10
+        },
+        {
+          "day": 5,
+          "level": 8,
+          "incomeRatePerHour": 0,
+          "buildings": 10
+        },
+        {
+          "day": 6,
+          "level": 8,
+          "incomeRatePerHour": 0,
+          "buildings": 13
+        },
+        {
+          "day": 7,
+          "level": 9,
+          "incomeRatePerHour": 0,
+          "buildings": 16
+        }
+      ],
+      "randomDailyMedian": [
+        {
+          "day": 1,
+          "level": 4,
+          "incomeRatePerHour": 0,
+          "buildings": 5
+        },
+        {
+          "day": 2,
+          "level": 5,
+          "incomeRatePerHour": 0,
+          "buildings": 7
+        },
+        {
+          "day": 3,
+          "level": 7,
+          "incomeRatePerHour": 0,
+          "buildings": 11
+        },
+        {
+          "day": 4,
+          "level": 8,
+          "incomeRatePerHour": 0,
+          "buildings": 14
+        },
+        {
+          "day": 5,
+          "level": 9,
+          "incomeRatePerHour": 0,
+          "buildings": 16
+        },
+        {
+          "day": 6,
+          "level": 9,
+          "incomeRatePerHour": 0,
+          "buildings": 18
+        },
+        {
+          "day": 7,
+          "level": 10,
+          "incomeRatePerHour": 0,
+          "buildings": 19
+        }
+      ],
+      "authoredQuestReachedDays": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.01,
+        0.5,
+        0.5,
+        4.69,
+        4.69
+      ],
+      "randomQuestReachedDaysMedian": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.01,
+        0.5,
+        0.5,
+        0.69,
+        0.69
+      ],
+      "medianDeltaPct": {
+        "tutorialDoneDays": 0,
+        "chainDoneDays": -85.3,
+        "netWorthDay7": 22.7
+      },
+      "pass": false,
+      "perSeed": [
+        {
+          "seed": 20260000,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004166666666666667,
+          "chainDoneDays": 0.6875,
+          "netWorth": 118642,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 2,
+            "FIELD_LIMIT": 46,
+            "STORAGE_FULL": 6
+          }
+        },
+        {
+          "seed": 20260001,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 143465,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 6,
+            "INSUFFICIENT_FUNDS": 2,
+            "STORAGE_FULL": 5
+          }
+        },
+        {
+          "seed": 20260002,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 158176,
+          "buildings": 19,
+          "rejected": {
+            "ZONE_LOCKED": 1,
+            "AFFECTS_NEIGHBOR": 5,
+            "FIELD_LIMIT": 26,
+            "STORAGE_FULL": 9
+          }
+        },
+        {
+          "seed": 20260003,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 119737,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 2,
+            "STORAGE_FULL": 8
+          }
+        },
+        {
+          "seed": 20260004,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 143395,
+          "buildings": 19,
+          "rejected": {
+            "ZONE_LOCKED": 1,
+            "FIELD_LIMIT": 44,
+            "STORAGE_FULL": 4,
+            "AFFECTS_NEIGHBOR": 3
+          }
+        },
+        {
+          "seed": 20260005,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 1.0416666666666667,
+          "netWorth": 125707,
+          "buildings": 19,
+          "rejected": {
+            "ZONE_LOCKED": 1,
+            "AFFECTS_NEIGHBOR": 13,
+            "FIELD_LIMIT": 15,
+            "STORAGE_FULL": 6
+          }
+        },
+        {
+          "seed": 20260006,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004166666666666667,
+          "chainDoneDays": 0.6875,
+          "netWorth": 114765,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 3,
+            "FIELD_LIMIT": 86,
+            "STORAGE_FULL": 4
+          }
+        },
+        {
+          "seed": 20260007,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 149923,
+          "buildings": 18,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 20,
+            "ZONE_LOCKED": 1,
+            "STORAGE_FULL": 6
+          }
+        },
+        {
+          "seed": 20260008,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 125575,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 10,
+            "INSUFFICIENT_FUNDS": 1,
+            "STORAGE_FULL": 7
+          }
+        },
+        {
+          "seed": 20260009,
+          "level": 9,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 1.0416666666666667,
+          "netWorth": 130803,
+          "buildings": 17,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 28,
+            "FIELD_LIMIT": 66,
+            "STORAGE_FULL": 4
+          }
+        },
+        {
+          "seed": 20260010,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 1.0416666666666667,
+          "netWorth": 129588,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 6,
+            "FIELD_LIMIT": 112,
+            "STORAGE_FULL": 8
+          }
+        },
+        {
+          "seed": 20260011,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004166666666666667,
+          "chainDoneDays": 1.0416666666666667,
+          "netWorth": 111151,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 45,
+            "STORAGE_FULL": 7
+          }
+        },
+        {
+          "seed": 20260012,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004166666666666667,
+          "chainDoneDays": 1.0416666666666667,
+          "netWorth": 139009,
+          "buildings": 18,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 3,
+            "FIELD_LIMIT": 37,
+            "STORAGE_FULL": 6
+          }
+        },
+        {
+          "seed": 20260013,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.5034722222222222,
+          "netWorth": 156418,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 15,
+            "STORAGE_FULL": 5
+          }
+        },
+        {
+          "seed": 20260014,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004166666666666667,
+          "chainDoneDays": 0.6875,
+          "netWorth": 109016,
+          "buildings": 19,
+          "rejected": {
+            "FIELD_LIMIT": 92,
+            "STORAGE_FULL": 7,
+            "AFFECTS_NEIGHBOR": 7
+          }
+        },
+        {
+          "seed": 20260015,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 1.0416666666666667,
+          "netWorth": 135210,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 18,
+            "STORAGE_FULL": 3
+          }
+        },
+        {
+          "seed": 20260016,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 1.5,
+          "netWorth": 143802,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 18,
+            "ZONE_LOCKED": 1,
+            "INSUFFICIENT_FUNDS": 5,
+            "FIELD_LIMIT": 234,
+            "STORAGE_FULL": 7
+          }
+        },
+        {
+          "seed": 20260017,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.5041666666666667,
+          "netWorth": 143833,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 11,
+            "STORAGE_FULL": 7
+          }
+        },
+        {
+          "seed": 20260018,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6902777777777778,
+          "netWorth": 140911,
+          "buildings": 19,
+          "rejected": {
+            "INSUFFICIENT_FUNDS": 3,
+            "AFFECTS_NEIGHBOR": 19,
+            "STORAGE_FULL": 6
+          }
+        },
+        {
+          "seed": 20260019,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 107770,
+          "buildings": 19,
+          "rejected": {
+            "FIELD_LIMIT": 60,
+            "STORAGE_FULL": 6,
+            "AFFECTS_NEIGHBOR": 2
+          }
+        },
+        {
+          "seed": 20260020,
+          "level": 9,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 1.0416666666666667,
+          "netWorth": 129800,
+          "buildings": 17,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 16,
+            "FIELD_LIMIT": 90,
+            "STORAGE_FULL": 3
+          }
+        },
+        {
+          "seed": 20260021,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 131035,
+          "buildings": 19,
+          "rejected": {
+            "ZONE_LOCKED": 1,
+            "INSUFFICIENT_FUNDS": 4,
+            "STORAGE_FULL": 6,
+            "AFFECTS_NEIGHBOR": 16
+          }
+        },
+        {
+          "seed": 20260022,
+          "level": 9,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 1.0451388888888888,
+          "netWorth": 101174,
+          "buildings": 18,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 21,
+            "INSUFFICIENT_FUNDS": 4,
+            "ZONE_LOCKED": 3,
+            "STORAGE_FULL": 8
+          }
+        },
+        {
+          "seed": 20260023,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 120537,
+          "buildings": 19,
+          "rejected": {
+            "FIELD_LIMIT": 54,
+            "STORAGE_FULL": 5,
+            "AFFECTS_NEIGHBOR": 2
+          }
+        },
+        {
+          "seed": 20260024,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6909722222222222,
+          "netWorth": 158962,
+          "buildings": 19,
+          "rejected": {
+            "ZONE_LOCKED": 1,
+            "AFFECTS_NEIGHBOR": 6,
+            "INSUFFICIENT_FUNDS": 1,
+            "FIELD_LIMIT": 8,
+            "STORAGE_FULL": 7
+          }
+        },
+        {
+          "seed": 20260025,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6916666666666667,
+          "netWorth": 133427,
+          "buildings": 18,
+          "rejected": {
+            "STORAGE_FULL": 6,
+            "AFFECTS_NEIGHBOR": 2
+          }
+        },
+        {
+          "seed": 20260026,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004166666666666667,
+          "chainDoneDays": 0.6909722222222222,
+          "netWorth": 140448,
+          "buildings": 19,
+          "rejected": {
+            "STORAGE_FULL": 8,
+            "AFFECTS_NEIGHBOR": 25,
+            "ZONE_LOCKED": 1
+          }
+        },
+        {
+          "seed": 20260027,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.5041666666666667,
+          "netWorth": 137284,
+          "buildings": 19,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 24,
+            "STORAGE_FULL": 5
+          }
+        },
+        {
+          "seed": 20260028,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 0.6875,
+          "netWorth": 165796,
+          "buildings": 19,
+          "rejected": {
+            "FIELD_LIMIT": 122,
+            "STORAGE_FULL": 8,
+            "AFFECTS_NEIGHBOR": 2
+          }
+        },
+        {
+          "seed": 20260029,
+          "level": 10,
+          "questIndex": 12,
+          "tutorialDoneDays": 0.004861111111111111,
+          "chainDoneDays": 1.0416666666666667,
+          "netWorth": 132610,
+          "buildings": 18,
+          "rejected": {
+            "AFFECTS_NEIGHBOR": 34,
+            "FIELD_LIMIT": 28,
+            "STORAGE_FULL": 4
+          }
+        }
+      ]
+    }
+  },
+  "pass": false
+}

@@ -1,11 +1,12 @@
-import { randomUUID } from 'node:crypto';
+import { randomInt, randomUUID } from 'node:crypto';
 import { and, eq, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import type { CommandResult, MapKind, WorldSnapshot } from '@xay-nha/contracts';
+import { WorldTemplateSchema, type CommandResult, type MapKind, type WorldSnapshot } from '@xay-nha/contracts';
+import { RANDOM_GENERATOR_VERSION, generateEnvironment, generateWorldTemplate, validateTemplate } from '@xay-nha/worldgen';
 import { advanceTime, createState, execute, recompute, stateHash, validateSnapshot, type SimState } from '@xay-nha/sim';
 import * as schema from './db/schema';
 import { randomTag } from './auth';
-import type { TemplateRegistry } from './templates';
+import { TemplateRegistry, type LoadedTemplate } from './templates';
 
 type Db = NodePgDatabase<typeof schema>;
 export class ApiError extends Error {
@@ -21,12 +22,19 @@ export interface CharacterSummary {
 export interface CommandBatchResponse { results: CommandResult[]; revision: number; serverTime: number; stateHash: string }
 
 export class WorldService {
-  constructor(private readonly db: Db, private readonly templates: TemplateRegistry, private readonly clock: () => number = Date.now) {}
+  /** `randomMaps` (RANDOM_MAPS=1): new worlds get a server-generated random map stored in `world_templates` (D039). */
+  constructor(private readonly db: Db, private readonly templates: TemplateRegistry, private readonly clock: () => number = Date.now,
+    private readonly randomMaps = false) {
+    templates.setRandomLoader(async worldId => {
+      const [row] = await this.db.select({ template: schema.worldTemplates.template }).from(schema.worldTemplates).where(eq(schema.worldTemplates.worldId, worldId));
+      return row ? WorldTemplateSchema.parse(row.template) : undefined;
+    });
+  }
 
   /** Rebuilds a SimState from stored JSON through validate-everything-then-swap (docs/08 §6.1). */
-  restore(stored: unknown, now: number): SimState {
+  async restore(stored: unknown, now: number): Promise<SimState> {
     const snapshot = stored as WorldSnapshot;
-    const loaded = this.templates.get(snapshot.mapId, snapshot.templateVersion);
+    const loaded = await this.templates.forWorld(snapshot.worldId, snapshot.mapId, snapshot.templateVersion);
     if (!loaded) throw new ApiError(500, 'TEMPLATE_MISSING', `Template ${snapshot.mapId}@${snapshot.templateVersion} is not available`);
     const base = createState(loaded.template, Math.min(now, snapshot.serverTime), loaded.env, {
       worldId: snapshot.worldId, accountId: snapshot.accountId, displayName: snapshot.character.displayName, tag: snapshot.character.tag });
@@ -37,21 +45,39 @@ export class WorldService {
   }
 
   async createCharacter(accountId: string, mapKind: MapKind, displayName: string): Promise<CharacterSummary> {
-    const loaded = this.templates.latestFor(mapKind);
-    if (!loaded) throw new ApiError(400, 'MAP_UNAVAILABLE', `Map ${mapKind} is not available yet`);
+    const staticMap = this.templates.latestFor(mapKind);
+    if (!staticMap) throw new ApiError(400, 'MAP_UNAVAILABLE', `Map ${mapKind} is not available yet`);
     const existing = await this.db.select({ id: schema.worlds.id }).from(schema.worlds)
       .where(and(eq(schema.worlds.accountId, accountId), eq(schema.worlds.mapKind, mapKind)));
     if (existing.length) throw new ApiError(409, 'CHARACTER_EXISTS', 'This account already has a character on that map', { characterId: existing[0]!.id });
+    // D039: generate once per registration; the same template is stored with every retry of the unique-tag loop.
+    let random: { loaded: LoadedTemplate; seed: number; attempt: number } | undefined;
+    if (this.randomMaps) {
+      const seed = randomInt(0, 2 ** 32);
+      const generated = generateWorldTemplate(mapKind, seed);
+      const errors = validateTemplate(generated.template);
+      if (errors.length) throw new ApiError(500, 'MAP_GENERATION_FAILED', `Generated template is invalid: ${errors.slice(0, 3).join('; ')}`);
+      random = { loaded: { template: generated.template, env: generateEnvironment(generated.template), path: 'db:new' }, seed, attempt: generated.attempt };
+    }
+    const loaded = random?.loaded ?? staticMap;
     for (let attempt = 0; attempt < 25; attempt++) {
       const now = this.clock(), id = randomUUID(), tag = randomTag();
       const state = createState(loaded.template, now, loaded.env, { worldId: id, accountId, displayName, tag });
       recompute(state);
       try {
-        await this.db.insert(schema.worlds).values({
-          id, accountId, mapId: loaded.template.mapId, mapKind, templateVersion: loaded.template.templateVersion,
-          displayName, tag, level: state.snapshot.progress.level, netWorth: state.snapshot.character.netWorth,
-          revision: state.snapshot.revision, snapshot: state.snapshot,
+        await this.db.transaction(async tx => {
+          await tx.insert(schema.worlds).values({
+            id, accountId, mapId: loaded.template.mapId, mapKind, templateVersion: loaded.template.templateVersion,
+            displayName, tag, level: state.snapshot.progress.level, netWorth: state.snapshot.character.netWorth,
+            revision: state.snapshot.revision, snapshot: state.snapshot,
+          });
+          if (random) {
+            await tx.insert(schema.worldTemplates).values({
+              worldId: id, mapId: loaded.template.mapId, generatorVersion: RANDOM_GENERATOR_VERSION, seed: random.seed, attempt: random.attempt, template: loaded.template,
+            });
+          }
         });
+        if (random) this.templates.cacheRandom(id, loaded.template, loaded.env);
         return summary(state.snapshot, new Date(now));
       } catch (error) {
         if (isUniqueViolation(error, 'worlds_display_name_tag_key')) continue;
@@ -70,9 +96,17 @@ export class WorldService {
   /** GET snapshot: completions and income are processed up to now (not persisted; commands persist). */
   async snapshot(accountId: string, worldId: string): Promise<{ snapshot: WorldSnapshot; stateHash: string; serverTime: number }> {
     const row = await this.row(accountId, worldId);
-    const now = this.clock(), state = this.restore(row.snapshot, now);
+    const now = this.clock(), state = await this.restore(row.snapshot, now);
     advanceTime(state, now);
     return { snapshot: state.snapshot, stateHash: stateHash(state), serverTime: now };
+  }
+
+  /** D039: the world's own template (random maps: the stored JSON; static maps: the shared file) with a strong ETag. */
+  async template(accountId: string, worldId: string): Promise<{ json: string; etag: string }> {
+    const row = await this.row(accountId, worldId);
+    const loaded = await this.templates.forWorld(worldId, row.mapId, row.templateVersion);
+    if (!loaded) throw new ApiError(500, 'TEMPLATE_MISSING', `Template ${row.mapId}@${row.templateVersion} is not available`);
+    return TemplateRegistry.payload(loaded);
   }
 
   async remove(accountId: string, worldId: string, confirmName: unknown): Promise<void> {
@@ -92,7 +126,7 @@ export class WorldService {
         .where(and(eq(schema.worlds.id, worldId), eq(schema.worlds.accountId, accountId))).for('update');
       if (!row) throw new ApiError(404, 'NOT_FOUND');
       const now = this.clock();
-      let state = this.restore(row.snapshot, now), changed = false;
+      let state = await this.restore(row.snapshot, now), changed = false;
       const results: CommandResult[] = [];
       for (const command of batch) {
         const commandId = (command as { commandId?: unknown })?.commandId;

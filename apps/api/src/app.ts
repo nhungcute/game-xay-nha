@@ -14,6 +14,8 @@ import { ApiError, MAX_BATCH, WorldService } from './worlds';
 export interface AppDeps {
   db: NodePgDatabase<typeof schema>; templates: TemplateRegistry; tokenPepper: string;
   clock?: () => number; logLevel?: string; trustProxy?: boolean;
+  /** D039 (RANDOM_MAPS=1): new worlds get a random server-generated map. Default off. */
+  randomMaps?: boolean;
   /** Interval for the periodic `metrics` log line (docs/11 §10); 0 disables it. Default 60 s. */
   metricsIntervalMs?: number;
   limits?: { accountsPerHour?: number; loginsPerHour?: number; commandsPerSecond?: number; commandsPerMinute?: number; telemetryPerMinute?: number };
@@ -24,7 +26,7 @@ declare module 'fastify' { interface FastifyInstance { commandMetrics: CommandMe
 export function buildApp(deps: AppDeps): FastifyInstance {
   const clock = deps.clock ?? Date.now;
   const app = Fastify({ logger: { level: deps.logLevel ?? 'info' }, bodyLimit: 64 * 1024, trustProxy: deps.trustProxy ?? true, genReqId: () => randomUUID() });
-  const worlds = new WorldService(deps.db, deps.templates, clock);
+  const worlds = new WorldService(deps.db, deps.templates, clock, deps.randomMaps ?? false);
   const accountsLimit = new RateLimiter(deps.limits?.accountsPerHour ?? 5, 3_600_000, clock);
   const loginLimit = new RateLimiter(deps.limits?.loginsPerHour ?? 30, 3_600_000, clock);
   const perSecond = new RateLimiter(deps.limits?.commandsPerSecond ?? 20, 1000, clock);
@@ -163,6 +165,15 @@ export function buildApp(deps: AppDeps): FastifyInstance {
   app.get<{ Params: { id: string } }>('/api/worlds/:id', async request => {
     const accountId = await account(request);
     return worlds.snapshot(accountId, request.params.id);
+  });
+
+  // D039: the world's template (random maps: stored per world). Immutable, so clients may cache it forever.
+  app.get<{ Params: { id: string } }>('/api/worlds/:id/template', async (request, reply) => {
+    const accountId = await account(request);
+    const { json, etag } = await worlds.template(accountId, request.params.id);
+    reply.header('ETag', etag).header('Cache-Control', 'private, max-age=31536000, immutable');
+    if (request.headers['if-none-match']?.split(',').some(tag => tag.trim() === etag)) return reply.status(304).send();
+    return reply.type('application/json; charset=utf-8').send(json);
   });
 
   app.post<{ Params: { id: string } }>('/api/worlds/:id/commands', async request => {
