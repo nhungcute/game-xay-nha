@@ -107,8 +107,9 @@ const SKIP_KEY = 'xay-nha.skipTutorial';
 const skipped = () => { try { return localStorage.getItem(SKIP_KEY) === '1'; } catch { return false; } };
 const PANEL_TITLE: Record<GamePanel, string> = { profile: 'Thành tích', materials: 'Vật liệu', inventory: 'Kho nông sản', settings: 'Cài đặt', people: 'Cư dân', notifications: 'Thông báo' };
 const PANEL_ICON = { profile: 'trophy', materials: 'wood', inventory: 'inventory', settings: 'settings', people: 'people', notifications: 'mail' } as const;
-export interface GameProps { loader:()=>Promise<WorldStore>; onSwitchMap?:(world:WorldStore)=>void|Promise<void>; onLogout?:(world:WorldStore)=>void|Promise<void> }
-export function Game({loader,onSwitchMap,onLogout}:GameProps){
+export interface GameProps { loader:()=>Promise<WorldStore>; onSwitchMap?:(world:WorldStore)=>void|Promise<void>; onLogout?:(world:WorldStore)=>void|Promise<void>;
+  /** D039 (offline only): throw the saved map away and start on a freshly generated one. */ onNewMap?:()=>void|Promise<void> }
+export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
   const canvas=useRef<HTMLCanvasElement>(null),gameRef=useRef<GameLoop|null>(null);
   const [ready,setReady]=useState(false),[hideHints,setHideHints]=useState(skipped()),[loadingError,setLoadingError]=useState(''),[attempt,setAttempt]=useState(0),[panel,setPanel]=useState<GamePanel|null>(null),[stats,setStats]=useState<ReturnType<GameLoop['metrics']>|null>(null);
   const [missionsOpen,setMissionsOpen]=useState(()=>!matchMedia('(max-width:700px)').matches),[switchingMap,setSwitchingMap]=useState(false),[category,setCategory]=useState<Category|null>(null),[seen,setSeen]=useState(''),[zones,setZones]=useState(true);
@@ -186,6 +187,7 @@ export function Game({loader,onSwitchMap,onLogout}:GameProps){
         <h2 className="panel-heading"><GameIcon name={PANEL_ICON[panel]}/>{PANEL_TITLE[panel]}</h2>
         {panel==='profile'?<Profile state={state}/>
           :panel==='settings'?<>{onSwitchMap&&<button type="button" className="hud3-switch" aria-label={t('switchMap')} disabled={switchingMap} onClick={()=>{void switchMap();}}><GameIcon name="maps"/>{switchingMap?'Đang đổi…':t('switchMap')}</button>}
+            {onNewMap&&<button type="button" className="hud3-switch" aria-label="Map mới" onClick={()=>{if(window.confirm('Tạo map mới? Bản lưu offline hiện tại sẽ bị xóa.'))void onNewMap();}}><GameIcon name="maps"/>Map mới</button>}
             <GraphicsSettings quality={stats?.quality} onChange={setQuality}/><TimeOfDaySettings mode={stats?.timeOfDay} onChange={setTimeOfDay}/><SoundSettings muted={stats?.muted} onChange={setMuted}/><MusicSettings on={stats?.musicOn} onChange={setMusic}/>
             <AssetCredits/>
             {onLogout&&<button type="button" className="hud3-switch hud3-logout" onClick={()=>{const w=gameRef.current?.world;if(w)void onLogout(w);}}><GameIcon name="close"/>Đăng xuất · {state.snapshot.character.displayName}</button>}

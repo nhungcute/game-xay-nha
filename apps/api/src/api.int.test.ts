@@ -262,7 +262,7 @@ describe('server state equals the shared sim (property test)', () => {
   it('100 random commands: every result and the final state hash match a local sim; reload is identical; net worth recomputes', async () => {
     const p = await newPlayer('farm', 'Thuộc Tính');
     const restorer = new WorldService(db, templates, clock);
-    let local: SimState = restorer.restore((await snapshotOf(p.token, p.worldId)).snapshot, now);
+    let local: SimState = await restorer.restore((await snapshotOf(p.token, p.worldId)).snapshot, now);
     let seed = 12345;
     const rnd = (n: number) => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed % n; };
     const zones = local.snapshot.unlockedZones;
@@ -299,7 +299,92 @@ describe('server state equals the shared sim (property test)', () => {
     expect(rejected).toBeGreaterThan(5);
     const first = await snapshotOf(p.token, p.worldId), second = await snapshotOf(p.token, p.worldId);
     expect(second.stateHash).toBe(first.stateHash);
-    const reloaded = restorer.restore(first.snapshot, now);
+    const reloaded = await restorer.restore(first.snapshot, now);
     expect(netWorth(reloaded)).toBe(first.snapshot.character.netWorth);
+  });
+});
+
+describe('random maps (D039, RANDOM_MAPS=1)', () => {
+  const rndApp = () => buildApp({ db, templates, tokenPepper: 'integration-test-pepper', clock, logLevel: 'silent', randomMaps: true,
+    limits: { accountsPerHour: 10_000, loginsPerHour: 10_000, commandsPerSecond: 10_000, commandsPerMinute: 100_000 } });
+  const rowCount = async (worldId: string) => ((await db.execute(sql`SELECT count(*)::int AS n FROM world_templates WHERE world_id = ${worldId}`)).rows[0] as { n: number }).n;
+
+  it('flag off (default): static map, no world_templates row, the template endpoint still serves the static file', async () => {
+    const p = await newPlayer('farm', 'Tĩnh Tại');
+    const me = await call('GET', '/api/me', undefined, p.token);
+    expect(me.body.characters[0].mapId).not.toMatch(/^rnd-/);
+    expect(await rowCount(p.worldId)).toBe(0);
+    const res = await app.inject({ method: 'GET', url: `/api/worlds/${p.worldId}/template`, headers: { authorization: `Bearer ${p.token}` } });
+    expect(res.statusCode).toBe(200);
+    expect(JSON.parse(res.body).mapId).toBe(me.body.characters[0].mapId);
+  });
+
+  it.each(['farm', 'city'] as const)('flag on: a new %s world gets a stored rnd- template, served with ETag/304, commands accepted, reload identical', async kind => {
+    await app.close(); app = rndApp();
+    const p = await newPlayer(kind, `Ngẫu Nhiên ${kind}`);
+    const me = await call('GET', '/api/me', undefined, p.token);
+    const character = me.body.characters[0];
+    expect(character.mapId).toMatch(new RegExp(`^rnd-${kind}-\\d+$`));
+    expect(character.templateVersion).toBe(1);
+    const [row] = (await db.execute(sql`SELECT map_id, generator_version, seed::text AS seed, attempt, template->>'mapId' AS tmap FROM world_templates WHERE world_id = ${p.worldId}`)).rows as
+      { map_id: string; generator_version: string; seed: string; attempt: number; tmap: string }[];
+    expect(row).toMatchObject({ map_id: character.mapId, tmap: character.mapId });
+    expect(character.mapId).toBe(`rnd-${kind}-${row!.seed}`);
+    expect(row!.generator_version).toMatch(/^rnd-v/); expect(row!.attempt).toBeGreaterThanOrEqual(0);
+
+    const get = (headers: Record<string, string> = {}) => app.inject({ method: 'GET', url: `/api/worlds/${p.worldId}/template`, headers: { authorization: `Bearer ${p.token}`, ...headers } });
+    const first = await get();
+    expect(first.statusCode).toBe(200);
+    expect(first.headers['cache-control']).toBe('private, max-age=31536000, immutable');
+    expect(first.headers.etag).toMatch(/^"[A-Za-z0-9_-]+"$/);
+    const template = JSON.parse(first.body);
+    expect(template).toMatchObject({ mapId: character.mapId, mapKind: kind, templateVersion: 1 });
+    const again = await get({ 'if-none-match': first.headers.etag as string });
+    expect(again.statusCode).toBe(304); expect(again.body).toBe('');
+    expect((await get({ 'if-none-match': '"stale"' })).statusCode).toBe(200);
+
+    const snap = await snapshotOf(p.token, p.worldId);
+    expect(snap.snapshot.mapId).toBe(character.mapId);
+    const bought = await send(p.token, p.worldId, [command(snap.snapshot, 'BUY_MATERIAL', { wood: 2 })]);
+    expect(bought.body.results[0].accepted).toBe(true);
+
+    // Reload with a cold registry (a new process): template and world come back from the database, byte-identical.
+    await app.close();
+    app = buildApp({ db, templates: new TemplateRegistry(), tokenPepper: 'integration-test-pepper', clock, logLevel: 'silent',
+      limits: { accountsPerHour: 10_000, loginsPerHour: 10_000, commandsPerSecond: 10_000, commandsPerMinute: 100_000 } });
+    const reloaded = await get();
+    expect(reloaded.statusCode).toBe(200); expect(reloaded.body).toBe(first.body); expect(reloaded.headers.etag).toBe(first.headers.etag);
+    const snap2 = await snapshotOf(p.token, p.worldId);
+    expect(snap2.snapshot.mapId).toBe(character.mapId);
+    expect(snap2.snapshot.wallet.wood).toBe(snap.snapshot.wallet.wood + 2);
+    expect((await send(p.token, p.worldId, [command(snap2.snapshot, 'BUY_MATERIAL', { wood: 1 })])).body.results[0].accepted).toBe(true);
+  });
+
+  it('every world has its own template; another account cannot read it; deleting the world deletes it', async () => {
+    await app.close(); app = rndApp();
+    const a = await newPlayer('farm', 'Chủ Bản Đồ'), b = await newPlayer('farm', 'Người Lạ');
+    const url = (id: string) => `/api/worlds/${id}/template`;
+    const ta = await call('GET', url(a.worldId), undefined, a.token), tb = await call('GET', url(b.worldId), undefined, b.token);
+    expect(ta.status).toBe(200); expect(tb.status).toBe(200);
+    expect(ta.body.mapId).not.toBe(tb.body.mapId);
+    expect(ta.body.water).not.toEqual(tb.body.water);
+    expect([403, 404]).toContain((await call('GET', url(a.worldId), undefined, b.token)).status);
+    expect((await call('GET', url(a.worldId))).status).toBe(401);
+    expect((await call('GET', url('00000000-0000-4000-8000-000000000000'), undefined, a.token)).status).toBe(404);
+    const sa = await snapshotOf(a.token, a.worldId), sb = await snapshotOf(b.token, b.worldId);
+    expect(sa.snapshot.mapId).toBe(ta.body.mapId); expect(sb.snapshot.mapId).toBe(tb.body.mapId);
+    expect(await rowCount(a.worldId)).toBe(1);
+    expect((await call('DELETE', `/api/worlds/${a.worldId}`, { confirmName: a.username }, a.token)).status).toBe(204);
+    expect(await rowCount(a.worldId)).toBe(0);
+    expect(await rowCount(b.worldId)).toBe(1);
+  });
+
+  it('worlds created without the flag keep working (and stay static) on a flag-on server', async () => {
+    const old = await newPlayer('farm', 'Làng Cũ');
+    const oldMap = (await call('GET', '/api/me', undefined, old.token)).body.characters[0].mapId;
+    await app.close(); app = rndApp();
+    const snap = await snapshotOf(old.token, old.worldId);
+    expect(snap.snapshot.mapId).toBe(oldMap); expect(oldMap).not.toMatch(/^rnd-/);
+    expect((await send(old.token, old.worldId, [command(snap.snapshot, 'BUY_MATERIAL', { wood: 1 })])).body.results[0].accepted).toBe(true);
   });
 });

@@ -40,7 +40,18 @@ export const worlds = pgTable('worlds', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const worldCommands = pgTable('world_commands', {
+/** D039: per-world generated template (random maps only). */
+export const worldTemplates = pgTable('world_templates', {
+  worldId: uuid('world_id').primaryKey(),
+  mapId: text('map_id').notNull(),
+  generatorVersion: text('generator_version').notNull(),
+  seed: bigint('seed', { mode: 'number' }).notNull(),
+  attempt: integer('attempt').notNull(),
+  template: jsonb('template').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const worldCommands =pgTable('world_commands', {
   commandId: uuid('command_id').primaryKey(),
   worldId: uuid('world_id').notNull(),
   accepted: boolean('accepted').notNull(),

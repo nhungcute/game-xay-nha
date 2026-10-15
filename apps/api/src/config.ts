@@ -4,6 +4,8 @@ import { resolve } from 'node:path';
 export interface Config {
   databaseUrl: string; port: number; host: string; tokenPepper: string; logLevel: string;
   worldsDir: string; migrationsDir: string; trustProxy: boolean; accountsPerHour: number; loginsPerHour: number;
+  /** D039: RANDOM_MAPS=1 gives every new world a random map (default off). */
+  randomMaps: boolean;
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
@@ -21,5 +23,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     accountsPerHour: Number(env.ACCOUNTS_PER_HOUR ?? 5),
     // D027: username + PIN login attempts per hour per IP (per-username lockout is separate).
     loginsPerHour: Number(env.LOGINS_PER_HOUR ?? 30),
+    randomMaps: env.RANDOM_MAPS === '1',
   };
 }
