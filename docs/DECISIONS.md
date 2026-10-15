@@ -575,3 +575,33 @@ Owner decisions. Full assessment and results: `docs/reports/D039-random-maps-ass
 - Hints now say "Chọn Đất đai → …"; the road hint no longer mentions the removed village entry road (D039).
 - QA: `scripts/dock-qa.mjs` (tabs, trays, toggle, no overlap at 1440×900, 1366×768, Pixel 7). Report:
   `docs/reports/DOCK-reorg.md`, evidence `docs/evidence/g4/dock/`.
+
+## D043 - 2026-10-15 - Floating toasts for rejected actions
+
+- Errors (`WorldStore.message(text, true)`): rejected commands, server rejections, queue full, cache/sync errors.
+  They float top-centre under the top bar and fade (2.5 s errors, 1.8 s info). At most 3 show at once, identical
+  messages merge into one with "×N", and a tap dismisses. Owner request.
+- Hover/touch previews never toast: the reason stays inline (preview bar and red cells). The `.feedback` line above the
+  Dock keeps neutral guidance only. Report: `docs/reports/TOASTS.md`.
+
+## D044 - 2026-10-15 - Tool bar: no Xác nhận/Hủy for mouse; one named commit button on touch
+
+- Mouse tools already confirm on release, so the bar shows only the tool, the live cost/error, "Esc để thoát" and a
+  × exit. Owner request ("nút Xác nhận & Hủy không có nhiều tác dụng").
+- Touch keeps an explicit commit (a tap only previews, so a wrong tap never buys anything) as one primary button
+  naming the action and price ("Đặt Nhà nhỏ · $300", "Xóa đường 3 ô"), disabled with the reason when invalid, plus ×.
+- Phá always confirms, on both inputs, with a red "Phá · hoàn $X" (the refund comes from simulating the demolish).
+- The input mode follows the last pointer's `pointerType` (initially `(pointer: coarse)`). Report:
+  `docs/reports/CONFIRM-bar.md`.
+
+## D045 - 2026-10-15 - Khu đất overlay: unlockable zones highlighted with their price
+
+- While the Khu đất tool is active, locked zones are classified through `validate(UNLOCK_ZONE)`, so no client-side rules:
+  - buyable: pulsing gold fill and "Mở khu · $X";
+  - adjacent but short of cash: orange fill and a red price, "Chưa đủ tiền";
+  - level-blocked: a grey tag "Khóa · Cấp N";
+  - not adjacent: only the faint outline.
+  Owner request.
+- One unlit vertex-coloured mesh follows the terrain, with pooled sprite labels. It is unaffected by night tint and stays
+  below bloom. A geometric adjacency pre-filter skips probes for non-adjacent zones. Report:
+  `docs/reports/ZONE-highlight.md`.

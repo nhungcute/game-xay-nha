@@ -259,6 +259,6 @@
 /* Confirm bar (D044): mouse = hint + exit, touch/demolish = one named commit button + x */
 .hud3-shell .tool-options .preview-hint{font-size:11px;opacity:.65;white-space:nowrap}
 .hud3-shell .tool-options .exit-x{min-width:44px;min-height:44px;padding:0;border-radius:50%}
-.hud3-shell .tool-options .commit{flex:1 1 150px;min-height:48px;font-size:14px;font-weight:700;border-radius:14px}
+.hud3-shell .tool-options .commit{flex:1 0 auto;min-width:150px;min-height:48px;font-size:14px;font-weight:700;border-radius:14px}
 .hud3-shell .tool-options .commit.danger{background:#d6402f;border-color:#b02a1c;color:#fff}
 .hud3-shell .tool-options .commit:disabled{opacity:.55}

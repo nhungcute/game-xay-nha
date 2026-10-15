@@ -47,7 +47,7 @@ for (const [name, options] of [['1440x900', { viewport: { width: 1440, height: 9
   const p = await page.evaluate(([cx, cz]) => window.__debug.project(cx * 2 + 1, cz * 2 + 1), tree);
 
   // 4) hover over invalid cells for 2 s: the inline preview shows the error, no toast ever appears.
-  await page.evaluate(() => { window.__maxToasts = 0; new MutationObserver(() => { window.__maxToasts = Math.max(window.__maxToasts, document.querySelectorAll('.hud3-toast').length); }).observe(document.body, { childList: true, subtree: true }); });
+  await page.evaluate(() => { window.__maxToasts = 0; new window.MutationObserver(() => { window.__maxToasts = Math.max(window.__maxToasts, document.querySelectorAll('.hud3-toast').length); }).observe(document.body, { childList: true, subtree: true }); });
   if (!mobile) {
     for (let i = 0; i < 40; i++) { await page.mouse.move(p.x + ((i % 8) - 4) * 28, p.y + (Math.floor(i / 8) - 2) * 22); await sleep(50); }
     run.hoverMaxToasts = await page.evaluate(() => window.__maxToasts); run.hoverInline = await page.locator('.tool-options .preview-cost').innerText().catch(() => null);

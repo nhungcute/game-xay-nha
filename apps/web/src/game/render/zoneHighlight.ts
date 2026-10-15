@@ -30,6 +30,8 @@ export function zoneHighlights(s: SimState, now: number): ZoneHighlight[] {
   let needLevel: number | undefined;
   for (const zone of ALL_ZONES) {
     if (owned.has(zone)) continue;
+    // Cheap pre-filter (the sim's own 4-neighbour rule, engine.ts UNLOCK_ZONE): a non-adjacent zone is 'far' whatever else holds, so skip its probes.
+    if (![...owned].some(id => Math.abs(id % 8 - zone % 8) + Math.abs(Math.floor(id / 8) - Math.floor(zone / 8)) === 1)) { out.push({ zone, kind: 'far' }); continue; }
     const r = ask(s, zone, now);
     if (r.valid) { out.push({ zone, kind: 'ok', cost: r.cost.cash }); continue; }
     if (r.code === 'LIMIT_REACHED') { out.push({ zone, kind: 'max' }); continue; }

@@ -58,7 +58,7 @@ const cash = page => page.evaluate(() => window.__debug.getStateHash());
   let b = await bar(page); await shot(page, 'desktop-build-valid');
   check('desktop: no Xác nhận/Hủy, no primary button', !b.hasOld && b.primary === null, b);
   check('desktop: hint Esc present', /Esc để thoát/.test(b.text ?? ''));
-  const bad = await seek(page, 'error', null, true);
+  await seek(page, 'error', null, true);
   b = await bar(page); await shot(page, 'desktop-build-invalid');
   check('desktop: invalid hover shows error text', !!b.cost?.includes('error'), b.text);
   await aim(page, entry);

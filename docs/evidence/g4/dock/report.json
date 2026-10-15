@@ -1,6 +1,6 @@
 {
- "base": "http://127.0.0.1:5197",
- "at": "2026-10-15T07:41:26.395Z",
+ "base": "http://127.0.0.1:5190",
+ "at": "2026-10-15T08:54:54.150Z",
  "runs": {
   "1440x900": {
    "city": {
@@ -814,7 +814,7 @@
  "failures": [],
  "clickTest": {
   "enabled": true,
-  "preview": "$0\n0\n0",
+  "preview": null,
   "building": {
    "id": "b_9_0",
    "defId": "house_small",

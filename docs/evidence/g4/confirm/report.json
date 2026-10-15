@@ -1,6 +1,6 @@
 {
- "base": "http://127.0.0.1:5198",
- "at": "2026-10-15T08:33:30.947Z",
+ "base": "http://127.0.0.1:5190",
+ "at": "2026-10-15T08:59:21.241Z",
  "checks": {
   "desktop: valid hover found": {
    "ok": true,
@@ -42,8 +42,8 @@
   "desktop: road drag placed on release": {
    "ok": true,
    "extra": {
-    "r0": "2f247aa8",
-    "r1": "956787f5"
+    "r0": "967e6f70",
+    "r1": "47a5568f"
    }
   },
   "desktop: road bar has no old buttons": {
