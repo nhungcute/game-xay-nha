@@ -1,0 +1,111 @@
+{
+ "base": "http://127.0.0.1:5198",
+ "at": "2026-10-15T08:33:30.947Z",
+ "checks": {
+  "desktop: valid hover found": {
+   "ok": true,
+   "extra": {
+    "def": "house_small",
+    "cell": [
+     48,
+     56
+    ]
+   }
+  },
+  "desktop: no Xác nhận/Hủy, no primary button": {
+   "ok": true,
+   "extra": {
+    "text": "Nhà nhỏ\nXoay 0°\nSan tự động\n$300\n5\n0\nEsc để thoát",
+    "primary": null,
+    "disabled": null,
+    "cost": "preview-cost valid",
+    "hasOld": false
+   }
+  },
+  "desktop: hint Esc present": {
+   "ok": true
+  },
+  "desktop: invalid hover shows error text": {
+   "ok": true,
+   "extra": "Nhà nhỏ\nXoay 0°\nSan tự động\nKhu đất chưa được mở hoặc không liền kề.\nEsc để thoát"
+  },
+  "desktop: building placed on release, no button": {
+   "ok": true,
+   "extra": {
+    "n0": 0,
+    "cell": [
+     48,
+     56
+    ]
+   }
+  },
+  "desktop: road drag placed on release": {
+   "ok": true,
+   "extra": {
+    "r0": "2f247aa8",
+    "r1": "956787f5"
+   }
+  },
+  "desktop: road bar has no old buttons": {
+   "ok": true
+  },
+  "desktop: exit icon leaves the tool": {
+   "ok": true
+  },
+  "desktop: demolish shows red \"Phá · hoàn $\"": {
+   "ok": true,
+   "extra": "Phá · hoàn $150"
+  },
+  "desktop: demolish not executed before confirm": {
+   "ok": true
+  },
+  "desktop: demolish confirmed removes building": {
+   "ok": true,
+   "extra": {
+    "n": 0
+   }
+  },
+  "touch: valid tap preview found": {
+   "ok": true,
+   "extra": {
+    "def": "house_small",
+    "cell": [
+     49,
+     60
+    ]
+   }
+  },
+  "touch: tap alone buys nothing": {
+   "ok": true
+  },
+  "touch: button names action + price": {
+   "ok": true,
+   "extra": "Đặt Nhà nhỏ · $300"
+  },
+  "touch: buttons >= 44px": {
+   "ok": true,
+   "extra": {
+    "x": 15,
+    "y": 598.40625,
+    "width": 333,
+    "height": 48
+   }
+  },
+  "touch: invalid -> disabled button with reason": {
+   "ok": true,
+   "extra": "Khu đất chưa được mở hoặc không liền kề."
+  },
+  "touch: building bought only after the button": {
+   "ok": true
+  },
+  "touch: rect tool names cells + price (or reason)": {
+   "ok": true,
+   "extra": "Có vật cản trên ô."
+  },
+  "touch: demolish red button with refund": {
+   "ok": true,
+   "extra": "Phá · hoàn $150"
+  }
+ },
+ "failures": []
+}

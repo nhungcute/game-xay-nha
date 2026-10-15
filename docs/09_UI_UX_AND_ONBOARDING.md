@@ -58,7 +58,11 @@ Thanh tiến độ theo bước: Dữ liệu → Địa hình → Cây cối →
 - Thanh công cụ dưới cùng, cuộn ngang trên mobile. Công cụ khóa hiển thị ổ khóa + "Cấp N".
 - **Dock theo danh mục (tab):** Công trình (nhà, cửa hàng, **Ngân hàng**, landmark), Đường (Đường/Cầu/Kè), Nông trại (Cuốc/Gieo/Thu hoạch, chỉ Quê), **Đất đai** (Dọn, San nền, Khu đất), Trang trí, Tiện ích (Quê: Giếng, Kho/Silo). Tab không còn gì để hiện trên map đó thì ẩn (Thành phố không có Nông trại và Tiện ích).
 - **Phá** là nút nhanh riêng nằm cạnh Dock (bên phải thanh tab, cả desktop lẫn điện thoại), không thuộc tab nào. Là nút bật/tắt (`aria-pressed`, nhãn "Phá công trình"): bấm lần nữa về Khám phá; đổi sang tab khác cũng tắt Phá. Vùng chạm tối thiểu 44px trên điện thoại.
-- Khi chọn công cụ: thanh phụ phía trên thanh công cụ hiện tùy chọn (chế độ san Nâng/Hạ/Phẳng, cấp đường, loại cầu, loại cây trồng), **chi phí dự kiến**, nút ✔ Xác nhận / ✖ Hủy (mobile luôn cần nút xác nhận; desktop thả chuột là xác nhận cho kéo vùng/đường).
+- Khi chọn công cụ: thanh phụ phía trên thanh công cụ hiện tùy chọn (chế độ san Nâng/Hạ/Phẳng, cấp đường, loại cầu, loại cây trồng), **chi phí dự kiến**, và phần đuôi tùy kiểu nhập (không còn nút Xác nhận/Hủy chung):
+  - **Chuột:** thả chuột là đặt ngay (chọn vị trí = đã xác nhận). Chỉ còn gợi ý "Esc để thoát" và biểu tượng × thoát công cụ.
+  - **Phá (chuột và cảm ứng):** bước xác nhận rõ ràng, một nút đỏ "Phá · hoàn $X" (kèm ghi chú "N công trình sẽ mất đường nối") và × hủy.
+  - **Cảm ứng:** chạm/kéo chỉ xem trước; một nút chính nêu hành động + giá ("Đặt Nhà nhỏ · $300", "San nền 12 ô · $60", "Mở khu · $X"), mờ kèm lý do khi không hợp lệ; × hủy. Vùng chạm tối thiểu 44px (nút chính 48px).
+  - Phát hiện: theo `pointerType` của lần chạm gần nhất (touch = giao diện cảm ứng, còn lại = chuột), khởi tạo từ `(pointer: coarse)`; laptop màn hình cảm ứng tự đổi theo thiết bị đang dùng. Xem `docs/reports/CONFIRM-bar.md`.
 - Panel catalog công trình: lưới thẻ (icon, tên, giá, kích thước, thu/giờ hoặc chức năng), lọc theo nhóm (Nhà ở / Kinh doanh / Trang trí / Sản xuất).
 - Chạm công trình (Khám phá): panel thông tin — tên, trạng thái đường (✔/⚠), thu/giờ, các thưởng đang nhận, tiền chờ thu, nút Thu / Phá dỡ. Farm: slot sản xuất, nút cho ăn/bắt đầu.
 - **Công trình đang xây:** giàn giáo + đồng hồ đếm ngược phía trên. Chạm vào → panel: thời gian còn lại, nút **Xây nhanh ($X)** và **Hủy (hoàn 100%)**. Xây xong: hiệu ứng bụi + âm thanh, bong bóng "✔ Xong".
