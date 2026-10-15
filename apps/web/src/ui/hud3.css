@@ -255,3 +255,10 @@
 @keyframes hud3-toast-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @media(max-width:700px){.hud3-shell .hud3-toasts{padding:0 16px}.hud3-shell .hud3-toast{width:100%;max-width:none;justify-content:center;text-align:center}}
 @media(prefers-reduced-motion:reduce){.hud3-shell .hud3-toast,.hud3-shell .hud3-toast-n{animation:none}}
+
+/* Confirm bar (D044): mouse = hint + exit, touch/demolish = one named commit button + x */
+.hud3-shell .tool-options .preview-hint{font-size:11px;opacity:.65;white-space:nowrap}
+.hud3-shell .tool-options .exit-x{min-width:44px;min-height:44px;padding:0;border-radius:50%}
+.hud3-shell .tool-options .commit{flex:1 1 150px;min-height:48px;font-size:14px;font-weight:700;border-radius:14px}
+.hud3-shell .tool-options .commit.danger{background:#d6402f;border-color:#b02a1c;color:#fff}
+.hud3-shell .tool-options .commit:disabled{opacity:.55}

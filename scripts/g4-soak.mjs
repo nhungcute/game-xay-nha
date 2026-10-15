@@ -57,7 +57,7 @@ async function useTool(label) {
   await page.mouse.up(); await page.waitForTimeout(300);
   const confirm = page.locator('.tool-options button.primary');
   if (await confirm.count() && await confirm.isEnabled()) { await confirm.click(); count(`confirm:${label}`); }
-  else if (await page.locator('.tool-options button', { hasText: 'Hủy' }).count()) await page.locator('.tool-options button', { hasText: 'Hủy' }).click();
+  else await page.keyboard.press('Escape'); // mouse tools commit on release; no Hủy button any more
 }
 const steps = [
   async () => { await page.mouse.move(700, 450); await page.mouse.down({ button: 'right' }); await page.mouse.move(700 + rnd(300) - 150, 450 + rnd(120) - 60, { steps: 8 }); await page.mouse.up({ button: 'right' }); count('orbit'); },

@@ -25,13 +25,17 @@ export class PointerRouter {
     const hit=this.ray.intersectObjects([...this.meshes],false)[0];if(!hit)return null;
     const cell:Cell=[Math.floor(hit.point.x/2),Math.floor(hit.point.z/2)];return cell.every(v=>v>=0&&v<128)?cell:null;
   }
+  /** Input mode follows the last real pointer, so a touchscreen laptop switches between mouse and finger UI. */
+  private mode(event:PointerEvent):void {const touch=event.pointerType==='touch';if(useTools.getState().touch!==touch)useTools.setState({touch});}
   private down=(event:PointerEvent):void=>{
+    this.mode(event);
     this.canvas.setPointerCapture(event.pointerId);this.points.set(event.pointerId,{x:event.clientX,y:event.clientY});
     if(this.points.size>1){this.tools.cancel();this.origin=null;return;}
     this.origin={x:event.clientX,y:event.clientY,button:event.button};this.dragging=false;
     if(event.button===0){const cell=this.pick(event.clientX,event.clientY);if(cell)this.tools.down(cell);}
   };
   private move=(event:PointerEvent):void=>{
+    this.mode(event);
     const old=this.points.get(event.pointerId);
     if(old&&this.points.size===2){
       const other=[...this.points.entries()].find(([id])=>id!==event.pointerId)![1],before=Math.hypot(old.x-other.x,old.y-other.y),after=Math.hypot(event.clientX-other.x,event.clientY-other.y);

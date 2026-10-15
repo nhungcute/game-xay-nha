@@ -9,8 +9,8 @@ import { t } from '../i18n';
 /** A non-building map object picked in explore mode (D033): its panel offers the tools that act on it. */
 export type Focus={kind:'env';id:string;cell:Cell}|{kind:'road'|'crop'|'tilled';cell:Cell};
 export type Tool='explore'|'clear'|'terraform'|'till'|'road'|'embank'|'bridge'|'build'|'plant'|'harvest'|'demolish'|'zone';
-interface ToolState {tool:Tool;mode:'RAISE'|'LOWER'|'FLATTEN';remove:boolean;tier:1|2|3;bridgeId:string;buildingId:string;cropId:string;rotation:Rotation;selection:string|null;focus:Focus|null;preview:ToolPreview|null;cell:Cell|null;autoFlatten:boolean}
-export const useTools=create<ToolState>(()=>({tool:'explore',mode:'FLATTEN',remove:false,tier:1,bridgeId:'bridge_wood',buildingId:'farmhouse',cropId:'veg_greens',rotation:0,selection:null,focus:null,preview:null,cell:null,autoFlatten:false}));
+interface ToolState {tool:Tool;mode:'RAISE'|'LOWER'|'FLATTEN';remove:boolean;tier:1|2|3;bridgeId:string;buildingId:string;cropId:string;rotation:Rotation;selection:string|null;focus:Focus|null;preview:ToolPreview|null;cell:Cell|null;autoFlatten:boolean;touch:boolean}
+export const useTools=create<ToolState>(()=>({tool:'explore',mode:'FLATTEN',remove:false,tier:1,bridgeId:'bridge_wood',buildingId:'farmhouse',cropId:'veg_greens',rotation:0,selection:null,focus:null,preview:null,cell:null,autoFlatten:false,touch:typeof matchMedia==='function'&&matchMedia('(pointer: coarse)').matches}));
 
 /**
  * Auto-flatten target for a footprint: flush with an adjacent road when there is one (so flattening
@@ -70,7 +70,7 @@ export class ToolController {
   up(cell:Cell,touch:boolean,dragged=false):void {
     if(useTools.getState().tool==='explore'){if(!dragged)this.select(cell);return;}
     if(useTools.getState().tool==='bridge'&&!this.bridgeStart){this.bridgeStart=cell;this.start=null;this.world.message(t('selectEnd'));return;}
-    // Desktop confirms on release, except demolition: destructive, it always waits for the ✓ button.
+    // Mouse confirms on release, except demolition (destructive: waits for the red button). Touch only previews; the primary button commits.
     this.preview(cell);if(!touch&&useTools.getState().tool!=='demolish')this.confirm();this.start=null;this.path=[];
   }
   refresh():void {const cell=useTools.getState().cell;if(cell)this.preview(cell);}
@@ -101,16 +101,17 @@ export class ToolController {
     }
     if(!type){useTools.setState({preview:{command:null,cells,valid:false,warning:false}});return;}
     const command=this.world.command(type,payload),result=validate(s,command,this.world.now());
-    let note:string|undefined,bad:Cell[]|undefined;
+    let note:string|undefined,bad:Cell[]|undefined,refund:number|undefined;
     if(result.valid&&(type==='REMOVE_ROAD'||type==='REMOVE_BRIDGE'||type==='DEMOLISH')){
       // Consequence preview: which working buildings would be cut off from the road network.
       const next=execute(s,command,this.world.now()).state;
       const cut=s.snapshot.buildings.filter(b=>b.status==='ACTIVE'&&access(s,b)>0&&next.snapshot.buildings.some(n=>n.id===b.id)&&!access(next,next.snapshot.buildings.find(n=>n.id===b.id)!)).length;
+      if(type!=='REMOVE_ROAD')refund=next.snapshot.wallet.cash-s.snapshot.wallet.cash;
       if(cut){note=`${cut} công trình sẽ mất đường nối và ngừng hoạt động.`;warning=true;}
     }
     if(!result.valid)bad=cells.filter(c=>{const i=cellIndex(...c),id=s.occupancy.get(i);
       return !isUnlocked(s,c)||(type!=='CLEAR_ENV'&&type!=='DEMOLISH'&&type!=='HARVEST'&&!!id&&!(type==='REMOVE_ROAD'))||(type!=='BUILD_BRIDGE'&&type!=='EMBANK'&&s.surface[i]===Surface.WATER);});
-    useTools.setState({preview:{command,cells,valid:result.valid,warning:result.valid&&warning,...(result.valid?{cost:result.cost}:{code:result.code}),...(note?{note}:{}),...(bad?.length?{bad}:{})}});
+    useTools.setState({preview:{command,cells,valid:result.valid,warning:result.valid&&warning,...(result.valid?{cost:result.cost}:{code:result.code}),...(note?{note}:{}),...(refund!==undefined?{refund}:{}),...(bad?.length?{bad}:{})}});
     // The invalid reason stays inline (preview bar + red cells); only a rejected confirm toasts (WorldStore.dispatch).
   }
 }
