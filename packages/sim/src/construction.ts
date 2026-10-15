@@ -5,7 +5,7 @@ import {
 import { catalog, economy } from '@xay-nha/content';
 import { footprintCells, rotatedSize } from './footprint';
 import { bridgeCells, corners, inBounds, isShore, isUnlocked, neighbors, rebuildOccupancy, type SimState } from './state';
-import { addCost, constructionCompleted, guard, lookup, pay, refund, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
+import { addCost, constructionCompleted, tutorialQuests, guard, lookup, pay, refund, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
 import { terraform } from './terrain';
 import { fieldQuota, inventoryCount, storageCapacity } from './farm';
 import { cancelOrSpeedUpgrade, upgradeValue, upgrades } from './upgrades';
@@ -43,10 +43,7 @@ function entityId(s: SimState, prefix: 'b' | 'br'): string {
 }
 
 function tutorialInstant(s: SimState, defId: string): boolean {
-  const index = s.snapshot.progress.questIndex;
-  const quest = catalog.quests[s.snapshot.mapKind][index];
-  return !s.snapshot.progress.tutorialDone && index < economy.construction.tutorialInstantThroughQuest
-    && quest?.action === 'BUILD' && quest.buildingId === defId;
+  return tutorialQuests(s).some(quest => quest.action === 'BUILD' && quest.buildingId === defId);
 }
 
 /** The caller settles income at the completion timestamp before invoking this. */

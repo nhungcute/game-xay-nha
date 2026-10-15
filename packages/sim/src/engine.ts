@@ -1,6 +1,6 @@
 import { CellFlag, CommandSchema, Surface, WorldSnapshotSchema, cellIndex, decodeInt16, decodeUint8, encodeInt16, encodeUint8, vertIndex, type Command, type CommandResult, type Cost, type ErrorCode, type GameEvent, type StatePatch, type ZoneDelta } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
-import { RuleError, addCost, addXp, cashXp, event, guard, pay, refund, requireEditable, requireLevel, zeroCost } from './common';
+import { RuleError, addCost, addXp, cashXp, claimedQuestIds, event, guard, openQuests, tutorialActive, pay, refund, requireEditable, requireLevel, zeroCost } from './common';
 import { construction } from './construction';
 import { farm } from './farm';
 import { terrain } from './terrain';
@@ -73,11 +73,12 @@ function administrative(s: SimState, cmd: Command, now: number): Cost | undefine
   if (cmd.type === 'REROLL_QUEST') return rerollRepeat(s,cmd.payload.questId,now);
   if (cmd.type === 'CLAIM_QUEST') {
     const repeat=claimRepeat(s,cmd.payload.questId); if (repeat) return repeat;
-    const p=s.snapshot.progress, q=catalog.quests[s.template.mapKind][p.questIndex];
-    guard(q?.id===cmd.payload.questId,'NOT_FOUND');
-    guard(authoredQuestProgress(s)>=q.target,'QUEST_NOT_READY');
-    refund(s,q.reward); addXp(s,q.xp); p.questIndex++;
-    if (p.questIndex >= economy.construction.tutorialInstantThroughQuest) p.tutorialDone=true;
+    const p=s.snapshot.progress, q=openQuests(s).find(o=>o.id===cmd.payload.questId);
+    guard(q,'NOT_FOUND');
+    guard(authoredQuestProgressFor(s,q.id)>=q.target,'QUEST_NOT_READY');
+    const claimed=[...claimedQuestIds(s),q.id];
+    refund(s,q.reward); addXp(s,q.xp); p.claimedQuests=claimed; p.questIndex=claimed.length;
+    if (!tutorialActive(s)) p.tutorialDone=true;
     ensureRepeatQuests(s);
     return zeroCost();
   }
@@ -85,13 +86,13 @@ function administrative(s: SimState, cmd: Command, now: number): Cost | undefine
 }
 
 /**
- * Progress of the current authored quest. Quests about the world's state (roads, embankments, tilled
+ * Progress of an authored quest. Quests about the world's state (roads, embankments, tilled
  * cells, buildings, population) are measured from the state itself, so work done before the quest
  * appeared still counts and a player can never get stuck (G3 sim-economy finding). Action quests
- * (clear, flatten, plant, harvest, sell, collect, produce, bridge, zones) count events while active.
+ * (clear, flatten, plant, harvest, sell, collect, produce, bridge, zones) count events while open.
  */
-export function authoredQuestProgress(s: SimState): number {
-  const p=s.snapshot.progress, q=catalog.quests[s.template.mapKind][p.questIndex];
+export function authoredQuestProgressFor(s: SimState, questId: string): number {
+  const p=s.snapshot.progress, q=catalog.quests[s.template.mapKind].find(o=>o.id===questId);
   if (!q) return 0;
   if (q.action==='BUILD' && q.buildingId) return s.snapshot.buildings.filter(b=>b.defId===q.buildingId && b.status==='ACTIVE' && (!q.requiresRoad || access(s,b))).length;
   if (q.action==='POPULATION') return populationAndJobs(s).population;
@@ -101,6 +102,11 @@ export function authoredQuestProgress(s: SimState): number {
   if (q.action==='TILL' && q.kind==='cells') { for (let i=0;i<s.surface.length;i++) if (s.surface[i]===Surface.TILLED) count++; return count; }
   return p.questProgress[q.id] ?? 0;
 }
+/** Progress of the first open quest (compat helper). */
+export function authoredQuestProgress(s: SimState): number {
+  const q=openQuests(s)[0];
+  return q ? authoredQuestProgressFor(s,q.id) : 0;
+}
 
 function applyDraft(s: SimState, cmd: Command, now: number): Cost {
   advanceTime(s,now);
@@ -108,10 +114,11 @@ function applyDraft(s: SimState, cmd: Command, now: number): Cost {
   guard(cost!==undefined,'INVALID_COMMAND');
   guard(rebuildOccupancy(s).length===0,'OCCUPIED'); recompute(s);
   if (cmd.type==='BUILD_ROAD') {
-    const q=catalog.quests[s.template.mapKind][s.snapshot.progress.questIndex];
-    if (q?.action==='ROAD') {
+    const roadQuests=openQuests(s).filter(q=>q.action==='ROAD');
+    if (roadQuests.length) {
       for (const c of cmd.payload.cells) if (s.connected[cellIndex(...c)]) s.snapshot.progress.questProgress[`road_${cellIndex(...c)}`]=1;
-      s.snapshot.progress.questProgress[q.id]=Object.entries(s.snapshot.progress.questProgress).filter(([k])=>k.startsWith('road_')).reduce((sum,[,n])=>sum+n,0);
+      const total=Object.entries(s.snapshot.progress.questProgress).filter(([k])=>k.startsWith('road_')).reduce((sum,[,n])=>sum+n,0);
+      for (const q of roadQuests) s.snapshot.progress.questProgress[q.id]=total;
     }
   }
   s.snapshot.revision++; return cost;

@@ -9,7 +9,7 @@ import { sql } from 'drizzle-orm';
 import { cellIndex, Surface, type Command, type CommandType, type WorldSnapshot } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { createTestTemplate, generateEnvironment } from '@xay-nha/worldgen';
-import { execute, netWorth, stateHash, type SimState } from '@xay-nha/sim';
+import { execute, netWorth, openQuests, stateHash, type SimState } from '@xay-nha/sim';
 import { createDatabase, migrate } from './db/database';
 import { TemplateRegistry } from './templates';
 import { buildApp, type AppDeps } from './app';
@@ -258,6 +258,50 @@ describe('world access and commands', () => {
   });
 });
 
+describe('parallel authored quests (D041)', () => {
+  const claim = (token: string, snapshot: WorldSnapshot, questId: string) => send(token, snapshot.worldId, [command(snapshot, 'CLAIM_QUEST', { questId })]);
+  it('a ready quest #3 is claimed before #1 and #2; a quest outside the open five is rejected', async () => {
+    const p = await newPlayer('city', 'Song Song');
+    const first = (await snapshotOf(p.token, p.worldId)).snapshot;
+    expect(first.progress.questIndex).toBe(0);
+    // city-3 (flatten a lot) is event-driven: mark it done, as the terraform command would.
+    await db.execute(sql`UPDATE worlds SET snapshot = jsonb_set(snapshot, '{progress,questProgress,city-3}', '1') WHERE id = ${p.worldId}`);
+    const before = (await snapshotOf(p.token, p.worldId)).snapshot;
+    const notOpen = await claim(p.token, before, 'city-6');
+    expect(notOpen.body.results[0]).toMatchObject({ accepted: false, code: 'NOT_FOUND' });
+    const early = await claim(p.token, before, 'city-1');
+    expect(early.body.results[0]).toMatchObject({ accepted: false, code: 'QUEST_NOT_READY' });
+    const r = await claim(p.token, before, 'city-3');
+    expect(r.body.results[0].accepted).toBe(true);
+    const after = (await snapshotOf(p.token, p.worldId)).snapshot;
+    expect(after.progress.claimedQuests).toEqual(['city-3']);
+    expect(after.progress.questIndex).toBe(1);
+    expect(after.wallet.cash).toBe(before.wallet.cash + catalog.quests.city[2]!.reward.cash);
+    const again = await claim(p.token, after, 'city-3');
+    expect(again.body.results[0]).toMatchObject({ accepted: false });
+    // city-6 is the sixth quest: it joined the open list once city-3 was claimed.
+    const joined = await claim(p.token, after, 'city-6');
+    expect(joined.body.results[0]).toMatchObject({ accepted: false, code: 'QUEST_NOT_READY' });
+  });
+  it('a legacy world stored with only questIndex loads, keeps working and is written back in the new form', async () => {
+    const p = await newPlayer('city', 'Thế Hệ Cũ');
+    await db.execute(sql`UPDATE worlds SET snapshot = jsonb_set(snapshot, '{progress}', (snapshot->'progress') || '{"questIndex": 10, "tutorialDone": true, "questProgress": {"city-11": 0, "spend_xp_remainder": 7}}'::jsonb) WHERE id = ${p.worldId}`);
+    const [stored] = (await db.execute(sql`SELECT snapshot->'progress' AS progress FROM worlds WHERE id = ${p.worldId}`)).rows as { progress: Record<string, unknown> }[];
+    expect(stored!.progress.claimedQuests).toBeUndefined();
+    const loaded = await snapshotOf(p.token, p.worldId);
+    expect(loaded.snapshot.progress.claimedQuests).toEqual(catalog.quests.city.slice(0, 10).map(q => q.id));
+    expect(loaded.snapshot.progress.questIndex).toBe(10);
+    const gone = await claim(p.token, loaded.snapshot, 'city-1');
+    expect(gone.body.results[0]).toMatchObject({ accepted: false, code: 'NOT_FOUND' });
+    const open = await claim(p.token, loaded.snapshot, 'city-12');
+    expect(open.body.results[0]).toMatchObject({ accepted: false, code: 'QUEST_NOT_READY' });
+    const ok = await send(p.token, p.worldId, [command(loaded.snapshot, 'BUY_MATERIAL', { wood: 1 })]);
+    expect(ok.body.results[0].accepted).toBe(true);
+    const [row] = (await db.execute(sql`SELECT snapshot->'progress'->'claimedQuests' AS claimed FROM worlds WHERE id = ${p.worldId}`)).rows as { claimed: string[] }[];
+    expect(row!.claimed).toEqual(catalog.quests.city.slice(0, 10).map(q => q.id));
+  });
+});
+
 describe('server state equals the shared sim (property test)', () => {
   it('100 random commands: every result and the final state hash match a local sim; reload is identical; net worth recomputes', async () => {
     const p = await newPlayer('farm', 'Thuộc Tính');
@@ -280,7 +324,7 @@ describe('server state equals the shared sim (property test)', () => {
         ['PLANT', { rect: [x, z, Math.min(127, x + 2), z], cropId: 'veg_greens' }],
         ['HARVEST', { cells: [[x, z]] }],
         ['PLACE_BUILDING', { defId: ['market', 'farmhouse', 'well'][rnd(3)], anchor: [x, z], rotation: rnd(4) }],
-        ['CLAIM_QUEST', { questId: catalog.quests.farm[local.snapshot.progress.questIndex]?.id ?? 'none' }],
+        ['CLAIM_QUEST', { questId: openQuests(local)[i % 5]?.id ?? 'none' }],
       ];
       const [type, payload] = options[kind]!;
       const cmd = command(local.snapshot, type, payload);

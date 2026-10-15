@@ -145,11 +145,13 @@ describe('construction lifecycle and refunds', () => {
     completeConstruction(s, b);
     expect(s.snapshot.progress.xp).toBe(xp);
   });
-  it('instantly completes only the current matching tutorial building', () => {
+  it('instantly completes only open tutorial buildings (parallel quests)', () => {
     const s = setup(); s.snapshot.progress.tutorialDone = false; s.snapshot.progress.questIndex = 0;
     const market = place(s, 'market');
     expect(market.status).toBe('ACTIVE'); expect(market.buildEndsAt).toBe(NOW);
-    expect(place(s, 'farmhouse', [76, 50]).status).toBe('CONSTRUCTING');
+    // The farmhouse quest is open at the same time, so it is instant too; a building no open tutorial quest wants is not.
+    expect(place(s, 'farmhouse', [76, 50]).status).toBe('ACTIVE');
+    expect(place(s, 'well', [70, 50]).status).toBe('CONSTRUCTING');
   });
   it('cancel returns 100% actual materials without XP', () => {
     const s = setup(), initial = { ...s.snapshot.wallet }, b = place(s);

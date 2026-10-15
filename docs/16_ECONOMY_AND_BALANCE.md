@@ -345,6 +345,8 @@ Lưới an toàn chống kẹt: khi tiền mặt **dưới $150** và không cò
 
 ## 10. Nhiệm vụ tân thủ
 
+> **Nhiệm vụ song song (D041).** 12 nhiệm vụ của mỗi bản đồ không còn là chuỗi tuần tự: danh sách luôn hiện **5 nhiệm vụ đang mở** = 5 nhiệm vụ chưa nhận đầu tiên theo thứ tự bảng dưới. Người chơi làm và nhận thưởng **bất kỳ** nhiệm vụ nào trong 5 nhiệm vụ đó, theo thứ tự tùy ý; nhận xong một nhiệm vụ thì nhiệm vụ chưa nhận kế tiếp (theo thứ tự bảng) vào danh sách. Mọi nhiệm vụ mở đều tích lũy tiến độ (nhiệm vụ đo từ trạng thái thế giới thì tự tính). Phần thưởng và mục tiêu giữ nguyên. Trạng thái lưu `progress.claimedQuests` (danh sách id đã nhận); `questIndex` = số nhiệm vụ đã nhận. Bản lưu cũ chỉ có `questIndex` đọc thành "`questIndex` nhiệm vụ đầu đã nhận". Hướng dẫn tân thủ (xây ngay, cây hướng dẫn mọc nhanh, thu tiền thành phố x60) chạy khi nhiệm vụ tương ứng đang mở và chưa nhận, đến khi mọi nhiệm vụ đánh dấu tân thủ (1–6) đã nhận. Nhiệm vụ lặp (§10.3) chỉ bắt đầu khi cả 12 nhiệm vụ đã nhận.
+
 ### 10.1 Thành phố
 
 | # | Nhiệm vụ | Thưởng |

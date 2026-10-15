@@ -1,0 +1,482 @@
+{
+  "base": "http://127.0.0.1:5196",
+  "at": "2026-10-15T04:38:15.280Z",
+  "runs": {
+    "1440x900": {
+      "cityStart": {
+        "heading": "0/12",
+        "quests": [
+          {
+            "title": "Chặt 3 cây",
+            "done": false,
+            "claim": false,
+            "progress": "0/3"
+          },
+          {
+            "title": "Làm 6 ô đường",
+            "done": false,
+            "claim": false,
+            "progress": "0/6"
+          },
+          {
+            "title": "San phẳng một nền 2 × 2",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Nhà nhỏ",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Tạp hóa",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          }
+        ],
+        "boxes": {
+          "missions": {
+            "x": 19.1875,
+            "y": 75.1875,
+            "w": 224,
+            "h": 425.5625,
+            "bottom": 500.75,
+            "right": 243.1875
+          },
+          "dock": {
+            "x": 458.4140625,
+            "y": 751.234375,
+            "w": 523.171875,
+            "h": 124.765625,
+            "bottom": 876,
+            "right": 981.5859375
+          },
+          "minimap": {
+            "x": 19.1875,
+            "y": 698.40625,
+            "w": 156.796875,
+            "h": 156.796875,
+            "bottom": 855.203125,
+            "right": 175.984375
+          }
+        }
+      },
+      "road": [
+        [
+          48,
+          66
+        ],
+        [
+          48,
+          67
+        ],
+        [
+          48,
+          68
+        ],
+        [
+          48,
+          69
+        ],
+        [
+          48,
+          70
+        ],
+        [
+          48,
+          71
+        ],
+        [
+          48,
+          72
+        ]
+      ],
+      "cityAfterRoad": {
+        "heading": "0/12",
+        "quests": [
+          {
+            "title": "Làm 6 ô đường",
+            "done": true,
+            "claim": true,
+            "progress": null
+          },
+          {
+            "title": "Chặt 3 cây",
+            "done": false,
+            "claim": false,
+            "progress": "0/3"
+          },
+          {
+            "title": "San phẳng một nền 2 × 2",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Nhà nhỏ",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Tạp hóa",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          }
+        ]
+      },
+      "cityAfterClaim": {
+        "heading": "1/12",
+        "quests": [
+          {
+            "title": "Chặt 3 cây",
+            "done": false,
+            "claim": false,
+            "progress": "0/3"
+          },
+          {
+            "title": "San phẳng một nền 2 × 2",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Nhà nhỏ",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Tạp hóa",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Thu tiền lần đầu",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          }
+        ],
+        "claimed": [
+          "city-2"
+        ]
+      },
+      "farmStart": {
+        "heading": "0/12",
+        "quests": [
+          {
+            "title": "Xây Chợ và nối đường",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Nhà nông",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Cuốc 6 ô đất",
+            "done": false,
+            "claim": false,
+            "progress": "0/6"
+          },
+          {
+            "title": "Gieo Rau cải",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Thu hoạch",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          }
+        ],
+        "boxes": {
+          "missions": {
+            "x": 19.1875,
+            "y": 75.1875,
+            "w": 224,
+            "h": 425.5625,
+            "bottom": 500.75,
+            "right": 243.1875
+          },
+          "dock": {
+            "x": 408.015625,
+            "y": 751.234375,
+            "w": 623.96875,
+            "h": 124.765625,
+            "bottom": 876,
+            "right": 1031.984375
+          },
+          "minimap": {
+            "x": 19.1875,
+            "y": 698.40625,
+            "w": 156.796875,
+            "h": 156.796875,
+            "bottom": 855.203125,
+            "right": 175.984375
+          }
+        }
+      }
+    },
+    "1366x768": {
+      "cityStart": {
+        "heading": "0/12",
+        "quests": [
+          {
+            "title": "Chặt 3 cây",
+            "done": false,
+            "claim": false,
+            "progress": "0/3"
+          },
+          {
+            "title": "Làm 6 ô đường",
+            "done": false,
+            "claim": false,
+            "progress": "0/6"
+          },
+          {
+            "title": "San phẳng một nền 2 × 2",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Nhà nhỏ",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Tạp hóa",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          }
+        ],
+        "boxes": {
+          "missions": {
+            "x": 17.265625,
+            "y": 67.671875,
+            "w": 201.59375,
+            "h": 383.46875,
+            "bottom": 451.140625,
+            "right": 218.859375
+          },
+          "dock": {
+            "x": 447.578125,
+            "y": 634.15625,
+            "w": 470.84375,
+            "h": 112.25,
+            "bottom": 746.40625,
+            "right": 918.421875
+          },
+          "minimap": {
+            "x": 17.265625,
+            "y": 586.578125,
+            "w": 141.109375,
+            "h": 141.109375,
+            "bottom": 727.6875,
+            "right": 158.375
+          }
+        }
+      },
+      "farmStart": {
+        "heading": "0/12",
+        "quests": [
+          {
+            "title": "Xây Chợ và nối đường",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Nhà nông",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Cuốc 6 ô đất",
+            "done": false,
+            "claim": false,
+            "progress": "0/6"
+          },
+          {
+            "title": "Gieo Rau cải",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Thu hoạch",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          }
+        ],
+        "boxes": {
+          "missions": {
+            "x": 17.265625,
+            "y": 67.671875,
+            "w": 201.59375,
+            "h": 383.46875,
+            "bottom": 451.140625,
+            "right": 218.859375
+          },
+          "dock": {
+            "x": 402.21875,
+            "y": 634.15625,
+            "w": 561.5625,
+            "h": 112.25,
+            "bottom": 746.40625,
+            "right": 963.78125
+          },
+          "minimap": {
+            "x": 17.265625,
+            "y": 586.578125,
+            "w": 141.109375,
+            "h": 141.109375,
+            "bottom": 727.6875,
+            "right": 158.375
+          }
+        }
+      }
+    },
+    "pixel7": {
+      "cityStart": {
+        "heading": "0/12",
+        "quests": [
+          {
+            "title": "Chặt 3 cây",
+            "done": false,
+            "claim": false,
+            "progress": "0/3"
+          },
+          {
+            "title": "Làm 6 ô đường",
+            "done": false,
+            "claim": false,
+            "progress": "0/6"
+          },
+          {
+            "title": "San phẳng một nền 2 × 2",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Nhà nhỏ",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Tạp hóa",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          }
+        ],
+        "boxes": {
+          "missions": {
+            "x": 8,
+            "y": 132,
+            "w": 250,
+            "h": 397.78125,
+            "bottom": 529.78125,
+            "right": 258
+          },
+          "dock": {
+            "x": 8,
+            "y": 715,
+            "w": 396,
+            "h": 116,
+            "bottom": 831,
+            "right": 404
+          },
+          "minimap": {
+            "x": 8,
+            "y": 601,
+            "w": 104,
+            "h": 104,
+            "bottom": 705,
+            "right": 112
+          }
+        }
+      },
+      "farmStart": {
+        "heading": "0/12",
+        "quests": [
+          {
+            "title": "Xây Chợ và nối đường",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Xây Nhà nông",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Cuốc 6 ô đất",
+            "done": false,
+            "claim": false,
+            "progress": "0/6"
+          },
+          {
+            "title": "Gieo Rau cải",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          },
+          {
+            "title": "Thu hoạch",
+            "done": false,
+            "claim": false,
+            "progress": "0/1"
+          }
+        ],
+        "boxes": {
+          "missions": {
+            "x": 8,
+            "y": 132,
+            "w": 250,
+            "h": 397.78125,
+            "bottom": 529.78125,
+            "right": 258
+          },
+          "dock": {
+            "x": 8,
+            "y": 715,
+            "w": 396,
+            "h": 116,
+            "bottom": 831,
+            "right": 404
+          },
+          "minimap": {
+            "x": 8,
+            "y": 601,
+            "w": 104,
+            "h": 104,
+            "bottom": 705,
+            "right": 112
+          }
+        }
+      }
+    }
+  },
+  "failures": []
+}

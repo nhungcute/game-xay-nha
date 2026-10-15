@@ -30,13 +30,23 @@ export function migrateContent(snapshot: WorldSnapshot): WorldSnapshot {
   return migrated;
 }
 
+/**
+ * Quests became parallel (D041): older saves only carry `questIndex`. They read as "the first N quests of the
+ * chain are claimed"; the converted form is persisted by the next save. No SQL migration.
+ */
+export function normalizeQuests(snapshot: WorldSnapshot): WorldSnapshot {
+  if (snapshot.progress.claimedQuests) return snapshot;
+  const claimedQuests = catalog.quests[snapshot.mapKind].slice(0, snapshot.progress.questIndex).map(q => q.id);
+  return { ...snapshot, progress: { ...snapshot.progress, claimedQuests } };
+}
+
 export type SnapshotValidation = { ok: true; state: SimState } | { ok: false; errors: string[] };
 
 /** No current-state, scene or cache mutation occurs while validating a replacement snapshot. */
 export function validateSnapshot(current: SimState, input: unknown, now: number): SnapshotValidation {
   const parsed = WorldSnapshotSchema.safeParse(input);
   if (!parsed.success) return { ok: false, errors: parsed.error.issues.map(issue => `SCHEMA:${issue.path.join('.')}:${issue.message}`) };
-  const snapshot = migrateContent(parsed.data), errors: string[] = [], template = current.template;
+  const snapshot = normalizeQuests(migrateContent(parsed.data)), errors: string[] = [], template = current.template;
   for (const key of ['mapId', 'mapKind', 'templateVersion', 'seed', 'generatorVersion'] as const) {
     if (snapshot[key] !== template[key]) errors.push(`TEMPLATE_MISMATCH:${key}`);
   }
@@ -51,6 +61,12 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
   while (level < economy.xp.maxLevel && snapshot.progress.xp >= table[level + 1]!) level++;
   if (snapshot.progress.level !== level) errors.push('LEVEL_XP');
   if (snapshot.progress.questIndex > catalog.quests[snapshot.mapKind].length) errors.push('QUEST_INDEX');
+  {
+    const known = new Set(catalog.quests[snapshot.mapKind].map(q => q.id)), claimed = snapshot.progress.claimedQuests ?? [];
+    if (claimed.some(id => !known.has(id))) errors.push('QUEST_CLAIMED:UNKNOWN');
+    if (new Set(claimed).size !== claimed.length) errors.push('QUEST_CLAIMED:DUPLICATE');
+    if (claimed.length !== snapshot.progress.questIndex) errors.push('QUEST_CLAIMED:COUNT');
+  }
   errors.push(...validateRepeat(snapshot));
   if ((snapshot.progress.questProgress.spend_xp_remainder ?? 0) >= economy.xp.spendDivisor
     || (snapshot.progress.questProgress.collect_xp_remainder ?? 0) >= economy.xp.collectDivisor) errors.push('XP_REMAINDER');
@@ -252,7 +268,7 @@ function canonical(value: unknown): string {
 export function stateHash(state: SimState): string {
   let hash = 0x811c9dc5;
   const byte = (value: number) => { hash = Math.imul(hash ^ value, 0x01000193) >>> 0; };
-  for (const character of canonical(state.snapshot as WorldSnapshot)) {
+  for (const character of canonical(normalizeQuests(state.snapshot as WorldSnapshot))) {
     const cp = character.codePointAt(0)!;
     if (cp < 128) byte(cp);
     else if (cp < 2048) { byte(192 | (cp >>> 6)); byte(128 | (cp & 63)); }

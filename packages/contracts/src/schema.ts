@@ -150,7 +150,11 @@ export const RepeatStateSchema = z.object({
   seq: IntegerSchema, rerollAt: IntegerSchema, last: IdSchema.optional(), active: z.array(RepeatQuestSchema).max(3),
 }).strict();
 export const ProgressSchema = z.object({
-  xp: IntegerSchema, level: IntegerSchema.min(1).max(20), questIndex: IntegerSchema,
+  xp: IntegerSchema, level: IntegerSchema.min(1).max(20),
+  /** Number of claimed authored quests (always claimedQuests.length once normalised). */
+  questIndex: IntegerSchema,
+  /** Claimed authored quest ids (quests are parallel since D041). Absent in older saves: read as the first `questIndex` of the chain. */
+  claimedQuests: z.array(IdSchema).max(64).optional(),
   questProgress: z.record(IdSchema, IntegerSchema), tutorialDone: z.boolean(),
   repeat: RepeatStateSchema.optional(),
   /** D028 §9.1: when the last emergency relief was claimed. */

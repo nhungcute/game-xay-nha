@@ -1,7 +1,7 @@
 import { CellFlag, Surface, cellIndex, type Cell, type CommandPayload, type CommandType, type Cost, type MapKind, type WorldTemplate } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { advanceTime, builderCapacity, buildingLimit, corners, costValue, execute, fieldQuota, footprintCells, inBounds, isShore, isUnlocked,
-  meanHeight, neighbors, rebuildOccupancy, recompute, slope, validateSnapshot, createState, access, authoredQuestProgress, repeatQuestProgress, isFarBank, type SimState } from '@xay-nha/sim';
+  meanHeight, neighbors, rebuildOccupancy, recompute, slope, validateSnapshot, createState, access, authoredQuestProgressFor, openQuests, repeatQuestProgress, isFarBank, type SimState } from '@xay-nha/sim';
 import { capHours } from '@xay-nha/sim';
 import { generateEnvironment } from '@xay-nha/worldgen';
 import { nextHarvestMinute, sessions, type PlayStyle, type Session } from './economy-bot-schedule';
@@ -203,11 +203,17 @@ export class EconomyBot {
     }
     this.siteCursor.set(defId, candidates.length); this.noSpace.add(defId); return false;
   }
+  /** D041: open quests that are not finished yet; the bot works on all of them, in chain order. */
+  pending() {
+    return openQuests(this.s).filter(quest => authoredQuestProgressFor(this.s, quest.id) < quest.target);
+  }
   claim(): void {
-    const quest = catalog.quests[this.template.mapKind][this.s.snapshot.progress.questIndex];
-    if (quest) {
-      const progress = authoredQuestProgress(this.s);
-      if (progress >= quest.target) this.command('CLAIM_QUEST', { questId: quest.id });
+    // Any ready open quest can be claimed, in any order; each claim may open the next quest, so repeat.
+    for (let again = true; again;) {
+      again = false;
+      for (const quest of openQuests(this.s)) {
+        if (authoredQuestProgressFor(this.s, quest.id) >= quest.target && this.command('CLAIM_QUEST', { questId: quest.id })) { again = true; break; }
+      }
     }
     for (const repeat of [...(this.s.snapshot.progress.repeat?.active ?? [])]) {
       if (repeatQuestProgress(this.s, repeat) >= repeat.target && this.command('CLAIM_QUEST', { questId: repeat.id })) this.repeatClaims++;
@@ -298,8 +304,10 @@ export class EconomyBot {
     if (this.command('BUILD_BRIDGE', { typeId: 'bridge_wood', a: candidate.a, b: candidate.b })) this.farAnchor = candidate.b;
   }
   infrastructure(): void {
-    const quest = catalog.quests[this.template.mapKind][this.s.snapshot.progress.questIndex];
-    if (!quest) return;
+    for (const quest of this.pending()) this.infrastructureFor(quest);
+    this.claim();
+  }
+  infrastructureFor(quest: ReturnType<EconomyBot['pending']>[number]): void {
     if (quest.action === 'UNLOCK_ZONE') this.expand();
     if (quest.action === 'EMBANK') {
       const cells: Cell[] = [];
@@ -336,14 +344,13 @@ export class EconomyBot {
         }
       }
     }
-    this.claim();
   }
   city(): void {
     const ids = this.s.snapshot.buildings.filter(building => building.status === 'ACTIVE' && (building.accrued ?? 0) >= 1).map(building => building.id);
     if (ids.length) this.command('COLLECT', { buildingIds: ids });
-    const quest = catalog.quests.city[this.s.snapshot.progress.questIndex];
-    if (!this.s.snapshot.progress.tutorialDone && quest?.action !== 'BUILD') return;
-    if (quest?.buildingId && this.build(quest.buildingId)) this.claim();
+    const quests = this.pending().filter(quest => quest.buildingId);
+    if (!this.s.snapshot.progress.tutorialDone && !quests.length) return;
+    for (const quest of quests) if (this.build(quest.buildingId!)) this.claim();
     if (!this.s.snapshot.progress.tutorialDone) return;
     const population = this.s.snapshot.buildings.reduce((sum, building) => sum + (catalog.buildings[building.defId]!.population ?? 0), 0);
     const jobs = this.s.snapshot.buildings.reduce((sum, building) => sum + (catalog.buildings[building.defId]!.jobs ?? 0), 0);
@@ -434,8 +441,9 @@ export class EconomyBot {
     const ripe = this.s.snapshot.crops.filter(crop => crop.readyAt <= this.now).map(crop => crop.cell);
     for (let i = 0; i < ripe.length; i += 256) { if (this.command('HARVEST', { cells: ripe.slice(i, i + 256) })) { this.production(); this.sellAll(); } }
     this.production(); this.sellAll(); this.claim(); this.infrastructure();
-    const quest = catalog.quests.farm[this.s.snapshot.progress.questIndex];
-    if (quest?.buildingId) this.build(quest.buildingId);
+    const pending = this.pending();
+    for (const wanted of pending) if (wanted.buildingId) this.build(wanted.buildingId);
+    const quest = pending.find(item => item.action === 'PLANT' && item.cropId) ?? pending[0];
     this.fields(); this.claim();
     const free: Cell[] = [];
     for (let z = 0; z < 128; z++) for (let x = 0; x < 128; x++) if (this.s.surface[cellIndex(x, z)] === Surface.TILLED && !this.s.occupancy.has(cellIndex(x, z))) free.push([x, z]);
@@ -470,15 +478,16 @@ export class EconomyBot {
       const session = this.schedule[index]!;
       for (let minute = session.start; minute <= session.end; minute++) {
         this.now = minute * MINUTE; advanceTime(this.s, this.now); this.captureLevels();
-        const quest = catalog.quests[this.template.mapKind][this.s.snapshot.progress.questIndex];
+        const pending = this.pending(), at = (action: string) => pending.find(item => item.action === action);
         if (this.template.mapKind === 'city') {
-          if (quest?.action === 'CLEAR') this.command('CLEAR_ENV', { envIds: this.s.env.filter(env => env.assetId.startsWith('tree') && isUnlocked(this.s, env.cell) && !this.s.snapshot.delta.removedEnvIds.includes(env.id)).slice(0, quest.target).map(env => env.id) });
-          if (quest?.action === 'ROAD') {
+          const clear = at('CLEAR'), road = at('ROAD'), terraform = at('TERRAFORM');
+          if (clear) this.command('CLEAR_ENV', { envIds: this.s.env.filter(env => env.assetId.startsWith('tree') && isUnlocked(this.s, env.cell) && !this.s.snapshot.delta.removedEnvIds.includes(env.id)).slice(0, clear.target).map(env => env.id) });
+          if (road) {
             const [x, z] = this.template.entryCells[0] ?? [-1, -1];
-            if (this.template.entryCells.length) this.road(Array.from({ length: quest.target + 1 }, (_, offset) => [x + offset, z]));
-            else this.dirtRoad(quest.target);
+            if (this.template.entryCells.length) this.road(Array.from({ length: road.target + 1 }, (_, offset) => [x + offset, z]));
+            else this.dirtRoad(road.target);
           }
-          if (quest?.action === 'TERRAFORM') {
+          if (terraform) {
             const lot = this.template.suggestedLots?.[0];
             if (lot && this.clear(footprintCells({ size: [2, 2] }, [lot.cells[0], lot.cells[1]], 0))) this.command('TERRAFORM', { rect: [lot.cells[0], lot.cells[1], lot.cells[0] + 1, lot.cells[1] + 1], mode: 'FLATTEN' });
           }

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { catalog, economy } from '@xay-nha/content';
-import { authoredQuestProgress, capHours, inventoryCount, populationAndJobs, repeatQuestProgress, storageCapacity } from '@xay-nha/sim';
+import { economy } from '@xay-nha/content';
+import { authoredQuestProgressFor, openQuests, capHours, inventoryCount, populationAndJobs, repeatQuestProgress, storageCapacity } from '@xay-nha/sim';
 import type { WorldStore } from '../game/WorldStore';
 import { money, t } from '../i18n';
 import { GameIcon } from './GameIcon';
@@ -19,8 +19,8 @@ export function playerTitle(kind: 'city' | 'farm', level: number): string {
 
 /** Things worth the player's attention right now (the mail button's red dot). */
 export function notifications(state: State): string[] {
-  const s = state.snapshot, items: string[] = [], quest = catalog.quests[s.mapKind][s.progress.questIndex];
-  if (quest && authoredQuestProgress(state) >= quest.target) items.push(`Nhiệm vụ "${t(quest.nameKey)}" đã xong — nhận thưởng.`);
+  const s = state.snapshot, items: string[] = [];
+  for (const quest of openQuests(state)) if (authoredQuestProgressFor(state, quest.id) >= quest.target) items.push(`Nhiệm vụ "${t(quest.nameKey)}" đã xong — nhận thưởng.`);
   const repeatDone = s.progress.repeat?.active.filter(q => repeatQuestProgress(state, q) >= q.target).length ?? 0;
   if (repeatDone) items.push(`${repeatDone} nhiệm vụ hằng ngày có thể nhận thưởng.`);
   if (s.mapKind === 'city') {
