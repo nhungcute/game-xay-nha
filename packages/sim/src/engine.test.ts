@@ -167,7 +167,9 @@ describe('quests and tutorial completion', () => {
   });
   it('not-ready quest and a different quest ID cannot be claimed', () => {
     rejected(initial('city'), 'CLAIM_QUEST', { questId: 'city-1' }, 'QUEST_NOT_READY');
-    rejected(initial('city'), 'CLAIM_QUEST', { questId: 'city-2' }, 'NOT_FOUND');
+    rejected(initial('city'), 'CLAIM_QUEST', { questId: 'city-2' }, 'QUEST_NOT_READY');
+    rejected(initial('city'), 'CLAIM_QUEST', { questId: 'city-6' }, 'NOT_FOUND');
+    rejected(initial('city'), 'CLAIM_QUEST', { questId: 'nope' }, 'NOT_FOUND');
   });
   it('claim grants exactly content rewards once, XP and an event', () => {
     let state = initial('city'); state = accepted(state, 'CLEAR_ENV', { envIds: ['A-0', 'A-1', 'A-2'] });
