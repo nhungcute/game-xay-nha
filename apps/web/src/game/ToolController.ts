@@ -4,7 +4,7 @@ import { catalog } from '@xay-nha/content';
 import { access, buildingAtCell, execute, footprintCells, inBounds, isUnlocked, meanHeight, validate } from '@xay-nha/sim';
 import { Surface } from '@xay-nha/contracts';
 import { WorldStore, type ToolPreview } from './WorldStore';
-import { errorText, t } from '../i18n';
+import { t } from '../i18n';
 
 /** A non-building map object picked in explore mode (D033): its panel offers the tools that act on it. */
 export type Focus={kind:'env';id:string;cell:Cell}|{kind:'road'|'crop'|'tilled';cell:Cell};
@@ -111,6 +111,6 @@ export class ToolController {
     if(!result.valid)bad=cells.filter(c=>{const i=cellIndex(...c),id=s.occupancy.get(i);
       return !isUnlocked(s,c)||(type!=='CLEAR_ENV'&&type!=='DEMOLISH'&&type!=='HARVEST'&&!!id&&!(type==='REMOVE_ROAD'))||(type!=='BUILD_BRIDGE'&&type!=='EMBANK'&&s.surface[i]===Surface.WATER);});
     useTools.setState({preview:{command,cells,valid:result.valid,warning:result.valid&&warning,...(result.valid?{cost:result.cost}:{code:result.code}),...(note?{note}:{}),...(bad?.length?{bad}:{})}});
-    if(!result.valid)this.world.message(errorText(result.code),true);
+    // The invalid reason stays inline (preview bar + red cells); only a rejected confirm toasts (WorldStore.dispatch).
   }
 }

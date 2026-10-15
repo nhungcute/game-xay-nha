@@ -13,6 +13,7 @@ import { report } from './net/telemetry';
 import { BuildingSelection } from './ui/BuildingSelection';
 import { MiniMap } from './ui/MiniMap';
 import { TopBar, notifications } from './ui/TopBar';
+import { Toasts } from './ui/Toasts';
 import { MissionPanel } from './ui/MissionPanel';
 import { CategoryBar, CategoryTray, DemolishButton, QUICK_TOOL, categoryOf, type Category } from './ui/CategoryBar';
 import type { GamePanel } from './ui/panels';
@@ -113,7 +114,7 @@ export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
   const canvas=useRef<HTMLCanvasElement>(null),gameRef=useRef<GameLoop|null>(null);
   const [ready,setReady]=useState(false),[hideHints,setHideHints]=useState(skipped()),[loadingError,setLoadingError]=useState(''),[attempt,setAttempt]=useState(0),[panel,setPanel]=useState<GamePanel|null>(null),[stats,setStats]=useState<ReturnType<GameLoop['metrics']>|null>(null);
   const [missionsOpen,setMissionsOpen]=useState(()=>!matchMedia('(max-width:700px)').matches),[switchingMap,setSwitchingMap]=useState(false),[category,setCategory]=useState<Category|null>(null),[seen,setSeen]=useState(''),[zones,setZones]=useState(true);
-  const {state,message,error,cacheStatus,connection,pending}=useWorld(),ui=useTools();
+  const {state,message,cacheStatus,connection,pending}=useWorld(),ui=useTools();
   const [levelUp,setLevelUp]=useState<number|null>(null),seenLevel=useRef<number|null>(null);
   // Show what a new level unlocks (G4 review) — only for levels gained while playing, not on load.
   useEffect(()=>{const level=state?.snapshot.progress.level;if(level===undefined)return;if(seenLevel.current!==null&&level>seenLevel.current)setLevelUp(level);seenLevel.current=level;},[state?.snapshot.progress.level]);
@@ -173,6 +174,7 @@ export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
     {ready&&state&&<>
       <TopBar state={state} night={stats?.night} panel={panel} status={status} connected={connection==='online'||connection==='local'} unread={alerts.length>0&&signature!==seen}
         canCollect={canCollect} onPanel={openPanel} onCollect={()=>apply('COLLECT',{buildingIds:[]})} onMeasure={hudRef}/>
+      <Toasts/>
       <MissionPanel state={state} open={missionsOpen} hint={hint?.text} onToggle={()=>setMissionsOpen(!missionsOpen)}
         onSkipHints={()=>{try{localStorage.setItem(SKIP_KEY,'1');}catch{/* storage blocked */}setHideHints(true);}}
         onClaim={id=>apply('CLAIM_QUEST',{questId:id})} onReroll={id=>apply('REROLL_QUEST',{questId:id})} onRelief={()=>apply('CLAIM_RELIEF',{})}
@@ -205,7 +207,7 @@ export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
         apply={(type,payload)=>{apply(type,payload);}} onTool={focusTool} onClose={closeFocus}/>}
       {object&&!panel&&<BuildingPanel key={object.id} state={state} building={selected} bridge={bridge} apply={(type,payload)=>{apply(type,payload);}} onClose={()=>update({selection:null})}/>}
       <footer className="hud3-dock" ref={dockRef}>
-        <div className="feedback"><span className={error?'error':''} role="status">{message||t('select')}</span><small>{cacheStatus}</small></div>
+        <div className="feedback"><span>{message||t('select')}</span><small>{cacheStatus}</small></div>
         {ui.tool!=='explore'&&<div className="tool-options panel"><strong>{ui.tool==='build'?t(catalog.buildings[ui.buildingId]?.nameKey??'build'):t(ui.tool)}</strong>
           {ui.tool==='terraform'&&(['RAISE','LOWER','FLATTEN'] as const).map(mode=><button className={ui.mode===mode?'selected':''} key={mode} onClick={()=>update({mode})}>{t(mode.toLowerCase())}</button>)}
           {ui.tool==='road'&&([1,2,3] as const).map(tier=><button className={ui.tier===tier?'selected':''} key={tier} onClick={()=>update({tier})}>{['Đường đất','Lát đá','Nhựa'][tier-1]}</button>)}
