@@ -99,6 +99,8 @@ Thanh tiến độ theo bước: Dữ liệu → Địa hình → Cây cối →
 
 Mỗi bước: mũi tên/viền sáng chỉ vào nút hoặc ô, bong bóng thoại ngắn (nhân vật hướng dẫn "Bác Tư" — trưởng làng). Có nút **Bỏ qua hướng dẫn** (vẫn giữ nhiệm vụ trong danh sách). Bước gắn với nhiệm vụ `16 §10`.
 
+**Bảng nhiệm vụ (D041).** Hiện tối đa 5 nhiệm vụ đang mở cùng lúc (biểu tượng chạm để chọn công cụ, tên, thanh tiến độ); nhiệm vụ đã xong có nút "Nhận thưởng · $x · +y XP" và xếp lên đầu; tiêu đề hiện `đã nhận/tổng` (vd. "Nhiệm vụ 4/12"). Có thể làm và nhận theo thứ tự bất kỳ. Lời nhắc của Bác Tư theo nhiệm vụ mở đầu tiên chưa xong. Trên điện thoại bảng gọn hơn và cuộn bên trên bản đồ nhỏ, không đè thanh công cụ.
+
 ### 5.1 Thành phố
 
 | Bước | Lời thoại (tóm tắt) | Hành động yêu cầu | Chặn thao tác khác? |
