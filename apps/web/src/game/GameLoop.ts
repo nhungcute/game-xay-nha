@@ -12,6 +12,7 @@ import { WaterRenderer } from './render/WaterRenderer';
 import { RoadRenderer } from './render/RoadRenderer';
 import { EmbankRenderer } from './render/EmbankRenderer';
 import { BridgeRenderer } from './render/BridgeRenderer';
+import { ZoneHighlightRenderer } from './render/ZoneHighlightRenderer';
 import { OverlayRenderer } from './render/OverlayRenderer';
 import { EnvRenderer } from './render/EnvRenderer';
 import { BuildingRenderer } from './render/BuildingRenderer';
@@ -37,6 +38,7 @@ export class GameLoop {
   readonly rig:CameraRig;
   readonly terrain:TerrainRenderer;
   readonly overlay:OverlayRenderer;
+  readonly zoneTool:ZoneHighlightRenderer;
   private readonly water:WaterRenderer;
   private readonly pointer:PointerRouter;
   private readonly buildings:BuildingRenderer;
@@ -76,7 +78,7 @@ export class GameLoop {
     this.scene.add(this.sun,this.sun.target,this.hemisphere);
     this.terrain=new TerrainRenderer(this.scene);this.terrain.update(world.state);
     this.water=new WaterRenderer(this.scene);this.water.update(world.state);
-    this.overlay=new OverlayRenderer(this.scene);this.overlay.update(world.state);
+    this.overlay=new OverlayRenderer(this.scene);this.overlay.update(world.state);this.zoneTool=new ZoneHighlightRenderer(this.scene);
     this.buildings=new BuildingRenderer(this.scene,assets);this.crops=new CropRenderer(this.scene,assets);this.ghost=new GhostRenderer(this.scene,assets);this.coins=new CoinRenderer(this.scene);
     this.renderers=[new RoadRenderer(this.scene),new EmbankRenderer(this.scene),new BridgeRenderer(this.scene),this.env=new EnvRenderer(this.scene,assets),this.buildings,this.crops,this.coins,new StreetLightRenderer(this.scene)];
     this.applyQuality(this.quality);
@@ -98,7 +100,7 @@ export class GameLoop {
     this.composer.addPass(this.bloom); this.composer.addPass(new OutputPass());
     this.tools=new ToolController(world);
     this.pointer=new PointerRouter(canvas,this.rig,this.tools,this.terrain.meshes);
-    this.subscriptions.push(world.subscribe((state,dirty,entitiesChanged)=>{this.rig.setState(state);if(dirty.length){this.terrain.update(state,dirty);this.overlay.update(state);}if(entitiesChanged)for(const renderer of this.renderers)renderer.update(state);else {this.crops.update(state);this.coins.update(state);}}),useTools.subscribe(ui=>{const p=ui.preview;const status=p?.valid?(p.warning?'warning':'valid'):'invalid';if(p)this.overlay.preview(p.cells,world.state,status,p.bad);else this.overlay.hide();if(p&&ui.tool==='build'&&ui.cell)this.ghost.preview(ui.buildingId,ui.cell,ui.rotation,world.state,status);else this.ghost.hide();}));
+    this.subscriptions.push(world.subscribe((state,dirty,entitiesChanged)=>{this.rig.setState(state);if(dirty.length){this.terrain.update(state,dirty);this.overlay.update(state);}this.syncZones();if(entitiesChanged)for(const renderer of this.renderers)renderer.update(state);else {this.crops.update(state);this.coins.update(state);}}),useTools.subscribe(ui=>{this.syncZones();const p=ui.preview;const status=p?.valid?(p.warning?'warning':'valid'):'invalid';if(p)this.overlay.preview(p.cells,world.state,status,p.bad);else this.overlay.hide();if(p&&ui.tool==='build'&&ui.cell)this.ghost.preview(ui.buildingId,ui.cell,ui.rotation,world.state,status);else this.ghost.hide();}));
     canvas.addEventListener('pointerdown',this.unlockAudio);this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.resize();this.updateLighting(true);this.frameId=requestAnimationFrame(this.frame);
     if(new URLSearchParams(location.search).get('debug')==='1')this.installDebug();
   }
@@ -112,6 +114,8 @@ export class GameLoop {
     this.updateLighting(true);
   }
   /** Ambience follows the camera: running water near shores, wind stronger when zoomed out. */
+  /** Khu đất overlay follows the active tool and the hovered cell's zone. */
+  private syncZones():void {const ui=useTools.getState(),c=ui.cell;this.zoneTool.sync(this.world.state,this.world.now(),ui.tool==='zone',c?Math.floor(c[1]/16)*8+Math.floor(c[0]/16):-1);}
   private updateAmbience():void {const t=this.rig.target,s=this.world.state;this.sound.ambient(waterNearby(s.surface,Math.floor(t.x/2),Math.floor(t.z/2)),Math.max(0,Math.min(1,(260-this.rig.distance)/200)));this.sound.playMusic(s.template.mapKind);}
   private unlockAudio=():void=>this.sound.unlock();
   private resize():void {
@@ -128,17 +132,17 @@ export class GameLoop {
   }
   setTimeOfDay(mode:TimeOfDayMode):void { if(mode===this.timeOfDay)return;this.timeOfDay=mode;saveTimeOfDayMode(mode);this.updateLighting(true); }
   private frame=(now:number):void=>{
-    const dt=Math.min((now-this.last)/1000,.1);this.last=now;this.pointer.update(dt);this.terrain.animate(dt);this.water.animate(dt);this.coins.animate(dt);this.effects.animate(dt);
+    const dt=Math.min((now-this.last)/1000,.1);this.last=now;this.pointer.update(dt);this.terrain.animate(dt);this.water.animate(dt);this.coins.animate(dt);this.zoneTool.animate(dt,this.rig.camera);this.effects.animate(dt);
     this.env.frame(dt,{x:this.rig.target.x,z:this.rig.target.z,yawDeg:this.rig.yaw});this.updateLighting();
     this.sun.target.position.copy(this.rig.target);this.sun.position.copy(this.rig.target).add(this.sunDirection);
     if(this.bloomEnabled)this.composer.render();else this.renderer.render(this.scene,this.rig.camera);this.frameCount++;
-    if(now-this.second>=1000){this.fps=this.frameCount*1000/(now-this.second);this.second=now;this.frameCount=0;this.world.tick();this.updateAmbience();}
+    if(now-this.second>=1000){this.fps=this.frameCount*1000/(now-this.second);this.second=now;this.frameCount=0;this.world.tick();this.updateAmbience();this.syncZones();}
     this.frameId=requestAnimationFrame(this.frame);
   };
   project(x:number,z:number):{x:number;y:number} {const point=new Vector3(x,this.terrain.sampleHeight(x,z),z).project(this.rig.camera),r=this.canvas.getBoundingClientRect();return{x:r.left+(point.x+1)*r.width/2,y:r.top+(1-point.y)*r.height/2};}
   metrics(){const info=this.renderer.info;return{quality:this.quality,timeOfDay:this.timeOfDay,night:lighting(this.currentHour(),this.timeOfDay).night,bloom:this.bloomEnabled,muted:this.sound.muted,musicOn:this.sound.musicOn,pending:this.world.pendingCount(),clockSkewMs:this.world.clockSkewMs(),fps:this.fps,drawCalls:this.bloomEnabled?this.sceneDrawCalls:info.render.calls,triangles:this.bloomEnabled?this.sceneTriangles:info.render.triangles,geometries:info.memory.geometries,textures:info.memory.textures,programs:info.programs?.length??0,terrain:this.terrain.stats,revision:this.world.state.snapshot.revision};}
   private installDebug():void {
-    const debug={getStateHash:()=>stateHash(this.world.state),listSceneObjectTypes:()=>{const types:string[]=[];this.scene.traverse(o=>types.push(o.type));return types;},sceneMeshes:()=>{const list:{name:string;castShadow:boolean;receiveShadow:boolean;visible:boolean;count?:number}[]=[];this.scene.traverse(o=>{const m=o as Mesh;if(m.isMesh)list.push({name:m.name,castShadow:m.castShadow,receiveShadow:m.receiveShadow,visible:m.visible,count:(m as InstancedMesh).count});});return list;},auditScene:()=>this.auditScene(),envCull:(enabled:boolean)=>this.env.setFrustumCulled(enabled),envVisible:(visible:boolean)=>this.env.setVisible(visible),treeLod:(options:{nearCount:number})=>this.env.setNearCount(options.nearCount),envBatches:()=>{const batches:{name:string;count:number;capacity:number;visible:boolean;castShadow:boolean;boundingSphereR:number}[]=[];this.env.sceneBatches(b=>batches.push(b));return batches;},env:()=>{const s=this.world.state,removed=new Set(s.snapshot.delta.removedEnvIds);return s.env.filter(e=>!removed.has(e.id)&&s.snapshot.unlockedZones.includes(Math.floor(e.cell[1]/16)*8+Math.floor(e.cell[0]/16))).map(e=>({id:e.id,cell:e.cell,assetId:e.assetId,blocking:e.blocking,footprint:e.footprint}));},orbit:(deg:number)=>this.rig.orbit(deg),camera:(x:number,z:number,distance?:number,yaw?:number,pitch?:number)=>this.rig.focus(x,z,distance,yaw,pitch),cameraState:()=>({distance:this.rig.distance,yaw:this.rig.yaw,pitch:this.rig.pitch,target:this.rig.target.toArray()}),screenshot:()=>this.canvas.toDataURL('image/png'),metrics:()=>this.metrics(),setQuality:(q:Quality)=>this.setQuality(q),timeOfDay:(hour:number|null)=>{this.forcedHour=hour===null?null:Math.max(0,Math.min(23.999,hour));this.updateLighting(true);},project:(x:number,z:number)=>this.project(x,z),snapshot:()=>structuredClone(this.world.state.snapshot),flush:()=>this.world.flushSaves(),drain:()=>this.world.drain()};
+    const debug={getStateHash:()=>stateHash(this.world.state),zoneHighlights:()=>this.zoneTool.highlights.map(h=>({...h})),listSceneObjectTypes:()=>{const types:string[]=[];this.scene.traverse(o=>types.push(o.type));return types;},sceneMeshes:()=>{const list:{name:string;castShadow:boolean;receiveShadow:boolean;visible:boolean;count?:number}[]=[];this.scene.traverse(o=>{const m=o as Mesh;if(m.isMesh)list.push({name:m.name,castShadow:m.castShadow,receiveShadow:m.receiveShadow,visible:m.visible,count:(m as InstancedMesh).count});});return list;},auditScene:()=>this.auditScene(),envCull:(enabled:boolean)=>this.env.setFrustumCulled(enabled),envVisible:(visible:boolean)=>this.env.setVisible(visible),treeLod:(options:{nearCount:number})=>this.env.setNearCount(options.nearCount),envBatches:()=>{const batches:{name:string;count:number;capacity:number;visible:boolean;castShadow:boolean;boundingSphereR:number}[]=[];this.env.sceneBatches(b=>batches.push(b));return batches;},env:()=>{const s=this.world.state,removed=new Set(s.snapshot.delta.removedEnvIds);return s.env.filter(e=>!removed.has(e.id)&&s.snapshot.unlockedZones.includes(Math.floor(e.cell[1]/16)*8+Math.floor(e.cell[0]/16))).map(e=>({id:e.id,cell:e.cell,assetId:e.assetId,blocking:e.blocking,footprint:e.footprint}));},orbit:(deg:number)=>this.rig.orbit(deg),camera:(x:number,z:number,distance?:number,yaw?:number,pitch?:number)=>this.rig.focus(x,z,distance,yaw,pitch),cameraState:()=>({distance:this.rig.distance,yaw:this.rig.yaw,pitch:this.rig.pitch,target:this.rig.target.toArray()}),screenshot:()=>this.canvas.toDataURL('image/png'),metrics:()=>this.metrics(),setQuality:(q:Quality)=>this.setQuality(q),timeOfDay:(hour:number|null)=>{this.forcedHour=hour===null?null:Math.max(0,Math.min(23.999,hour));this.updateLighting(true);},project:(x:number,z:number)=>this.project(x,z),snapshot:()=>structuredClone(this.world.state.snapshot),flush:()=>this.world.flushSaves(),drain:()=>this.world.drain()};
     Object.assign(window,{__debug:{...debug,...(import.meta.env.DEV&&new URLSearchParams(location.search).get('test')==='1'?{command:(type:CommandType,payload:unknown)=>this.world.apply(type,payload).result,advance:(ms:number)=>this.world.advanceForTest(ms),loadSnapshot:(snapshot:unknown)=>this.world.loadSnapshot(snapshot)}:{})}});
   }
   /** docs/10 §5: detect flat image planes faking 3D (textured planes / sprites) and summarise the scene. */
@@ -152,5 +156,5 @@ export class GameLoop {
     });
     return {objects,meshes,instanced,sprites,texturedPlanes,largestPlaneM,textures:textures.size};
   }
-  dispose():void {cancelAnimationFrame(this.frameId);this.resizeObserver.disconnect();for(const unsubscribe of this.subscriptions)unsubscribe();this.canvas.removeEventListener('pointerdown',this.unlockAudio);this.pointer.dispose();this.overlay.dispose();this.ghost.dispose();for(const renderer of this.renderers)renderer.dispose();this.terrain.dispose();this.water.dispose();this.assets.dispose();this.bloom.dispose();this.composer.dispose();this.renderer.dispose();this.world.onCommand=undefined;this.world.onTick=undefined;this.sound.dispose();this.effects.dispose();this.world.dispose();Reflect.deleteProperty(window,'__debug');}
+  dispose():void {cancelAnimationFrame(this.frameId);this.resizeObserver.disconnect();for(const unsubscribe of this.subscriptions)unsubscribe();this.canvas.removeEventListener('pointerdown',this.unlockAudio);this.pointer.dispose();this.overlay.dispose();this.zoneTool.dispose();this.ghost.dispose();for(const renderer of this.renderers)renderer.dispose();this.terrain.dispose();this.water.dispose();this.assets.dispose();this.bloom.dispose();this.composer.dispose();this.renderer.dispose();this.world.onCommand=undefined;this.world.onTick=undefined;this.sound.dispose();this.effects.dispose();this.world.dispose();Reflect.deleteProperty(window,'__debug');}
 }
