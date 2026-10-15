@@ -3,8 +3,8 @@
 
 /** Category of each tool button (bottom bar → tray). */
 const TOOL_CATEGORY = {
-  'Dọn': 'nature', 'San nền': 'nature', 'Đường': 'roads', 'Cầu': 'roads', 'Kè': 'roads',
-  'Cuốc': 'farms', 'Gieo': 'farms', 'Thu hoạch': 'farms', 'Khu đất': 'utilities', 'Phá': 'utilities',
+  'Dọn': 'land', 'San nền': 'land', 'Đường': 'roads', 'Cầu': 'roads', 'Kè': 'roads',
+  'Cuốc': 'farms', 'Gieo': 'farms', 'Thu hoạch': 'farms', 'Khu đất': 'land',
 };
 export const SYNC = '.sync-status';
 export const syncText = page => page.evaluate(sel => document.querySelector(sel)?.textContent ?? '', SYNC);
@@ -28,6 +28,11 @@ export async function pickTool(page, label, { tap = false } = {}) {
     const open = page.locator('.hud3-cat[aria-pressed=true]');
     if (label === 'Khám phá') { if (await open.count()) await (tap ? open.first().tap() : open.first().click()); await page.keyboard.press('Escape'); return; }
     await openCategory(page, 'buildings', tap); return;
+  }
+  if (label === 'Phá') { // quick toggle beside the Dock, in no tab
+    const quick = page.locator('.hud3-quick');
+    if ((await quick.getAttribute('aria-pressed')) !== 'true') await (tap ? quick.tap() : quick.click());
+    await page.waitForTimeout(120); return;
   }
   const category = TOOL_CATEGORY[label];
   if (!category) throw new Error(`Unknown tool label ${label}`);

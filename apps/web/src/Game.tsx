@@ -14,7 +14,7 @@ import { BuildingSelection } from './ui/BuildingSelection';
 import { MiniMap } from './ui/MiniMap';
 import { TopBar, notifications } from './ui/TopBar';
 import { MissionPanel } from './ui/MissionPanel';
-import { CategoryBar, CategoryTray, categoryOf, type Category } from './ui/CategoryBar';
+import { CategoryBar, CategoryTray, DemolishButton, QUICK_TOOL, categoryOf, type Category } from './ui/CategoryBar';
 import type { GamePanel } from './ui/panels';
 import { BuildingPanel } from './ui/BuildingPanel';
 import { ObjectPanel } from './ui/ObjectPanel';
@@ -88,13 +88,13 @@ function Profile({ state }: { state: NonNullable<ReturnType<typeof useWorld.getS
 }
 /** docs/09 §5 — "Bác Tư" hints for the authored quests: which tool to use and how. */
 const HINTS: Record<string, { tool: Tool; text: string }> = {
-  CLEAR: { tool: 'clear', text: 'Chọn Thiên nhiên → Dọn rồi kéo qua vài cái cây để chặt lấy gỗ.' },
+  CLEAR: { tool: 'clear', text: 'Chọn Đất đai → Dọn rồi kéo qua vài cái cây để chặt lấy gỗ.' },
   ROAD: { tool: 'road', text: 'Chọn Đường, kéo từ ô đường làng (điểm vào) tới bãi đất trống.' },
-  TERRAFORM: { tool: 'terraform', text: 'Chọn Thiên nhiên → San nền → Phẳng, rồi kéo một vùng 2 × 2 ô.' },
+  TERRAFORM: { tool: 'terraform', text: 'Chọn Đất đai → San nền → Phẳng, rồi kéo một vùng 2 × 2 ô.' },
   BUILD: { tool: 'build', text: 'Chọn Công trình, chọn một công trình, đặt cạnh đường.' },
   COLLECT: { tool: 'explore', text: 'Chạm vào ngôi nhà hoặc cửa hàng có đồng đô la xanh bay phía trên, rồi bấm Thu tiền.' },
   POPULATION: { tool: 'build', text: 'Xây thêm nhà ở cạnh đường để có thêm dân.' },
-  UNLOCK_ZONE: { tool: 'zone', text: 'Chọn Tiện ích → Khu đất rồi chạm vào khu sát khu đã mở.' },
+  UNLOCK_ZONE: { tool: 'zone', text: 'Chọn Đất đai → Khu đất rồi chạm vào khu sát khu đã mở.' },
   EMBANK: { tool: 'embank', text: 'Chọn Đường → Kè rồi chạm vào các ô đất sát mép nước.' },
   BRIDGE: { tool: 'bridge', text: 'Chọn Đường → Cầu: chạm đầu cầu (ô đường đã kè) rồi chạm ô bên kia sông.' },
   TILL: { tool: 'till', text: 'Chọn Nông trại → Cuốc rồi kéo một vùng đất bằng phẳng.' },
@@ -161,6 +161,7 @@ export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
     setCategory(next);if(categoryOf(ui.tool,ui.buildingId)!==next)gameRef.current?.tools.choose('explore');
   };
   const pickBuilding=(defId:string,cell?:Cell)=>{gameRef.current?.tools.choose('build');useTools.setState({buildingId:defId,...(cell?{cell}:{})});gameRef.current?.tools.refresh();};
+  const toggleDemolish=()=>{setPanel(null);useTools.setState({selection:null,focus:null});if(ui.tool===QUICK_TOOL){gameRef.current?.tools.choose('explore');return;}setCategory(null);gameRef.current?.tools.choose(QUICK_TOOL);};
   const closeFocus=useCallback(()=>useTools.setState({focus:null}),[]);
   // Object panel shortcut: switch to the tool on the picked cell, its category open, ready to drag from there.
   const focusTool=(tool:Tool)=>{const cell=ui.focus?.cell;choose(tool);if(cell){useTools.setState({cell});gameRef.current?.tools.refresh();}};
@@ -216,7 +217,8 @@ export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
         </div>}
         {category&&<CategoryTray state={state} category={category} tool={ui.tool} buildingId={ui.buildingId} hintTool={hint?.tool}
           onTool={tool=>choose(tool)} onBuilding={defId=>pickBuilding(defId)}/>}
-        <CategoryBar kind={kind} active={category} hintCategory={hintCategory} onCategory={pickCategory} onMeasure={()=>undefined}/>
+        <div className="hud3-barrow"><CategoryBar kind={kind} active={category} hintCategory={hintCategory} onCategory={pickCategory} onMeasure={()=>undefined}/>
+          <DemolishButton active={ui.tool===QUICK_TOOL} hint={hint?.tool===QUICK_TOOL} onToggle={toggleDemolish}/></div>
       </footer>
       {levelUp!==null&&<LevelUpCard kind={kind} level={levelUp} onClose={()=>setLevelUp(null)}/>}
       {new URLSearchParams(location.search).get('debug')==='1'&&<pre className="debug">{stats?`${stats.fps.toFixed(1)} FPS · ${stats.drawCalls} calls · ${stats.triangles} triangles\nGPU objects ${stats.geometries} geometries / ${stats.textures} textures / ${stats.programs} programs\nZone ${stats.terrain.lastRebuildMs.toFixed(2)} ms · max ${stats.terrain.maxRebuildMs.toFixed(2)} ms · ${stats.terrain.zonesRebuilt} rebuilds · revision ${stats.revision}\nQueue ${stats.pending} · clock skew ${Math.round(stats.clockSkewMs)} ms · graphics ${stats.quality}\nCell ${ui.cell?.join(',')??'—'}`:''}</pre>}

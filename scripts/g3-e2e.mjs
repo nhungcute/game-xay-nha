@@ -62,7 +62,7 @@ await page.goto(`${BASE}/?debug=1`);
 await page.getByText('Chọn vùng đất').waitFor({ timeout: 20000 });
 await registerUI(page, 'city', NAME, PIN); await waitSynced(page);
 check('city character created with username + PIN', (await snap(page)).character.displayName === NAME, NAME);
-check('tutorial hint from "Bác Tư" is visible with the Clear tool highlighted', await page.locator('.hud3-mission-desc').isVisible() && await page.locator('.hud3-cat[data-cat=nature] .hud3-dot').isVisible());
+check('tutorial hint from "Bác Tư" is visible with the Clear tool highlighted', await page.locator('.hud3-mission-desc').isVisible() && await page.locator('.hud3-cat[data-cat=land] .hud3-dot').isVisible());
 await shot(page, 'city-tutorial-start');
 const env = await debug(page, 'env');
 const trees = env.filter(e => e.blocking && e.assetId.startsWith('tree') && e.cell[1] >= 50 && e.cell[1] <= 78 && e.cell[0] >= 50 && e.cell[0] <= 78);
