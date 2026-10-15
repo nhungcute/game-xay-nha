@@ -1,0 +1,92 @@
+{
+  "thresholds": {
+    "minIou": 0.45,
+    "minIouRebuilt": 0.4,
+    "maxRatio": 0.8,
+    "maxDE": 45,
+    "minLRatio": 0.3,
+    "maxLRatio": 3.5,
+    "minOutMedL": 12,
+    "minOutContrast": 8
+  },
+  "views": [
+    "top",
+    "front",
+    "threeQuarter"
+  ],
+  "totalSeconds": 15,
+  "summary": {
+    "total": 1,
+    "pass": 0,
+    "fail": 1
+  },
+  "results": [
+    {
+      "id": "landmark_citadel",
+      "family": "landmarks",
+      "source": "map/nha2/citadel_of_kings.glb",
+      "output": "4e33db4:apps/web/public/assets/models/authored/landmark_citadel.glb",
+      "knownBad": true,
+      "pass": false,
+      "failures": [
+        "ratio 0.91 (needs <= 0.8)"
+      ],
+      "margin": -0.133,
+      "scores": {
+        "iou": 0.959,
+        "dE": 10.519,
+        "dEGrid": 10.241,
+        "dL": 9.894,
+        "corr": 0.135,
+        "grad": 1.272,
+        "spread": 6.095,
+        "ratio": 0.906,
+        "lRatio": 0.756,
+        "outMedL": 29.968,
+        "outContrast": 35.892
+      },
+      "views": {
+        "top": {
+          "iou": 1,
+          "dE": 12.035,
+          "dEGrid": 12.312,
+          "dL": 10.599,
+          "corr": 0.145,
+          "grad": 1.463,
+          "spread": 6.827,
+          "ratio": 0.9,
+          "lRatio": 0.745,
+          "outMedL": 31.037,
+          "outContrast": 36.241
+        },
+        "front": {
+          "iou": 0.927,
+          "dE": 12.646,
+          "dEGrid": 12.02,
+          "dL": 12.56,
+          "corr": 0.083,
+          "grad": 1.392,
+          "spread": 5.396,
+          "ratio": 0.86,
+          "lRatio": 0.701,
+          "outMedL": 29.255,
+          "outContrast": 36.3
+        },
+        "threeQuarter": {
+          "iou": 0.951,
+          "dE": 6.876,
+          "dEGrid": 6.392,
+          "dL": 6.523,
+          "corr": 0.178,
+          "grad": 0.96,
+          "spread": 6.061,
+          "ratio": 0.96,
+          "lRatio": 0.823,
+          "outMedL": 29.611,
+          "outContrast": 35.135
+        }
+      },
+      "ms": 12535
+    }
+  ]
+}
