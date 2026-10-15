@@ -56,6 +56,8 @@ Thanh tiến độ theo bước: Dữ liệu → Địa hình → Cây cối →
 - Số tiền định dạng `$12,340`; số lớn rút gọn trên mobile (`$1.2M`).
 - 🗺 Đổi map → màn chọn map (`§1.2`).
 - Thanh công cụ dưới cùng, cuộn ngang trên mobile. Công cụ khóa hiển thị ổ khóa + "Cấp N".
+- **Dock theo danh mục (tab):** Công trình (nhà, cửa hàng, **Ngân hàng**, landmark), Đường (Đường/Cầu/Kè), Nông trại (Cuốc/Gieo/Thu hoạch, chỉ Quê), **Đất đai** (Dọn, San nền, Khu đất), Trang trí, Tiện ích (Quê: Giếng, Kho/Silo). Tab không còn gì để hiện trên map đó thì ẩn (Thành phố không có Nông trại và Tiện ích).
+- **Phá** là nút nhanh riêng nằm cạnh Dock (bên phải thanh tab, cả desktop lẫn điện thoại), không thuộc tab nào. Là nút bật/tắt (`aria-pressed`, nhãn "Phá công trình"): bấm lần nữa về Khám phá; đổi sang tab khác cũng tắt Phá. Vùng chạm tối thiểu 44px trên điện thoại.
 - Khi chọn công cụ: thanh phụ phía trên thanh công cụ hiện tùy chọn (chế độ san Nâng/Hạ/Phẳng, cấp đường, loại cầu, loại cây trồng), **chi phí dự kiến**, nút ✔ Xác nhận / ✖ Hủy (mobile luôn cần nút xác nhận; desktop thả chuột là xác nhận cho kéo vùng/đường).
 - Panel catalog công trình: lưới thẻ (icon, tên, giá, kích thước, thu/giờ hoặc chức năng), lọc theo nhóm (Nhà ở / Kinh doanh / Trang trí / Sản xuất).
 - Chạm công trình (Khám phá): panel thông tin — tên, trạng thái đường (✔/⚠), thu/giờ, các thưởng đang nhận, tiền chờ thu, nút Thu / Phá dỡ. Farm: slot sản xuất, nút cho ăn/bắt đầu.
