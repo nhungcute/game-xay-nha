@@ -3,6 +3,7 @@ import type { Command, CommandType, Cost, ErrorCode, WorldTemplate } from '@xay-
 import { advanceTime, cloneState, createState, execute, recompute, stateHash, validateSnapshot, type SimState } from '@xay-nha/sim';
 import { generateEnvironment, validateTemplate } from '@xay-nha/worldgen';
 import { errorText, t } from '../i18n';
+import { toast } from './toasts';
 import { ApiError, type CommandBatchResponse, type SnapshotResponse } from '../net/api';
 
 export type Connection = 'local' | 'online' | 'syncing' | 'offline';
@@ -203,7 +204,8 @@ export class WorldStore {
   /** Only exposed in the offline development test harness; progression still runs through sim. */
   advanceForTest(ms: number): void { if (this.transport) return; this.timeOffset += ms; this.tick(); }
   subscribe(listener: Listener): () => void { this.listeners.add(listener); return () => this.listeners.delete(listener); }
-  message(message: string, error = false): void { useWorld.setState({ message, error }); }
+  /** Errors float as toasts (D043); the inline .feedback line keeps neutral guidance only. */
+  message(message: string, error = false): void { if (error) toast(message); else useWorld.setState({ message, error: false }); }
   private updateSync(): void {
     const connection = useWorld.getState().connection;
     useWorld.setState({ pending: this.pending.length, connection: connection === 'offline' ? 'offline' : this.pending.length || this.inflight ? 'syncing' : (this.transport ? 'online' : 'local') });

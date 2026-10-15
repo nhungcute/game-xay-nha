@@ -246,3 +246,12 @@
  .hud3-shell .hud3-cat{flex-basis:52px}
 }
 @media(max-height:500px) and (orientation:landscape){.hud3-shell .hud3-quick{width:52px;font-size:10px}}
+/* D043 toasts: rejected actions float top-centre under the top bar, then fade out by themselves. */
+.hud3-shell .hud3-toasts{position:absolute;z-index:30;left:0;right:0;top:calc(var(--hud-bottom,80px) + 10px);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;zoom:var(--hud-zoom)}
+.hud3-shell .hud3-toast{pointer-events:auto;cursor:pointer;display:flex;align-items:center;gap:8px;max-width:min(440px,calc(100vw / var(--hud-zoom) - 32px));padding:9px 16px;border-radius:16px;font-size:13px;font-weight:600;line-height:1.35;background:var(--h3-paper);color:var(--h3-ink);border:1px solid #cfe3c4;box-shadow:var(--h3-shadow);animation:hud3-toast-in .18s ease-out}
+.hud3-shell .hud3-toast.is-error{background:#fff3ef;border-color:#e6a597;color:#a3382a}
+.hud3-shell .hud3-toast.is-info{color:#2f7a3c}
+.hud3-shell .hud3-toast-n{font-size:11px;padding:1px 7px;border-radius:10px;background:#a3382a;color:#fff;animation:hud3-toast-in .18s ease-out}
+@keyframes hud3-toast-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media(max-width:700px){.hud3-shell .hud3-toasts{padding:0 16px}.hud3-shell .hud3-toast{width:100%;max-width:none;justify-content:center;text-align:center}}
+@media(prefers-reduced-motion:reduce){.hud3-shell .hud3-toast,.hud3-shell .hud3-toast-n{animation:none}}
