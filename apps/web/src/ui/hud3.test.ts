@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { catalog, economy } from '@xay-nha/content';
 import { createTestTemplate } from '@xay-nha/worldgen';
 import { createState, recompute } from '@xay-nha/sim';
-import { CATEGORIES, buildingCategory, categoryOf, categoryTools } from './CategoryBar';
+import { CATEGORIES, buildingCategory, categoryOf, categoryTools, visibleCategories } from './CategoryBar';
 import { clockIcon, notifications, playerTitle } from './TopBar';
 
 describe('reference HUD logic', () => {
@@ -22,22 +22,30 @@ describe('reference HUD logic', () => {
     expect(buildingCategory(catalog.buildings.house_small!)).toBe('buildings');
     expect(buildingCategory(catalog.buildings.chicken_coop!)).toBe('farms');
     expect(buildingCategory(catalog.buildings.deco_park!)).toBe('decorations');
-    expect(buildingCategory(catalog.buildings.bank!)).toBe('utilities');
+    expect(buildingCategory(catalog.buildings.bank!)).toBe('buildings');
+    expect(buildingCategory(catalog.buildings.silo!)).toBe('utilities');
+    expect(buildingCategory(catalog.buildings.well!)).toBe('utilities');
     // D037: landmark buildings always map to 'buildings' despite having decor properties
     expect(buildingCategory(catalog.buildings.landmark_palace!)).toBe('buildings');
     expect(buildingCategory(catalog.buildings.landmark_castle!)).toBe('buildings');
     expect(buildingCategory(catalog.buildings.landmark_culture!)).toBe('buildings');
-    for (const kind of ['city', 'farm'] as const) for (const c of CATEGORIES.filter(c => !c.farmOnly || kind === 'farm')) {
+    for (const kind of ['city', 'farm'] as const) for (const c of visibleCategories(kind)) {
       const buildings = Object.values(catalog.buildings).filter(d => d.mapKinds.includes(kind) && buildingCategory(d) === c.id);
       expect(buildings.length + categoryTools(c.id).length, `${kind}/${c.id}`).toBeGreaterThan(0);
     }
   });
   it('maps chosen tools back to their category (for the highlighted bar button)', () => {
-    expect(categoryOf('clear', 'x')).toBe('nature');
+    expect(categoryOf('clear', 'x')).toBe('land'); expect(categoryOf('terraform', 'x')).toBe('land'); expect(categoryOf('zone', 'x')).toBe('land');
+    expect(categoryOf('demolish', 'x')).toBeNull(); // Phá is the quick button, in no tab
+    for (const c of CATEGORIES) expect(categoryTools(c.id)).not.toContain('demolish');
     expect(categoryOf('bridge', 'x')).toBe('roads');
     expect(categoryOf('build', 'market')).toBe('buildings');
     expect(categoryOf('build', 'deco_flowerbed')).toBe('decorations');
     expect(categoryOf('explore', 'x')).toBeNull();
+  });
+  it('hides tabs that would be empty per map kind', () => {
+    expect(visibleCategories('city').map(c => c.id)).toEqual(['buildings', 'roads', 'land', 'decorations']);
+    expect(visibleCategories('farm').map(c => c.id)).toEqual(['buildings', 'roads', 'farms', 'land', 'decorations', 'utilities']);
   });
   it('notifications: ripe crops and finished constructions are reported, nothing when idle', () => {
     const s = createState(createTestTemplate('farm'), 1_000_000); recompute(s);
