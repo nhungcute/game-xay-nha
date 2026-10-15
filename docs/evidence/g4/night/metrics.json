@@ -1,6 +1,6 @@
 {
-  "base": "http://127.0.0.1:5190",
-  "at": "2026-10-12T17:00:44.086Z",
+  "base": "http://127.0.0.1:5192",
+  "at": "2026-10-15T02:43:31.062Z",
   "overviews": {
     "city_high": {
       "kind": "city",
@@ -9,17 +9,25 @@
       "file": "city-high-overview-23h.jpg",
       "drawCalls": 243,
       "triangles": 582930,
-      "fps": 47,
-      "p95Ms": 25.9,
+      "fps": 38.6,
+      "p95Ms": 33.2,
+      "fpsSpread": 3.8,
+      "fpsSamples": [
+        39.5,
+        37.7,
+        38.6,
+        41.5,
+        37.9
+      ],
       "bloom": true,
       "night": 1,
       "foliage": {
         "hour": 23,
         "foliagePixelShare": 0.442,
         "dayFoliageLuma": 134.8,
-        "nightFoliageLuma": 11.4,
-        "nightSceneLuma": 9.5,
-        "ratio": 1.2,
+        "nightFoliageLuma": 11.5,
+        "nightSceneLuma": 9.4,
+        "ratio": 1.23,
         "max": 1.5
       }
     },
@@ -30,17 +38,23 @@
       "file": "city-low-overview-23h.jpg",
       "drawCalls": 110,
       "triangles": 458580,
-      "fps": 59,
-      "p95Ms": 17.7,
+      "fps": 59.9,
+      "p95Ms": 17.6,
+      "fpsSpread": 0.7,
+      "fpsSamples": [
+        59.9,
+        60.6,
+        59.9
+      ],
       "bloom": false,
       "night": 1,
       "foliage": {
         "hour": 23,
-        "foliagePixelShare": 0.441,
+        "foliagePixelShare": 0.442,
         "dayFoliageLuma": 136.6,
-        "nightFoliageLuma": 13.3,
-        "nightSceneLuma": 13.7,
-        "ratio": 0.97,
+        "nightFoliageLuma": 13.4,
+        "nightSceneLuma": 13.6,
+        "ratio": 0.98,
         "max": 1.5
       }
     },
@@ -51,8 +65,16 @@
       "file": "farm-high-overview-23h.jpg",
       "drawCalls": 251,
       "triangles": 345814,
-      "fps": 58,
+      "fps": 59.9,
       "p95Ms": 18.7,
+      "fpsSpread": 0,
+      "fpsSamples": [
+        59.9,
+        59.9,
+        59.9,
+        59.9,
+        59.9
+      ],
       "bloom": true,
       "night": 1,
       "foliage": {
@@ -72,8 +94,14 @@
       "file": "farm-low-overview-23h.jpg",
       "drawCalls": 104,
       "triangles": 216138,
-      "fps": 59,
-      "p95Ms": 17.7,
+      "fps": 59.9,
+      "p95Ms": 17.1,
+      "fpsSpread": 0,
+      "fpsSamples": [
+        59.9,
+        59.9,
+        59.9
+      ],
       "bloom": false,
       "night": 1,
       "foliage": {
@@ -94,7 +122,7 @@
       "file": "closeup-rice_mill-23h.jpg",
       "drawCalls": 171,
       "triangles": 311638,
-      "fps": 59,
+      "fps": 59.9,
       "bloom": true,
       "warmPixels22h": 8897,
       "warmPixels13h": 955
@@ -105,7 +133,7 @@
       "file": "closeup-office_tower-23h.jpg",
       "drawCalls": 144,
       "triangles": 480220,
-      "fps": 44,
+      "fps": 42.4,
       "bloom": true
     },
     "house_apartment": {
@@ -114,7 +142,7 @@
       "file": "closeup-house_apartment-23h.jpg",
       "drawCalls": 165,
       "triangles": 508116,
-      "fps": 44,
+      "fps": 44.4,
       "bloom": true
     }
   },
@@ -124,7 +152,7 @@
       "file": "compare-13h.jpg",
       "drawCalls": 210,
       "triangles": 566006,
-      "fps": 39,
+      "fps": 34.2,
       "bloom": false,
       "night": 0
     },
@@ -133,7 +161,7 @@
       "file": "compare-22h.jpg",
       "drawCalls": 210,
       "triangles": 566006,
-      "fps": 43,
+      "fps": 37.6,
       "bloom": true,
       "night": 0.5
     },
@@ -142,7 +170,7 @@
       "file": "compare-23h.jpg",
       "drawCalls": 210,
       "triangles": 566006,
-      "fps": 43,
+      "fps": 38,
       "bloom": true,
       "night": 1
     },
@@ -151,7 +179,7 @@
       "file": "compare-3h.jpg",
       "drawCalls": 210,
       "triangles": 566006,
-      "fps": 43,
+      "fps": 42,
       "bloom": true,
       "night": 1
     }
@@ -167,8 +195,16 @@
       "file": "mobile-pixel7-night.jpg",
       "drawCalls": 66,
       "triangles": 436616,
-      "fps": 59,
-      "p95Ms": 17.7,
+      "fps": 59.9,
+      "p95Ms": 17,
+      "fpsSpread": 0.4,
+      "fpsSamples": [
+        59.9,
+        59.9,
+        60.2,
+        59.9,
+        60.2
+      ],
       "bloom": false
     }
   },
@@ -181,7 +217,8 @@
     "budgetChecks": {
       "desktopCityDrawCallsOk": true,
       "desktopFarmDrawCallsOk": true,
-      "desktopCityFpsOk": true,
+      "desktopCityTrianglesOk": true,
+      "desktopFarmTrianglesOk": true,
       "desktopFarmFpsOk": true,
       "mobilePixel7FpsOk": true,
       "riceMillLit": true,
@@ -189,6 +226,23 @@
       "bloomActiveAtNightHigh": true,
       "bloomDisabledAtLow": true,
       "noErrors": true
+    },
+    "fpsInfo": {
+      "desktopCityFps": {
+        "fps": 38.6,
+        "spread": 3.8,
+        "samples": [
+          39.5,
+          37.7,
+          38.6,
+          41.5,
+          37.9
+        ],
+        "target": 35,
+        "meetsTarget": true,
+        "gating": false,
+        "note": "info only: headless Chrome FPS near the floor is noise-dominated; hard gates are draw calls and triangles"
+      }
     }
   },
   "errors": []
