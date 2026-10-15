@@ -91,10 +91,62 @@ export function buildAuthoredTemplate(layout: AuthoredLayout): WorldTemplate {
   }
   for (const [x, z] of layout.entryCells) layers.flags[z * 128 + x] = layers.flags[z * 128 + x]! | CellFlag.ENTRY;
   water.forEach((wet, index) => { if (wet) layers.surface[index] = Surface.WATER; });
-  for (let z = 0; z <= 128; z++) for (let x = 0; x <= 128; x++) {
-    const adjacent: number[] = [];
-    for (const cz of [z - 1, z]) for (const cx of [x - 1, x]) if (cx >= 0 && cx < 128 && cz >= 0 && cz < 128) adjacent.push(water[cz * 128 + cx]!);
-    if (adjacent.some(Boolean)) layers.heightsDm[z * 129 + x] = adjacent.every(Boolean) ? level - 15 : level + 5;
+  if (layout.organicBiomes) {
+    const vertDist = new Uint8Array(129 * 129).fill(255);
+    const queue: number[] = [];
+    for (let vz = 0; vz <= 128; vz++) for (let vx = 0; vx <= 128; vx++) {
+      let touchesWater = false, touchesLand = false;
+      for (const cz of [vz - 1, vz]) for (const cx of [vx - 1, vx]) {
+        if (cx >= 0 && cx < 128 && cz >= 0 && cz < 128) {
+          if (water[cz * 128 + cx]) touchesWater = true;
+          else touchesLand = true;
+        }
+      }
+      const vi = vz * 129 + vx;
+      if (touchesWater && touchesLand) {
+        vertDist[vi] = 0;
+        queue.push(vi);
+      } else if (touchesWater && !touchesLand) {
+        vertDist[vi] = 250;
+      }
+    }
+    let head = 0;
+    while (head < queue.length) {
+      const vi = queue[head++]!;
+      const vx = vi % 129, vz = Math.floor(vi / 129);
+      const d = vertDist[vi]!;
+      if (d >= 3) continue;
+      for (const [nx, nz] of [[vx - 1, vz], [vx + 1, vz], [vx, vz - 1], [vx, vz + 1]]) {
+        if (nx! >= 0 && nx! <= 128 && nz! >= 0 && nz! <= 128) {
+          const ni = nz! * 129 + nx!;
+          if (vertDist[ni]! !== 250 && vertDist[ni]! > d + 1) {
+            vertDist[ni] = d + 1;
+            queue.push(ni);
+          }
+        }
+      }
+    }
+    for (let vz = 0; vz <= 128; vz++) for (let vx = 0; vx <= 128; vx++) {
+      const vi = vz * 129 + vx;
+      const d = vertDist[vi]!;
+      if (d === 250) {
+        layers.heightsDm[vi] = level - 15;
+      } else if (d === 0) {
+        layers.heightsDm[vi] = level + 10;
+      } else if (d === 1) {
+        const raw = layers.heightsDm[vi]!;
+        layers.heightsDm[vi] = Math.min(level + 18, Math.max(level + 10, Math.round(((level + 10) * 0.6 + raw * 0.4) / 5) * 5));
+      } else if (d === 2) {
+        const raw = layers.heightsDm[vi]!;
+        layers.heightsDm[vi] = Math.min(level + 28, Math.max(level + 12, Math.round(((level + 15) * 0.4 + raw * 0.6) / 5) * 5));
+      }
+    }
+  } else {
+    for (let z = 0; z <= 128; z++) for (let x = 0; x <= 128; x++) {
+      const adjacent: number[] = [];
+      for (const cz of [z - 1, z]) for (const cx of [x - 1, x]) if (cx >= 0 && cx < 128 && cz >= 0 && cz < 128) adjacent.push(water[cz * 128 + cx]!);
+      if (adjacent.some(Boolean)) layers.heightsDm[z * 129 + x] = adjacent.every(Boolean) ? level - 15 : level + 5;
+    }
   }
   if (layout.organicBiomes) {
     for (let z = 0; z < 128; z++) for (let x = 0; x < 128; x++) {

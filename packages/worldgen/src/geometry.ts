@@ -22,13 +22,56 @@ export function pointInRiver(x: number, z: number, centerline: readonly Point[],
   return false;
 }
 
-/** A cell's center controls water raster membership; meters are the vector units. */
+/** A cell's center controls water raster membership; meters are the vector units. Bounding-box acceleration. */
 export function rasterizeWater(water: WorldTemplate['water']): Uint8Array {
   const mask = new Uint8Array(128 * 128);
-  for (let cz = 0; cz < 128; cz++) for (let cx = 0; cx < 128; cx++) {
-    const x = cx * 2 + 1, z = cz * 2 + 1;
-    if (water.lakes.some(lake => pointInPolygon(x, z, lake.polygonXZ))
-      || water.rivers.some(river => pointInRiver(x, z, river.centerlineXZ, river.widthM))) mask[cz * 128 + cx] = 1;
+  for (const lake of water.lakes) {
+    let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity;
+    for (const [px, pz] of lake.polygonXZ) {
+      if (px < minX) minX = px;
+      if (px > maxX) maxX = px;
+      if (pz < minZ) minZ = pz;
+      if (pz > maxZ) maxZ = pz;
+    }
+    const c0 = Math.max(0, Math.floor((minX - 1) / 2));
+    const c1 = Math.min(127, Math.ceil((maxX - 1) / 2));
+    const r0 = Math.max(0, Math.floor((minZ - 1) / 2));
+    const r1 = Math.min(127, Math.ceil((maxZ - 1) / 2));
+    for (let cz = r0; cz <= r1; cz++) {
+      const z = cz * 2 + 1;
+      for (let cx = c0; cx <= c1; cx++) {
+        if (!mask[cz * 128 + cx]) {
+          const x = cx * 2 + 1;
+          if (pointInPolygon(x, z, lake.polygonXZ)) mask[cz * 128 + cx] = 1;
+        }
+      }
+    }
+  }
+  for (const river of water.rivers) {
+    const pts = river.centerlineXZ, widths = river.widthM;
+    for (let i = 1; i < pts.length; i++) {
+      const p1 = pts[i - 1]!, p2 = pts[i]!;
+      const maxW = Math.max(widths[i - 1]!, widths[i]!);
+      const minX = Math.min(p1[0], p2[0]) - maxW;
+      const maxX = Math.max(p1[0], p2[0]) + maxW;
+      const minZ = Math.min(p1[1], p2[1]) - maxW;
+      const maxZ = Math.max(p1[1], p2[1]) + maxW;
+      const c0 = Math.max(0, Math.floor((minX - 1) / 2));
+      const c1 = Math.min(127, Math.ceil((maxX - 1) / 2));
+      const r0 = Math.max(0, Math.floor((minZ - 1) / 2));
+      const r1 = Math.min(127, Math.ceil((maxZ - 1) / 2));
+      const segPts = [p1, p2], segW = [widths[i - 1]!, widths[i]!];
+      for (let cz = r0; cz <= r1; cz++) {
+        const z = cz * 2 + 1;
+        for (let cx = c0; cx <= c1; cx++) {
+          const idx = cz * 128 + cx;
+          if (!mask[idx]) {
+            const x = cx * 2 + 1;
+            if (pointInRiver(x, z, segPts, segW)) mask[idx] = 1;
+          }
+        }
+      }
+    }
   }
   return mask;
 }
