@@ -517,3 +517,35 @@ importer (its two-image atlas and permissive-simplify branches), the manifest, b
 credits. No saved world contained one (0 of 147 checked on the server before removal), so no migration is needed.
 The three city landmarks are unchanged byte for byte. Lesson for future imports: add a visual gate (in-game render
 compared with a render of the source) rather than performance gates alone.
+
+## D039 - 2026-10-15 - Random maps for new worlds; no default village road
+
+Owner decisions. Full assessment and results: `docs/reports/D039-random-maps-assessment.md`.
+
+- **Road rule A (all maps):** every road cell and every active bridge cell counts as connected (`roadConnectivity`
+  no longer floods from `entryCells`). A building works when it touches any road. City quest 2 is "Làm 6 ô đường".
+  On a template without entry cells the "home bank" is the largest dry component of the start zones.
+- **Random maps:** `packages/worldgen/src/random-layout.ts` generates a constrained random layout (no road cells, water
+  20% ± 1%, gentle shores, meandering rivers with a ≤ 6-cell bridge site inside the start zones, playable start area).
+  Old maps (`city-coast-01`, `farm-valley-01`, `farm-g1`) stay byte-identical.
+- **Server:** with `RANDOM_MAPS=1` a new world gets its own template, generated once and stored in `world_templates`
+  (migration 0003); `map_id = rnd-<kind>-<seed>`. `GET /api/worlds/:id/template` serves it (ETag, immutable). Existing
+  worlds are untouched. Offline random maps are opt-in (`?random=1`) with a "Map mới" button.
+- **Balance:** accepted by the owner. Random maps match the authored maps up to the embank quest; the bridge quest is
+  quicker (bridge site in the start zones), so net worth after 7 simulated days is +23% (farm) / +43% (city).
+- **Enabled for new players** on 2026-10-15 (`RANDOM_MAPS=1` in `infra/.env`).
+
+## D040 - 2026-10-15 - QA gates hardened; culture house cleaned; admin boost script
+
+- `scripts/lib/perf.mjs`: warmed-up, multi-sample FPS; "FPS drop" gates compare interleaved medians against measured noise.
+  City high ≥ 35 FPS is recorded as info only (headless noise sits on the floor); triangle gates were added instead.
+  Report: `docs/reports/QA-perf-gates.md`.
+- `scripts/model-visual-qa.mjs`: renders each importer's source next to its output (silhouette IoU, colour-mapping
+  consistency, tone checks). All 42 shipped models pass; the D037 Citadel output fails. Run it after any import change
+  (needs the local `map/` sources). Report: `docs/reports/QA-visual-gate.md`.
+- `landmark_culture`: roof and facade cleaned in `import-landmarks.mjs` (GLB 646 → 485 KB); other landmarks unchanged.
+- `scripts/admin/boost-world.ts`: owner-requested one-off upgrade of account TinTin (both worlds: level 20, 64 zones,
+  one finished building of every type, 1,000,000 cash/wood/stone), applied through game commands and validated; the
+  previous rows are kept in the git-ignored `backups/`.
+- `.gitattributes` pins generated JSON (content, manifest, map templates, importer configs) to LF so `--check` scripts do
+  not report CRLF checkouts as stale.

@@ -7,3 +7,10 @@ Dockerfile text eol=lf
 *.glb binary
 *.png binary
 *.jpg binary
+# Generated files are compared byte-for-byte by their --check scripts (content:check, importers, build-maps).
+# Pin them to LF so a Windows checkout with core.autocrlf=true does not report them as stale.
+packages/content/*.json text eol=lf
+packages/content/i18n/*.json text eol=lf
+apps/web/public/assets/manifest.json text eol=lf
+apps/web/public/worlds/**/*.json text eol=lf
+scripts/*.config.json text eol=lf
