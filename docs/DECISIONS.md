@@ -564,3 +564,14 @@ Owner decisions. Full assessment and results: `docs/reports/D039-random-maps-ass
 - Bot bench (7 days, authored maps): farm normal/slow finish the chain faster, city about flat; the fast-spending farm
   style no longer finishes within 7 days (bot spends on several quests before the bridge). Bot policy, not a game rule.
   Report: `docs/reports/QUESTS-parallel.md`.
+
+## D042 - 2026-10-15 - Dock reorganized: bank in Công trình, Đất đai tab, quick Phá button
+
+- The bank (`bankCapHours`) now sits in the Công trình tab with the other functional buildings; price, limits and
+  behaviour are unchanged. Tiện ích keeps the farm's well and silo and is hidden on the city, where it is now empty
+  (`visibleCategories` hides any tab with no tool and no building for the map kind).
+- "Thiên nhiên" is replaced by **Đất đai** (Dọn, San nền, Khu đất). **Phá** is in no tab: it is a quick toggle button
+  beside the Dock, reachable from any tab; switching tabs turns it off. Owner request.
+- Hints now say "Chọn Đất đai → …"; the road hint no longer mentions the removed village entry road (D039).
+- QA: `scripts/dock-qa.mjs` (tabs, trays, toggle, no overlap at 1440×900, 1366×768, Pixel 7). Report:
+  `docs/reports/DOCK-reorg.md`, evidence `docs/evidence/g4/dock/`.

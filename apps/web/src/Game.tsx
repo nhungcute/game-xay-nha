@@ -89,7 +89,7 @@ function Profile({ state }: { state: NonNullable<ReturnType<typeof useWorld.getS
 /** docs/09 §5 — "Bác Tư" hints for the authored quests: which tool to use and how. */
 const HINTS: Record<string, { tool: Tool; text: string }> = {
   CLEAR: { tool: 'clear', text: 'Chọn Đất đai → Dọn rồi kéo qua vài cái cây để chặt lấy gỗ.' },
-  ROAD: { tool: 'road', text: 'Chọn Đường, kéo từ ô đường làng (điểm vào) tới bãi đất trống.' },
+  ROAD: { tool: 'road', text: 'Chọn Đường rồi kéo một đoạn đường đất trên bãi đất trống.' },
   TERRAFORM: { tool: 'terraform', text: 'Chọn Đất đai → San nền → Phẳng, rồi kéo một vùng 2 × 2 ô.' },
   BUILD: { tool: 'build', text: 'Chọn Công trình, chọn một công trình, đặt cạnh đường.' },
   COLLECT: { tool: 'explore', text: 'Chạm vào ngôi nhà hoặc cửa hàng có đồng đô la xanh bay phía trên, rồi bấm Thu tiền.' },
