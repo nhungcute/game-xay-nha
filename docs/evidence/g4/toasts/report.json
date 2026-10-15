@@ -1,0 +1,133 @@
+{
+ "base": "http://127.0.0.1:5199",
+ "at": "2026-10-15T08:16:53.455Z",
+ "runs": {
+  "1440x900": {
+   "hoverMaxToasts": 0,
+   "hoverInline": "Có vật cản trên ô.",
+   "placement": [
+    "Có vật cản trên ô."
+   ],
+   "placementGeo": {
+    "list": [
+     {
+      "x": 664.796875,
+      "y": 72,
+      "right": 775.1875,
+      "bottom": 102.421875
+     }
+    ],
+    "topBottom": 63.984375,
+    "w": 1440,
+    "overlap": false
+   },
+   "placementAfter": 0,
+   "codes": [
+    "INVALID_COMMAND",
+    "NOT_FOUND",
+    "WRONG_MAP"
+   ],
+   "stacked": [
+    "Thao tác không hợp lệ.",
+    "Không tìm thấy đối tượng.",
+    "Công cụ không dùng ở bản đồ này."
+   ],
+   "stackedGeo": {
+    "list": [
+     {
+      "x": 651.984375,
+      "y": 72,
+      "right": 788.015625,
+      "bottom": 102.421875
+     },
+     {
+      "x": 643.546875,
+      "y": 107.21875,
+      "right": 796.453125,
+      "bottom": 137.640625
+     },
+     {
+      "x": 623.171875,
+      "y": 142.4375,
+      "right": 816.8125,
+      "bottom": 172.859375
+     }
+    ],
+    "topBottom": 63.984375,
+    "w": 1440,
+    "overlap": false
+   },
+   "capped": 3,
+   "merged": [
+    "Thao tác không hợp lệ.\n×3"
+   ],
+   "aria": {
+    "role": "status",
+    "live": "assertive"
+   }
+  },
+  "pixel7": {
+   "touchPreviewToasts": 0,
+   "touchConfirmDisabled": true,
+   "touchInline": "Có vật cản trên ô.",
+   "codes": [
+    "INVALID_COMMAND",
+    "NOT_FOUND",
+    "WRONG_MAP"
+   ],
+   "stacked": [
+    "Thao tác không hợp lệ.",
+    "Không tìm thấy đối tượng.",
+    "Công cụ không dùng ở bản đồ này."
+   ],
+   "stackedGeo": {
+    "list": [
+     {
+      "x": 16,
+      "y": 130,
+      "right": 396,
+      "bottom": 167.546875
+     },
+     {
+      "x": 16,
+      "y": 173.546875,
+      "right": 396,
+      "bottom": 211.09375
+     },
+     {
+      "x": 16,
+      "y": 217.09375,
+      "right": 396,
+      "bottom": 254.640625
+     }
+    ],
+    "topBottom": 120,
+    "w": 412,
+    "overlap": false
+   },
+   "capped": 3,
+   "merged": [
+    "Thao tác không hợp lệ.\n×3"
+   ],
+   "aria": {
+    "role": "status",
+    "live": "assertive"
+   },
+   "mobileGutter": [
+    [
+     16,
+     16
+    ],
+    [
+     16,
+     16
+    ],
+    [
+     16,
+     16
+    ]
+   ]
+  }
+ },
+ "failures": []
+}

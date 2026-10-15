@@ -75,6 +75,7 @@ Thanh tiến độ theo bước: Dữ liệu → Địa hình → Cây cối →
 | Không hợp lệ | Đỏ | Lý do (chuỗi từ mã lỗi `15 §11`), ô gây lỗi tô đậm |
 
 - Lưới ô hiển thị mờ khi đang dùng công cụ, ẩn ở chế độ Khám phá.
+- Lý do không hợp lệ hiển thị tại chỗ (thanh preview); chỉ khi bấm xác nhận bị từ chối mới có toast (xem §6).
 - San nền: hiện lưới đỉnh + số bậc thay đổi; địa hình biến đổi mượt 200 ms sau khi xác nhận.
 - Đường: các ô đường xem trước hiển thị đúng auto-tile.
 - Cầu: chạm đầu A → các ô hợp lệ cho đầu B được đánh dấu; dải nhịp hiển thị độ dài/nhịp tối đa.
@@ -127,7 +128,7 @@ Chợ (nối đường) → Nhà nông → Cuốc 6 ô → Gieo rau cải (chín
 - "Trong lúc bạn vắng mặt": tổng tiền chờ thu (city) / số ô đã chín, sản phẩm xong (farm). Nút "Thu tất cả" (city, không cần ngân hàng từ D028).
 - Lên cấp: popup danh sách mở khóa mới.
 - Mất kết nối: banner vàng cố định trên cùng.
-- Không dùng popup chặn cho lỗi validate — chỉ hiện ở thanh phụ.
+- Không dùng popup chặn cho lỗi validate. Lệnh bị từ chối (cục bộ, server, rebase, hàng đợi đầy, lỗi lưu) hiện dạng toast nổi sát mép trên, dưới thanh trên cùng (D043): tối đa 3, tự tắt sau 2,5 s (lỗi) / 1,8 s (thông tin), trùng thì gộp ×N, chạm để đóng. Lý do khi rê chuột/chạm xem trước vẫn nằm ở thanh preview + ô đỏ, không toast. Dòng `.feedback` chỉ còn hướng dẫn trung tính.
 
 ## 7. Cài đặt
 
