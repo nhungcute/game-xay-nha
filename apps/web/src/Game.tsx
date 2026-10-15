@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
 import type { Cell, CommandType } from '@xay-nha/contracts';
-import { builderCapacity, fieldQuota, populationAndJobs } from '@xay-nha/sim';
+import { authoredQuestProgressFor, builderCapacity, fieldQuota, openQuests, populationAndJobs } from '@xay-nha/sim';
 import { AssetManager, type AssetManifestEntry } from './game/assets/AssetManager';
 import { GameLoop } from './game/GameLoop';
 import { WorldStore, useWorld } from './game/WorldStore';
@@ -138,7 +138,7 @@ export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
   const update=(patch:Partial<typeof ui>)=>{useTools.setState(patch);gameRef.current?.tools.refresh();};
   const selected=state?.snapshot.buildings.find(b=>b.id===ui.selection),bridge=state?.snapshot.bridges.find(b=>b.id===ui.selection),object=selected??bridge;
   const kind=state?.template.mapKind??'farm';
-  const q=state?catalog.quests[kind][state.snapshot.progress.questIndex]:undefined;
+  const q=state?openQuests(state).find(o=>authoredQuestProgressFor(state,o.id)<o.target):undefined;
   const hint=q&&!hideHints?HINTS[q.action]:undefined;
   const hintCategory=hint&&hint.tool!=='explore'?categoryOf(hint.tool,q?.buildingId??ui.buildingId):null;
   // D028: "collect all" is there from the start whenever any business has money waiting.

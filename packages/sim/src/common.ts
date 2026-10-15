@@ -52,10 +52,39 @@ export function pay(s: SimState, cost: Cost, spend = false): void {
 export function refund(s: SimState, cost: Cost, fraction = 1): void {
   for (const key of ['cash','wood','stone'] as const) s.snapshot.wallet[key] += Math.floor(cost[key] * fraction);
 }
+/** How many authored quests are open (claimable in any order) at the same time. */
+export const OPEN_QUESTS = 5;
+type AuthoredQuest = (typeof catalog.quests)['city'][number];
+/** Claimed authored quest ids. Legacy saves (only `questIndex`) read as the first N quests of the chain. */
+export function claimedQuestIds(s: SimState): readonly string[] {
+  const p = s.snapshot.progress;
+  return p.claimedQuests ?? catalog.quests[s.template.mapKind].slice(0, p.questIndex).map(q => q.id);
+}
+/** The first OPEN_QUESTS unclaimed authored quests, in chain order. */
+export function openQuests(s: SimState): AuthoredQuest[] {
+  const claimed = new Set(claimedQuestIds(s)), open: AuthoredQuest[] = [];
+  for (const q of catalog.quests[s.template.mapKind]) {
+    if (claimed.has(q.id)) continue;
+    open.push(q);
+    if (open.length >= OPEN_QUESTS) break;
+  }
+  return open;
+}
+/** Tutorial helpers (instant build, fast crops, boosted first collection) run until every tutorial quest is claimed. */
+export function tutorialActive(s: SimState): boolean {
+  if (s.snapshot.progress.tutorialDone) return false;
+  const claimed = new Set(claimedQuestIds(s));
+  return catalog.quests[s.template.mapKind].some(q => q.tutorial && !claimed.has(q.id));
+}
+/** Open, unclaimed tutorial quests while the tutorial is active. */
+export function tutorialQuests(s: SimState): AuthoredQuest[] {
+  return tutorialActive(s) ? openQuests(s).filter(q => q.tutorial) : [];
+}
 export function event(s: SimState, action: string, kind: string, count = 1): void {
-  const q = catalog.quests[s.template.mapKind][s.snapshot.progress.questIndex];
-  if (q?.action === action && (q.kind === kind || q.buildingId === kind || q.cropId === kind)) {
-    s.snapshot.progress.questProgress[q.id] = (s.snapshot.progress.questProgress[q.id] ?? 0) + count;
+  for (const q of openQuests(s)) {
+    if (q.action === action && (q.kind === kind || q.buildingId === kind || q.cropId === kind)) {
+      s.snapshot.progress.questProgress[q.id] = (s.snapshot.progress.questProgress[q.id] ?? 0) + count;
+    }
   }
   // Repeat quests (docs/16 §10.3): same events, matched by template action + subject/kind.
   for (const r of s.snapshot.progress.repeat?.active ?? []) {

@@ -1,6 +1,6 @@
 import { GRID, type BuildingDef, type Cost, type MapKind, type RepeatQuest, type WorldSnapshot } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
-import { addXp, guard, refund, zeroCost } from './common';
+import { addXp, claimedQuestIds, guard, refund, zeroCost } from './common';
 import { buildingLimit } from './construction';
 import { populationAndJobs } from './economy';
 import { fieldQuota } from './farm';
@@ -125,7 +125,7 @@ function next(s: SimState): RepeatQuest | null {
 /** Fills the active list up to the configured slot count once the authored quests are done. */
 export function ensureRepeatQuests(s: SimState): void {
   const p = s.snapshot.progress;
-  if (p.questIndex < catalog.quests[s.template.mapKind].length) return;
+  if (claimedQuestIds(s).length < catalog.quests[s.template.mapKind].length) return;
   p.repeat ??= { seq: 0, rerollAt: 0, active: [] };
   while (p.repeat.active.length < R.slots) { const q = next(s); if (!q) break; p.repeat.active.push(q); }
 }
@@ -158,7 +158,7 @@ export function validateRepeat(snapshot: WorldSnapshot): string[] {
   const r = snapshot.progress.repeat, errors: string[] = [];
   if (!r) return errors;
   const kind = snapshot.mapKind, level = snapshot.progress.level, templates = kind === 'city' ? CITY : FARM;
-  if (snapshot.progress.questIndex < catalog.quests[kind].length) errors.push('REPEAT:BEFORE_AUTHORED_DONE');
+  if ((snapshot.progress.claimedQuests?.length ?? snapshot.progress.questIndex) < catalog.quests[kind].length) errors.push('REPEAT:BEFORE_AUTHORED_DONE');
   if (r.active.length > R.slots) errors.push('REPEAT:TOO_MANY');
   if (r.rerollAt > snapshot.serverTime + R.rerollHours * 3_600_000 + 300_000) errors.push('REPEAT:REROLL_TIME');
   if (r.last !== undefined && !templates.includes(r.last as Template)) errors.push('REPEAT:LAST');

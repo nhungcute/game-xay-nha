@@ -3,7 +3,7 @@ import { catalog, economy } from '@xay-nha/content';
 import { footprintCells } from './footprint';
 import { roadConnectivity, access } from './roads';
 import { completeConstruction } from './construction';
-import { addXp, guard } from './common';
+import { addXp, guard, tutorialQuests } from './common';
 import type { SimState } from './state';
 import { roadPaidValue } from './road-value';
 import { completeUpgrade, tierMultiplier, upgradeWorth } from './upgrades';
@@ -48,8 +48,8 @@ export function recompute(s: SimState): void {
   s.snapshot.character.netWorth = netWorth(s);
 }
 export function settle(s: SimState, now: number): void {
-  const cap = capHours(s), q = catalog.quests.city[s.snapshot.progress.questIndex];
-  const tutorial = s.template.mapKind === 'city' && !s.snapshot.progress.tutorialDone && q?.tutorial && q.action === 'COLLECT';
+  const cap = capHours(s);
+  const tutorial = s.template.mapKind === 'city' && tutorialQuests(s).some(q => q.action === 'COLLECT');
   for (const b of s.snapshot.buildings) if (b.status === 'ACTIVE' && catalog.buildings[b.defId]?.baseRatePerHour) {
     const start = Math.max(b.settledAt ?? b.buildEndsAt,b.buildEndsAt);
     guard(now >= start,'INVALID_TIME');

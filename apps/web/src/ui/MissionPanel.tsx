@@ -1,6 +1,6 @@
 import { catalog, economy } from '@xay-nha/content';
 import type { RepeatQuest } from '@xay-nha/contracts';
-import { authoredQuestProgress, reliefAvailable, repeatQuestProgress } from '@xay-nha/sim';
+import { authoredQuestProgressFor, claimedQuestIds, openQuests, reliefAvailable, repeatQuestProgress } from '@xay-nha/sim';
 import type { WorldStore } from '../game/WorldStore';
 import { duration, money, t } from '../i18n';
 import { GameIcon, type GameIconName } from './GameIcon';
@@ -40,13 +40,19 @@ interface Props {
   onToggle: () => void; onSkipHints: () => void; onClaim: (id: string) => void; onReroll: (id: string) => void; onChoose: (action: string) => void;
   onRelief: () => void;
 }
-export function MissionPanel({ state, open, hint, onToggle, onSkipHints, onClaim, onReroll, onChoose, onRelief }: Props) {
-  const s = state.snapshot, quests = catalog.quests[s.mapKind], index = s.progress.questIndex, quest = quests[index];
+export function MissionPanel({ state, open: isOpen, hint, onToggle, onSkipHints, onClaim, onReroll, onChoose, onRelief }: Props) {
+  const s = state.snapshot, quests = catalog.quests[s.mapKind], index = claimedQuestIds(state).length;
+  // Parallel quests (D041): up to five open at once, claimable in any order; finished ones float to the top.
+  const open = openQuests(state).map(q => ({ q, earned: authoredQuestProgressFor(state, q.id) }))
+    .map((row, order) => ({ ...row, order, done: row.earned >= row.q.target }))
+    .sort((a, b) => Number(b.done) - Number(a.done) || a.order - b.order);
+  const quest = open[0]?.q;
+  const hintId = open.find(row => !row.done)?.q.id;
   const repeat = !quest ? s.progress.repeat?.active ?? [] : [];
   const heading = quest ? `${index}/${quests.length}` : `${repeat.filter(q => repeatQuestProgress(state, q) >= q.target).length}/${repeat.length}`;
-  return <aside className={`hud3-pill hud3-missions ${open ? '' : 'is-closed'}`} aria-label="Nhiệm vụ">
-    <button type="button" className="hud3-missions-head" aria-expanded={open} onClick={onToggle}>
-      <strong>{quest ? 'Nhiệm vụ' : 'Nhiệm vụ hằng ngày'}</strong><small>{heading}</small><GameIcon name={open ? 'up' : 'down'}/>
+  return <aside className={`hud3-pill hud3-missions ${isOpen ? '' : 'is-closed'}`} aria-label="Nhiệm vụ">
+    <button type="button" className="hud3-missions-head" aria-expanded={isOpen} onClick={onToggle}>
+      <strong>{quest ? 'Nhiệm vụ' : 'Nhiệm vụ hằng ngày'}</strong><small>{heading}</small><GameIcon name={isOpen ? 'up' : 'down'}/>
     </button>
     {/* D028 §9.1: a stuck player always sees the relief offer, even with the panel folded. */}
     {reliefAvailable(state, s.serverTime) && <div className="hud3-mission is-active is-done hud3-relief">
@@ -56,24 +62,17 @@ export function MissionPanel({ state, open, hint, onToggle, onSkipHints, onClaim
         <button type="button" className="hud3-claim" onClick={onRelief}><GameIcon name="cash"/>Nhận {money(economy.relief.amount)}</button>
       </div>
     </div>}
-    {open && quest && (() => {
-      const earned = authoredQuestProgress(state), done = earned >= quest.target;
-      return <>
-        <div className={`hud3-mission is-active ${done ? 'is-done' : ''}`}>
-          <button type="button" className="hud3-mission-icon" aria-label="Chọn công cụ cho nhiệm vụ" title="Chọn công cụ" onClick={() => onChoose(quest.action)}><GameIcon name={ACTION_ICON[quest.action] ?? 'quests'}/></button>
-          <div className="hud3-mission-copy">
-            <strong>{t(quest.nameKey)}</strong>
-            {hint && <p className="hud3-mission-desc">{hint} <button type="button" className="link" onClick={onSkipHints}>{t('skipTutorial')}</button></p>}
-            {done
-              ? <button type="button" className="hud3-claim" onClick={() => onClaim(quest.id)}><GameIcon name="gift"/>Nhận thưởng · {money(quest.reward.cash)}{quest.xp ? ` · +${quest.xp} XP` : ''}</button>
-              : <Progress value={earned} target={quest.target}/>}
-          </div>
-        </div>
-        {quests.slice(Math.max(0, index - 2), index).reverse().map(previous => <div key={previous.id} className="hud3-mission is-complete">
-          <span className="hud3-check"><GameIcon name="confirm"/></span><s>{t(previous.nameKey)}</s></div>)}
-      </>;
-    })()}
-    {open && !quest && repeat.map(q => {
+    {isOpen && open.map(({ q, earned, done }) => <div key={q.id} className={`hud3-mission is-active ${done ? 'is-done' : ''}`}>
+      <button type="button" className="hud3-mission-icon" aria-label="Chọn công cụ cho nhiệm vụ" title="Chọn công cụ" onClick={() => onChoose(q.action)}><GameIcon name={ACTION_ICON[q.action] ?? 'quests'}/></button>
+      <div className="hud3-mission-copy">
+        <strong>{t(q.nameKey)}</strong>
+        {hint && q.id === hintId && <p className="hud3-mission-desc">{hint} <button type="button" className="link" onClick={onSkipHints}>{t('skipTutorial')}</button></p>}
+        {done
+          ? <button type="button" className="hud3-claim" onClick={() => onClaim(q.id)}><GameIcon name="gift"/>Nhận thưởng · {money(q.reward.cash)}{q.xp ? ` · +${q.xp} XP` : ''}</button>
+          : <Progress value={earned} target={q.target}/>}
+      </div>
+    </div>)}
+    {isOpen && !quest && repeat.map(q => {
       const value = repeatQuestProgress(state, q), done = value >= q.target, rerollReady = s.serverTime >= (s.progress.repeat?.rerollAt ?? 0);
       return <div key={q.id} className={`hud3-mission is-active ${done ? 'is-done' : ''}`}>
         <span className="hud3-mission-icon"><GameIcon name={REPEAT_ICON[q.template]}/></span>

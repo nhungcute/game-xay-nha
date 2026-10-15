@@ -4,7 +4,7 @@ import { footprintCells } from './footprint';
 import { access } from './roads';
 import { editable, slope, type SimState } from './state';
 import { slotCount, tierMultiplier } from './upgrades';
-import { addXp, event, guard, isFarBank, lookup, pay, rectCells, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
+import { addXp, event, guard, isFarBank, lookup, openQuests, tutorialQuests, pay, rectCells, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
 
 function operating(s: SimState, building: SimState['snapshot']['buildings'][number]): boolean {
   return building.status === 'ACTIVE' && access(s, building) > 0;
@@ -60,8 +60,7 @@ export function farm(s: SimState, cmd: Command, now: number): Cost | undefined {
       pay(s, cost, true);
       for (const c of cells) s.surface[cellIndex(...c)] = Surface.TILLED;
       event(s, 'TILL', 'cells', cells.length);
-      const quest = catalog.quests.farm[s.snapshot.progress.questIndex];
-      if (quest?.kind === 'cells_far_bank' && isFarBank(s, cells)) event(s, 'TILL', 'cells_far_bank', cells.length);
+      if (openQuests(s).some(quest => quest.kind === 'cells_far_bank') && isFarBank(s, cells)) event(s, 'TILL', 'cells_far_bank', cells.length);
       return cost;
     }
     case 'UNTILL': {
@@ -87,8 +86,7 @@ export function farm(s: SimState, cmd: Command, now: number): Cost | undefined {
       guard(cells.length > 0, 'CELL_BLOCKED');
       const cost = scaleCost({ ...zeroCost(), cash: def.seedCost }, cells.length);
       pay(s, cost);
-      const quest = catalog.quests.farm[s.snapshot.progress.questIndex];
-      const tutorial = !s.snapshot.progress.tutorialDone && quest?.action === 'PLANT' && quest.cropId === def.id && quest.tutorial;
+      const tutorial = tutorialQuests(s).some(quest => quest.action === 'PLANT' && quest.cropId === def.id);
       for (const cell of cells) {
         const growSeconds = tutorial ? economy.tutorial.farmGrowSeconds
           : def.growSeconds * (irrigated(s, cell) ? economy.farm.irrigationMultiplier : 1);
