@@ -19,7 +19,7 @@ function catmullRom(
   const x = (2 * p1[0] - 2 * p2[0] + v0 + v1) * t3 + (-3 * p1[0] + 3 * p2[0] - 2 * v0 - v1) * t2 + v0 * t + p1[0];
   const u0 = (p2[1] - p0[1]) * 0.5, u1 = (p3[1] - p1[1]) * 0.5;
   const z = (2 * p1[1] - 2 * p2[1] + u0 + u1) * t3 + (-3 * p1[1] + 3 * p2[1] - 2 * u0 - u1) * t2 + u0 * t + p1[1];
-  return [Math.round(x), Math.round(z)];
+  return [x, z];
 }
 
 function smoothPolyline(pts: readonly [number, number][], steps = 3): [number, number][] {
@@ -36,6 +36,62 @@ function smoothPolyline(pts: readonly [number, number][], steps = 3): [number, n
   return result;
 }
 
+/**
+ * Organic river centreline: densifies the control polyline (~18 m spacing), pushes the interior points
+ * sideways with a two-wave meander (wavelength 55-140 m) that fades to zero at the map edge and at the
+ * `pinned` points (start-zone crossing), then rounds everything with a Catmull-Rom spline. No long straight
+ * runs and no hard corners remain (see sweep.json river metrics).
+ */
+/** Replaces each interior corner by two points `d` m before/after it, so the spline rounds the bend instead of kinking. */
+function roundCorners(pts: readonly [number, number][], d: number): [number, number][] {
+  const out: [number, number][] = [pts[0]!];
+  for (let i = 1; i < pts.length - 1; i++) {
+    const a = pts[i - 1]!, p = pts[i]!, b = pts[i + 1]!;
+    const l1 = Math.hypot(p[0] - a[0], p[1] - a[1]), l2 = Math.hypot(b[0] - p[0], b[1] - p[1]);
+    const k1 = Math.min(d, l1 / 3), k2 = Math.min(d, l2 / 3);
+    if (l1 === 0 || l2 === 0) { out.push(p); continue; }
+    out.push([p[0] - (p[0] - a[0]) / l1 * k1, p[1] - (p[1] - a[1]) / l1 * k1], [p[0] + (b[0] - p[0]) / l2 * k2, p[1] + (b[1] - p[1]) / l2 * k2]);
+  }
+  out.push(pts[pts.length - 1]!);
+  return out;
+}
+
+function meanderPolyline(
+  rawPts: readonly [number, number][],
+  rng: () => number,
+  amp: number,
+  pinned: readonly (readonly [number, number])[],
+): [number, number][] {
+  const pts = roundCorners(rawPts, 16);
+  const dense: [number, number][] = [];
+  const along: number[] = [];
+  let s = 0;
+  const l1 = 75 + rng() * 40, l2 = 55 + rng() * 15;
+  const ph1 = rng() * Math.PI * 2, ph2 = rng() * Math.PI * 2;
+  const total = pts.slice(1).reduce((t, p, i) => t + Math.hypot(p[0] - pts[i]![0], p[1] - pts[i]![1]), 0);
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i]!, b = pts[i + 1]!;
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const n = Math.max(1, Math.round(len / 18));
+    const nx = len > 0 ? -(b[1] - a[1]) / len : 0, nz = len > 0 ? (b[0] - a[0]) / len : 0;
+    for (let k = 0; k < n; k++) {
+      const t = k / n;
+      const x = a[0] + (b[0] - a[0]) * t, z = a[1] + (b[1] - a[1]) * t;
+      const pos = s + len * t;
+      let fade = Math.min(1, pos / 30, (total - pos) / 30);
+      for (const q of pinned) fade = Math.min(fade, Math.hypot(x - q[0], z - q[1]) / 40);
+      fade = Math.max(0, fade);
+      const w = amp * fade * (0.78 * Math.sin(pos / l1 * Math.PI * 2 + ph1) + 0.22 * Math.sin(pos / l2 * Math.PI * 2 + ph2));
+      dense.push([x + nx * w, z + nz * w]);
+      along.push(pos);
+    }
+    s += len;
+  }
+  dense.push([pts[pts.length - 1]![0], pts[pts.length - 1]![1]]);
+  const out = smoothPolyline(dense, 3);
+  return out.map(([x, z]) => [Math.round(Math.max(0, Math.min(256, x)) * 10) / 10, Math.round(Math.max(0, Math.min(256, z)) * 10) / 10]);
+}
+
 function noise2D(seed: number, x: number, z: number): number {
   const sample = (sx: number, sz: number) => hash32(seed, sx, sz, 'rnd-lake') / 4294967295 * 2 - 1;
   const ix = Math.floor(x), iz = Math.floor(z), fx = x - ix, fz = z - iz;
@@ -44,6 +100,9 @@ function noise2D(seed: number, x: number, z: number): number {
   const bottom = sample(ix, iz + 1) * (1 - tx) + sample(ix + 1, iz + 1) * tx;
   return top * (1 - tz) + bottom * tz;
 }
+
+/** Stored with every generated template (world_templates.generator_version); bump when the generator output changes. */
+export const RANDOM_GENERATOR_VERSION = 'rnd-v13-meander';
 
 export interface RiverForkInfo {
   x: number;
@@ -66,6 +125,7 @@ interface LakeSpec {
   cx: number;
   cz: number;
   baseR: number;
+  maxR: number;
 }
 
 export function generateRandomLayout(
@@ -153,11 +213,12 @@ export function generateRandomLayout(
       Math.round((riverOutM[1] + mainEnd[1]) / 2 + (rng() * 14 - 7)),
     ];
 
-    const mainCenterline = smoothPolyline([mainStart, midUp1, riverInM, midSZ1, riverOutM, midDown1, mainEnd], 3);
+    const meanderRng = mulberry32(hash32(subSeed, 7, 7, 'rnd-meander'));
+    const mainCenterline = meanderPolyline([mainStart, midUp1, riverInM, midSZ1, riverOutM, midDown1, mainEnd], meanderRng, 11, [riverInM, riverOutM]);
     const mainWidths: number[] = mainCenterline.map(pt => {
       const inSZ = Math.hypot(pt[0] - szCenterM_x, pt[1] - szCenterM_z);
       if (inSZ < 45) return 7.5; // Nhịp cầu 3-4 ô nước trong startZones
-      return 11.5;
+      return 12.5;
     });
 
     // Tributary 1
@@ -182,19 +243,46 @@ export function generateRandomLayout(
       Math.round((trib1Start[0] + forkP1[0]) / 2 + (rng() * 10 - 5)),
       Math.round((trib1Start[1] + forkP1[1]) / 2 + (rng() * 10 - 5)),
     ];
-    const trib1Centerline = smoothPolyline([trib1Start, trib1Mid, forkP1], 3);
+    const trib1Centerline = meanderPolyline([trib1Start, trib1Mid, forkP1], meanderRng, 9, [forkP1]);
     const trib1Widths: number[] = trib1Centerline.map(pt => {
       const distToFork = Math.hypot(pt[0] - forkP1[0], pt[1] - forkP1[1]);
-      if (distToFork < 25) return 4.0 + (distToFork / 25) * 2.0;
-      return 6.0;
+      if (distToFork < 25) return 5.0 + (distToFork / 25) * 2.0;
+      return 7.0;
     });
 
+    // Rivers must not pile into one zone: r2 takes whichever straight band (horizontal/vertical, 48 or 208 m) stays clear of main and trib.
+    function minDistBetween(a: readonly [number, number][], b: readonly [number, number][], skip?: readonly [number, number], skipR = 0): number {
+      let m = Infinity;
+      for (const p of a) {
+        if (skip && Math.hypot(p[0] - skip[0], p[1] - skip[1]) < skipR) continue;
+        for (let i = 1; i < b.length; i++) {
+          const dx = b[i]![0] - b[i - 1]![0], dz = b[i]![1] - b[i - 1]![1], len = dx * dx + dz * dz;
+          const t = len === 0 ? 0 : Math.max(0, Math.min(1, ((p[0] - b[i - 1]![0]) * dx + (p[1] - b[i - 1]![1]) * dz) / len));
+          m = Math.min(m, Math.hypot(p[0] - (b[i - 1]![0] + t * dx), p[1] - (b[i - 1]![1] + t * dz)));
+        }
+      }
+      return m;
+    }
+
+
     // Sông thứ 2 (River 2) chạy ngang ở nửa còn lại của bản đồ
-    const r2SideZ = (szCenterM_z > 128) ? 48 : 208;
-    const r2Start: [number, number] = [0, r2SideZ + Math.round(rng() * 20 - 10)];
-    const r2Mid: [number, number] = [128 + Math.round(rng() * 20 - 10), r2SideZ + Math.round(rng() * 20 - 10)];
-    const r2End: [number, number] = [256, r2SideZ + Math.round(rng() * 20 - 10)];
-    const r2Centerline = smoothPolyline([r2Start, r2Mid, r2End], 3);
+    const r2Cands: { horiz: boolean; at: number }[] = [];
+    for (const horiz of [true, false]) for (const at of [48, 208]) {
+      const mid: [number, number] = horiz ? [128, at] : [at, 128];
+      if (Math.abs((horiz ? szCenterM_z : szCenterM_x) - at) < 62) continue;
+      const probe: [number, number][] = horiz ? [[0, at], mid, [256, at]] : [[at, 0], mid, [at, 256]];
+      const dense: [number, number][] = [];
+      for (let k = 0; k <= 32; k++) dense.push([probe[0]![0] + (probe[2]![0] - probe[0]![0]) * k / 32, probe[0]![1] + (probe[2]![1] - probe[0]![1]) * k / 32]);
+      if (minDistBetween(mainCenterline, dense) < 44 || minDistBetween(trib1Centerline, dense) < 40) continue;
+      r2Cands.push({ horiz, at });
+    }
+    if (r2Cands.length === 0) continue;
+    const r2Pick = r2Cands[Math.floor(rng() * r2Cands.length)]!;
+    const j2 = () => Math.round(rng() * 20 - 10);
+    const r2Start: [number, number] = r2Pick.horiz ? [0, r2Pick.at + j2()] : [r2Pick.at + j2(), 0];
+    const r2Mid: [number, number] = r2Pick.horiz ? [128 + j2(), r2Pick.at + j2()] : [r2Pick.at + j2(), 128 + j2()];
+    const r2End: [number, number] = r2Pick.horiz ? [256, r2Pick.at + j2()] : [r2Pick.at + j2(), 256];
+    const r2Centerline = meanderPolyline([r2Start, r2Mid, r2End], meanderRng, 9, []);
     const r2Widths: number[] = r2Centerline.map(() => 9.5);
 
     function distToAllRivers(x: number, z: number): number {
@@ -219,7 +307,7 @@ export function generateRandomLayout(
       [64, 128], [192, 128], [128, 64], [128, 192],
     ];
     const candidateJunctions = allJunctions.filter(([jx, jz]) =>
-      Math.hypot(jx - szCenterM_x, jz - szCenterM_z) > 60 && distToAllRivers(jx, jz) > 34,
+      Math.hypot(jx - szCenterM_x, jz - szCenterM_z) > 60 && distToAllRivers(jx, jz) > 39,
     );
 
     const safeJunctions: [number, number][] = [];
@@ -233,24 +321,41 @@ export function generateRandomLayout(
     if (safeJunctions.length < 3) continue;
 
     const majorR = 23.0 + rng() * 1.0;
-    const minorR1 = 14.5 + rng() * 1.0;
-    const minorR2 = 13.0 + rng() * 1.0;
-    const minorR3 = 11.5 + rng() * 1.0;
-    const minorR4 = 10.5 + rng() * 1.0;
+    const minorR1 = 15.5 + rng() * 1.0;
+    const minorR2 = 14.0 + rng() * 1.0;
+    const minorR3 = 12.5 + rng() * 1.0;
+    const minorR4 = 11.5 + rng() * 1.0;
 
     const lakeSpecs: LakeSpec[] = [
-      { id: 'l1', cx: safeJunctions[0]![0], cz: safeJunctions[0]![1], baseR: majorR },
+      { id: 'l1', cx: safeJunctions[0]![0], cz: safeJunctions[0]![1], baseR: majorR, maxR: 26.5 },
     ];
-    if (safeJunctions.length > 1) lakeSpecs.push({ id: 'l2', cx: safeJunctions[1]![0], cz: safeJunctions[1]![1], baseR: minorR1 });
-    if (safeJunctions.length > 2) lakeSpecs.push({ id: 'l3', cx: safeJunctions[2]![0], cz: safeJunctions[2]![1], baseR: minorR2 });
-    if (safeJunctions.length > 3) lakeSpecs.push({ id: 'l4', cx: safeJunctions[3]![0], cz: safeJunctions[3]![1], baseR: minorR3 });
-    if (safeJunctions.length > 4) lakeSpecs.push({ id: 'l5', cx: safeJunctions[4]![0], cz: safeJunctions[4]![1], baseR: minorR4 });
+    if (safeJunctions.length > 1) lakeSpecs.push({ id: 'l2', cx: safeJunctions[1]![0], cz: safeJunctions[1]![1], baseR: minorR1, maxR: 19.5 });
+    if (safeJunctions.length > 2) lakeSpecs.push({ id: 'l3', cx: safeJunctions[2]![0], cz: safeJunctions[2]![1], baseR: minorR2, maxR: 19.5 });
+    if (safeJunctions.length > 3) lakeSpecs.push({ id: 'l4', cx: safeJunctions[3]![0], cz: safeJunctions[3]![1], baseR: minorR3, maxR: 19.5 });
+    if (safeJunctions.length > 4) lakeSpecs.push({ id: 'l5', cx: safeJunctions[4]![0], cz: safeJunctions[4]![1], baseR: minorR4, maxR: 19.5 });
+
+    // Ponds soak up the remaining water budget without saturating a single zone (zone corners, away from rivers/lakes).
+    const pondPool: [number, number][] = [];
+    for (let px = 32; px <= 224; px += 32) for (let pz = 32; pz <= 224; pz += 32) pondPool.push([px, pz]);
+    for (let k = pondPool.length - 1; k > 0; k--) {
+      const j = Math.floor(rng() * (k + 1));
+      [pondPool[k], pondPool[j]] = [pondPool[j]!, pondPool[k]!];
+    }
+    let pondN = 0;
+    for (const [px, pz] of pondPool) {
+      if (pondN >= 3) break;
+      if (Math.hypot(px - szCenterM_x, pz - szCenterM_z) <= 62) continue;
+      if (distToAllRivers(px, pz) <= 30) continue;
+      if (lakeSpecs.some(l => Math.hypot(px - l.cx, pz - l.cz) < l.baseR + 22)) continue;
+      pondN++;
+      lakeSpecs.push({ id: `p${pondN}`, cx: px, cz: pz, baseR: 8 + rng() * 3, maxR: 16 });
+    }
 
     const allRadii = lakeSpecs.map(l => l.baseR);
     const areas = allRadii.map(r => Math.PI * r * r);
     const meanArea = areas.reduce((s, a) => s + a, 0) / areas.length;
     const varArea = areas.reduce((s, a) => s + (a - meanArea) ** 2, 0) / areas.length;
-    const lakeCV = Math.sqrt(varArea) / meanArea;
+    let lakeCV = Math.sqrt(varArea) / meanArea;
     if (lakeCV < 0.43) continue;
 
     function buildLakes(specs: typeof lakeSpecs): WorldTemplate['water']['lakes'] {
@@ -281,28 +386,39 @@ export function generateRandomLayout(
       waterfalls: [],
     };
 
-    // Fast convergence of total water
-    for (let iter = 0; iter < 10; iter++) {
+    // Converge total water on 20.0 % (3277 cells). Lakes keep their relative sizes (one shared factor) so the
+    // size diversity (CV) survives; rivers scale within wide caps. Target window sits just above 20.0 %.
+    const MIN_W = 3272, MAX_W = 3302;
+    for (let iter = 0; iter < 16; iter++) {
       const mask = rasterizeWater(water);
       let count = 0;
       for (let i = 0; i < mask.length; i++) if (mask[i]) count++;
-      if (count >= 3255 && count <= 3315) break;
-      const scale = Math.sqrt(3277 / Math.max(1, count));
-      const clamped = Math.max(0.92, Math.min(1.08, scale));
-      for (const spec of lakeSpecs) spec.baseR = Math.max(9, Math.min(22.0, spec.baseR * clamped));
+      if (count >= MIN_W && count <= MAX_W) break;
+      const scale = Math.pow(3287 / Math.max(1, count), 1.0);
+      const clamped = Math.max(0.88, Math.min(1.25, scale));
+      const lakeF = Math.min(1.08, clamped);
+      for (const spec of lakeSpecs) spec.baseR = Math.min(spec.maxR, spec.baseR * lakeF);
       for (let j = 0; j < mainWidths.length; j++) {
         if (Math.hypot(mainCenterline[j]![0] - szCenterM_x, mainCenterline[j]![1] - szCenterM_z) >= 45) {
-          mainWidths[j] = Math.max(7, Math.min(12.0, mainWidths[j]! * clamped));
+          mainWidths[j] = Math.max(6.5, Math.min(15.0, mainWidths[j]! * clamped));
         }
       }
-      for (let j = 0; j < trib1Widths.length; j++) trib1Widths[j] = Math.max(4.5, Math.min(7.5, trib1Widths[j]! * clamped));
-      for (let j = 0; j < r2Widths.length; j++) r2Widths[j] = Math.max(6.5, Math.min(11.0, r2Widths[j]! * clamped));
+      for (let j = 0; j < trib1Widths.length; j++) trib1Widths[j] = Math.max(4.0, Math.min(9.0, trib1Widths[j]! * clamped));
+      for (let j = 0; j < r2Widths.length; j++) r2Widths[j] = Math.max(6.0, Math.min(10.5, r2Widths[j]! * clamped));
       water.lakes = buildLakes(lakeSpecs);
     }
 
     const finalMask = rasterizeWater(water);
     const totalWater = finalMask.reduce((s, w) => s + w, 0);
-    if (totalWater < 3120 || totalWater > 3435) continue;
+    if (totalWater < MIN_W - 12 || totalWater > MAX_W + 12) continue;
+
+    {
+      const fa = lakeSpecs.map(l => Math.PI * l.baseR * l.baseR);
+      const fm = fa.reduce((t, x) => t + x, 0) / fa.length;
+      const finalCV = Math.sqrt(fa.reduce((t, x) => t + (x - fm) ** 2, 0) / fa.length) / fm;
+      if (finalCV < 0.4) continue;
+      lakeCV = finalCV;
+    }
 
     const lakeOnly = rasterizeWater({ lakes: water.lakes, rivers: [], waterfalls: [] });
     const lakeWater = lakeOnly.reduce((s, w) => s + w, 0);
@@ -373,7 +489,7 @@ export function generateRandomLayout(
       mapKind,
       mapId: `rnd-${mapKind}-${seed}`,
       seed,
-      templateVersion: 2,
+      templateVersion: 1,
       waterLevelDm,
       water,
       startZones,

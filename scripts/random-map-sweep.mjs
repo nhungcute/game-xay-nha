@@ -3,6 +3,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { performance } from 'node:perf_hooks';
 import { chromium } from '@playwright/test';
+import { dismissLevelUp } from './lib/hud.mjs';
 import {
   generateWorldTemplate,
   rasterizeWater,
@@ -16,6 +17,39 @@ await mkdir(OUT_DIR, { recursive: true });
 
 const SEED_COUNT = process.env.SWEEP_SEEDS ? parseInt(process.env.SWEEP_SEEDS, 10) : 500;
 const START_SEED = 20260000;
+const BASE_URL = process.env.BASE_URL ?? 'http://127.0.0.1:5195';
+
+/** Resample a centreline every 6 m; report the sharpest 12 m turn and the longest near-straight run (dev <= 1.5 m). */
+function riverShape(centerline) {
+  const pts = [centerline[0]];
+  let carry = 0;
+  for (let i = 1; i < centerline.length; i++) {
+    const [ax, az] = centerline[i - 1], [bx, bz] = centerline[i];
+    const len = Math.hypot(bx - ax, bz - az);
+    for (let d = 6 - carry; d <= len; d += 6) pts.push([ax + (bx - ax) * d / len, az + (bz - az) * d / len]);
+    carry = (carry + len) % 6;
+  }
+  let maxTurn = 0;
+  for (let i = 2; i < pts.length; i++) {
+    const a1 = Math.atan2(pts[i - 1][1] - pts[i - 2][1], pts[i - 1][0] - pts[i - 2][0]);
+    const a2 = Math.atan2(pts[i][1] - pts[i - 1][1], pts[i][0] - pts[i - 1][0]);
+    let d = Math.abs(a2 - a1) * 180 / Math.PI;
+    if (d > 180) d = 360 - d;
+    maxTurn = Math.max(maxTurn, d);
+  }
+  let longest = 0;
+  for (let i = 0; i < pts.length; i++) {
+    for (let j = i + 2; j < pts.length; j++) {
+      const [ax, az] = pts[i], [bx, bz] = pts[j];
+      const len = Math.hypot(bx - ax, bz - az);
+      let dev = 0;
+      for (let k = i + 1; k < j; k++) dev = Math.max(dev, Math.abs((bx - ax) * (az - pts[k][1]) - (ax - pts[k][0]) * (bz - az)) / len);
+      if (dev > 1.5) break;
+      longest = Math.max(longest, len);
+    }
+  }
+  return { maxTurnDeg: maxTurn, longestStraightM: longest };
+}
 
 function computeStats(values) {
   if (!values.length) return { min: 0, max: 0, avg: 0, median: 0 };
@@ -153,8 +187,11 @@ async function runSweepForKind(kind) {
     const bridge = findBridgeSpan(template, layers, water);
     const steepShoreRatio = measureShoreHeightRatio(layers, water, template.waterLevelDm);
 
+    const shapes = template.water.rivers.map(r => riverShape(r.centerlineXZ));
     const record = {
       seed,
+      riverMaxTurnDeg: Math.round(Math.max(...shapes.map(x => x.maxTurnDeg))),
+      riverLongestStraightM: Math.round(Math.max(...shapes.map(x => x.longestStraightM))),
       attempt: attempt + 1,
       durationMs: Math.round(durationMs * 10) / 10,
       waterCells: totalWater,
@@ -272,6 +309,11 @@ async function runSweepForKind(kind) {
     else forkDistBuckets['>80m']++;
   }
 
+  const turnStats = computeStats(results.map(r => r.riverMaxTurnDeg));
+  const straightStats = computeStats(results.map(r => r.riverLongestStraightM));
+  const waterShareGe20 = results.filter(r => r.waterPct >= 20).length / results.length;
+  const waterPassed = waterStats.min >= 19 && waterStats.max <= 21 && waterShareGe20 >= 0.5;
+  const riverPassed = turnStats.max <= 48 && straightStats.max <= 100;
   const perfPassed = p95Duration <= 1000 && durationStats.max <= 2500;
   const shorePassed = steepStats.max <= 10;
 
@@ -279,10 +321,17 @@ async function runSweepForKind(kind) {
     mapKind: kind,
     totalSeeds: SEED_COUNT,
     passedSeeds: results.length,
-    gatePassed: results.length === SEED_COUNT && results.every(r => r.attempt <= 50) && perfPassed && shorePassed,
+    gatePassed: results.length === SEED_COUNT && results.every(r => r.attempt <= 50) && perfPassed && shorePassed && waterPassed && riverPassed,
     attemptsDistribution: attemptCounts,
     avgAttempts: Math.round((results.reduce((s, r) => s + r.attempt, 0) / results.length) * 100) / 100,
     maxAttempts: Math.max(...results.map(r => r.attempt)),
+    waterShareGe20Pct: Math.round(waterShareGe20 * 1000) / 10,
+    waterPassGate: waterPassed,
+    riverShape: {
+      maxTurnDeg12m: { avg: Math.round(turnStats.avg), max: turnStats.max },
+      longestStraightM: { avg: Math.round(straightStats.avg), max: straightStats.max },
+      passGate: riverPassed,
+    },
     waterPct: {
       min: Math.round(waterStats.min * 100) / 100,
       max: Math.round(waterStats.max * 100) / 100,
@@ -404,6 +453,7 @@ async function renderSheet(browser, kind, tiles) {
 }
 
 async function renderIngameScreenshots(browser, kind, ingameTemplates) {
+  const live = [];
   console.log(`\nRendering in-game 3D overview shots for 4 seeds of ${kind}...`);
   for (const { seed, template, bridgeSite } of ingameTemplates) {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -415,7 +465,7 @@ async function renderIngameScreenshots(browser, kind, ingameTemplates) {
       });
     });
 
-    await page.goto('http://127.0.0.1:5190/?debug=1&test=1');
+    await page.goto(`${BASE_URL}/?debug=1&test=1`);
     await page.waitForFunction(() => !!window.__debug?.camera, null, { timeout: 30000 });
     await page.waitForTimeout(1500);
 
@@ -494,11 +544,25 @@ async function renderIngameScreenshots(browser, kind, ingameTemplates) {
     }
 
     await page.waitForTimeout(1200);
+    await dismissLevelUp(page);
+    await page.waitForTimeout(500);
+    await dismissLevelUp(page);
+    if (await page.locator('.levelup-card').isVisible().catch(() => false)) throw new Error(`Level-up card still covers the capture for seed ${seed}`);
+    live.push({
+      seed,
+      embankAccepted: actionOutcome.rEmbank,
+      embankedCells: shoreCells.length,
+      bridgeAccepted: actionOutcome.rBridge,
+      bridgeCount: actionOutcome.bridgesCount,
+      bridgeLengthCells: bridgeSite?.span ?? 0,
+      bridgeEnds: bridgeSite?.from && bridgeSite?.to ? [bridgeSite.from, bridgeSite.to] : null,
+    });
     const shotFile = `${OUT_DIR}/ingame-${kind}-seed-${seed}.png`;
     await page.screenshot({ path: shotFile, type: 'png' });
     console.log(`Saved in-game shot: ${shotFile}`);
     await page.close();
   }
+  return live;
 }
 
 console.log('=== RANDOM MAP SWEEP & IN-GAME QA (D039) ===');
@@ -517,10 +581,6 @@ const sweepReport = {
   farm: farmData.summary,
 };
 
-const jsonPath = `${OUT_DIR}/sweep.json`;
-await writeFile(jsonPath, JSON.stringify(sweepReport, null, 2));
-console.log(`Saved sweep statistics to ${jsonPath}`);
-
 // Launch browser for sheets and 3D in-game renders
 const browser = await chromium.launch({
   executablePath: process.env.BROWSER_EXECUTABLE ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -531,10 +591,14 @@ const browser = await chromium.launch({
 await renderSheet(browser, 'city', cityData.sheetTiles);
 await renderSheet(browser, 'farm', farmData.sheetTiles);
 
-await renderIngameScreenshots(browser, 'city', cityData.ingameTemplates);
-await renderIngameScreenshots(browser, 'farm', farmData.ingameTemplates);
+sweepReport.city.ingameLive = await renderIngameScreenshots(browser, 'city', cityData.ingameTemplates);
+sweepReport.farm.ingameLive = await renderIngameScreenshots(browser, 'farm', farmData.ingameTemplates);
 
 await browser.close();
+
+const jsonPath = `${OUT_DIR}/sweep.json`;
+await writeFile(jsonPath, JSON.stringify(sweepReport, null, 2));
+console.log(`Saved sweep statistics to ${jsonPath}`);
 
 console.log(`\n=== SWEEP COMPLETED in ${totalTime}s ===`);
 console.log(`Gate passed: ${sweepReport.gatePassed ? 'YES (100% pass, p95 <= 1.0s, max <= 2.5s, lake CV >= 0.4)' : 'FAILED'}`);
