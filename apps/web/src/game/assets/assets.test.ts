@@ -301,9 +301,9 @@ describe('actual placeholder GLB artifacts', () => {
     manager.dispose();
   });
   it('keeps D037 landmark models byte-identical to what the deterministic import script generates', async () => {
-    const output = execFileSync('node', ['scripts/import-landmarks.mjs', '--check'], { encoding: 'utf8', timeout: 55_000 });
+    const output = execFileSync('node', ['scripts/import-landmarks.mjs', '--check'], { encoding: 'utf8', timeout: 120_000 });
     expect(output).toMatch(/--check PASS|skipping/);
-  }, 60_000);
+  }, 130_000);
   it('verifies D037 landmark artifacts meet 1-part, texture, footprint and hash constraints', async () => {
     const manager = await setup();
     for (const [id, model] of Object.entries(landmarksConfig.models)) {

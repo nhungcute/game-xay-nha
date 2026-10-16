@@ -77,33 +77,33 @@
         7,
         6
       ],
-      "triangles": 5999,
+      "triangles": 2551,
       "triangleCap": 6000,
       "bounds": {
         "min": [
           -6.44,
           0,
-          -5.107773
+          -3.849004
         ],
         "max": [
           6.44,
-          3.68686,
-          5.107773
+          2.211769,
+          3.849004
         ]
       },
-      "scale": 0.175532,
+      "scale": 0.066649,
       "texture": {
         "width": 1024,
         "height": 1024,
-        "bytes": 231662
+        "bytes": 287227
       },
-      "bytes": 485356,
+      "bytes": 464800,
       "credits": {
-        "title": "Pripyat Palace of Culture, \"Energetik\"",
-        "author": "AndrewDW",
+        "title": "East Kowloon Cultural Centre",
+        "author": "patrick.young",
         "license": "CC-BY-4.0",
-        "url": "https://sketchfab.com/3d-models/pripyat-palace-of-culture-energetik-e2647265ab4949cfaef2d021e24cec23",
-        "source": "map/nha2/pripyat_palace_of_culture_energetik.glb"
+        "url": "https://sketchfab.com/3d-models/east-kowloon-cultural-centre-b401812058301063a0-58d32ac488c04597a7058b011f4d7cd8",
+        "source": "map/nha3/east_kowloon_cultural_centre_b401812058301063a0.glb"
       }
     }
   }

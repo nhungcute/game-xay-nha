@@ -71,7 +71,7 @@ Four iconic landmark buildings added from owner-supplied untracked models in `ma
 |---|---|---|---|---|
 | `landmark_palace` | Cung điện | [St James's Palace](https://sketchfab.com/3d-models/st-jamess-palace-9ebcaaca6ba8451eabd6344230272c0f) | QuintusHortensiusHortalus | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
 | `landmark_castle` | Lâu đài | [Monserrate Palace - Scale Model (Scaniverse)](https://sketchfab.com/3d-models/monserrate-palace-scale-model-scaniverse-e9d5212d88a34cf98912ed59df136888) | JFN | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
-| `landmark_culture` | Nhà văn hóa | [Pripyat Palace of Culture, "Energetik"](https://sketchfab.com/3d-models/pripyat-palace-of-culture-energetik-e2647265ab4949cfaef2d021e24cec23) | AndrewDW | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
+| `landmark_culture` | Nhà văn hóa | [East Kowloon Cultural Centre](https://sketchfab.com/3d-models/east-kowloon-cultural-centre-b401812058301063a0-58d32ac488c04597a7058b011f4d7cd8) | patrick.young | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
 
 Excluded files from `map/nha2`:
 - `royal_palace_brussel_minecraft.glb`: excluded due to **CC-BY-NC-4.0** license (non-commercial clause incompatible with commercial distribution).

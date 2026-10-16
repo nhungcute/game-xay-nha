@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:5190",
-  "at": "2026-10-15T04:12:51.624Z",
+  "at": "2026-10-16T02:59:41.156Z",
   "shots": [
     {
       "kind": "city",
@@ -99,27 +99,27 @@
     },
     "gate2_fps": {
       "pass": true,
-      "fpsBaseline": 40.2,
-      "fpsAfter": 40,
-      "fpsDrop": 0.2,
-      "noiseSpread": 1.3,
+      "fpsBaseline": 36.6,
+      "fpsAfter": 35.1,
+      "fpsDrop": 1.5,
+      "noiseSpread": 1.4,
       "tolerance": 3,
       "roundsBaseline": [
-        40.2,
-        39.2,
-        40.5
+        36.9,
+        36.6,
+        36
       ],
       "roundsAfter": [
-        40,
-        40.3,
-        39.8
+        35.1,
+        36.1,
+        34.7
       ],
-      "details": "Interleaved medians: baseline 40.2 -> after 40 (drop 0.2 <= tolerance 3.0 = max(3, 2 x noise 1.3))"
+      "details": "Interleaved medians: baseline 36.6 -> after 35.1 (drop 1.5 <= tolerance 3.0 = max(3, 2 x noise 1.4))"
     },
     "gate3_triangles_budget": {
       "pass": true,
-      "cityTriangles": 550952,
-      "details": "City triangles 550952 <= 1.5M"
+      "cityTriangles": 547504,
+      "details": "City triangles 547504 <= 1.5M"
     },
     "gate4_zero_console_errors": {
       "pass": true,

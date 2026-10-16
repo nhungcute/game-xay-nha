@@ -605,3 +605,11 @@ Owner decisions. Full assessment and results: `docs/reports/D039-random-maps-ass
 - One unlit vertex-coloured mesh follows the terrain, with pooled sprite labels. It is unaffected by night tint and stays
   below bloom. A geometric adjacency pre-filter skips probes for non-adjacent zones. Report:
   `docs/reports/ZONE-highlight.md`.
+
+## D046 - 2026-10-16 - Culture house remodelled from East Kowloon Cultural Centre
+
+- `landmark_culture` (Nhà văn hóa) now comes from the owner-supplied `map/nha3/east_kowloon_cultural_centre_b401812058301063a0.glb`
+  ("East Kowloon Cultural Centre" by patrick.young, CC-BY-4.0 per the file's own metadata), replacing Pripyat "Energetik".
+  The output has 2,551 triangles and a 1024² atlas built from the source's 9 textures; the 7×6 footprint is unchanged.
+- The Pripyat-only cleanup helpers (D040) were removed with it. The importer's `--check` passes and all landmark QA
+  gates pass.

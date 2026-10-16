@@ -5,7 +5,7 @@
 // Deterministic: byte-identical output across runs.
 // When map/nha2 is absent, skips cleanly with exit 0.
 
-import { existsSync, writeFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { inflateSync } from 'node:zlib';
@@ -52,14 +52,14 @@ const MODELS = [
   },
   {
     id: 'landmark_culture',
-    sourceFile: 'map/nha2/pripyat_palace_of_culture_energetik.glb',
-    title: 'Pripyat Palace of Culture, "Energetik"',
-    author: 'AndrewDW',
+    sourceFile: 'map/nha3/east_kowloon_cultural_centre_b401812058301063a0.glb',
+    title: 'East Kowloon Cultural Centre',
+    author: 'patrick.young',
     license: 'CC-BY-4.0',
-    url: 'https://sketchfab.com/3d-models/pripyat-palace-of-culture-energetik-e2647265ab4949cfaef2d021e24cec23',
+    url: 'https://sketchfab.com/3d-models/east-kowloon-cultural-centre-b401812058301063a0-58d32ac488c04597a7058b011f4d7cd8',
     footprint: [7, 6],
     triangleCap: 6000,
-    rotationY: Math.PI, // Colonnade / entrance terrace faces -Z
+    rotationY: 0,
     textureSize: 1024,
     cutBase: false,
     flattenY0: false,
@@ -245,6 +245,38 @@ function downscale(image, targetW, targetH = targetW) {
   return { width: targetW, height: targetH, data: rgba };
 }
 
+// Fast downscale with adaptive stride for large textures in Kowloon Atlas
+function downscaleKowloon(image, targetW, targetH = targetW) {
+  if (image.width === targetW && image.height === targetH) return image;
+  const factorX = image.width / targetW, factorY = image.height / targetH;
+  const stepX = Math.max(1, Math.floor(factorX / 4));
+  const stepY = Math.max(1, Math.floor(factorY / 4));
+  const rgba = new Uint8ClampedArray(targetW * targetH * 4);
+  for (let y = 0; y < targetH; y++) {
+    const y0 = Math.floor(y * factorY), y1 = Math.floor((y + 1) * factorY);
+    for (let x = 0; x < targetW; x++) {
+      const x0 = Math.floor(x * factorX), x1 = Math.floor((x + 1) * factorX);
+      let r = 0, g = 0, b = 0, a = 0, count = 0;
+      for (let yy = y0; yy < y1; yy += stepY) {
+        for (let xx = x0; xx < x1; xx += stepX) {
+          const at = (yy * image.width + xx) * 4;
+          r += image.data[at];
+          g += image.data[at + 1];
+          b += image.data[at + 2];
+          a += image.data[at + 3];
+          count++;
+        }
+      }
+      const outAt = (y * targetW + x) * 4;
+      rgba[outAt] = Math.round(r / count);
+      rgba[outAt + 1] = Math.round(g / count);
+      rgba[outAt + 2] = Math.round(b / count);
+      rgba[outAt + 3] = Math.round(a / count);
+    }
+  }
+  return { width: targetW, height: targetH, data: rgba };
+}
+
 function shoulder(value, knee, ceiling) {
   return value <= knee ? value : knee + (ceiling - knee) * (1 - Math.exp(-(value - knee) / (ceiling - knee)));
 }
@@ -268,202 +300,37 @@ function cleanToneMonserrate(image) {
   return { width: image.width, height: image.height, data };
 }
 
-// Clean tone for Pripyat: clean grunge/dirt, brighten walls, refresh glass tint
-function cleanTonePripyat(image) {
-  const data = new Uint8ClampedArray(image.data.length);
-  for (let i = 0; i < image.data.length; i += 4) {
-    let r = image.data[i];
-    let g = image.data[i + 1];
-    let b = image.data[i + 2];
-    const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    // Lift dark grunge on walls (luma < 100)
-    if (luma < 100) {
-      const lift = (100 - luma) * 0.45;
-      r = Math.min(255, r + lift * 1.1);
-      g = Math.min(255, g + lift * 1.15);
-      b = Math.min(255, b + lift * 1.2);
-    } else {
-      // General brightness & clean warm tone
-      r = Math.min(255, r * 1.12);
-      g = Math.min(255, g * 1.12);
-      b = Math.min(255, b * 1.14);
-    }
-    // Broken window replacement: detect dark shattered window areas and tint them clean sky-blue
-    if (r > 60 && r < 140 && Math.abs(r - g) < 20 && Math.abs(g - b) < 20) {
-      b = Math.min(255, b * 1.15);
-      g = Math.min(255, g * 1.05);
-    }
-    data[i] = Math.round(shoulder(r, 210, 248));
-    data[i + 1] = Math.round(shoulder(g, 210, 248));
-    data[i + 2] = Math.round(shoulder(b, 210, 248));
-    data[i + 3] = 255;
-  }
-  return { width: image.width, height: image.height, data };
-}
+// ---- East Kowloon Cultural Centre Atlas builder ----
+const KOWLOON_ATLAS_LAYOUT = {
+  0: { x: 768, y: 512, w: 128, h: 256 },
+  1: { x: 896, y: 512, w: 128, h: 256 },
+  2: { x: 512, y: 768, w: 256, h: 128 },
+  3: { x: 768, y: 768, w: 128, h: 128 },
+  4: { x: 0, y: 0, w: 512, h: 512 },
+  5: { x: 512, y: 0, w: 512, h: 512 },
+  6: { x: 896, y: 768, w: 128, h: 128 },
+  7: { x: 512, y: 512, w: 256, h: 256 },
+  8: { x: 0, y: 512, w: 512, h: 512 },
+};
 
-// ---- Culture house cleanup helpers (D037 follow-up) ----
-
-// Separable box blur on a Float32Array plane; `weight` (optional) makes it a normalised, masked blur.
-function boxBlurPlane(src, w, h, r, weight = null) {
-  const num = new Float32Array(w * h);
-  const den = weight ? new Float32Array(w * h) : null;
-  const tmpN = new Float32Array(w * h);
-  const tmpD = weight ? new Float32Array(w * h) : null;
-  const pass = (inN, inD, outN, outD, horizontal) => {
-    const len = horizontal ? w : h;
-    const lines = horizontal ? h : w;
-    for (let line = 0; line < lines; line++) {
-      let sn = 0, sd = 0;
-      const at = k => (horizontal ? line * w + k : k * w + line);
-      for (let k = -r; k <= r; k++) {
-        const kk = Math.min(len - 1, Math.max(0, k));
-        sn += inN[at(kk)];
-        if (inD) sd += inD[at(kk)];
-      }
-      for (let k = 0; k < len; k++) {
-        outN[at(k)] = sn;
-        if (outD) outD[at(k)] = sd;
-        const add = Math.min(len - 1, k + r + 1), sub = Math.max(0, k - r);
-        sn += inN[at(add)] - inN[at(sub)];
-        if (inD) sd += inD[at(add)] - inD[at(sub)];
-      }
-    }
-  };
-  const pre = weight ? src.map((v, i) => v * weight[i]) : src;
-  pass(pre, weight, tmpN, tmpD, true);
-  pass(tmpN, tmpD, num, den, false);
-  const norm = (2 * r + 1) * (2 * r + 1);
-  const out = new Float32Array(w * h);
-  for (let i = 0; i < out.length; i++) out[i] = weight ? (den[i] > 1e-3 ? num[i] / den[i] : src[i]) : num[i] / norm;
-  return out;
-}
-
-// Rasterise (into a w x h mask) the UV triangles of horizontal surfaces: faces pointing up (normal.y > 0.8);
-// those in the top quarter of the model are the roof (1), the rest terrace/plinth/ground (2). Returns a Uint8Array of 0/1/2 (triangle edges overdrawn by a fraction of a texel).
-function roofUvMask(geometry, w, h) {
-  const { positions: P, uvs: UV, indices: I } = geometry;
-  let minY = Infinity, maxY = -Infinity;
-  for (let i = 1; i < P.length; i += 3) { minY = Math.min(minY, P[i]); maxY = Math.max(maxY, P[i]); }
-  const roofY = minY + (maxY - minY) * 0.75;
-  const mask = new Uint8Array(w * h); // 1 = roof, 2 = lower horizontal surface (terrace, plinth, ground)
-  for (let t = 0; t < I.length; t += 3) {
-    const a = I[t] * 3, b = I[t + 1] * 3, c = I[t + 2] * 3;
-    const e1x = P[b] - P[a], e1y = P[b + 1] - P[a + 1], e1z = P[b + 2] - P[a + 2];
-    const e2x = P[c] - P[a], e2y = P[c + 1] - P[a + 1], e2z = P[c + 2] - P[a + 2];
-    const nx = e1y * e2z - e1z * e2y, ny = e1z * e2x - e1x * e2z, nz = e1x * e2y - e1y * e2x;
-    const len = Math.hypot(nx, ny, nz);
-    if (len < 1e-12 || ny / len < 0.8) continue;
-    const cls = (P[a + 1] + P[b + 1] + P[c + 1]) / 3 < roofY ? 2 : 1;
-    const u0 = UV[I[t] * 2] * w, v0 = UV[I[t] * 2 + 1] * h;
-    const u1 = UV[I[t + 1] * 2] * w, v1 = UV[I[t + 1] * 2 + 1] * h;
-    const u2 = UV[I[t + 2] * 2] * w, v2 = UV[I[t + 2] * 2 + 1] * h;
-    const minX = Math.max(0, Math.floor(Math.min(u0, u1, u2) - 0.5)), maxX = Math.min(w - 1, Math.ceil(Math.max(u0, u1, u2) + 0.5));
-    const minYp = Math.max(0, Math.floor(Math.min(v0, v1, v2) - 0.5)), maxYp = Math.min(h - 1, Math.ceil(Math.max(v0, v1, v2) + 0.5));
-    const den = (v1 - v2) * (u0 - u2) + (u2 - u1) * (v0 - v2);
-    if (Math.abs(den) < 1e-9) continue;
-    for (let py = minYp; py <= maxYp; py++) {
-      for (let px = minX; px <= maxX; px++) {
-        const x = px + 0.5, y = py + 0.5;
-        const l0 = ((v1 - v2) * (x - u2) + (u2 - u1) * (y - v2)) / den;
-        const l1 = ((v2 - v0) * (x - u2) + (u0 - u2) * (y - v2)) / den;
-        const l2 = 1 - l0 - l1;
-        const eps = -0.15;
-        if (l0 >= eps && l1 >= eps && l2 >= eps && (mask[py * w + px] === 0 || cls === 1)) mask[py * w + px] = cls;
+function buildKowloonAtlas(parsed) {
+  const atlas = new Uint8ClampedArray(1024 * 1024 * 4);
+  for (const [imgIdxStr, rect] of Object.entries(KOWLOON_ATLAS_LAYOUT)) {
+    const imgIdx = Number(imgIdxStr);
+    const decoded = decodeGlbImage(parsed, imgIdx);
+    const scaled = downscaleKowloon(decoded, rect.w, rect.h);
+    for (let dy = 0; dy < rect.h; dy++) {
+      for (let dx = 0; dx < rect.w; dx++) {
+        const srcAt = (dy * rect.w + dx) * 4;
+        const dstAt = ((rect.y + dy) * 1024 + (rect.x + dx)) * 4;
+        atlas[dstAt] = scaled.data[srcAt];
+        atlas[dstAt + 1] = scaled.data[srcAt + 1];
+        atlas[dstAt + 2] = scaled.data[srcAt + 2];
+        atlas[dstAt + 3] = 255;
       }
     }
   }
-  return mask;
-}
-
-// Culture house: clean walls and a clean, evenly toned roof. Deterministic, pure JS.
-function cleanCultureHouse(image, geometry) {
-  const w = image.width, h = image.height, n = w * h;
-  const tone = cleanTonePripyat(image);
-  const roof = roofUvMask(geometry, w, h);
-
-  const R = new Float32Array(n), G = new Float32Array(n), B = new Float32Array(n), L = new Float32Array(n);
-  for (let i = 0; i < n; i++) {
-    R[i] = tone.data[i * 4]; G[i] = tone.data[i * 4 + 1]; B[i] = tone.data[i * 4 + 2];
-    L[i] = 0.2126 * R[i] + 0.7152 * G[i] + 0.0722 * B[i];
-  }
-  const wallW = Float32Array.from(roof, v => (v ? 0 : 1));
-  const horiz = new Float32Array(n); // detail offsets for horizontal surfaces
-  const baseOf = new Array(n);
-  // Per class: pull dark outliers (stains) up to the island median, smooth, add subtle variation.
-  const classes = [
-    { id: 1, base: [178, 178, 174], lowAmp: 10, fineAmp: 5 }, // roof: even light concrete/bitumen grey
-    { id: 2, base: [186, 182, 172], lowAmp: 12, fineAmp: 7 }, // terrace / plinth / ground paving: warm light concrete
-  ];
-  for (const cls of classes) {
-    const m = Float32Array.from(roof, v => (v === cls.id ? 1 : 0));
-    const sorted = [];
-    for (let i = 0; i < n; i++) if (m[i]) sorted.push(Math.round(L[i]));
-    if (!sorted.length) continue;
-    sorted.sort((a, b) => a - b);
-    const medianL = sorted[sorted.length >> 1];
-    const lifted = new Float32Array(n);
-    for (let i = 0; i < n; i++) lifted[i] = m[i] ? Math.max(L[i], medianL) : L[i];
-    const low = boxBlurPlane(boxBlurPlane(lifted, w, h, 9, m), w, h, 9, m);
-    const fine = boxBlurPlane(lifted, w, h, 2, m);
-    for (let i = 0; i < n; i++) {
-      if (!m[i]) continue;
-      horiz[i] = Math.max(-cls.lowAmp, Math.min(cls.lowAmp, (low[i] - medianL) * 0.25))
-        + Math.max(-cls.fineAmp, Math.min(cls.fineAmp, (lifted[i] - fine[i]) * 0.6));
-      baseOf[i] = cls.base;
-    }
-  }
-
-  // ---- Walls: lift grime blobs / streaks, glass to a neutral light blue-grey ----
-  const wallLow = boxBlurPlane(boxBlurPlane(L, w, h, 5, wallW), w, h, 5, wallW);
-  const wallSoft = boxBlurPlane(L, w, h, 2, wallW);
-  const wallRef = boxBlurPlane(boxBlurPlane(L, w, h, 24, wallW), w, h, 24, wallW);
-
-  const out = new Uint8ClampedArray(n * 4);
-  for (let i = 0; i < n; i++) {
-    let r = R[i], g = G[i], b = B[i];
-    if (roof[i]) {
-      const d = horiz[i], base = baseOf[i];
-      r = base[0] + d; g = base[1] + d; b = base[2] + d;
-    } else {
-      const l = L[i];
-      // Mid-scale dark blobs relative to the surroundings = grime; lift partially.
-      const blob = wallRef[i] - wallLow[i];
-      if (blob > 2 && wallRef[i] > 110) {
-        const lift = Math.min(80, blob * 0.85);
-        r += lift; g += lift; b += lift;
-      }
-      // Soften the remaining mottling (keeps column / mullion edges, which are wider than the blur).
-      const soft = wallSoft[i] - L[i];
-      r += soft * 0.5; g += soft * 0.5; b += soft * 0.5;
-      // Dark, neutral/cool texels = broken glass: neutral light blue-grey, keep some of the pane structure.
-      const sat = Math.max(r, g, b) - Math.min(r, g, b);
-      if (l < 120 && sat < 40) {
-        const k = Math.min(0.75, (120 - l) / 120 * 1.1);
-        r = r * (1 - k) + (150 + (l - 60) * 0.35) * k;
-        g = g * (1 - k) + (174 + (l - 60) * 0.35) * k;
-        b = b * (1 - k) + (188 + (l - 60) * 0.3) * k;
-      }
-      // Pull stray warm brown stains toward neutral concrete.
-      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-      const desat = 0.45;
-      r = r + (lum - r) * desat; g = g + (lum - g) * desat; b = b + (lum - b) * desat;
-      // Gentle brightening toward a clean, maintained light concrete (darks lift most).
-      const lift2 = Math.max(0, 215 - lum) * 0.22;
-      r += lift2; g += lift2; b += lift2 * 1.03;
-    }
-    out[i * 4] = Math.round(Math.max(0, Math.min(255, r)));
-    out[i * 4 + 1] = Math.round(Math.max(0, Math.min(255, g)));
-    out[i * 4 + 2] = Math.round(Math.max(0, Math.min(255, b)));
-    out[i * 4 + 3] = 255;
-  }
-  if (process.env.CULTURE_DEBUG) {
-    writeFileSync(`${process.env.CULTURE_DEBUG}/before.jpg`, jpeg.encode(image, 90).data);
-    writeFileSync(`${process.env.CULTURE_DEBUG}/after.jpg`, jpeg.encode({ data: out, width: w, height: h }, 90).data);
-    const m = new Uint8ClampedArray(n * 4);
-    for (let i = 0; i < n; i++) { m[i * 4] = m[i * 4 + 1] = m[i * 4 + 2] = roof[i] * 120; m[i * 4 + 3] = 255; }
-    writeFileSync(`${process.env.CULTURE_DEBUG}/mask.jpg`, jpeg.encode({ data: m, width: w, height: h }, 90).data);
-  }
-  return { width: w, height: h, data: out };
+  return { width: 1024, height: 1024, data: atlas };
 }
 
 // Rotation matrix around Y axis
@@ -537,7 +404,19 @@ function collectSceneGeometry(parsed, config) {
       const len = Math.hypot(tnx, tny, tnz) || 1;
       combinedNrm.push(tnx / len, tny / len, tnz / len);
 
-      combinedUv.push(prim.uvs[v * 2], prim.uvs[v * 2 + 1]);
+      let uvU = prim.uvs[v * 2];
+      let uvV = prim.uvs[v * 2 + 1];
+      if (config.id === 'landmark_culture') {
+        const mat = parsed.json.materials?.[prim.material];
+        const texIdx = mat?.pbrMetallicRoughness?.baseColorTexture?.index ?? prim.material;
+        const imgIdx = parsed.json.textures?.[texIdx]?.source ?? texIdx;
+        const rect = KOWLOON_ATLAS_LAYOUT[imgIdx] ?? { x: 0, y: 0, w: 512, h: 512 };
+        uvU = uvU - Math.floor(uvU);
+        uvV = uvV - Math.floor(uvV);
+        uvU = (rect.x + uvU * rect.w) / 1024;
+        uvV = (rect.y + uvV * rect.h) / 1024;
+      }
+      combinedUv.push(uvU, uvV);
     }
 
     for (let i = 0; i < prim.indices.length; i++) {
@@ -777,12 +656,12 @@ async function processModel(config) {
   const parsed = parseGlb(rawGlb);
 
   // 1. Process texture
-  const downscaled = downscale(decodeGlbImage(parsed, 0), config.textureSize);
-  // 2. Collect and transform geometry (before the texture: the culture house cleanup needs the roof UV mask)
+  const downscaled = config.id === 'landmark_culture' ? null : downscale(decodeGlbImage(parsed, 0), config.textureSize);
+  // 2. Collect and transform geometry
   const rawGeometry = collectSceneGeometry(parsed, config);
 
   const textureRgba = config.id === 'landmark_castle' ? cleanToneMonserrate(downscaled)
-    : config.id === 'landmark_culture' ? cleanCultureHouse(downscaled, rawGeometry) : downscaled;
+    : config.id === 'landmark_culture' ? buildKowloonAtlas(parsed) : downscaled;
 
   const jpegBytes = Buffer.from(jpeg.encode({ data: textureRgba.data, width: textureRgba.width, height: textureRgba.height }, 85).data);
 

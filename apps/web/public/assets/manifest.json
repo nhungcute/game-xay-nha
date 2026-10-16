@@ -911,10 +911,10 @@
     {
       "id": "landmark_culture",
       "file": "models/authored/landmark_culture.glb",
-      "source": "https://sketchfab.com/3d-models/pripyat-palace-of-culture-energetik-e2647265ab4949cfaef2d021e24cec23",
-      "author": "AndrewDW",
+      "source": "https://sketchfab.com/3d-models/east-kowloon-cultural-centre-b401812058301063a0-58d32ac488c04597a7058b011f4d7cd8",
+      "author": "patrick.young",
       "license": "CC-BY-4.0",
-      "url": "https://sketchfab.com/3d-models/pripyat-palace-of-culture-energetik-e2647265ab4949cfaef2d021e24cec23",
+      "url": "https://sketchfab.com/3d-models/east-kowloon-cultural-centre-b401812058301063a0-58d32ac488c04597a7058b011f4d7cd8",
       "modified": true,
       "placeholder": false,
       "category": "building",
@@ -922,8 +922,8 @@
         7,
         6
       ],
-      "triangles": 5999,
-      "hash": "e26e1acd6e24"
+      "triangles": 2551,
+      "hash": "2fa77b26ab01"
     },
     {
       "id": "landmark_palace",
