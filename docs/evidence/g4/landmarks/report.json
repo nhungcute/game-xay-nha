@@ -1,6 +1,6 @@
 {
-  "base": "http://127.0.0.1:5201",
-  "at": "2026-10-16T14:56:07.413Z",
+  "base": "http://127.0.0.1:5190",
+  "at": "2026-10-16T15:09:13.936Z",
   "shots": [
     {
       "kind": "city",
@@ -136,22 +136,22 @@
     },
     "gate2_fps": {
       "pass": true,
-      "fpsBaseline": 39.5,
-      "fpsAfter": 40.2,
-      "fpsDrop": -0.7,
-      "noiseSpread": 1.3,
-      "tolerance": 3,
+      "fpsBaseline": 38.9,
+      "fpsAfter": 38,
+      "fpsDrop": 0.9,
+      "noiseSpread": 4.9,
+      "tolerance": 9.8,
       "roundsBaseline": [
-        39.5,
-        39.4,
-        40.7
+        41.5,
+        36.6,
+        38.9
       ],
       "roundsAfter": [
-        40.3,
-        40.2,
-        39.8
+        36.2,
+        39.5,
+        38
       ],
-      "details": "Interleaved medians: baseline 39.5 -> after 40.2 (drop -0.7 <= tolerance 3.0 = max(3, 2 x noise 1.3))"
+      "details": "Interleaved medians: baseline 38.9 -> after 38 (drop 0.9 <= tolerance 9.8 = max(3, 2 x noise 4.9))"
     },
     "gate3_triangles_budget": {
       "pass": true,

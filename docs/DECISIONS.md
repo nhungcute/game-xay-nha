@@ -613,3 +613,33 @@ Owner decisions. Full assessment and results: `docs/reports/D039-random-maps-ass
   The output has 2,551 triangles and a 1024² atlas built from the source's 9 textures; the 7×6 footprint is unchanged.
 - The Pripyat-only cleanup helpers (D040) were removed with it. The importer's `--check` passes and all landmark QA
   gates pass.
+
+## D047 - 2026-10-16 - Landmark "Phố cổ bên sông" (`landmark_rome`)
+
+- Owner request: add `map/nha3/rome_river_side.glb` ("Rome River Side" by Shahriar Shahrabi, CC-BY-4.0). It was excluded in
+  D037 as a whole riverside quarter; it is now in as a city landmark.
+- The canal water, bridge, boats and far bank are clipped at the north quay, and the fire and figure meshes are dropped.
+- Positions-only simplification to a proxy mesh, then a fresh 1024² atlas baked by ray-casting onto the original
+  (`scripts/lib/atlas-bake.mjs`, `bake: true` for rome only). The UV-aware simplify garbled this 340k-triangle source,
+  as in D038.
+- The result: 10×9 cells, 10,758 triangles, 945 KB GLB (this model's byte budget is 1 MB).
+- In game: level 18, $150,000 + 120 wood + 250 stone, 6 h build, limit 1, decor +20% within 14 cells.
+- Other landmarks are byte-identical. All landmark QA gates pass with 4 landmarks. Report:
+  `docs/reports/LANDMARK-rome.md`.
+
+## D048 - 2026-10-16 - Third map kind: Thị trấn (`town`)
+
+- Owner request: a third map mixing city and countryside, with every building and tool.
+- `MapKind` gains `town`, with contract helpers:
+  - `hasCityFeatures` (income, COLLECT, population);
+  - `hasFarmFeatures` (till, plant, harvest, sell, production, storage);
+  - `kindAllows(mapKinds, kind)`: town allows every catalog entry, including future ones such as `landmark_rome`.
+- Where the city and farm rules differ, town gets the more permissive one (concrete bridge, road tiers 2–3).
+- Town maps are always random (D039 generator) and stored in `world_templates`, even with `RANDOM_MAPS` off.
+  Migration 0004 widens `worlds_map_kind_check`.
+- Existing accounts open town from Đổi map → Thị trấn → Tạo nhân vật; their city and farm worlds are untouched.
+- Content: a 14-quest town chain (first 6 tutorial; D041 parallel rules), repeat quests from the union of the city and
+  farm templates, and the XP table of the slower city. City and farm content diffs are additions only.
+- Bot bench over 7 days: town finishes all 14 quests in every run. Net worth ≈ random city at the normal style (+1%),
+  +24% at the busy style, −42% at the idle style; no modifier applied. Sweep: 50/50 seeds playable, water 20%,
+  about 0.5 s per map. Report: `docs/reports/TOWN-map.md`.

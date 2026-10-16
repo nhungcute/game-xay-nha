@@ -1,11 +1,11 @@
 {
-  "base": "http://127.0.0.1:5202",
+  "base": "http://127.0.0.1:5190",
   "mode": "offline",
-  "at": "2026-10-16T14:50:48.756Z",
+  "at": "2026-10-16T15:12:08.644Z",
   "runs": {
     "1440x900": {
       "mapKind": "town",
-      "mapId": "rnd-town-3416216104",
+      "mapId": "rnd-town-2468454928",
       "tabs": [
         "buildings",
         "roads",
@@ -38,28 +38,29 @@
         "farmhouse",
         "landmark_culture",
         "landmark_palace",
-        "landmark_castle"
+        "landmark_castle",
+        "landmark_rome"
       ],
       "placed": {
         "road": [
-          81,
-          79
+          83,
+          47
         ],
         "farmhouse": [
-          81,
-          76
+          83,
+          44
         ],
         "house": [
           74,
-          78
+          46
         ],
         "shop": [
           72,
-          81
+          49
         ],
         "field": [
-          89,
-          66
+          88,
+          40
         ],
         "planted": true
       },
@@ -98,7 +99,7 @@
     },
     "pixel7": {
       "mapKind": "town",
-      "mapId": "rnd-town-1185877112",
+      "mapId": "rnd-town-1728770641",
       "tabs": [
         "buildings",
         "roads",
@@ -131,28 +132,29 @@
         "farmhouse",
         "landmark_culture",
         "landmark_palace",
-        "landmark_castle"
+        "landmark_castle",
+        "landmark_rome"
       ],
       "placed": {
         "road": [
-          65,
-          80
+          49,
+          47
         ],
         "farmhouse": [
-          65,
-          77
+          49,
+          44
         ],
         "house": [
-          58,
-          78
+          42,
+          46
         ],
         "shop": [
-          54,
-          79
+          40,
+          49
         ],
         "field": [
-          63,
-          72
+          53,
+          41
         ],
         "planted": true
       },
