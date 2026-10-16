@@ -94,6 +94,17 @@ describe('docs/16 generated economy content', () => {
     expect(castle?.decor).toEqual({ bonus: 0.15, radius: 12 });
     expect(vi[castle!.nameKey]).toBe('Lâu đài');
 
+    const rome = catalog.buildings.landmark_rome;
+    expect(rome).toBeDefined();
+    expect(rome?.mapKinds).toEqual(['city']);
+    expect(rome?.cost).toEqual({ cash: 150000, wood: 120, stone: 250 });
+    expect(rome?.unlockLevel).toBe(18);
+    expect(rome?.size).toEqual([10, 9]);
+    expect(rome?.buildSeconds).toBe(21600);
+    expect(rome?.limit).toEqual([1, 0, 1]);
+    expect(rome?.decor).toEqual({ bonus: 0.20, radius: 14 });
+    expect(vi[rome!.nameKey]).toBe('Phố cổ bên sông');
+
     // D038: the Citadel (farm) was removed: its voxel model did not survive simplification.
     expect(catalog.buildings.landmark_citadel).toBeUndefined();
   });

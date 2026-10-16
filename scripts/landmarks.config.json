@@ -105,6 +105,41 @@
         "url": "https://sketchfab.com/3d-models/east-kowloon-cultural-centre-b401812058301063a0-58d32ac488c04597a7058b011f4d7cd8",
         "source": "map/nha3/east_kowloon_cultural_centre_b401812058301063a0.glb"
       }
+    },
+    "landmark_rome": {
+      "file": "apps/web/public/assets/models/authored/landmark_rome.glb",
+      "footprint": [
+        10,
+        9
+      ],
+      "triangles": 10758,
+      "triangleCap": 11000,
+      "bounds": {
+        "min": [
+          -9.2,
+          0,
+          -8.271593
+        ],
+        "max": [
+          9.2,
+          5.590968,
+          8.271593
+        ]
+      },
+      "scale": 18.972395,
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "bytes": 344851
+      },
+      "bytes": 945256,
+      "credits": {
+        "title": "Rome River Side",
+        "author": "Shahriar Shahrabi",
+        "license": "CC-BY-4.0",
+        "url": "https://sketchfab.com/3d-models/rome-river-side-8521d86dcd9043eba0b518ccab430d0f",
+        "source": "map/nha3/rome_river_side.glb"
+      }
     }
   }
 }

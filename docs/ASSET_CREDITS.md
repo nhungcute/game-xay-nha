@@ -65,17 +65,19 @@ It is marked modified (`modified: true`) with CC-BY-4.0 in `assets/manifest.json
 
 ## Iconic Landmarks (D037)
 
-Four iconic landmark buildings added from owner-supplied untracked models in `map/nha2/` (processed by `scripts/import-landmarks.mjs` into `apps/web/public/assets/models/authored/landmark_*.glb`):
+Iconic landmark buildings added from owner-supplied untracked models in `map/nha2/` and `map/nha3/` (processed by `scripts/import-landmarks.mjs` into `apps/web/public/assets/models/authored/landmark_*.glb`):
 
 | Game id | Tên | Source model | Author | License |
 |---|---|---|---|---|
 | `landmark_palace` | Cung điện | [St James's Palace](https://sketchfab.com/3d-models/st-jamess-palace-9ebcaaca6ba8451eabd6344230272c0f) | QuintusHortensiusHortalus | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
 | `landmark_castle` | Lâu đài | [Monserrate Palace - Scale Model (Scaniverse)](https://sketchfab.com/3d-models/monserrate-palace-scale-model-scaniverse-e9d5212d88a34cf98912ed59df136888) | JFN | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
 | `landmark_culture` | Nhà văn hóa | [East Kowloon Cultural Centre](https://sketchfab.com/3d-models/east-kowloon-cultural-centre-b401812058301063a0-58d32ac488c04597a7058b011f4d7cd8) | patrick.young | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
+| `landmark_rome` | Phố cổ bên sông | [Rome River Side](https://sketchfab.com/3d-models/rome-river-side-8521d86dcd9043eba0b518ccab430d0f) | Shahriar Shahrabi | [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/) |
+
+`landmark_rome` is modified: the canal water, bridge, boats, far bank, flames and small figures were removed, the scene was simplified and its texture re-baked onto the simplified mesh (`scripts/lib/atlas-bake.mjs`).
 
 Excluded files from `map/nha2`:
 - `royal_palace_brussel_minecraft.glb`: excluded due to **CC-BY-NC-4.0** license (non-commercial clause incompatible with commercial distribution).
-- `rome_river_side.glb`: excluded because it is an entire urban neighborhood and river bank quarter rather than an individual landmark building.
 - `citadel_of_kings.glb`: imported in D037 then **removed in D038** (the voxel model collapsed into an unreadable mass after simplification); no longer shipped.
 
 Modifications ("đã chỉnh sửa", `modified: true`):

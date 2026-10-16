@@ -119,6 +119,7 @@ Nâng cấp đường = trả chênh lệch giữa hai tier. Gỡ bất kỳ h�
 | `landmark_culture` | Nhà văn hóa | 7×6 | 30 000 | 40 | 80 | 32 200 | 10 | — | — | +10% bán kính 10 ô | — | — | 2 giờ |
 | `landmark_palace` | Cung điện | 5×5 | 60 000 | 60 | 120 | 63 300 | 14 | — | — | +15% bán kính 12 ô | — | — | 3 giờ |
 | `landmark_castle` | Lâu đài | 8×4 | 90 000 | 80 | 150 | 94 200 | 16 | — | — | +15% bán kính 12 ô | — | — | 4 giờ |
+| `landmark_rome` | Phố cổ bên sông | 10×9 | 150 000 | 120 | 250 | 156 800 | 18 | — | — | +20% bán kính 14 ô | — | — | 6 giờ |
 
 Ngân hàng: ngoài thu nhập, mỗi ngân hàng (tối đa 4 có hiệu lực) **+2 giờ trần kho tiền** cho toàn bộ công trình. Nút "Thu tất cả" có ngay từ đầu, không cần ngân hàng (D028). Khách sạn nhận thưởng view nước +20% thay vì +10%.
 
@@ -144,6 +145,7 @@ Ngân hàng: ngoài thu nhập, mỗi ngân hàng (tối đa 4 có hiệu lực)
 | Nhà văn hóa | 1 | 0 | 1 | — | — | — | 1 | 1 | 1 | 1 |
 | Cung điện | 1 | 0 | 1 | — | — | — | — | — | 1 | 1 |
 | Lâu đài | 1 | 0 | 1 | — | — | — | — | — | — | 1 |
+| Phố cổ bên sông | 1 | 0 | 1 | — | — | — | — | — | — | 1 |
 
 ### 6.3 Công thức thu nhập
 
