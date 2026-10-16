@@ -1,4 +1,4 @@
-import { GRID, Surface, cellIndex, type Cell, type Command, type Cost } from '@xay-nha/contracts';
+import { GRID, Surface, hasFarmFeatures, cellIndex, type Cell, type Command, type Cost } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { footprintCells } from './footprint';
 import { access } from './roads';
@@ -42,7 +42,7 @@ function irrigated(s: SimState, cell: Cell): boolean {
 
 export function farm(s: SimState, cmd: Command, now: number): Cost | undefined {
   if (!['TILL', 'UNTILL', 'PLANT', 'HARVEST', 'START_PRODUCTION', 'COLLECT_PRODUCTION', 'SELL'].includes(cmd.type)) return undefined;
-  guard(s.snapshot.mapKind === 'farm', 'WRONG_MAP');
+  guard(hasFarmFeatures(s.snapshot.mapKind), 'WRONG_MAP');
   const result = zeroCost();
   switch (cmd.type) {
     case 'TILL': {

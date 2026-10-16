@@ -5,11 +5,14 @@ import { pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { WorldTemplateSchema, type MapKind } from '@xay-nha/contracts';
 import { economy } from '@xay-nha/content';
+import { generateWorldTemplate } from '@xay-nha/worldgen';
 import type { BotResult } from './src/economy-bot-core';
 import { createBot } from './src/economy-bot-policies';
 import { PLAYER_SCHEDULES, type PlayStyle } from './src/economy-bot-schedule';
 
-const EXPECTED_NORMAL_DAYS: Record<MapKind, Record<number, number>> = { city: { 8: 3.5, 12: 11, 15: 21, 20: 49 }, farm: { 8: 4, 12: 12, 15: 22, 20: 52 } };
+const EXPECTED_NORMAL_DAYS: Record<MapKind, Record<number, number>> = { city: { 8: 3.5, 12: 11, 15: 21, 20: 49 }, farm: { 8: 4, 12: 12, 15: 22, 20: 52 },
+  // Town has no calibrated target yet (random maps only); it levels on the city XP table, so the city numbers are the reference.
+  town: { 8: 3.5, 12: 11, 15: 21, 20: 49 } };
 async function sourceFingerprint() {
   const files: string[] = [];
   async function visit(directory: string): Promise<void> {
@@ -36,24 +39,26 @@ export function pacingComparison(result: BotResult) {
 export async function runEconomy(args: string[]): Promise<unknown> {
   const options = new Map<string, string>();
   for (let index = 0; index < args.length; index += 2) {
-    if (!args[index]?.startsWith('--') || !args[index + 1] || options.has(args[index]!)) throw new Error('Use --days N --map city|farm|all --style cham|thuong|nhan|all [--bot tuned|base] --out report.json');
+    if (!args[index]?.startsWith('--') || !args[index + 1] || options.has(args[index]!)) throw new Error('Use --days N --map city|farm|town|all --style cham|thuong|nhan|all [--bot tuned|base] --out report.json');
     options.set(args[index]!, args[index + 1]!);
   }
-  const allowed = new Set(['--days', '--map', '--style', '--out', '--bot']);
+  const allowed = new Set(['--days', '--map', '--style', '--out', '--bot', '--seed']);
   for (const key of options.keys()) if (!allowed.has(key)) throw new Error(`Unknown option ${key}`);
   const days = Number(options.get('--days') ?? 60), map = options.get('--map') ?? 'all', style = options.get('--style') ?? 'all';
   if (!Number.isInteger(days) || days < 1 || days > 60) throw new Error('--days must be 1..60');
-  if (!['city', 'farm', 'all'].includes(map) || !['cham', 'thuong', 'nhan', 'all'].includes(style)) throw new Error('Invalid map/style');
+  if (!['city', 'farm', 'town', 'all'].includes(map) || !['cham', 'thuong', 'nhan', 'all'].includes(style)) throw new Error('Invalid map/style');
   const bot = options.get('--bot') ?? 'tuned';
   if (bot !== 'tuned' && bot !== 'base') throw new Error('--bot must be tuned or base');
-  const maps = (map === 'all' ? ['city', 'farm'] : [map]) as MapKind[], styles = (style === 'all' ? ['cham', 'thuong', 'nhan'] : [style]) as PlayStyle[];
+  const maps = (map === 'all' ? ['city', 'farm', 'town'] : [map]) as MapKind[], styles = (style === 'all' ? ['cham', 'thuong', 'nhan'] : [style]) as PlayStyle[];
   const revision = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
   const dirtyFiles = execFileSync('git', ['status', '--short'], { encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
   const source = await sourceFingerprint();
   const results: { result: BotResult; pacing: ReturnType<typeof pacingComparison>; wallSeconds: number }[] = [];
   for (const kind of maps) {
+    // Town has no authored map: a random one from --seed (default 20260000).
     const id = kind === 'city' ? 'city-coast-01' : 'farm-valley-01';
-    const template = WorldTemplateSchema.parse(JSON.parse(await readFile(`apps/web/public/worlds/${id}/template.v2.json`, 'utf8')));
+    const template = kind === 'town' ? generateWorldTemplate('town', Number(options.get('--seed') ?? 20260000)).template
+      : WorldTemplateSchema.parse(JSON.parse(await readFile(`apps/web/public/worlds/${id}/template.v2.json`, 'utf8')));
     for (const mode of styles) {
       const start = performance.now(), result = createBot(template, mode, days, day => {
         if (days <= 10 || day % 10 === 0) console.error(`${kind}/${mode}: completed day ${day}`);

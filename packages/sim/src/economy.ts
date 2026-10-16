@@ -1,4 +1,4 @@
-import { CellFlag, GRID, Surface, cellIndex, type Cell, type Cost } from '@xay-nha/contracts';
+import { CellFlag, GRID, hasCityFeatures, Surface, cellIndex, type Cell, type Cost } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { footprintCells } from './footprint';
 import { roadConnectivity, access } from './roads';
@@ -49,7 +49,7 @@ export function recompute(s: SimState): void {
 }
 export function settle(s: SimState, now: number): void {
   const cap = capHours(s);
-  const tutorial = s.template.mapKind === 'city' && tutorialQuests(s).some(q => q.action === 'COLLECT');
+  const tutorial = hasCityFeatures(s.template.mapKind) && tutorialQuests(s).some(q => q.action === 'COLLECT');
   for (const b of s.snapshot.buildings) if (b.status === 'ACTIVE' && catalog.buildings[b.defId]?.baseRatePerHour) {
     const start = Math.max(b.settledAt ?? b.buildEndsAt,b.buildEndsAt);
     guard(now >= start,'INVALID_TIME');

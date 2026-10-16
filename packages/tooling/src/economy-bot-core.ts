@@ -1,4 +1,4 @@
-import { CellFlag, Surface, cellIndex, type Cell, type CommandPayload, type CommandType, type Cost, type MapKind, type WorldTemplate } from '@xay-nha/contracts';
+import { CellFlag, Surface, cellIndex, hasCityFeatures, hasFarmFeatures, type Cell, type CommandPayload, type CommandType, type Cost, type MapKind, type WorldTemplate } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { advanceTime, builderCapacity, buildingLimit, corners, costValue, execute, fieldQuota, footprintCells, inBounds, isShore, isUnlocked,
   meanHeight, neighbors, rebuildOccupancy, recompute, slope, validateSnapshot, createState, access, authoredQuestProgressFor, openQuests, repeatQuestProgress, isFarBank, type SimState } from '@xay-nha/sim';
@@ -327,7 +327,7 @@ export class EconomyBot {
     }
     if (quest.action === 'BRIDGE') this.bridge();
     if (quest.farBank && this.s.snapshot.bridges.some(bridge => bridge.status === 'ACTIVE')) {
-      if (this.template.mapKind === 'city') {
+      if (hasCityFeatures(this.template.mapKind)) {
         const def = Object.values(catalog.buildings).find(building => building.mapKinds.includes('city') && building.baseRatePerHour && building.unlockLevel <= this.s.snapshot.progress.level
           && this.s.snapshot.buildings.filter(item => item.defId === building.id).length < buildingLimit(this.s, building));
         if (def) { this.siteCursor.delete(def.id); this.build(def.id, true); }
@@ -479,7 +479,7 @@ export class EconomyBot {
       for (let minute = session.start; minute <= session.end; minute++) {
         this.now = minute * MINUTE; advanceTime(this.s, this.now); this.captureLevels();
         const pending = this.pending(), at = (action: string) => pending.find(item => item.action === action);
-        if (this.template.mapKind === 'city') {
+        if (hasCityFeatures(this.template.mapKind)) {
           const clear = at('CLEAR'), road = at('ROAD'), terraform = at('TERRAFORM');
           if (clear) this.command('CLEAR_ENV', { envIds: this.s.env.filter(env => env.assetId.startsWith('tree') && isUnlocked(this.s, env.cell) && !this.s.snapshot.delta.removedEnvIds.includes(env.id)).slice(0, clear.target).map(env => env.id) });
           if (road) {
@@ -494,7 +494,9 @@ export class EconomyBot {
           this.claim();
           if ((minute - session.start) % 5 === 0 || minute === session.end || !this.s.snapshot.progress.tutorialDone) this.city();
           this.infrastructure();
-        } else this.farm(session, minute);
+        }
+        // Town runs both loops in the same minute: the city loop above, then the farm loop.
+        if (hasFarmFeatures(this.template.mapKind)) this.farm(session, minute);
         this.claim();
       }
       if (this.schedule[index + 1]?.day !== session.day) this.daily.push({ day: session.day, level: this.s.snapshot.progress.level, cash: this.s.snapshot.wallet.cash,

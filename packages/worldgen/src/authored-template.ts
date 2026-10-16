@@ -1,4 +1,4 @@
-import { CellFlag, Surface, WorldTemplateSchema, type Cell, type WorldTemplate } from '@xay-nha/contracts';
+import { CellFlag, Surface, WorldTemplateSchema, type Cell, type MapKind, type WorldTemplate } from '@xay-nha/contracts';
 import { createTestTemplate } from './fixture';
 import { encodeLayers, type DecodedLayers } from './layers';
 import { hash32 } from './random';
@@ -6,7 +6,7 @@ import { rasterizeWater, zoneOfCell } from './geometry';
 import { validateTemplate } from './validator';
 
 export interface AuthoredLayout {
-  schemaVersion: 1; provisional: true; kind: 'authored-fixture'; mapKind: 'farm' | 'city'; mapId: string; seed: number;
+  schemaVersion: 1; provisional: true; kind: 'authored-fixture'; mapKind: MapKind; mapId: string; seed: number;
   waterLevelDm: number; water: WorldTemplate['water']; startZones: number[]; entryCells: Cell[];
   roads: Cell[][]; suggestedLots: NonNullable<WorldTemplate['suggestedLots']>;
   bankRegions?: WorldTemplate['bankRegions'];
@@ -49,7 +49,7 @@ const base = (density: number): Scatter => [
   { biome: 2, category: 'rock_large', densityPerCell: 0.02, assetIds: ['rock_large_01', 'rock_large_02'], rules: { maxSlopeDm: 60 } },
   { biome: 2, category: 'tree_conifer', densityPerCell: 0.08, assetIds: trees.conifer, rules: { maxSlopeDm: 40 } },
 ];
-const AUTHORED_SCATTER: Record<'city' | 'farm', Scatter> = { city: base(0.035), farm: base(0.045) };
+const AUTHORED_SCATTER: Record<MapKind, Scatter> = { city: base(0.035), farm: base(0.045), town: base(0.04) };
 
 /** Terrain authoring (G1 fixture, G3 maps, and D039 random maps). */
 export function buildAuthoredTemplate(layout: AuthoredLayout): WorldTemplate {

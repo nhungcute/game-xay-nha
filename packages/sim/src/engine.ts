@@ -1,4 +1,4 @@
-import { CellFlag, CommandSchema, Surface, WorldSnapshotSchema, cellIndex, decodeInt16, decodeUint8, encodeInt16, encodeUint8, vertIndex, type Command, type CommandResult, type Cost, type ErrorCode, type GameEvent, type StatePatch, type ZoneDelta } from '@xay-nha/contracts';
+import { CellFlag, CommandSchema, hasCityFeatures, Surface, WorldSnapshotSchema, cellIndex, decodeInt16, decodeUint8, encodeInt16, encodeUint8, vertIndex, type Command, type CommandResult, type Cost, type ErrorCode, type GameEvent, type StatePatch, type ZoneDelta } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { RuleError, addCost, addXp, cashXp, claimedQuestIds, event, guard, openQuests, tutorialActive, pay, refund, requireEditable, requireLevel, zeroCost } from './common';
 import { construction } from './construction';
@@ -53,7 +53,7 @@ function administrative(s: SimState, cmd: Command, now: number): Cost | undefine
     event(s,'UNLOCK_ZONE','zone'); return cost;
   }
   if (cmd.type === 'COLLECT') {
-    guard(s.template.mapKind === 'city','WRONG_MAP');
+    guard(hasCityFeatures(s.template.mapKind),'WRONG_MAP');
     let ids = cmd.payload.buildingIds;
     // D028: "collect all" (empty list) no longer needs a bank.
     if (!ids.length) {
