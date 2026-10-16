@@ -396,6 +396,29 @@ Lưới an toàn chống kẹt: khi tiền mặt **dưới $150** và không cò
 - XP thưởng = `round(2 × √tiền_thưởng)`.
 - Tất cả hằng số trên phải nằm trong `economy.v1.json` và được kiểm bằng `sim-economy` tại G3.
 
+### 10.4 Thị trấn (map thứ 3: thành phố + đồng quê, D047)
+
+Mọi công trình, công cụ và hành động của Thành phố **và** Quê đều dùng được (không danh sách theo id: `kindAllows(mapKinds, 'town')` chấp nhận mọi mục; công trình/ cầu/ đường tier chỉ gắn city hoặc farm vẫn dùng được; khi hai map khác nhau lấy luật **rộng hơn**, vd cầu bê tông, đường tier 2–3). Thu tiền COLLECT và nhà/dân số theo luật Thành phố; cuốc/trồng/thu hoạch/bán/sản xuất/kho/ruộng theo luật Quê. Bảng XP = bảng Thành phố (chậm hơn Quê; bù cho thu nhập cộng dồn). Bản đồ luôn ngẫu nhiên (D039, nước ≈20%). Nhiệm vụ lặp: hợp của hai bộ mẫu; thu nhập tham chiếu = tổng rate thành phố + thu nhập ruộng.
+
+| # | Nhiệm vụ | Thưởng | Tân thủ |
+|---|---|---|---|
+| 1 | Chặt 3 cây | $100, 20 XP | có |
+| 2 | Làm 6 ô đường | $100, 10 XP | có |
+| 3 | Xây Nhà nông | $100 | có (xây ngay) |
+| 4 | Cuốc 6 ô đất | $50, 10 XP | có |
+| 5 | Gieo Rau cải (chín sau 20 giây) | $30 | có |
+| 6 | Xây Nhà nhỏ | $150 | có (xây ngay) |
+| 7 | Thu hoạch | $50 | |
+| 8 | Xây Chợ và nối đường | $100 | |
+| 9 | Xây Tạp hóa | $200 | |
+| 10 | Thu tiền lần đầu | $100 | |
+| 11 | Bán 10 nông sản ở chợ | $100 | |
+| 12 | Có 12 dân | $300 | |
+| 13 | Kè 4 ô bờ nước | $300, 10 đá, 10 XP | |
+| 14 | Bắc một cây cầu gỗ | $800 | |
+
+Thứ tự bảng đặt các nhiệm vụ tân thủ có hiệu ứng (Nhà nông xây ngay, rau cải 20 giây) trong 5 nhiệm vụ mở đầu hoặc mở ngay sau 1–2 lần nhận. Số liệu cân bằng bot: `docs/reports/TOWN-map.md`.
+
 ## 11. Núm tinh chỉnh
 
 Trong `model.mjs` (object `P`) và `economy.v1.json`: `paybackBaseH`, `paybackGrowth`, hệ số nhà ở/ngân hàng/xưởng, `cropP0`, `cropCycleExp`, `cropLevelGrowth`, giá vật liệu, `capBaseH`, `bankCapH`, `bankCapMax`, `limit[]` từng công trình, `builders(L)`, `speedupPct`, `refund`, `xpBuild`, `xpCollect`, XP/ô, `xpCumMap`, `levelReward`, `zoneCost`, `zoneLevel`, mọi dòng trong bảng công trình/cây trồng/xưởng.

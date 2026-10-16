@@ -1,0 +1,48 @@
+{
+  "base": "http://127.0.0.1:5202",
+  "mode": "online",
+  "at": "2026-10-16T14:51:41.710Z",
+  "runs": {
+    "maps-1440x900": [
+      {
+        "cls": "map-card city",
+        "title": "Thành phố",
+        "button": "Chơi tiếp",
+        "disabled": false
+      },
+      {
+        "cls": "map-card farm",
+        "title": "Quê",
+        "button": "Chơi tiếp",
+        "disabled": false
+      },
+      {
+        "cls": "map-card town",
+        "title": "Thị trấn",
+        "button": "Tạo nhân vật",
+        "disabled": false
+      }
+    ],
+    "maps-pixel7": [
+      {
+        "cls": "map-card city",
+        "title": "Thành phố",
+        "button": "Chơi tiếp",
+        "disabled": false
+      },
+      {
+        "cls": "map-card farm",
+        "title": "Quê",
+        "button": "Chơi tiếp",
+        "disabled": false
+      },
+      {
+        "cls": "map-card town",
+        "title": "Thị trấn",
+        "button": "Tạo nhân vật",
+        "disabled": false
+      }
+    ]
+  },
+  "failures": []
+}

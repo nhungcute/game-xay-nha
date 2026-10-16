@@ -1,0 +1,194 @@
+{
+  "base": "http://127.0.0.1:5202",
+  "mode": "offline",
+  "at": "2026-10-16T14:50:48.756Z",
+  "runs": {
+    "1440x900": {
+      "mapKind": "town",
+      "mapId": "rnd-town-3416216104",
+      "tabs": [
+        "buildings",
+        "roads",
+        "farms",
+        "land",
+        "decorations",
+        "utilities"
+      ],
+      "farmTools": [
+        "Cuốc",
+        "Gieo",
+        "Thu hoạch",
+        "Chuồng gà$1,500205Cấp 3",
+        "Cối xay$3,0002020Cấp 5",
+        "Chuồng bò$6,0004020Cấp 7",
+        "Lò bánh$12,0002040Cấp 9"
+      ],
+      "buildingCards": [
+        "house_small",
+        "shop_grocery",
+        "house_town",
+        "shop_cafe",
+        "shop_restaurant",
+        "bank",
+        "house_apartment",
+        "shop_supermarket",
+        "hotel",
+        "office_tower",
+        "market",
+        "farmhouse",
+        "landmark_culture",
+        "landmark_palace",
+        "landmark_castle"
+      ],
+      "placed": {
+        "road": [
+          81,
+          79
+        ],
+        "farmhouse": [
+          81,
+          76
+        ],
+        "house": [
+          74,
+          78
+        ],
+        "shop": [
+          72,
+          81
+        ],
+        "field": [
+          89,
+          66
+        ],
+        "planted": true
+      },
+      "collect": true,
+      "missions": {
+        "heading": "0/14",
+        "quests": [
+          {
+            "title": "Làm 6 ô đường",
+            "done": true
+          },
+          {
+            "title": "Xây Nhà nông",
+            "done": true
+          },
+          {
+            "title": "Cuốc 6 ô đất",
+            "done": true
+          },
+          {
+            "title": "Gieo Rau cải",
+            "done": true
+          },
+          {
+            "title": "Chặt 3 cây",
+            "done": false
+          }
+        ]
+      },
+      "afterClaim": {
+        "heading": "1/14",
+        "claimed": [
+          "town-2"
+        ]
+      }
+    },
+    "pixel7": {
+      "mapKind": "town",
+      "mapId": "rnd-town-1185877112",
+      "tabs": [
+        "buildings",
+        "roads",
+        "farms",
+        "land",
+        "decorations",
+        "utilities"
+      ],
+      "farmTools": [
+        "Cuốc",
+        "Gieo",
+        "Thu hoạch",
+        "Chuồng gà$1,500205Cấp 3",
+        "Cối xay$3,0002020Cấp 5",
+        "Chuồng bò$6,0004020Cấp 7",
+        "Lò bánh$12,0002040Cấp 9"
+      ],
+      "buildingCards": [
+        "house_small",
+        "shop_grocery",
+        "house_town",
+        "shop_cafe",
+        "shop_restaurant",
+        "bank",
+        "house_apartment",
+        "shop_supermarket",
+        "hotel",
+        "office_tower",
+        "market",
+        "farmhouse",
+        "landmark_culture",
+        "landmark_palace",
+        "landmark_castle"
+      ],
+      "placed": {
+        "road": [
+          65,
+          80
+        ],
+        "farmhouse": [
+          65,
+          77
+        ],
+        "house": [
+          58,
+          78
+        ],
+        "shop": [
+          54,
+          79
+        ],
+        "field": [
+          63,
+          72
+        ],
+        "planted": true
+      },
+      "collect": true,
+      "missions": {
+        "heading": "0/14",
+        "quests": [
+          {
+            "title": "Làm 6 ô đường",
+            "done": true
+          },
+          {
+            "title": "Xây Nhà nông",
+            "done": true
+          },
+          {
+            "title": "Cuốc 6 ô đất",
+            "done": true
+          },
+          {
+            "title": "Gieo Rau cải",
+            "done": true
+          },
+          {
+            "title": "Chặt 3 cây",
+            "done": false
+          }
+        ]
+      },
+      "afterClaim": {
+        "heading": "1/14",
+        "claimed": [
+          "town-2"
+        ]
+      }
+    }
+  },
+  "failures": []
+}
