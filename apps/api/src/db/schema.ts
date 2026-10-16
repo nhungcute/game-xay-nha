@@ -1,4 +1,5 @@
 import { bigint, boolean, customType, integer, jsonb, pgTable, text, timestamp, uuid, char } from 'drizzle-orm/pg-core';
+import type { MapKind } from '@xay-nha/contracts';
 
 const bytea = customType<{ data: Buffer; driverData: Buffer }>({ dataType: () => 'bytea' });
 
@@ -28,7 +29,7 @@ export const worlds = pgTable('worlds', {
   id: uuid('id').primaryKey(),
   accountId: uuid('account_id').notNull(),
   mapId: text('map_id').notNull(),
-  mapKind: text('map_kind').$type<'city' | 'farm'>().notNull(),
+  mapKind: text('map_kind').$type<MapKind>().notNull(),
   templateVersion: integer('template_version').notNull(),
   displayName: text('display_name').notNull(),
   tag: char('tag', { length: 4 }).notNull(),
