@@ -1,6 +1,6 @@
 {
-  "base": "http://127.0.0.1:5190",
-  "at": "2026-10-16T02:59:41.156Z",
+  "base": "http://127.0.0.1:5201",
+  "at": "2026-10-16T14:56:07.413Z",
   "shots": [
     {
       "kind": "city",
@@ -82,44 +82,81 @@
     },
     {
       "kind": "city",
+      "landmark": "rome",
+      "shot": "close",
+      "hour": "13h",
+      "file": "docs/evidence/g4/landmarks/landmark_rome-close-13h.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "rome",
+      "shot": "close",
+      "hour": "23h",
+      "file": "docs/evidence/g4/landmarks/landmark_rome-close-23h.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "rome",
+      "shot": "mid-scale",
+      "file": "docs/evidence/g4/landmarks/landmark_rome-mid-scale.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "rome",
+      "shot": "low-quality",
+      "file": "docs/evidence/g4/landmarks/landmark_rome-low-quality.jpg"
+    },
+    {
+      "kind": "city",
       "shot": "overview",
       "file": "docs/evidence/g4/landmarks/city-landmarks-overview.jpg"
+    },
+    {
+      "kind": "city",
+      "landmark": "rome",
+      "shot": "overview",
+      "file": "docs/evidence/g4/landmarks/landmark_rome-overview.jpg"
     },
     {
       "kind": "mobile",
       "target": "city-landmarks",
       "file": "docs/evidence/g4/landmarks/mobile-pixel7-city-landmarks.jpg"
+    },
+    {
+      "kind": "mobile",
+      "target": "landmark_rome",
+      "file": "docs/evidence/g4/landmarks/landmark_rome-mobile-pixel7.jpg"
     }
   ],
   "gates": {
     "gate1_draw_calls": {
       "pass": true,
-      "cityDrawCallIncrease": 3,
-      "details": "City +3 calls for 3 buildings (<=3)"
+      "cityDrawCallIncrease": 4,
+      "details": "City +4 calls for 4 buildings (<=4)"
     },
     "gate2_fps": {
       "pass": true,
-      "fpsBaseline": 36.6,
-      "fpsAfter": 35.1,
-      "fpsDrop": 1.5,
-      "noiseSpread": 1.4,
+      "fpsBaseline": 39.5,
+      "fpsAfter": 40.2,
+      "fpsDrop": -0.7,
+      "noiseSpread": 1.3,
       "tolerance": 3,
       "roundsBaseline": [
-        36.9,
-        36.6,
-        36
+        39.5,
+        39.4,
+        40.7
       ],
       "roundsAfter": [
-        35.1,
-        36.1,
-        34.7
+        40.3,
+        40.2,
+        39.8
       ],
-      "details": "Interleaved medians: baseline 36.6 -> after 35.1 (drop 1.5 <= tolerance 3.0 = max(3, 2 x noise 1.4))"
+      "details": "Interleaved medians: baseline 39.5 -> after 40.2 (drop -0.7 <= tolerance 3.0 = max(3, 2 x noise 1.3))"
     },
     "gate3_triangles_budget": {
       "pass": true,
-      "cityTriangles": 547504,
-      "details": "City triangles 547504 <= 1.5M"
+      "cityTriangles": 551526,
+      "details": "City triangles 551526 <= 1.5M"
     },
     "gate4_zero_console_errors": {
       "pass": true,

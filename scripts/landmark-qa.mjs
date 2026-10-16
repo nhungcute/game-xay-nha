@@ -1,6 +1,6 @@
 // D037 visual QA & automated gates: Iconic Landmarks verification.
-// Places the 3 landmark buildings via __debug PLACE_BUILDING on the city map:
-//   landmark_culture (7x6), landmark_palace (5x5), landmark_castle (8x4). (The farm Citadel was removed in D038.)
+// Places the 4 landmark buildings via __debug PLACE_BUILDING on the city map:
+//   landmark_culture (7x6), landmark_palace (5x5), landmark_castle (8x4), landmark_rome (10x9). (The farm Citadel was removed in D038.)
 // Captures close-up shots at 13:00 and 23:00, mid-range scale comparison against standard buildings,
 // high/low quality comparison, and Pixel 7 mobile viewport.
 // Automated gates:
@@ -38,6 +38,24 @@ const report = {
   errors: [],
 };
 
+// Runs in the page: try anchors on a 2-cell grid, nearest to `around` first; env objects in the way are cleared.
+function placeNear({ defId, around, autoFlattenHDm }) {
+  const candidates = [];
+  for (let x = 60; x <= 130; x += 2) for (let z = 18; z <= 90; z += 2) candidates.push([x, z]);
+  candidates.sort((a, b) => Math.hypot(a[0] - around[0], a[1] - around[1]) - Math.hypot(b[0] - around[0], b[1] - around[1]) || a[0] - b[0] || a[1] - b[1]);
+  let tried = 0;
+  for (const anchor of candidates) {
+    tried++;
+    for (let attempt = 0; attempt < 40; attempt++) {
+      const r = window.__debug.command('PLACE_BUILDING', { defId, anchor, rotation: 0, autoFlattenHDm });
+      if (r.accepted) return { accepted: true, anchor, tried };
+      if (r.code === 'OCCUPIED' && typeof r.detail === 'string' && !r.detail.startsWith('b_')) window.__debug.command('CLEAR_ENV', { envIds: [r.detail] });
+      else break;
+    }
+  }
+  return { accepted: false, tried };
+}
+
 async function loadWorld(page, kind) {
   const mapId = kind === 'city' ? 'city-coast-01' : 'farm-valley-01';
   const template = await readFile(`apps/web/public/worlds/${mapId}/template.v2.json`, 'utf8');
@@ -72,7 +90,7 @@ try {
   await loadWorld(page, 'city');
 
   // Baseline metrics before placing landmarks: set fixed overview camera and wait for FPS timer
-  await page.evaluate(() => window.__debug.command('BUY_MATERIAL', { wood: 500, stone: 500 }));
+  await page.evaluate(() => window.__debug.command('BUY_MATERIAL', { wood: 1500, stone: 1500 }));
   await page.evaluate(() => window.__debug.timeOfDay(13));
   await page.evaluate(() => window.__debug.setQuality('high'));
   await page.evaluate(() => window.__debug.camera(65 * 2, 55 * 2, 100, 35, 45));
@@ -113,9 +131,20 @@ try {
     { id: 'landmark_palace', name: 'palace', anchor: [80, 44], size: [5, 5], h: 45, buildSec: 10800 },
     { id: 'landmark_culture', name: 'culture', anchor: [83, 51], size: [7, 6], h: 45, buildSec: 7200 },
     { id: 'landmark_castle', name: 'castle', anchor: [85, 37], size: [8, 4], h: 45, buildSec: 14400 },
+    // Rome is a whole quarter: farther cameras, and its evidence files are named after the landmark id
+    { id: 'landmark_rome', name: 'rome', anchor: [100, 50], search: true, size: [10, 9], h: 45, buildSec: 21600, file: 'landmark_rome', cam: { close: 52, mid: 110, low: 58 } },
   ];
 
   for (const b of cityPlacements) {
+    if (b.search) {
+      // A 10x9 quarter does not fit a hand-picked anchor reliably (neighbouring env objects veto the auto-flatten),
+      // so walk the unlocked land outwards from the preferred spot and take the first anchor that is accepted.
+      const found = await page.evaluate(placeNear, { defId: b.id, around: b.anchor, autoFlattenHDm: b.h });
+      if (!found.accepted) throw new Error(`Failed to place ${b.id} near [${b.anchor}]`);
+      b.anchor = found.anchor;
+      console.log(`Placed ${b.id} at [${b.anchor[0]}, ${b.anchor[1]}] (searched ${found.tried} anchors)`);
+      continue;
+    }
     const res = await page.evaluate(({ defId, anchor, autoFlattenHDm }) => {
       for (let attempt = 0; attempt < 30; attempt++) {
         const r = window.__debug.command('PLACE_BUILDING', { defId, anchor, rotation: 0, autoFlattenHDm });
@@ -133,7 +162,7 @@ try {
   }
 
   // Advance time to complete construction of all buildings
-  await page.evaluate(() => window.__debug.advance(15000 * 1000));
+  await page.evaluate(() => window.__debug.advance(25000 * 1000));
   // Return camera to the exact same overview position and wait for FPS timer
   await page.evaluate(() => window.__debug.camera(65 * 2, 55 * 2, 100, 35, 45));
   await page.waitForTimeout(2500);
@@ -147,7 +176,7 @@ try {
   });
 
   const cityDrawCallIncrease = cityMetricsAfter.drawCalls - baseMetrics.drawCalls;
-  console.log(`City draw calls increase: ${cityDrawCallIncrease} (across 3 landmarks, need <= 3, average <= 1 each)`);
+  console.log(`City draw calls increase: ${cityDrawCallIncrease} (across ${cityPlacements.length} landmarks, need <= ${cityPlacements.length}, average <= 1 each)`);
 
   // Verify decor bonus applied to near building while far building remains unchanged
   const postDecorRates = await page.evaluate(({ nearId, farId }) => {
@@ -156,7 +185,9 @@ try {
     const palace = snap.buildings.find(b => b.defId === 'landmark_palace');
     const castle = snap.buildings.find(b => b.defId === 'landmark_castle');
     const culture = snap.buildings.find(b => b.defId === 'landmark_culture');
+    const rome = snap.buildings.find(b => b.defId === 'landmark_rome');
     return {
+      romeActive: rome?.status === 'ACTIVE',
       palaceActive: palace?.status === 'ACTIVE',
       castleActive: castle?.status === 'ACTIVE',
       cultureActive: culture?.status === 'ACTIVE',
@@ -174,31 +205,33 @@ try {
   for (const b of cityPlacements) {
     const cx = (b.anchor[0] + b.size[0] / 2) * 2;
     const cz = (b.anchor[1] + b.size[1] / 2) * 2;
+    const cam = b.cam ?? { close: 30, mid: 75, low: 35 };
+    const prefix = b.file ?? `city-${b.name}`;
 
     // 1. Close-up at 13h (day) and 23h (night)
     for (const [hourName, hour] of [['13h', 13], ['23h', 23]]) {
       await page.evaluate(h => window.__debug.timeOfDay(h), hour);
-      await page.evaluate(([x, z]) => window.__debug.camera(x, z, 30, 25, 42), [cx, cz]);
+      await page.evaluate(([x, z, d]) => window.__debug.camera(x, z, d, 25, 42), [cx, cz, cam.close]);
       await page.waitForTimeout(800);
 
-      const shotFile = `${OUT}/city-${b.name}-close-${hourName}.jpg`;
+      const shotFile = `${OUT}/${prefix}-close-${hourName}.jpg`;
       await page.screenshot({ path: shotFile, type: 'jpeg', quality: 85 });
       report.shots.push({ kind: 'city', landmark: b.name, shot: 'close', hour: hourName, file: shotFile });
     }
 
     // 2. Mid-range scale comparison against neighbouring townhouses/apartments
     await page.evaluate(() => window.__debug.timeOfDay(13));
-    await page.evaluate(([x, z]) => window.__debug.camera(x - 15, z, 75, 40, 48), [cx, cz]);
+    await page.evaluate(([x, z, d]) => window.__debug.camera(x - 15, z, d, 40, 48), [cx, cz, cam.mid]);
     await page.waitForTimeout(800);
-    const midShotFile = `${OUT}/city-${b.name}-mid-scale.jpg`;
+    const midShotFile = `${OUT}/${prefix}-mid-scale.jpg`;
     await page.screenshot({ path: midShotFile, type: 'jpeg', quality: 85 });
     report.shots.push({ kind: 'city', landmark: b.name, shot: 'mid-scale', file: midShotFile });
 
     // 3. Low quality comparison
     await page.evaluate(() => window.__debug.setQuality('low'));
-    await page.evaluate(([x, z]) => window.__debug.camera(x, z, 35, 25, 42), [cx, cz]);
+    await page.evaluate(([x, z, d]) => window.__debug.camera(x, z, d, 25, 42), [cx, cz, cam.low]);
     await page.waitForTimeout(800);
-    const lowShotFile = `${OUT}/city-${b.name}-low-quality.jpg`;
+    const lowShotFile = `${OUT}/${prefix}-low-quality.jpg`;
     await page.screenshot({ path: lowShotFile, type: 'jpeg', quality: 85 });
     report.shots.push({ kind: 'city', landmark: b.name, shot: 'low-quality', file: lowShotFile });
 
@@ -211,6 +244,17 @@ try {
   const cityOverviewFile = `${OUT}/city-landmarks-overview.jpg`;
   await page.screenshot({ path: cityOverviewFile, type: 'jpeg', quality: 85 });
   report.shots.push({ kind: 'city', shot: 'overview', file: cityOverviewFile });
+
+  // Rome overview: the whole quarter against its surroundings, plus a high 3/4 view from the front
+  const rome = cityPlacements.find(b => b.id === 'landmark_rome');
+  if (rome) {
+    const rx = (rome.anchor[0] + rome.size[0] / 2) * 2, rz = (rome.anchor[1] + rome.size[1] / 2) * 2;
+    await page.evaluate(([x, z]) => window.__debug.camera(x, z, 85, 45, 30), [rx, rz]);
+    await page.waitForTimeout(1000);
+    const romeOverviewFile = `${OUT}/landmark_rome-overview.jpg`;
+    await page.screenshot({ path: romeOverviewFile, type: 'jpeg', quality: 85 });
+    report.shots.push({ kind: 'city', landmark: 'rome', shot: 'overview', file: romeOverviewFile });
+  }
 
   // Interleaved baseline/after FPS comparison on the live city page (before the context closes)
   const loadState = snap => page.evaluate(async s => {
@@ -232,7 +276,7 @@ try {
   mobilePage.on('pageerror', e => { report.errors.push(`mobile-city: ${e.message}`); });
   await loadWorld(mobilePage, 'city');
   await mobilePage.evaluate(() => {
-    window.__debug.command('BUY_MATERIAL', { wood: 500, stone: 500 });
+    window.__debug.command('BUY_MATERIAL', { wood: 1500, stone: 1500 });
     window.__debug.command('UNLOCK_ZONE', { zoneId: 21 });
     window.__debug.command('UNLOCK_ZONE', { zoneId: 29 });
     for (let i = 0; i < 20; i++) {
@@ -245,7 +289,12 @@ try {
       if (p.accepted) break;
       if (p.detail && typeof p.detail === 'string') window.__debug.command('CLEAR_ENV', { envIds: [p.detail] });
     }
-    window.__debug.advance(15000 * 1000);
+    window.__debug.command('UNLOCK_ZONE', { zoneId: 30 });
+  });
+  const mobileRome = await mobilePage.evaluate(placeNear, { defId: 'landmark_rome', around: [100, 50], autoFlattenHDm: 45 });
+  if (!mobileRome.accepted) throw new Error('Failed to place landmark_rome on the Pixel 7 page');
+  await mobilePage.evaluate(() => {
+    window.__debug.advance(25000 * 1000);
     window.__debug.timeOfDay(13);
     window.__debug.camera(81 * 2, 48 * 2, 50, 30, 45);
   });
@@ -253,6 +302,11 @@ try {
   const mobileCityFile = `${OUT}/mobile-pixel7-city-landmarks.jpg`;
   await mobilePage.screenshot({ path: mobileCityFile, type: 'jpeg', quality: 85 });
   report.shots.push({ kind: 'mobile', target: 'city-landmarks', file: mobileCityFile });
+  await mobilePage.evaluate(([x, z]) => window.__debug.camera(x, z, 62, 30, 42), [(mobileRome.anchor[0] + 5) * 2, (mobileRome.anchor[1] + 4.5) * 2]);
+  await mobilePage.waitForTimeout(1500);
+  const mobileRomeFile = `${OUT}/landmark_rome-mobile-pixel7.jpg`;
+  await mobilePage.screenshot({ path: mobileRomeFile, type: 'jpeg', quality: 85 });
+  report.shots.push({ kind: 'mobile', target: 'landmark_rome', file: mobileRomeFile });
   await mobileContext.close();
 
   // ==========================================
@@ -261,12 +315,12 @@ try {
   console.log('=== Verifying Automated Gates ===');
 
   // Gate 1: Draw calls increase <= 1 per building
-  // City has 3 buildings -> drawCalls increase <= 3
-  const gate1Pass = cityDrawCallIncrease <= 3;
+  // City has 4 landmarks -> drawCalls increase <= 4
+  const gate1Pass = cityDrawCallIncrease <= cityPlacements.length;
   report.gates.gate1_draw_calls = {
     pass: gate1Pass,
     cityDrawCallIncrease,
-    details: `City +${cityDrawCallIncrease} calls for 3 buildings (<=3)`,
+    details: `City +${cityDrawCallIncrease} calls for ${cityPlacements.length} buildings (<=${cityPlacements.length})`,
   };
   console.log(`Gate 1 (Draw calls increase <= 1 per landmark): ${gate1Pass ? 'PASS' : 'FAIL'} (${report.gates.gate1_draw_calls.details})`);
 
@@ -306,7 +360,7 @@ try {
   console.log(`Gate 4 (Zero console errors): ${gate4Pass ? 'PASS' : 'FAIL'} (${report.errors.length} errors)`);
 
   // Gate 5: Decor effect verified
-  const gate5Pass = postDecorRates.palaceActive && postDecorRates.castleActive && postDecorRates.cultureActive && decorBoostNear && farUnchanged;
+  const gate5Pass = postDecorRates.palaceActive && postDecorRates.castleActive && postDecorRates.cultureActive && postDecorRates.romeActive && decorBoostNear && farUnchanged;
   report.gates.gate5_decor_effect = {
     pass: gate5Pass,
     decorBoostNear,
