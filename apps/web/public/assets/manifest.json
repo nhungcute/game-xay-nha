@@ -960,6 +960,23 @@
       "hash": "1cbf105f31d9"
     },
     {
+      "id": "landmark_rome",
+      "file": "models/authored/landmark_rome.glb",
+      "source": "https://sketchfab.com/3d-models/rome-river-side-8521d86dcd9043eba0b518ccab430d0f",
+      "author": "Shahriar Shahrabi",
+      "license": "CC-BY-4.0",
+      "url": "https://sketchfab.com/3d-models/rome-river-side-8521d86dcd9043eba0b518ccab430d0f",
+      "modified": true,
+      "placeholder": false,
+      "category": "building",
+      "footprint": [
+        10,
+        9
+      ],
+      "triangles": 10758,
+      "hash": "99a462acf84f"
+    },
+    {
       "id": "veg_greens_seed",
       "file": "models/veg_greens_seed.glb",
       "source": "Procedural low-poly placeholder generated in this repository",
