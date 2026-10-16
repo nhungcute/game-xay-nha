@@ -352,6 +352,210 @@
         "xp": 0,
         "tutorial": false
       }
+    ],
+    "town": [
+      {
+        "id": "town-1",
+        "nameKey": "quest.town-1",
+        "action": "CLEAR",
+        "kind": "tree",
+        "target": 3,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 20,
+        "tutorial": true
+      },
+      {
+        "id": "town-2",
+        "nameKey": "quest.town-2",
+        "action": "ROAD",
+        "kind": "road_cells",
+        "target": 6,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 10,
+        "tutorial": true
+      },
+      {
+        "id": "town-3",
+        "nameKey": "quest.town-3",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "farmhouse",
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "town-4",
+        "nameKey": "quest.town-4",
+        "action": "TILL",
+        "kind": "cells",
+        "target": 6,
+        "reward": {
+          "cash": 50,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 10,
+        "tutorial": true
+      },
+      {
+        "id": "town-5",
+        "nameKey": "quest.town-5",
+        "action": "PLANT",
+        "kind": "crop",
+        "target": 1,
+        "cropId": "veg_greens",
+        "reward": {
+          "cash": 30,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "town-6",
+        "nameKey": "quest.town-6",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "house_small",
+        "reward": {
+          "cash": 150,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": true
+      },
+      {
+        "id": "town-7",
+        "nameKey": "quest.town-7",
+        "action": "HARVEST",
+        "kind": "first_harvest",
+        "target": 1,
+        "reward": {
+          "cash": 50,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "town-8",
+        "nameKey": "quest.town-8",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "market",
+        "requiresRoad": true,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "town-9",
+        "nameKey": "quest.town-9",
+        "action": "BUILD",
+        "kind": "building",
+        "target": 1,
+        "buildingId": "shop_grocery",
+        "reward": {
+          "cash": 200,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "town-10",
+        "nameKey": "quest.town-10",
+        "action": "COLLECT",
+        "kind": "first_collection",
+        "target": 1,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "town-11",
+        "nameKey": "quest.town-11",
+        "action": "SELL",
+        "kind": "farm_items",
+        "target": 10,
+        "reward": {
+          "cash": 100,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "town-12",
+        "nameKey": "quest.town-12",
+        "action": "POPULATION",
+        "kind": "population",
+        "target": 12,
+        "reward": {
+          "cash": 300,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      },
+      {
+        "id": "town-13",
+        "nameKey": "quest.town-13",
+        "action": "EMBANK",
+        "kind": "cells",
+        "target": 4,
+        "reward": {
+          "cash": 300,
+          "wood": 0,
+          "stone": 10
+        },
+        "xp": 10,
+        "tutorial": false
+      },
+      {
+        "id": "town-14",
+        "nameKey": "quest.town-14",
+        "action": "BRIDGE",
+        "kind": "bridge_wood",
+        "target": 1,
+        "reward": {
+          "cash": 800,
+          "wood": 0,
+          "stone": 0
+        },
+        "xp": 0,
+        "tutorial": false
+      }
     ]
   }
 }

@@ -39,7 +39,7 @@ const quest = z.object({
 export const CatalogSchema: z.ZodType<ContentCatalog> = z.object({
   contentVersion: positive,
   buildings: z.record(building), crops: z.record(crop), recipes: z.record(recipe),
-  items: z.record(item), bridges: z.record(bridge), quests: z.object({ city: z.array(quest), farm: z.array(quest) }).strict(),
+  items: z.record(item), bridges: z.record(bridge), quests: z.object({ city: z.array(quest), farm: z.array(quest), town: z.array(quest) }).strict(),
 }).strict().superRefine((catalog, context) => {
   for (const key of ['buildings', 'crops', 'recipes', 'items', 'bridges'] as const) {
     for (const [id, value] of Object.entries(catalog[key])) {

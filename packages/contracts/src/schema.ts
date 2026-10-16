@@ -4,7 +4,7 @@ import { GRID, VERTS, ZONE_CELLS, ZONES } from './grid.js';
 export const IntegerSchema = z.number().int().nonnegative().safe();
 export const TimestampSchema = IntegerSchema;
 export const IdSchema = z.string().min(1).max(128).regex(/^[A-Za-z0-9_-]+$/);
-export const MapKindSchema = z.enum(['city', 'farm']);
+export const MapKindSchema = z.enum(['city', 'farm', 'town']);
 export const CellSchema = z.tuple([IntegerSchema.max(GRID - 1), IntegerSchema.max(GRID - 1)]);
 export const RotationSchema = z.union([z.literal(0), z.literal(1), z.literal(2), z.literal(3)]);
 export const CostSchema = z.object({ cash: IntegerSchema, wood: IntegerSchema, stone: IntegerSchema }).strict();
