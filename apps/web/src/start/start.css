@@ -248,3 +248,14 @@
 }
 /* D027: username + PIN forms stack several fields; keep labels clear of the focused field above. */
 .entry-form .field+.field,.entry-form .field-hint+.field{margin-top:16px}
+
+/* Third map (town): three cards on wide screens, the town card spans the second row on tablets. */
+.start .map-card.town { --map-accent: #9a7324; }
+.entry-art.town { background-size: 200% auto; background-position: 50% 60%; }
+.town .map-symbol { background: #f1e8cf; }
+.start .town .map-play { background: #8a6a24; border-color: #8a6a24; }
+.start .town .map-play:hover:not(:disabled) { background: #725719; border-color: #725719; }
+.town .preview-avatar { background: #8a6a24; }
+.start .map-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .start .map-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .start .map-card.town { grid-column: 1 / -1; } }
+@media (max-width: 640px) { .start .map-cards { grid-template-columns: 1fr; } .start .map-card.town { grid-column: auto; } }

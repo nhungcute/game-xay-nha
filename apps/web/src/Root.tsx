@@ -27,19 +27,22 @@ const loadCharacterTemplate = async (c: CharacterSummary): Promise<WorldTemplate
 
 /** Offline random maps are opt-in (VITE_RANDOM_MAPS=1 or ?random=1) so the hand-authored offline slice stays the default. */
 const OFFLINE_RANDOM = import.meta.env.VITE_RANDOM_MAPS === '1' || (typeof location !== 'undefined' && new URLSearchParams(location.search).has('random'));
+/** Offline `?map=town` (or VITE_OFFLINE_MAP=town): the mixed city + countryside map, always randomly generated. */
+const OFFLINE_TOWN = import.meta.env.VITE_OFFLINE_MAP === 'town' || (typeof location !== 'undefined' && new URLSearchParams(location.search).get('map') === 'town');
+const OFFLINE_KIND: MapKind = OFFLINE_TOWN ? 'town' : 'farm';
 /** Generated once, stored with the offline save in IndexedDB; a reload keeps the same map. */
 async function loadOfflineTemplate(): Promise<WorldTemplate> {
-  if (!OFFLINE_RANDOM) return loadTemplate('/worlds/farm-g1/template.v1.json');
+  if (!OFFLINE_RANDOM && !OFFLINE_TOWN) return loadTemplate('/worlds/farm-g1/template.v1.json');
   const cache = new SnapshotCache();
   try {
     await cache.open();
     const stored = WorldTemplateSchema.safeParse(await cache.readKey(OFFLINE_TEMPLATE_KEY));
-    if (stored.success && validateTemplate(stored.data).length === 0) return stored.data;
-    const { template } = generateWorldTemplate('farm', crypto.getRandomValues(new Uint32Array(1))[0]!);
+    if (stored.success && stored.data.mapKind === OFFLINE_KIND && validateTemplate(stored.data).length === 0) return stored.data;
+    const { template } = generateWorldTemplate(OFFLINE_KIND, crypto.getRandomValues(new Uint32Array(1))[0]!);
     await cache.deleteKeys([OFFLINE_WORLD_KEY]); // an old save belongs to the previous map
     await cache.writeKey(OFFLINE_TEMPLATE_KEY, template);
     return template;
-  } catch { return generateWorldTemplate('farm', crypto.getRandomValues(new Uint32Array(1))[0]!).template; }
+  } catch { return generateWorldTemplate(OFFLINE_KIND, crypto.getRandomValues(new Uint32Array(1))[0]!).template; }
   finally { cache.close(); }
 }
 async function newOfflineMap(): Promise<void> {
@@ -51,7 +54,7 @@ async function newOfflineMap(): Promise<void> {
 type Screen = { name: 'boot' } | { name: 'maps' } | { name: 'register'; kind: MapKind } | { name: 'login' } | { name: 'game'; character: CharacterSummary };
 
 export function Root() {
-  if (OFFLINE) return <Game onNewMap={OFFLINE_RANDOM ? newOfflineMap : undefined} loader={async () => {
+  if (OFFLINE) return <Game onNewMap={OFFLINE_RANDOM || OFFLINE_TOWN ? newOfflineMap : undefined} loader={async () => {
     const template = await loadOfflineTemplate();
     return new WorldStore(template);
   }}/>;

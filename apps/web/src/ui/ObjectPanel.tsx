@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
-import { cellIndex, Surface, type Command, type CommandType } from '@xay-nha/contracts';
+import { cellIndex, kindAllows, Surface, type Command, type CommandType } from '@xay-nha/contracts';
 import { execute } from '@xay-nha/sim';
 import type { Focus, Tool } from '../game/ToolController';
 import type { WorldStore } from '../game/WorldStore';
@@ -60,7 +60,7 @@ export function describeFocus(state: State, focus: Focus): ObjectDescription | n
   if (focus.kind === 'road') {
     const tier = s.roadTier[i] as 0 | 1 | 2 | 3;
     if (!tier) return null;
-    const upgrades: ObjectAction[] = ([2, 3] as const).filter(next => next > tier && economy.roadTiers[next].mapKinds.includes(s.template.mapKind))
+    const upgrades: ObjectAction[] = ([2, 3] as const).filter(next => next > tier && kindAllows(economy.roadTiers[next].mapKinds, s.template.mapKind))
       .map(next => ({ kind: 'command', key: `tier-${next}`, label: `Nâng lên ${ROAD_TIER_NAMES[next]}`, type: 'BUILD_ROAD',
         payload: { cells: [focus.cell], tier: next }, needLevel: economy.roadTiers[next].unlockLevel }));
     return {

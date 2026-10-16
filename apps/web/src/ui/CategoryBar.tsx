@@ -1,5 +1,5 @@
 import { catalog } from '@xay-nha/content';
-import type { BuildingDef, MapKind } from '@xay-nha/contracts';
+import { hasFarmFeatures, kindAllows, type BuildingDef, type MapKind } from '@xay-nha/contracts';
 import { buildingLimit } from '@xay-nha/sim';
 import type { Tool } from '../game/ToolController';
 import type { WorldStore } from '../game/WorldStore';
@@ -36,7 +36,7 @@ export function categoryOf(tool: Tool, buildingId: string): Category | null {
 }
 /** Tabs shown for a map kind: farm-only ones are dropped on the city, and a tab with no tool and no building is hidden (no empty tray). */
 export function visibleCategories(kind: MapKind) {
-  return CATEGORIES.filter(c => (!c.farmOnly || kind === 'farm') && (TOOLS[c.id].length > 0 || Object.values(catalog.buildings).some(d => d.mapKinds.includes(kind) && buildingCategory(d) === c.id)));
+  return CATEGORIES.filter(c => (!c.farmOnly || hasFarmFeatures(kind)) && (TOOLS[c.id].length > 0 || Object.values(catalog.buildings).some(d => kindAllows(d.mapKinds, kind) && buildingCategory(d) === c.id)));
 }
 export function categoryTools(category: Category): Tool[] { return TOOLS[category]; }
 
@@ -60,7 +60,7 @@ interface TrayProps {
 }
 export function CategoryTray({ state, category, tool, buildingId, hintTool, onTool, onBuilding }: TrayProps) {
   const kind = state.template.mapKind, level = state.snapshot.progress.level;
-  const defs = Object.values(catalog.buildings).filter(d => d.mapKinds.includes(kind) && buildingCategory(d) === category);
+  const defs = Object.values(catalog.buildings).filter(d => kindAllows(d.mapKinds, kind) && buildingCategory(d) === category);
   const label = CATEGORIES.find(c => c.id === category)!.label;
   return <div className="hud3-pill hud3-tray" role="group" aria-label={label}>
     {TOOLS[category].map(item => <button type="button" key={item} className={`hud3-tool ${hintTool === item && tool !== item ? 'is-hint' : ''}`} data-tool={item}

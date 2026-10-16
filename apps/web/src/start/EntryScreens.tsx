@@ -26,8 +26,12 @@ const MAPS = {
     features: ['Xây nhà', 'Kinh doanh', 'Thu nhập'], icon: 'home' as const, number: '01' },
   farm: { title: 'Quê', label: 'Miền xanh', text: 'Một khu vườn, vài luống rau và những mùa thu hoạch. Tự tay vun trồng cuộc sống bình yên.',
     features: ['Trồng trọt', 'Chăn nuôi', 'Sản xuất'], icon: 'leaf' as const, number: '02' },
-};
-const MAP_KINDS = ['city', 'farm'] as const;
+  town: { title: 'Thị trấn', label: 'Phố và ruộng', text: 'Phố xá lẫn đồng quê trên một vùng đất ngẫu nhiên. Có đủ mọi công trình: nhà cửa, cửa hàng và cả ruộng vườn.',
+    features: ['Phố + ruộng', 'Mọi công trình', 'Bản đồ ngẫu nhiên'], icon: 'town' as const, number: '03' },
+} satisfies Record<MapKind, unknown>;
+const MAP_KINDS = ['city', 'farm', 'town'] as const;
+/** Kinds without an authored template: the server always generates them, so they never wait for /api/maps. */
+const RANDOM_ONLY: readonly MapKind[] = ['town'];
 const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2).map(word => [...word][0] ?? '').join('').toLocaleUpperCase('vi');
 const PIN = /^\d{4,6}$/;
 
@@ -57,12 +61,12 @@ export function MapSelect({ maps, characters, signedIn, busyKind, onPlay, onCrea
     <section className="entry-map-section" aria-labelledby="map-title">
       <div className="entry-section-heading"><div><p className="entry-eyebrow">01 / CHỌN NƠI BẮT ĐẦU</p>
         <h2 id="map-title">Chọn vùng đất</h2><p>Mỗi bản đồ là một nhân vật riêng. Bạn muốn bắt đầu ở đâu?</p></div>
-        <span className="entry-section-mark">Hai vùng đất, hai cách sống.</span>
+        <span className="entry-section-mark">Ba vùng đất, ba cách sống.</span>
       </div>
       <div className="map-cards">
         {MAP_KINDS.map(kind => {
           const map = MAPS[kind], character = characters.find(item => item.mapKind === kind);
-          const available = maps.some(item => item.mapKind === kind);
+          const available = RANDOM_ONLY.includes(kind) || maps.some(item => item.mapKind === kind);
           return <article key={kind} className={`map-card ${kind}`} aria-labelledby={`map-${kind}`}>
             <div className="map-card-visual"><MapArtwork kind={kind}/>
               <span className="map-place-label">{map.number} <span>/</span> {map.label}</span>
@@ -129,7 +133,7 @@ export function RegisterForm({ kind, onBack, onLogin, onRegistered }: {
         <div className="character-preview-art"><MapArtwork kind={kind}/><span className="preview-map"><EntryIcon name={map.icon}/>{map.title}</span></div>
         <div className="character-preview-body"><span className="preview-avatar">{name.trim() ? initials(name) : <EntryIcon name={map.icon}/>}</span>
           <p className="entry-eyebrow">NGƯỜI HÀNG XÓM MỚI</p><h2>{name.trim() || 'Tên của bạn'}</h2>
-          <p>{kind === 'city' ? 'Một thị trưởng tương lai, bắt đầu từ ngôi nhà nhỏ.' : 'Một người làm vườn, với cả mùa xanh phía trước.'}</p>
+          <p>{kind === 'city' ? 'Một thị trưởng tương lai, bắt đầu từ ngôi nhà nhỏ.' : kind === 'town' ? 'Một người lập ấp, vừa xây phố vừa trồng ruộng.' : 'Một người làm vườn, với cả mùa xanh phía trước.'}</p>
           <div className="preview-starting"><span>Cấp khởi đầu<strong>01</strong></span><span>Vốn khởi đầu<strong>{money(2000)}</strong></span></div>
         </div>
       </aside>

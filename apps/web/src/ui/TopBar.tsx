@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { economy } from '@xay-nha/content';
+import { hasCityFeatures, hasFarmFeatures, type MapKind } from '@xay-nha/contracts';
 import { authoredQuestProgressFor, openQuests, capHours, inventoryCount, populationAndJobs, repeatQuestProgress, storageCapacity } from '@xay-nha/sim';
 import type { WorldStore } from '../game/WorldStore';
 import { money, t } from '../i18n';
@@ -9,11 +10,12 @@ import type { GamePanel } from './panels';
 type State = WorldStore['state'];
 
 /** Titles shown under the player's name, by level (one ladder per map). */
-const TITLES: Record<'city' | 'farm', [number, string][]> = {
+const TITLES: Record<MapKind, [number, string][]> = {
   city: [[1, 'Người lập làng'], [5, 'Trưởng thôn'], [10, 'Thị trưởng'], [15, 'Kiến trúc sư đô thị'], [20, 'Huyền thoại thành phố']],
   farm: [[1, 'Người khai hoang'], [5, 'Nông dân chăm chỉ'], [10, 'Chủ trang trại'], [15, 'Phú nông'], [20, 'Lão nông huyền thoại']],
+  town: [[1, 'Người lập ấp'], [5, 'Trưởng ấp'], [10, 'Chủ thị trấn'], [15, 'Điền chủ thành thị'], [20, 'Huyền thoại thị trấn']],
 };
-export function playerTitle(kind: 'city' | 'farm', level: number): string {
+export function playerTitle(kind: MapKind, level: number): string {
   return TITLES[kind].filter(([from]) => level >= from).at(-1)![1];
 }
 
@@ -23,11 +25,12 @@ export function notifications(state: State): string[] {
   for (const quest of openQuests(state)) if (authoredQuestProgressFor(state, quest.id) >= quest.target) items.push(`Nhiệm vụ "${t(quest.nameKey)}" đã xong — nhận thưởng.`);
   const repeatDone = s.progress.repeat?.active.filter(q => repeatQuestProgress(state, q) >= q.target).length ?? 0;
   if (repeatDone) items.push(`${repeatDone} nhiệm vụ hằng ngày có thể nhận thưởng.`);
-  if (s.mapKind === 'city') {
+  if (hasCityFeatures(s.mapKind)) {
     const cap = capHours(state);
     const ready = s.buildings.filter(b => (state.rates[b.id] ?? 0) > 0 && (b.accrued ?? 0) >= (state.rates[b.id] ?? 0) * cap * economy.income.bubbleFraction).length;
     if (ready) items.push(`${ready} công trình có tiền chờ thu.`);
-  } else {
+  }
+  if (hasFarmFeatures(s.mapKind)) {
     const ripe = s.crops.filter(c => c.readyAt <= s.serverTime).length;
     if (ripe) items.push(`${ripe} ô ruộng đã chín, có thể thu hoạch.`);
     if (inventoryCount(state) >= storageCapacity(state)) items.push('Kho đã đầy — bán bớt hàng để thu hoạch tiếp.');
@@ -55,9 +58,10 @@ export function TopBar({ state, panel, status, connected, unread, canCollect, ni
   const initial = ([...s.character.displayName.trim()][0] ?? '?').toLocaleUpperCase('vi');
   const now = new Date(s.serverTime), hour = now.getHours();
   const day = Math.max(1, Math.floor((s.serverTime - s.character.createdAt) / 86_400_000) + 1);
-  const third = kind === 'farm'
-    ? { icon: 'crops' as const, value: `${inventoryCount(state)}/${storageCapacity(state)}`, label: 'Kho nông sản', panel: 'inventory' as const }
-    : { icon: 'people' as const, value: `${populationAndJobs(state).population}`, label: 'Dân số', panel: 'people' as const };
+  const chips = [
+    ...(hasCityFeatures(kind) ? [{ icon: 'people' as const, value: `${populationAndJobs(state).population}`, label: 'Dân số', panel: 'people' as const }] : []),
+    ...(hasFarmFeatures(kind) ? [{ icon: 'crops' as const, value: `${inventoryCount(state)}/${storageCapacity(state)}`, label: 'Kho nông sản', panel: 'inventory' as const }] : []),
+  ];
   const measure = useCallback((element: HTMLElement | null) => onMeasure(element), [onMeasure]);
   return <header className="hud3-top" ref={measure}>
     <button type="button" className="hud3-pill hud3-player" aria-pressed={panel === 'profile'} onClick={() => onPanel('profile')}
@@ -73,7 +77,7 @@ export function TopBar({ state, panel, status, connected, unread, canCollect, ni
       <span className="hud3-divider" aria-hidden="true"/>
       <button type="button" className="hud3-chip" data-res="wood" aria-label="Gỗ (mua vật liệu)" aria-pressed={panel === 'materials'} onClick={() => onPanel('materials')}><GameIcon name="wood"/><strong>{s.wallet.wood.toLocaleString('en-US')}</strong></button>
       <button type="button" className="hud3-chip" data-res="stone" aria-label="Đá (mua vật liệu)" aria-pressed={panel === 'materials'} onClick={() => onPanel('materials')}><GameIcon name="stone"/><strong>{s.wallet.stone.toLocaleString('en-US')}</strong></button>
-      <button type="button" className="hud3-chip" data-res={third.panel} aria-label={third.label} title={third.label} aria-pressed={panel === third.panel} onClick={() => onPanel(third.panel)}><GameIcon name={third.icon}/><strong>{third.value}</strong></button>
+      {chips.map(third => <button key={third.panel} type="button" className="hud3-chip" data-res={third.panel} aria-label={third.label} title={third.label} aria-pressed={panel === third.panel} onClick={() => onPanel(third.panel)}><GameIcon name={third.icon}/><strong>{third.value}</strong></button>)}
     </div>
     <div className="hud3-pill hud3-status">
       <button type="button" className="hud3-icon" aria-label="Thông báo" aria-pressed={panel === 'notifications'} onClick={() => onPanel('notifications')}><GameIcon name="mail"/>{unread && <span className="hud3-dot" aria-label="Có thông báo mới"/>}</button>
