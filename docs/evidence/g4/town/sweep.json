@@ -1,0 +1,21 @@
+{
+  "seeds": 50,
+  "startSeed": 20260000,
+  "pass": 50,
+  "passRate": 1,
+  "failed": [],
+  "waterPct": {
+    "min": 19.970703125,
+    "avg": 19.99951171875,
+    "max": 20.10498046875
+  },
+  "genMs": {
+    "avg": 539,
+    "median": 508,
+    "max": 1342
+  },
+  "attempts": {
+    "avg": 0.02,
+    "max": 1
+  }
+}

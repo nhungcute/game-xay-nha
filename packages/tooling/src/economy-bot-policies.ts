@@ -69,8 +69,20 @@ export class CityBotV2 extends EconomyBot {
   }
 }
 
+/** Town (city + countryside): field-first farm policy (V3) plus the city bot's within-tick building loop. */
+export class TownBot extends FarmBotV3 {
+  override city(): void {
+    for (let i = 0; i < 12; i++) {
+      const before = this.s.snapshot.buildings.length;
+      super.city();
+      if (this.s.snapshot.buildings.length === before) break;
+    }
+  }
+}
+
 /** The bot sim-economy.ts uses: tuned policies by default, the original base bot with `base`. */
 export function createBot(template: WorldTemplate, style: PlayStyle, days: number, onDay?: (day: number) => void, policy: 'tuned' | 'base' = 'tuned'): EconomyBot {
   if (policy === 'base') return new EconomyBot(template, style, days, onDay);
+  if (template.mapKind === 'town') return new TownBot(template, style, days, onDay);
   return template.mapKind === 'farm' ? new FarmBotV3(template, style, days, onDay) : new CityBotV2(template, style, days, onDay);
 }

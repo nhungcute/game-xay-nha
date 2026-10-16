@@ -33,7 +33,7 @@ async function call(method: 'GET' | 'POST' | 'DELETE', url: string, body?: unkno
 }
 let serial = 0;
 /** D027: a new player registers a unique username + PIN with the first map (usernames get a counter suffix). */
-async function newPlayer(mapKind: 'farm' | 'city' = 'farm', base = 'Nông Dân', pin = '2468') {
+async function newPlayer(mapKind: 'farm' | 'city' | 'town' = 'farm', base = 'Nông Dân', pin = '2468') {
   const username = `${base} ${++serial}`;
   const r = await call('POST', '/api/auth/register', { username, pin, mapKind });
   expect(r.status).toBe(201);
@@ -430,5 +430,92 @@ describe('random maps (D039, RANDOM_MAPS=1)', () => {
     const snap = await snapshotOf(old.token, old.worldId);
     expect(snap.snapshot.mapId).toBe(oldMap); expect(oldMap).not.toMatch(/^rnd-/);
     expect((await send(old.token, old.worldId, [command(snap.snapshot, 'BUY_MATERIAL', { wood: 1 })])).body.results[0].accepted).toBe(true);
+  });
+});
+
+describe('town map kind (Thị trấn): city + countryside on a random map', () => {
+  const rowCount = async (worldId: string) => ((await db.execute(sql`SELECT count(*)::int AS n FROM world_templates WHERE world_id = ${worldId}`)).rows[0] as { n: number }).n;
+  const accepted = (r: { body: { results: { accepted: boolean }[] } }) => r.body.results[0]!.accepted;
+  /** Tries `make(x, z)` over a growing window around (cx, cz) until the server accepts it; returns the winning cell. */
+  async function firstAccepted(token: string, worldId: string, cx: number, cz: number, make: (x: number, z: number) => [CommandType, unknown]): Promise<[number, number]> {
+    for (let r = 0; r < 14; r++) for (let dz = -r; dz <= r; dz++) for (let dx = -r; dx <= r; dx++) {
+      if (Math.max(Math.abs(dx), Math.abs(dz)) !== r) continue;
+      const snap = (await snapshotOf(token, worldId)).snapshot, [type, payload] = make(cx + dx, cz + dz);
+      if (accepted(await send(token, worldId, [command(snap, type, payload)]))) return [cx + dx, cz + dz];
+    }
+    throw new Error('no accepted placement');
+  }
+
+  it('an existing farm + city account opens a town world: new random template, the other worlds are untouched', async () => {
+    const p = await newPlayer('farm', 'Ba Vùng Đất');
+    expect((await call('POST', '/api/characters', { mapKind: 'city' }, p.token)).status).toBe(201);
+    const before = await call('GET', '/api/me', undefined, p.token);
+    expect(before.body.characters.map((c: { mapKind: string }) => c.mapKind).sort()).toEqual(['city', 'farm']);
+    const hashes = new Map<string, string>();
+    for (const c of before.body.characters) hashes.set(c.id, (await snapshotOf(p.token, c.id)).stateHash);
+
+    // The default app has RANDOM_MAPS off: town is generated anyway.
+    const made = await call('POST', '/api/characters', { mapKind: 'town' }, p.token);
+    expect(made.status).toBe(201);
+    const town = made.body.character;
+    expect(town).toMatchObject({ mapKind: 'town', level: 1, cash: 2000 });
+    expect(town.mapId).toMatch(/^rnd-town-\d+$/);
+
+    const me = await call('GET', '/api/me', undefined, p.token);
+    expect(me.body.characters).toHaveLength(3);
+    for (const [id, hash] of hashes) expect((await snapshotOf(p.token, id)).stateHash).toBe(hash);
+    for (const c of before.body.characters) expect(await rowCount(c.id)).toBe(0);
+    expect(await rowCount(town.id)).toBe(1);
+    const [row] = (await db.execute(sql`SELECT map_id, seed::text AS seed, template->>'mapKind' AS kind FROM world_templates WHERE world_id = ${town.id}`)).rows as { map_id: string; seed: string; kind: string }[];
+    expect(row).toMatchObject({ map_id: town.mapId, kind: 'town' }); expect(town.mapId).toBe(`rnd-town-${row!.seed}`);
+
+    const tpl = await call('GET', `/api/worlds/${town.id}/template`, undefined, p.token);
+    expect(tpl.status).toBe(200); expect(tpl.body).toMatchObject({ mapKind: 'town', mapId: town.mapId });
+    // a second attempt is a conflict, and the constraint allows the new kind
+    const again = await call('POST', '/api/characters', { mapKind: 'town' }, p.token);
+    expect(again.status).toBe(409);
+    const def = ((await db.execute(sql`SELECT pg_get_constraintdef(oid) AS d FROM pg_constraint WHERE conname = 'worlds_map_kind_check'`)).rows[0] as { d: string }).d;
+    expect(def).toContain('town');
+  });
+
+  it('a brand-new account can start on town; invalid kinds are still refused', async () => {
+    const p = await newPlayer('town', 'Thị Dân');
+    const me = await call('GET', '/api/me', undefined, p.token);
+    expect(me.body.characters[0]).toMatchObject({ mapKind: 'town' }); expect(me.body.characters[0].mapId).toMatch(/^rnd-town-/);
+    expect((await call('POST', '/api/auth/register', { username: 'Sai Kiểu', pin: '1234', mapKind: 'moon' })).status).toBe(400);
+  });
+
+  it('COLLECT, TILL, PLANT work on town, and the town quest chain claims out of order', async () => {
+    const p = await newPlayer('town', 'Chủ Thị Trấn');
+    const template = (await call('GET', `/api/worlds/${p.worldId}/template`, undefined, p.token)).body as { startZones: number[] };
+    const zx = template.startZones.map(z => (z % 8) * 16 + 8), zz = template.startZones.map(z => Math.floor(z / 8) * 16 + 8);
+    const cx = Math.round(zx.reduce((a, b) => a + b) / zx.length), cz = Math.round(zz.reduce((a, b) => a + b) / zz.length);
+    const first = (await snapshotOf(p.token, p.worldId)).snapshot;
+    expect(first.progress.questIndex).toBe(0);
+
+    // Farmhouse (instant: town-3 is open) with a dirt road cell beside it.
+    const house = await firstAccepted(p.token, p.worldId, cx, cz, (x, z) => ['PLACE_BUILDING', { defId: 'farmhouse', anchor: [x, z], rotation: 0 }]);
+    await firstAccepted(p.token, p.worldId, house[0] + 1, house[1] + 3, (x, z) => ['BUILD_ROAD', { tier: 1, cells: [[x, z]] }]);
+    // Six road cells in a row (town-2), then claim town-3 and town-2 before town-1.
+    await firstAccepted(p.token, p.worldId, cx, cz + 6, (x, z) => ['BUILD_ROAD', { tier: 1, cells: Array.from({ length: 6 }, (_, n) => [x + n, z]) }]);
+    for (const id of ['town-3', 'town-2']) {
+      const snap = (await snapshotOf(p.token, p.worldId)).snapshot;
+      const r = await send(p.token, p.worldId, [command(snap, 'CLAIM_QUEST', { questId: id })]);
+      expect(r.body.results[0], `${id}: ${JSON.stringify(r.body.results[0])}`).toMatchObject({ accepted: true });
+    }
+    const claimed = (await snapshotOf(p.token, p.worldId)).snapshot.progress;
+    expect(claimed.claimedQuests).toEqual(['town-3', 'town-2']); expect(claimed.questIndex).toBe(2);
+
+    // Farm side: till + plant (the farmhouse's fields count once it has road access).
+    const field = await firstAccepted(p.token, p.worldId, house[0], house[1] - 4, (x, z) => ['TILL', { rect: [x, z, x + 2, z] }]);
+    const snap = (await snapshotOf(p.token, p.worldId)).snapshot;
+    expect(accepted(await send(p.token, p.worldId, [command(snap, 'PLANT', { rect: [field[0], field[1], field[0] + 2, field[1]], cropId: 'veg_greens' })]))).toBe(true);
+
+    // City side: COLLECT is accepted on town (and is WRONG_MAP on a pure farm).
+    const s2 = (await snapshotOf(p.token, p.worldId)).snapshot;
+    expect((await send(p.token, p.worldId, [command(s2, 'COLLECT', { buildingIds: [] })])).body.results[0]).toMatchObject({ accepted: true });
+    const farmer = await newPlayer('farm', 'Nông Dân Thuần');
+    const fs = (await snapshotOf(farmer.token, farmer.worldId)).snapshot;
+    expect((await send(farmer.token, farmer.worldId, [command(fs, 'COLLECT', { buildingIds: [] })])).body.results[0]).toMatchObject({ accepted: false, code: 'WRONG_MAP' });
   });
 });

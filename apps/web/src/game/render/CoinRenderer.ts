@@ -1,5 +1,5 @@
 import { CanvasTexture, CylinderGeometry, InstancedMesh, MeshStandardMaterial, Object3D, SRGBColorSpace, type Scene, type Texture } from 'three';
-import { CELL_SIZE_M } from '@xay-nha/contracts';
+import { CELL_SIZE_M, hasCityFeatures } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { capHours, rotatedSize, type SimState } from '@xay-nha/sim';
 import { terrainHeight } from '../assets/placement';
@@ -49,7 +49,7 @@ export class CoinRenderer {
   }
   update(s: SimState): void {
     this.placements = [];
-    if (s.template.mapKind !== 'city') { this.mesh.count = 0; return; }
+    if (!hasCityFeatures(s.template.mapKind)) { this.mesh.count = 0; return; }
     const cap = capHours(s);
     for (const b of s.snapshot.buildings) {
       const def = catalog.buildings[b.defId], rate = s.rates[b.id] ?? 0;

@@ -23,10 +23,11 @@ Hiện khi chọn một map chưa có nhân vật.
 
 ### 1.2 Màn chọn map
 
-Hai thẻ lớn: **Thành phố** / **Quê**, mỗi thẻ có ảnh render, 1 dòng mô tả lối chơi ("Xây phố, thu tiền thuê và kinh doanh" / "Cuốc đất, trồng trọt, chăn nuôi").
+Ba thẻ lớn: **Thành phố** / **Quê** / **Thị trấn** (map thứ 3, phố lẫn đồng quê; luôn là bản đồ ngẫu nhiên, mở sẵn từ đầu, không khóa cấp), mỗi thẻ có ảnh render, 1 dòng mô tả lối chơi ("Xây phố, thu tiền thuê và kinh doanh" / "Cuốc đất, trồng trọt, chăn nuôi").
 
 - Map **đã có nhân vật**: thẻ hiện `Tên#1234 · Cấp N · Tài sản $X` và nút **Chơi tiếp**.
 - Map **chưa có nhân vật**: thẻ hiện nhãn **Mới** và nút **Tạo nhân vật**.
+- Tài khoản đã có Thành phố và Quê mở Thị trấn từ chính màn này (nút **Tạo nhân vật** → sinh bản đồ ngẫu nhiên trên máy chủ, lưu ở `world_templates`); tài khoản mới cũng có thể bắt đầu ngay ở Thị trấn. Offline: `?map=town`.
 - Thẻ Sinh thái hiển thị "Sắp ra mắt".
 - Link nhỏ "Tôi có mã khôi phục" (khôi phục mọi nhân vật trên thiết bị mới).
 
@@ -127,6 +128,10 @@ Mỗi bước: mũi tên/viền sáng chỉ vào nút hoặc ô, bong bóng tho�
 ### 5.2 Quê
 
 Chợ (nối đường) → Nhà nông → Cuốc 6 ô → Gieo rau cải (chín sau 20 giây trong hướng dẫn) → Thu hoạch → Mở chợ, bán → Lên cấp 2.
+
+### 5.3 Thị trấn
+
+Thanh Dock có đủ 6 tab (Công trình, Đường, **Nông trại**, Đất đai, Trang trí, Tiện ích); thanh trên có cả chip Dân số và Kho nông sản. Nhiệm vụ: Chặt 3 cây, Làm 6 ô đường, Nhà nông, Cuốc 6 ô, Gieo rau cải (chín 20 giây), Nhà nhỏ (xây ngay) — 6 nhiệm vụ tân thủ; sau đó Thu hoạch, Chợ, Tạp hóa, Thu tiền, Bán nông sản, 12 dân, Kè, Cầu gỗ (chi tiết `16 §10.4`). Nhạc nền riêng (giữa Thành phố và Quê); danh hiệu: Người lập ấp → Huyền thoại thị trấn.
 
 ## 6. Thông báo và popup
 

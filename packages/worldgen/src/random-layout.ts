@@ -137,7 +137,7 @@ export function generateRandomLayout(
 
   // Fast internal trial loop to pre-validate water topology and bridge constraints in < 15ms
   for (let trial = 0; trial < 100; trial++) {
-    const subSeed = hash32(seed, attempt * 100 + trial, mapKind === 'city' ? 101 : 202, 'rnd-v12');
+    const subSeed = hash32(seed, attempt * 100 + trial, ({ city: 101, farm: 202, town: 303 })[mapKind], 'rnd-v12');
     const rng = mulberry32(subSeed);
 
     // 1. Khu khởi đầu: 4 khu (2x2) gần giữa map

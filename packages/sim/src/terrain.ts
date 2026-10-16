@@ -1,4 +1,4 @@
-import { CellFlag, GRID, Surface, VERTS, cellIndex, vertIndex, type Cell, type Command, type Cost, type Rect } from '@xay-nha/contracts';
+import { CellFlag, GRID, kindAllows, Surface, VERTS, cellIndex, vertIndex, type Cell, type Command, type Cost, type Rect } from '@xay-nha/contracts';
 import { economy } from '@xay-nha/content';
 import { addCost, event, guard, pay, rectCells, refund, requireEditable, requireLevel, scaleCost, zeroCost } from './common';
 import { affectedVertexCells, corners, isShore, meanHeight, neighbors, slope, type SimState } from './state';
@@ -69,7 +69,7 @@ export function terrain(s: SimState, cmd: Command): Cost | undefined {
   if (cmd.type === 'TERRAFORM') return terraform(s,cmd.payload.rect,cmd.payload.mode,cmd.payload.targetHDm);
   if (cmd.type === 'BUILD_ROAD') {
     const def = economy.roadTiers[cmd.payload.tier]; requireLevel(s,def.unlockLevel);
-    guard(def.mapKinds.includes(s.template.mapKind),'WRONG_MAP');
+    guard(kindAllows(def.mapKinds,s.template.mapKind),'WRONG_MAP');
     let cost = zeroCost();
     const changed: Cell[] = [];
     for (const c of cmd.payload.cells) {

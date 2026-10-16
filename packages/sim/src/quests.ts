@@ -1,4 +1,4 @@
-import { GRID, type BuildingDef, type Cost, type MapKind, type RepeatQuest, type WorldSnapshot } from '@xay-nha/contracts';
+import { GRID, hasCityFeatures, hasFarmFeatures, kindAllows, type BuildingDef, type Cost, type MapKind, type RepeatQuest, type WorldSnapshot } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { addXp, claimedQuestIds, guard, refund, zeroCost } from './common';
 import { buildingLimit } from './construction';
@@ -14,6 +14,8 @@ const R = economy.repeatQuests;
 type Template = RepeatQuest['template'];
 const CITY: Template[] = ['collect_cash', 'build_type', 'road_cells', 'embank_cells', 'population'];
 const FARM: Template[] = ['harvest_crop', 'sell_item', 'produce_item', 'till_cells'];
+/** Repeat templates a map kind draws from (town = union of city and farm). */
+const poolFor = (kind: MapKind): Template[] => [...(hasCityFeatures(kind) ? CITY : []), ...(hasFarmFeatures(kind) ? FARM : [])];
 
 function prng(seed: string): () => number {
   let h = 0x811c9dc5;
@@ -24,9 +26,10 @@ const between = (rnd: () => number, [a, b]: readonly number[]): number => a! + M
 const roundTo = (v: number, step: number) => Math.round(v / step) * step;
 
 /** Reference income for one hour (docs/16 §10.3). */
+const cityIncome = (s: SimState): number => Object.values(s.rates).reduce((sum, r) => sum + r, 0);
 export function referenceIncome(s: SimState): number {
-  if (s.template.mapKind === 'city') return Object.values(s.rates).reduce((sum, r) => sum + r, 0);
-  return fieldQuota(s) * bestCropRate(s.snapshot.progress.level) * R.farmIncomeFactor;
+  const kind = s.template.mapKind;
+  return (hasCityFeatures(kind) ? cityIncome(s) : 0) + (hasFarmFeatures(kind) ? fieldQuota(s) * bestCropRate(s.snapshot.progress.level) * R.farmIncomeFactor : 0);
 }
 export function rewardFor(ref: number): { reward: Cost; xp: number } {
   const cash = Math.max(R.rewardMin, roundTo(ref * R.rewardShare, R.rewardRound));
@@ -47,11 +50,12 @@ const countAt = (def: BuildingDef, level: number): number => {
 /** Upper bound on the reference income reachable at `level`; rejects forged repeat rewards. */
 export function maxReferenceIncome(mapKind: MapKind, level: number): number {
   const tier = Math.max(...Object.values(economy.roadTiers).map(t => t.multiplier));
-  if (mapKind === 'farm') return Object.values(catalog.buildings).reduce((n, d) => n + (d.fieldQuota ?? 0) * countAt(d, level), 0)
-    * bestCropRate(level) * R.farmIncomeFactor;
-  return Object.values(catalog.buildings).filter(d => d.mapKinds.includes('city') && d.baseRatePerHour)
+  const farmPart = hasFarmFeatures(mapKind) ? Object.values(catalog.buildings).reduce((n, d) => n + (d.fieldQuota ?? 0) * countAt(d, level), 0)
+    * bestCropRate(level) * R.farmIncomeFactor : 0;
+  const cityPart = hasCityFeatures(mapKind) ? Object.values(catalog.buildings).filter(d => d.mapKinds.includes('city') && d.baseRatePerHour)
     .reduce((n, d) => n + d.baseRatePerHour! * countAt(d, level) * tier
-      * (1 + economy.income.decorCap + (d.waterBonusOverride ?? economy.income.waterBonus)), 0);
+      * (1 + economy.income.decorCap + (d.waterBonusOverride ?? economy.income.waterBonus)), 0) : 0;
+  return farmPart + cityPart;
 }
 
 /** Builds one quest for `template`, or null when it has no unlocked target right now. */
@@ -60,11 +64,11 @@ function build(s: SimState, template: Template, rnd: () => number): Omit<RepeatQ
   switch (template) {
     case 'collect_cash': {
       // X = one hour of current base income in whole dollars (docs/16 §10.3); $10 rounding is for rewards only.
-      const hour = Math.round(referenceIncome(s));
+      const hour = Math.round(hasCityFeatures(s.template.mapKind) ? cityIncome(s) : referenceIncome(s)); // COLLECT only pays city income
       return hour >= 100 ? { template, target: hour } : null;
     }
     case 'build_type': {
-      const options = Object.values(catalog.buildings).filter(d => d.mapKinds.includes(s.template.mapKind) && d.unlockLevel <= level
+      const options = Object.values(catalog.buildings).filter(d => kindAllows(d.mapKinds, s.template.mapKind) && d.unlockLevel <= level
         && s.snapshot.buildings.filter(b => b.defId === d.id).length < buildingLimit(s, d));
       if (!options.length) return null;
       const def = options[Math.floor(rnd() * options.length)]!;
@@ -106,7 +110,7 @@ function build(s: SimState, template: Template, rnd: () => number): Omit<RepeatQ
 function next(s: SimState): RepeatQuest | null {
   const r = s.snapshot.progress.repeat!;
   const rnd = prng(`${s.snapshot.worldId}:repeat:${r.seq}`);
-  const all = s.template.mapKind === 'city' ? CITY : FARM;
+  const all = poolFor(s.template.mapKind);
   const same = (q: { template: Template; subject?: string }) => r.active.some(a => a.template === q.template && a.subject === q.subject);
   // Never the template just claimed/rerolled (docs/16 §10.3); active quests may share a template with different
   // targets. Only when nothing else is eligible is the previous template reused (D024, Q009).
@@ -157,7 +161,7 @@ export function rerollRepeat(s: SimState, questId: string, now: number): Cost {
 export function validateRepeat(snapshot: WorldSnapshot): string[] {
   const r = snapshot.progress.repeat, errors: string[] = [];
   if (!r) return errors;
-  const kind = snapshot.mapKind, level = snapshot.progress.level, templates = kind === 'city' ? CITY : FARM;
+  const kind = snapshot.mapKind, level = snapshot.progress.level, templates = poolFor(kind);
   if ((snapshot.progress.claimedQuests?.length ?? snapshot.progress.questIndex) < catalog.quests[kind].length) errors.push('REPEAT:BEFORE_AUTHORED_DONE');
   if (r.active.length > R.slots) errors.push('REPEAT:TOO_MANY');
   if (r.rerollAt > snapshot.serverTime + R.rerollHours * 3_600_000 + 300_000) errors.push('REPEAT:REROLL_TIME');
@@ -179,7 +183,7 @@ export function validateRepeat(snapshot: WorldSnapshot): string[] {
     let subjectOk = q.subject === undefined;
     if (q.template === 'build_type' || q.template === 'produce_item') {
       const d = q.subject ? catalog.buildings[q.subject] : undefined;
-      subjectOk = !!d && d.mapKinds.includes(kind) && unlocked(d.unlockLevel) && (q.template === 'build_type' || !!d.production);
+      subjectOk = !!d && kindAllows(d.mapKinds, kind) && unlocked(d.unlockLevel) && (q.template === 'build_type' || !!d.production);
     } else if (q.template === 'harvest_crop') subjectOk = unlocked(q.subject ? catalog.crops[q.subject]?.unlockLevel : undefined);
     else if (q.template === 'sell_item') subjectOk = Object.values(catalog.crops).some(c => c.itemId === q.subject && unlocked(c.unlockLevel));
     if (!subjectOk) errors.push(`${label}:SUBJECT`);

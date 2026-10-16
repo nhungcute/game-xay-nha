@@ -1,6 +1,7 @@
 import {
   CellFlag, GRID, Surface, VERTS, WorldSnapshotSchema, cellIndex, decodeInt16, decodeUint8, vertIndex,
   type WorldSnapshot,
+  hasFarmFeatures, kindAllows,
 } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { createState, inBounds, isUnlocked, isShore, corners, affectedVertexCells, meanHeight, neighbors, slope, rebuildOccupancy, restoreDeltas, type SimState } from './state';
@@ -129,7 +130,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
     if ((candidate.surface[i] === Surface.ROAD) !== (candidate.roadTier[i]! > 0)) errors.push(`ROAD_SURFACE:${i}`);
     if (candidate.surface[i] === Surface.WATER && candidate.roadTier[i]) errors.push(`ROAD_WATER:${i}`);
     if ((candidate.surface[i] === Surface.WATER) !== (templateSurface[i] === Surface.WATER)) errors.push(`WATER_CHANGED:${i}`);
-    if (snapshot.mapKind === 'city' && candidate.surface[i] === Surface.TILLED) errors.push(`WRONG_MAP:TILLED:${i}`);
+    if (!hasFarmFeatures(snapshot.mapKind) && candidate.surface[i] === Surface.TILLED) errors.push(`WRONG_MAP:TILLED:${i}`);
     let immutableFlags = templateFlags[i]! & (CellFlag.NO_BUILD | CellFlag.ENTRY | CellFlag.PROTECTED);
     if (templateRoads[i] && unlockedCell && !(immutableFlags & CellFlag.NO_BUILD)) immutableFlags &= ~CellFlag.PROTECTED;
     if ((candidate.flags[i]! & (CellFlag.NO_BUILD | CellFlag.ENTRY | CellFlag.PROTECTED)) !== immutableFlags) errors.push(`IMMUTABLE_FLAGS:${i}`);
@@ -163,7 +164,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
     const def = Object.hasOwn(catalog.buildings, building.defId) ? catalog.buildings[building.defId] : undefined;
     if (!def) { errors.push(`BUILDING_REFERENCE:${building.id}`); continue; }
     counts.set(def.id, (counts.get(def.id) ?? 0) + 1);
-    if (!def.mapKinds.includes(snapshot.mapKind)) errors.push(`WRONG_MAP:${building.id}`);
+    if (!kindAllows(def.mapKinds, snapshot.mapKind)) errors.push(`WRONG_MAP:${building.id}`);
     if (snapshot.progress.level < def.unlockLevel) errors.push(`LEVEL_REQUIRED:${building.id}`);
     if (building.materialsPaid.cash !== building.cashPaid || building.materialsPaid.wood !== def.cost.wood || building.materialsPaid.stone !== def.cost.stone
       || !(def.costScaling ?? [def.cost.cash]).includes(building.cashPaid) || building.investedValue !== costValue(building.materialsPaid)) errors.push(`PAID_VALUE:${building.id}`);
@@ -211,7 +212,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
   for (const crop of snapshot.crops) {
     const def = Object.hasOwn(catalog.crops, crop.cropId) ? catalog.crops[crop.cropId] : undefined;
     if (!def) { errors.push(`CROP_REFERENCE:${crop.cropId}`); continue; }
-    if (snapshot.mapKind !== 'farm') errors.push('WRONG_MAP:CROP');
+    if (!hasFarmFeatures(snapshot.mapKind)) errors.push('WRONG_MAP:CROP');
     if (snapshot.progress.level < def.unlockLevel) errors.push(`CROP_LEVEL:${crop.cropId}`);
     createdTime(crop.plantedAt, `crop.${crop.cell}.plantedAt`);
     if (!isUnlocked(candidate, crop.cell)) errors.push(`CROP_ZONE:${crop.cell}`);
@@ -221,12 +222,12 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
     // Irrigation is fixed at sowing; current well/road state cannot reconstruct that historical decision.
     const durations = [def.growSeconds * 1000, Math.round(def.growSeconds * economy.farm.irrigationMultiplier) * 1000];
     // A completed tutorial may leave its accelerated crop in the saved world.
-    if (catalog.quests.farm.some(quest => quest.tutorial && quest.action === 'PLANT' && quest.cropId === def.id)) durations.push(economy.tutorial.farmGrowSeconds * 1000);
+    if (Object.values(catalog.quests).some(list => list.some(quest => quest.tutorial && quest.action === 'PLANT' && quest.cropId === def.id))) durations.push(economy.tutorial.farmGrowSeconds * 1000);
     if (!durations.some(valid => Math.abs(duration - valid) <= 1000)) errors.push(`CROP_DURATION:${crop.cell}`);
   }
   for (const bridge of snapshot.bridges) {
     const def = catalog.bridges[bridge.typeId];
-    if (!def || !def.mapKinds.includes(snapshot.mapKind)) { errors.push(`BRIDGE_REFERENCE:${bridge.id}`); continue; }
+    if (!def || !kindAllows(def.mapKinds, snapshot.mapKind)) { errors.push(`BRIDGE_REFERENCE:${bridge.id}`); continue; }
     if (snapshot.progress.level < def.unlockLevel) errors.push(`BRIDGE_LEVEL:${bridge.id}`);
     try {
       const geometry = validateBridge(candidate, bridge.a, bridge.b, def.maxSpan, bridge.id);
@@ -239,7 +240,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
   }
   for (const item of Object.keys(snapshot.inventory)) if (!Object.hasOwn(catalog.items, item)) errors.push(`ITEM_REFERENCE:${item}`);
   errors.push(...validateRoadPayments(candidate));
-  if (snapshot.mapKind === 'farm') {
+  if (hasFarmFeatures(snapshot.mapKind)) {
     // Lost road access may reduce effective capacity, but cannot create new physical support buildings.
     const support = snapshot.buildings.filter(building => building.status === 'ACTIVE' && Object.hasOwn(catalog.buildings, building.defId));
     const maximumStorage = economy.farm.baseStorage + support.reduce((total, building) => total + (catalog.buildings[building.defId]!.storageBonus ?? 0), 0);
@@ -247,7 +248,7 @@ export function validateSnapshot(current: SimState, input: unknown, now: number)
     if (Object.values(snapshot.inventory).reduce((sum, count) => sum + count, 0) > maximumStorage) errors.push('STORAGE_CAPACITY');
     if (candidate.surface.reduce((sum, surface) => sum + Number(surface === Surface.TILLED), 0) > maximumFields) errors.push('FIELD_QUOTA');
   }
-  if (snapshot.mapKind === 'city' && Object.values(snapshot.inventory).some(count => count > 0)) errors.push('WRONG_MAP:INVENTORY');
+  if (!hasFarmFeatures(snapshot.mapKind) && Object.values(snapshot.inventory).some(count => count > 0)) errors.push('WRONG_MAP:INVENTORY');
   if (errors.length) return { ok: false, errors: [...new Set(errors)] };
   const savedWorth = snapshot.character.netWorth;
   try { recompute(candidate); } catch (error) { return { ok: false, errors: [`RECOMPUTE:${error instanceof Error ? error.message : String(error)}`] }; }

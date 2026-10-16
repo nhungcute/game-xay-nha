@@ -26,6 +26,17 @@ describe('D039 Random Layout and Playability', () => {
     expect(checkPlayability(template)).toEqual([]);
   });
 
+  it('generates a playable town template (mixed city + countryside) with ~20% water and its own seed stream', () => {
+    const { template, attempt } = generateWorldTemplate('town', 20261014);
+    expect(attempt).toBeLessThan(50);
+    expect(template.mapKind).toBe('town'); expect(template.mapId).toBe('rnd-town-20261014');
+    expect(validateTemplate(template)).toEqual([]);
+    expect(checkPlayability(template)).toEqual([]);
+    const water = rasterizeWater(template.water).reduce((sum, w) => sum + w, 0) / 16384;
+    expect(water).toBeGreaterThan(0.19); expect(water).toBeLessThan(0.21);
+    expect(generateWorldTemplate('city', 20261014).template.water).not.toEqual(template.water);
+  });
+
   it.each(['city', 'farm'] as const)('%s: water is centred on 20% and rivers meander without hard corners', kind => {
     for (const seed of [20260000, 20260001, 20260002]) {
       const layout = generateRandomLayout(kind, seed, 0);

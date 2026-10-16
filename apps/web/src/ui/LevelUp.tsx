@@ -1,5 +1,5 @@
 import { catalog, economy } from '@xay-nha/content';
-import type { MapKind } from '@xay-nha/contracts';
+import { hasFarmFeatures, kindAllows, type MapKind } from '@xay-nha/contracts';
 import { t } from '../i18n';
 import { GameIcon } from './GameIcon';
 
@@ -10,12 +10,12 @@ const ROAD_NAME: Record<string, string> = { 2: 'Đường lát đá', 3: 'Đư�
 export function unlocksAt(kind: MapKind, level: number): string[] {
   const items: string[] = [];
   for (const def of Object.values(catalog.buildings)) {
-    if (!def.mapKinds.includes(kind)) continue;
+    if (!kindAllows(def.mapKinds, kind)) continue;
     if (def.unlockLevel === level) items.push(t(def.nameKey));
     const extra = def.unlockLevels?.indexOf(level) ?? -1;
     if (extra > 0) items.push(`${t(def.nameKey)} thứ ${extra + 1}`);
   }
-  if (kind === 'farm') for (const crop of Object.values(catalog.crops)) if (crop.unlockLevel === level) items.push(`Giống ${t(crop.nameKey)}`);
+  if (hasFarmFeatures(kind)) for (const crop of Object.values(catalog.crops)) if (crop.unlockLevel === level) items.push(`Giống ${t(crop.nameKey)}`);
   for (const bridge of Object.values(catalog.bridges)) if (bridge.unlockLevel === level) items.push(BRIDGE_NAME[bridge.id] ?? bridge.id);
   for (const [tier, def] of Object.entries(economy.roadTiers)) if (def.unlockLevel === level && ROAD_NAME[tier]) items.push(ROAD_NAME[tier]!);
   if (economy.embank.unlockLevel === level) items.push('Kè bờ');

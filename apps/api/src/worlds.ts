@@ -45,21 +45,22 @@ export class WorldService {
   }
 
   async createCharacter(accountId: string, mapKind: MapKind, displayName: string): Promise<CharacterSummary> {
-    const staticMap = this.templates.latestFor(mapKind);
-    if (!staticMap) throw new ApiError(400, 'MAP_UNAVAILABLE', `Map ${mapKind} is not available yet`);
+    // Town has no authored template: it is always generated (even with RANDOM_MAPS off).
+    const randomMaps = this.randomMaps || mapKind === 'town', staticMap = this.templates.latestFor(mapKind);
+    if (!staticMap && !randomMaps) throw new ApiError(400, 'MAP_UNAVAILABLE', `Map ${mapKind} is not available yet`);
     const existing = await this.db.select({ id: schema.worlds.id }).from(schema.worlds)
       .where(and(eq(schema.worlds.accountId, accountId), eq(schema.worlds.mapKind, mapKind)));
     if (existing.length) throw new ApiError(409, 'CHARACTER_EXISTS', 'This account already has a character on that map', { characterId: existing[0]!.id });
     // D039: generate once per registration; the same template is stored with every retry of the unique-tag loop.
     let random: { loaded: LoadedTemplate; seed: number; attempt: number } | undefined;
-    if (this.randomMaps) {
+    if (randomMaps) {
       const seed = randomInt(0, 2 ** 32);
       const generated = generateWorldTemplate(mapKind, seed);
       const errors = validateTemplate(generated.template);
       if (errors.length) throw new ApiError(500, 'MAP_GENERATION_FAILED', `Generated template is invalid: ${errors.slice(0, 3).join('; ')}`);
       random = { loaded: { template: generated.template, env: generateEnvironment(generated.template), path: 'db:new' }, seed, attempt: generated.attempt };
     }
-    const loaded = random?.loaded ?? staticMap;
+    const loaded = (random?.loaded ?? staticMap)!;
     for (let attempt = 0; attempt < 25; attempt++) {
       const now = this.clock(), id = randomUUID(), tag = randomTag();
       const state = createState(loaded.template, now, loaded.env, { worldId: id, accountId, displayName, tag });

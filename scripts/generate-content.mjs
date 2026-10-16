@@ -202,7 +202,9 @@ const economy = {
     waterIrrigationRadius: capture(/ô nước trong bán kính (\d+) ô/, farmSection),
     productionQueueLimit: capture(/hàng chờ (\d+) mẻ/, producerSource) },
   xp: { buildMultiplier: capture(/round\((\d+) × √V\)/), spendDivisor: capture(/1 XP \/ \$(\d+) chi/),
-    collectDivisor: capture(/1 XP \/ \$(\d+) thu được/), cumulative: { city: P.xpCumMap.city.slice(0, 21), farm: P.xpCumMap.farm.slice(0, 21) },
+    collectDivisor: capture(/1 XP \/ \$(\d+) thu được/), cumulative: { city: P.xpCumMap.city.slice(0, 21), farm: P.xpCumMap.farm.slice(0, 21),
+      // Town stacks city + farm income, so it levels on the slower of the two tables (element-wise max = the city table).
+      town: P.xpCumMap.city.slice(0, 21).map((v, i) => Math.max(v, P.xpCumMap.farm[i])) },
     levelReward: P.levelReward, maxLevel: P.xpCumMap.city.slice(0, 21).length - 1 },
   zones: { maxBuy: P.zoneMaxBuy, costBase: capture(/\$\(([^+]+)\+/), costLinear: capture(/\+ ([\d ]+)·k \+/),
     costQuadratic: capture(/\+ ([\d ]+)·k²/), unlockBase: capture(/min\(20, (\d+) \+ floor\(k \/ 3\)\)/),
@@ -254,6 +256,27 @@ const questRules = {
     { action: 'TILL', kind: 'cells_far_bank', target: 1, farBank: true },
   ],
 };
+// Town (mixed map) chain is authored here, not in docs/16 §10.1/10.2: [name, reward cash, wood, stone, xp] per rule, mirrored in docs/16 §10.4.
+const townRules = [
+  ['Chặt 3 cây', 100, 0, 0, 20, { action: 'CLEAR', kind: 'tree', target: 3 }],
+  ['Làm 6 ô đường', 100, 0, 0, 10, { action: 'ROAD', kind: 'road_cells', target: 6 }],
+  ['Xây Nhà nông', 100, 0, 0, 0, { action: 'BUILD', kind: 'building', target: 1, buildingId: 'farmhouse' }],
+  ['Cuốc 6 ô đất', 50, 0, 0, 10, { action: 'TILL', kind: 'cells', target: 6 }],
+  ['Gieo Rau cải', 30, 0, 0, 0, { action: 'PLANT', kind: 'crop', target: 1, cropId: 'veg_greens' }],
+  ['Xây Nhà nhỏ', 150, 0, 0, 0, { action: 'BUILD', kind: 'building', target: 1, buildingId: 'house_small' }],
+  ['Thu hoạch', 50, 0, 0, 0, { action: 'HARVEST', kind: 'first_harvest', target: 1 }],
+  ['Xây Chợ và nối đường', 100, 0, 0, 0, { action: 'BUILD', kind: 'building', target: 1, buildingId: 'market', requiresRoad: true }],
+  ['Xây Tạp hóa', 200, 0, 0, 0, { action: 'BUILD', kind: 'building', target: 1, buildingId: 'shop_grocery' }],
+  ['Thu tiền lần đầu', 100, 0, 0, 0, { action: 'COLLECT', kind: 'first_collection', target: 1 }],
+  ['Bán 10 nông sản ở chợ', 100, 0, 0, 0, { action: 'SELL', kind: 'farm_items', target: 10 }],
+  ['Có 12 dân', 300, 0, 0, 0, { action: 'POPULATION', kind: 'population', target: 12 }],
+  ['Kè 4 ô bờ nước', 300, 0, 10, 10, { action: 'EMBANK', kind: 'cells', target: 4 }],
+  ['Bắc một cây cầu gỗ', 800, 0, 0, 0, { action: 'BRIDGE', kind: 'bridge_wood', target: 1 }],
+];
+const townQuests = townRules.map(([label, cash, wood, stone, xp, rule], index) => {
+  const id = `town-${index + 1}`;
+  return { id, nameKey: name('quest', id, label), ...rule, reward: { cash, wood, stone }, xp, tutorial: index < economy.construction.tutorialInstantThroughQuest };
+});
 const quests = Object.fromEntries(Object.entries(questRules).map(([mapKind, rules]) => {
   const table = section(mapKind === 'city' ? '### 10.1' : '### 10.2', mapKind === 'city' ? '### 10.2' : '## 11.');
   return [mapKind, rules.map((rule, index) => {
@@ -263,6 +286,7 @@ const quests = Object.fromEntries(Object.entries(questRules).map(([mapKind, rule
       xp: /XP/.test(row[2]) ? capture(/(\d+) XP/, row[2]) : 0, tutorial: index < economy.construction.tutorialInstantThroughQuest };
   })];
 }));
+quests.town = townQuests;
 const catalog = { contentVersion: CONTENT_VERSION, buildings, crops, recipes, items, bridges, quests };
 // docs/16 requires the economy artifact to contain every balance table.
 economy.catalog = catalog;

@@ -1,4 +1,4 @@
-import { GRID, Surface, cellIndex, type CommandType } from '@xay-nha/contracts';
+import { GRID, Surface, cellIndex, type CommandType, type MapKind } from '@xay-nha/contracts';
 import type { SimState } from '@xay-nha/sim';
 
 /**
@@ -47,9 +47,11 @@ const KEY = 'xay-nha.sound', MUSIC_KEY = 'xay-nha.music';
 
 /** Generative music (docs/13 §4.8 "Nhạc"): pentatonic, slow, deterministic per map; 16-step bars. */
 export interface MusicStyle { root: number; scale: number[]; bpm: number; wave: OscillatorType; seed: number }
-export const MUSIC: Record<'city' | 'farm', MusicStyle> = {
+export const MUSIC: Record<MapKind, MusicStyle> = {
   city: { root: 261.63, scale: [0, 2, 4, 7, 9, 12, 14, 16], bpm: 84, wave: 'triangle', seed: 7 },
   farm: { root: 196.0, scale: [0, 2, 4, 7, 9, 12, 14, 16], bpm: 70, wave: 'sine', seed: 11 },
+  // Town: between the two (city brightness over farm calm), its own seed so the melody differs.
+  town: { root: 220.0, scale: [0, 2, 4, 7, 9, 12, 14, 16], bpm: 77, wave: 'triangle', seed: 13 },
 };
 /** Melody for bar `bar`: 16 steps, each a scale index or -1 (rest). Pure and deterministic (unit-tested). */
 export function musicBar(style: MusicStyle, bar: number): number[] {
@@ -95,7 +97,7 @@ export class SoundEffects {
     if (this.music && this.context) this.music.gain.gain.setTargetAtTime(on && !this.muted ? 1 : 0, this.context.currentTime, .4);
   }
   /** Schedules the next bars ahead of time; call about once a second. */
-  playMusic(kind: 'city' | 'farm'): void {
+  playMusic(kind: MapKind): void {
     const ctx = this.context;
     if (!ctx || this.muted || !this.musicOn) return;
     try {

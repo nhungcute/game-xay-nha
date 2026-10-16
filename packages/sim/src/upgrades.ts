@@ -1,4 +1,4 @@
-import type { BuildingDef, Command, Cost, PlacedBuilding } from '@xay-nha/contracts';
+import { hasCityFeatures, hasFarmFeatures, type BuildingDef, type Command, type Cost, type PlacedBuilding } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { addXp, guard, lookup, pay, refund, requireLevel, zeroCost } from './common';
 import type { SimState } from './state';
@@ -79,12 +79,12 @@ export function reliefAvailable(s: SimState, now: number): boolean {
   const snap = s.snapshot, relief = economy.relief;
   if (snap.wallet.cash >= relief.cashBelow) return false;
   if (snap.progress.reliefAt !== undefined && now < snap.progress.reliefAt + relief.cooldownHours * 3_600_000) return false;
-  if (snap.mapKind === 'city') {
-    return !snap.buildings.some(b => (s.rates[b.id] ?? 0) > 0 || (b.accrued ?? 0) >= 1
-      || (b.status === 'CONSTRUCTING' && lookup(catalog.buildings, b.defId)?.baseRatePerHour));
-  }
-  return snap.crops.length === 0 && Object.values(snap.inventory).every(count => !count)
-    && !snap.buildings.some(b => b.slots?.some(slot => slot.length > 0));
+  // Stuck = no earner of any kind the map has (town: neither city income nor farm activity).
+  const cityEarning = hasCityFeatures(snap.mapKind) && snap.buildings.some(b => (s.rates[b.id] ?? 0) > 0 || (b.accrued ?? 0) >= 1
+    || (b.status === 'CONSTRUCTING' && lookup(catalog.buildings, b.defId)?.baseRatePerHour));
+  const farmEarning = hasFarmFeatures(snap.mapKind) && (snap.crops.length > 0 || Object.values(snap.inventory).some(count => count)
+    || snap.buildings.some(b => b.slots?.some(slot => slot.length > 0)));
+  return !cityEarning && !farmEarning;
 }
 export function claimRelief(s: SimState, cmd: Command, now: number): Cost | undefined {
   if (cmd.type !== 'CLAIM_RELIEF') return undefined;

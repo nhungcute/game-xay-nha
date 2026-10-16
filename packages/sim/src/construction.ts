@@ -1,6 +1,7 @@
 import {
   CellFlag, Surface, cellIndex, vertIndex,
   type BuildingDef, type Cell, type Command, type Cost, type PlacedBridge, type PlacedBuilding,
+  hasCityFeatures, kindAllows,
 } from '@xay-nha/contracts';
 import { catalog, economy } from '@xay-nha/content';
 import { footprintCells, rotatedSize } from './footprint';
@@ -79,12 +80,12 @@ function placeBuilding(s: SimState, cmd: Extract<Command, { type: 'PLACE_BUILDIN
     requireEditable(s, c);
     guard(!(s.flags[cellIndex(...c)]! & CellFlag.NO_BUILD), 'CELL_BLOCKED');
   }
-  guard(def.mapKinds.includes(s.snapshot.mapKind), 'WRONG_MAP');
+  guard(kindAllows(def.mapKinds, s.snapshot.mapKind), 'WRONG_MAP');
   const object: PlacedBuilding = {
     id: entityId(s, 'b'), defId, anchor: [...anchor], rotation,
     placedAt: now, buildEndsAt: now + (tutorialInstant(s, defId) ? 0 : def.buildSeconds * 1000),
     status: 'CONSTRUCTING', cashPaid: cost.cash, materialsPaid: { ...cost }, investedValue: value(cost),
-    ...(s.snapshot.mapKind === 'city' ? { accrued: 0, settledAt: now } : {}),
+    ...(hasCityFeatures(s.snapshot.mapKind) ? { accrued: 0, settledAt: now } : {}),
     ...(def.production ? { slots: Array.from({ length: def.production.slots }, () => []) } : {}),
   };
   s.snapshot.buildings.push(object);
@@ -136,7 +137,7 @@ function buildBridge(s: SimState, cmd: Extract<Command, { type: 'BUILD_BRIDGE' }
   const def = catalog.bridges[typeId];
   guard(def, 'NOT_FOUND');
   const { cells, deckHeightDm } = validateBridge(s, a, b, def.maxSpan);
-  guard(def.mapKinds.includes(s.snapshot.mapKind), 'WRONG_MAP');
+  guard(kindAllows(def.mapKinds, s.snapshot.mapKind), 'WRONG_MAP');
   requireLevel(s, def.unlockLevel);
   const cost = scaleCost(def.costPerCell, cells.length);
   pay(s, cost);

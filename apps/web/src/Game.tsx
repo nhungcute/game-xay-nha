@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { catalog, economy } from '@xay-nha/content';
-import type { Cell, CommandType } from '@xay-nha/contracts';
+import { hasCityFeatures, hasFarmFeatures, type Cell, type CommandType, type MapKind } from '@xay-nha/contracts';
 import { authoredQuestProgressFor, builderCapacity, fieldQuota, openQuests, populationAndJobs } from '@xay-nha/sim';
 import { AssetManager, type AssetManifestEntry } from './game/assets/AssetManager';
 import { GameLoop } from './game/GameLoop';
@@ -81,12 +81,13 @@ function Profile({ state }: { state: NonNullable<ReturnType<typeof useWorld.getS
   const xpTable = economy.xp.cumulative[s.mapKind], next = xpTable[s.progress.level + 1];
   const rows: [string, number][] = [['Tiền mặt', cash], ['Gỗ + đá (quy đổi)', materials], ['Công trình', buildings], ['Đường + kè', infra], ['Cầu', bridges], ['Đất đã mở', s.landValue], ['Tiền chờ thu', pending], ['Hàng trong kho', goods]];
   return <div className="profile">
-    <p><strong>{s.character.displayName}#{s.character.tag}</strong> · {s.mapKind === 'city' ? 'Thành phố' : 'Quê'}</p>
+    <p><strong>{s.character.displayName}#{s.character.tag}</strong> · {KIND_NAME[s.mapKind]}</p>
     <p>Cấp {s.progress.level} · {s.progress.xp.toLocaleString('vi-VN')} XP{next !== undefined ? ` · cần ${(next - s.progress.xp).toLocaleString('vi-VN')} XP để lên cấp` : ' · cấp tối đa'}</p>
     <p>Khu đất đã mở: {s.unlockedZones.length}/64 · Công trình: {s.buildings.length} · Đội thợ {builderCapacity(state)} · Ngày tạo {new Date(s.character.createdAt).toLocaleDateString('vi-VN')}</p>
     <table><tbody>{rows.map(([label, value]) => <tr key={label}><td>{label}</td><td>{money(value)}</td></tr>)}<tr className="total"><td>Tổng tài sản</td><td>{money(s.character.netWorth)}</td></tr></tbody></table>
   </div>;
 }
+const KIND_NAME: Record<MapKind, string> = { city: 'Thành phố', farm: 'Quê', town: 'Thị trấn' };
 /** docs/09 §5 — "Bác Tư" hints for the authored quests: which tool to use and how. */
 const HINTS: Record<string, { tool: Tool; text: string }> = {
   CLEAR: { tool: 'clear', text: 'Chọn Đất đai → Dọn rồi kéo qua vài cái cây để chặt lấy gỗ.' },
@@ -152,7 +153,7 @@ export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
   const hint=q&&!hideHints?HINTS[q.action]:undefined;
   const hintCategory=hint&&hint.tool!=='explore'?categoryOf(hint.tool,q?.buildingId??ui.buildingId):null;
   // D028: "collect all" is there from the start whenever any business has money waiting.
-  const canCollect=!!state&&kind==='city'&&state.snapshot.buildings.some(b=>(b.accrued??0)>=1);
+  const canCollect=!!state&&hasCityFeatures(kind)&&state.snapshot.buildings.some(b=>(b.accrued??0)>=1);
   const alerts=state?notifications(state):[],signature=alerts.join('|');
   const openPanel=(next:GamePanel)=>{gameRef.current?.tools.choose('explore');setCategory(null);if(next==='notifications')setSeen(signature);setPanel(current=>current===next?null:next);};
   const setQuality=(quality:'high'|'low')=>{gameRef.current?.setQuality(quality);setStats(gameRef.current?.metrics()??null);};
@@ -206,7 +207,7 @@ export function Game({loader,onSwitchMap,onLogout,onNewMap}:GameProps){
             <p className={`hud3-sync-row ${connection==='online'||connection==='local'?'is-on':'is-off'}`}><span className="hud3-sync-dot" aria-hidden="true"/>Đồng bộ: <strong>{status}</strong></p>
             <p className="hud3-panel-note">{cacheStatus||'—'}</p></>
           :panel==='notifications'?(alerts.length?<ul className="hud3-notes">{alerts.map(text=><li key={text}>{text}</li>)}</ul>:<p className="empty-inventory"><GameIcon name="mail"/>Chưa có thông báo mới.</p>)
-          :panel==='people'?<div className="population-summary"><GameIcon name="people"/>{kind==='city'?<><strong>{populationAndJobs(state).population} cư dân</strong><p>{populationAndJobs(state).jobs} việc làm từ các công trình hiện có.</p><p>Xây thêm nhà để tăng dân số và đáp ứng nhân lực kinh doanh.</p></>:<><strong>{state.snapshot.crops.length}/{fieldQuota(state)} ô ruộng</strong><p>Nhà nông giúp mở rộng diện tích canh tác.</p></>}</div>
+          :panel==='people'?<div className="population-summary"><GameIcon name="people"/>{hasCityFeatures(kind)&&<><strong>{populationAndJobs(state).population} cư dân</strong><p>{populationAndJobs(state).jobs} việc làm từ các công trình hiện có.</p><p>Xây thêm nhà để tăng dân số và đáp ứng nhân lực kinh doanh.</p></>}{hasFarmFeatures(kind)&&<><strong>{state.snapshot.crops.length}/{fieldQuota(state)} ô ruộng</strong><p>Nhà nông giúp mở rộng diện tích canh tác.</p></>}</div>
           :panel==='materials'?<MaterialShop state={state} apply={(type,payload)=>{apply(type,payload);}}/>
           :Object.keys(state.snapshot.inventory).length?Object.entries(state.snapshot.inventory).filter(([,count])=>count>0).map(([id,count])=>{const price=catalog.items[id]?.sellPrice??0;return <div className="item" key={id}><span>{t(catalog.items[id]?.nameKey??id)} × {count}</span>{[1,10].filter(n=>n<count).map(n=><button key={n} onClick={()=>apply('SELL',{items:{[id]:n}})}>{t('sell')} {n}</button>)}<button onClick={()=>apply('SELL',{items:{[id]:count}})}>{t('sell')} hết · {money(count*price)}</button></div>;})
           :<p className="empty-inventory"><GameIcon name="inventory"/>Kho đang trống. Thu hoạch hoặc thu sản phẩm để thêm hàng vào kho.</p>}
