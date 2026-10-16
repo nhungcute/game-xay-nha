@@ -11,8 +11,11 @@ import { join } from 'node:path';
 import { inflateSync } from 'node:zlib';
 import { MeshoptSimplifier } from 'meshoptimizer';
 import jpeg from 'jpeg-js';
+import { bakeAtlas, dropDownFacing, weldPositions } from './lib/atlas-bake.mjs';
 
 const CHECK = process.argv.includes('--check');
+// Dev aid: --only=<id> processes one landmark and never touches the shared config (so --check ignores it too).
+const ONLY = process.argv.find(arg => arg.startsWith('--only='))?.slice(7);
 const OUT_DIR = 'apps/web/public/assets/models/authored';
 const CONFIG_PATH = 'scripts/landmarks.config.json';
 const SOURCE_DIR = 'map/nha2';
@@ -63,6 +66,24 @@ const MODELS = [
     textureSize: 1024,
     cutBase: false,
     flattenY0: false,
+  },
+  {
+    id: 'landmark_rome',
+    sourceFile: 'map/nha3/rome_river_side.glb',
+    title: 'Rome River Side',
+    author: 'Shahriar Shahrabi',
+    license: 'CC-BY-4.0',
+    url: 'https://sketchfab.com/3d-models/rome-river-side-8521d86dcd9043eba0b518ccab430d0f',
+    footprint: [10, 9],
+    triangleCap: 11000,
+    maxBytes: 1024 * 1024, // a whole quarter: bigger than the 700 KB single-building budget
+    rotationY: Math.PI, // Temple facade and its stairs face +Z in the source; the quay edge ends up at -Z
+    textureSize: 1024,
+    cutBase: false,
+    flattenY0: false,
+    skipMaterials: [0, 2], // "Fire" (alpha-blended flames) and "Attachments" (tiny figures on their own 1024 texture)
+    bake: true, // re-bake the atlas onto a position-simplified proxy (see scripts/lib/atlas-bake.mjs)
+    cutSrcZ: 0.269, // Source-space Z of the north quay edge: everything south of it (canal water, bridge, boats, far bank) is clipped away
   },
 ];
 
@@ -382,7 +403,10 @@ function collectSceneGeometry(parsed, config) {
 
   const modelRot = rotY(config.rotationY);
 
+  const combinedSrcZ = [];
+
   for (const prim of primitives) {
+    if (config.skipMaterials?.includes(prim.material)) continue;
     const fullMat = multiply(modelRot, prim.matrix);
     const nrmMat = normalMatrix(fullMat);
     const baseVertex = combinedPos.length / 3;
@@ -394,6 +418,9 @@ function collectSceneGeometry(parsed, config) {
       const ty = fullMat[1] * x + fullMat[5] * y + fullMat[9] * z + fullMat[13];
       const tz = fullMat[2] * x + fullMat[6] * y + fullMat[10] * z + fullMat[14];
       combinedPos.push(tx, ty, tz);
+      if (config.cutSrcZ !== undefined) {
+        combinedSrcZ.push(prim.matrix[2] * x + prim.matrix[6] * y + prim.matrix[10] * z + prim.matrix[14]);
+      }
 
       let nx = prim.normals ? prim.normals[offset] : 0;
       let ny = prim.normals ? prim.normals[offset + 1] : 1;
@@ -422,6 +449,42 @@ function collectSceneGeometry(parsed, config) {
     for (let i = 0; i < prim.indices.length; i++) {
       combinedIdx.push(baseVertex + prim.indices[i]);
     }
+  }
+
+  // Rome: clip the scene at a source-space Z plane (keeps Z <= cutSrcZ), splitting straddling triangles
+  if (config.cutSrcZ !== undefined) {
+    const limit = config.cutSrcZ;
+    const kept = [];
+    const lerpVertex = (a, b, t) => {
+      const at = combinedPos.length / 3;
+      for (let k = 0; k < 3; k++) combinedPos.push(combinedPos[a * 3 + k] + (combinedPos[b * 3 + k] - combinedPos[a * 3 + k]) * t);
+      const nx = combinedNrm[a * 3] + (combinedNrm[b * 3] - combinedNrm[a * 3]) * t;
+      const ny = combinedNrm[a * 3 + 1] + (combinedNrm[b * 3 + 1] - combinedNrm[a * 3 + 1]) * t;
+      const nz = combinedNrm[a * 3 + 2] + (combinedNrm[b * 3 + 2] - combinedNrm[a * 3 + 2]) * t;
+      const len = Math.hypot(nx, ny, nz) || 1;
+      combinedNrm.push(nx / len, ny / len, nz / len);
+      for (let k = 0; k < 2; k++) combinedUv.push(combinedUv[a * 2 + k] + (combinedUv[b * 2 + k] - combinedUv[a * 2 + k]) * t);
+      combinedSrcZ.push(limit);
+      return at;
+    };
+    for (let t = 0; t < combinedIdx.length; t += 3) {
+      const tri = [combinedIdx[t], combinedIdx[t + 1], combinedIdx[t + 2]];
+      const inside = tri.map(i => combinedSrcZ[i] <= limit);
+      const count = inside.filter(Boolean).length;
+      if (count === 3) { kept.push(...tri); continue; }
+      if (count === 0) continue;
+      // Sutherland-Hodgman against one plane keeps the winding of the polygon
+      const polygon = [];
+      for (let e = 0; e < 3; e++) {
+        const a = tri[e], b = tri[(e + 1) % 3];
+        const aIn = inside[e], bIn = inside[(e + 1) % 3];
+        if (aIn) polygon.push(a);
+        if (aIn !== bIn) polygon.push(lerpVertex(a, b, (limit - combinedSrcZ[a]) / (combinedSrcZ[b] - combinedSrcZ[a])));
+      }
+      for (let k = 1; k + 1 < polygon.length; k++) kept.push(polygon[0], polygon[k], polygon[k + 1]);
+    }
+    combinedIdx.length = 0;
+    for (const i of kept) combinedIdx.push(i);
   }
 
   // Handle cutting base plate (Monserrate) or flattening Y=0
@@ -514,6 +577,27 @@ async function simplifyGeometry(geometry, cap) {
     throw new Error(`meshoptimizer could not reach ${cap} triangles (best ${best.indices.length / 3})`);
   }
   return best;
+}
+
+// Position-only simplification: no UV constraint, tiny disconnected props are pruned first. The closed source shells
+// are simplified whole (open bottoms would lock their borders); the down-facing faces are dropped afterwards, so the
+// target is scaled until the surviving face count lands just under the cap.
+async function simplifyPositions(mesh, cap) {
+  await MeshoptSimplifier.ready;
+  let target = cap;
+  for (let attempt = 0; attempt < 6; attempt++) {
+    let simplified = null;
+    for (let error = 0.001; error <= 0.5; error *= 2) {
+      const [indices] = MeshoptSimplifier.simplify(mesh.indices, mesh.positions, 3, target * 3, error, ['Prune']);
+      if (indices.length / 3 <= target) { simplified = { indices, error }; break; }
+    }
+    if (!simplified) throw new Error(`meshoptimizer could not reach ${target} triangles position-only`);
+    const visible = dropDownFacing(mesh.positions, simplified.indices);
+    const count = visible.length / 3;
+    if (count <= cap && count >= cap * 0.97) return { indices: visible, error: simplified.error };
+    target = Math.round(target * (cap * 0.985) / count);
+  }
+  throw new Error(`position-only simplification did not settle under ${cap} triangles`);
 }
 
 function referencedBounds(positions, indices) {
@@ -660,15 +744,25 @@ async function processModel(config) {
   // 2. Collect and transform geometry
   const rawGeometry = collectSceneGeometry(parsed, config);
 
-  const textureRgba = config.id === 'landmark_castle' ? cleanToneMonserrate(downscaled)
+  let textureRgba = config.id === 'landmark_castle' ? cleanToneMonserrate(downscaled)
     : config.id === 'landmark_culture' ? buildKowloonAtlas(parsed) : downscaled;
 
+  let welded, simplified;
+  if (config.bake) {
+    // 3. Simplify positions only, then re-bake the atlas onto the proxy (the source UV islands cannot survive 30x)
+    const sourceMesh = weldPositions(rawGeometry.positions, rawGeometry.indices);
+    const proxy = await simplifyPositions(sourceMesh, config.triangleCap);
+    const baked = bakeAtlas({ proxy: { positions: sourceMesh.positions, indices: proxy.indices }, source: rawGeometry, texture: downscaled, size: config.textureSize });
+    welded = baked.geometry;
+    simplified = { indices: baked.geometry.indices, error: proxy.error };
+    textureRgba = baked.texture;
+  } else {
+    welded = weld(rawGeometry);
+    // 3. Simplify
+    simplified = await simplifyGeometry(welded, config.triangleCap);
+  }
+
   const jpegBytes = Buffer.from(jpeg.encode({ data: textureRgba.data, width: textureRgba.width, height: textureRgba.height }, 85).data);
-
-  const welded = weld(rawGeometry);
-
-  // 3. Simplify
-  const simplified = await simplifyGeometry(welded, config.triangleCap);
 
   // 4. Fit footprint
   const fitted = compactAndFit(welded, simplified, config.footprint);
@@ -680,8 +774,9 @@ async function processModel(config) {
   if (glb.triangles > config.triangleCap) {
     throw new Error(`${config.id}: ${glb.triangles} triangles exceed cap of ${config.triangleCap}`);
   }
-  if (glb.bytes.length >= 700 * 1024) {
-    throw new Error(`${config.id}: ${glb.bytes.length} bytes exceed the 700 KB budget`);
+  const maxBytes = config.maxBytes ?? 700 * 1024;
+  if (glb.bytes.length >= maxBytes) {
+    throw new Error(`${config.id}: ${glb.bytes.length} bytes exceed the ${Math.round(maxBytes / 1024)} KB budget`);
   }
 
   const outFile = `${OUT_DIR}/${config.id}.glb`;
@@ -732,7 +827,7 @@ async function main() {
     models: {},
   };
 
-  for (const modelConfig of MODELS) {
+  for (const modelConfig of ONLY ? MODELS.filter(model => model.id === ONLY) : MODELS) {
     console.log(`Processing ${modelConfig.id} (${modelConfig.title})...`);
     const t0 = Date.now();
     const res = await processModel(modelConfig);
@@ -765,7 +860,7 @@ async function main() {
     }
     let existingConfig = null;
     try { existingConfig = await readFile(join(process.cwd(), CONFIG_PATH)); } catch { /* reported below */ }
-    if (!existingConfig || !existingConfig.equals(configBytes)) {
+    if (!ONLY && (!existingConfig || !existingConfig.equals(configBytes))) {
       console.error(`DRIFT ${CONFIG_PATH}${existingConfig ? '' : ' (missing)'}`);
       drifted++;
     }
@@ -776,7 +871,7 @@ async function main() {
     console.log(`--check PASS: ${results.length} D037 landmarks + config are deterministic.`);
   } else {
     await mkdir(join(process.cwd(), OUT_DIR), { recursive: true });
-    await writeFile(join(process.cwd(), CONFIG_PATH), configBytes);
+    if (!ONLY) await writeFile(join(process.cwd(), CONFIG_PATH), configBytes);
     for (const r of results) {
       await writeFile(join(process.cwd(), r.outFile), r.bytes);
     }
